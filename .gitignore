@@ -1,0 +1,35 @@
+# Project files
+.Rproj.user
+.Rhistory
+.RData
+..Rcheck/
+.Rapp.history
+
+# Drake files
+.drake/
+
+# Files produced by data system
+outputs/
+xml*/
+sample-generator/outputs/
+R/*.html
+Rplots.pdf
+
+# Vignette files
+inst/doc
+
+# Proprietary files
+IEA_EnergyBalances_2019.csv.gz
+*CEDS_emissions.csv
+
+# OS files
+.DS_Store
+
+# emacs backup files
+*~
+
+# junk produced when developing the python scripts
+*pycache*
+
+# pkgdown stuff
+docs/*
