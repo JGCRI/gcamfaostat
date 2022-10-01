@@ -239,13 +239,28 @@ get_data <- function(all_data, name, strip_attributes = FALSE) {
 #' Construct a data structure of objects (\code{...}) and return it.
 #' Abstracts this away from chunk function code.
 #'
-#' @param ... Objects to handle
+#' @param ... Objects to handle; could be a vector of char including object names
 #' @return Object ready for insertion into the data system data structure.
 return_data <- function(...) {
+
   dots <- list(...)
-  raw_names <- as.list(substitute(list(...)))[-1L]
-  # if a user explicitly named a return data then keep their name
-  # otherwise use the name of the raw variable to set the name
+
+  if (is.character(dots[[1]])) {
+
+    raw_names <- c(...)
+    dots <- list()
+    for (x in raw_names) {
+
+      dots[[x]] <- get(x, envir = parent.frame() )
+    }
+
+  } else{
+
+    raw_names <- as.list(substitute(list(...)))[-1L]
+    # if a user explicitly named a return data then keep their name
+    # otherwise use the name of the raw variable to set the name
+  }
+
   if(is.null(names(dots))) {
     # if none of the arguments were explicitly named then `names(dots)`
     # returns NULL and we should set all the names to the raw names

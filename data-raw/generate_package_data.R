@@ -501,29 +501,29 @@ if(USE_DRIVER_DRAKE) {
 usethis::use_data(GCAM_DATA_MAP, overwrite = TRUE, internal = FALSE)
 
 prebuilt_data_names <- c(
-  # outputs of module_emissions_L102.nonco2_ceds_R_S_Y
-  "L102.ceds_GFED_nonco2_tg_R_S_F",
-  "L102.ceds_GFED_nonco2_tg_C_S_F",
-  "L102.ceds_int_shipping_nonco2_tg_S_F",
-
-  # outputs of module_energy_LA101.en_bal_IEA
-  "L101.en_bal_EJ_R_Si_Fi_Yh_full",
-  "L101.en_bal_EJ_ctry_Si_Fi_Yh_full",
-  "L101.in_EJ_ctry_trn_Fi_Yh",
-  "L101.in_EJ_ctry_bld_Fi_Yh",
-
-  # output of module_energy_LA111.rsrc_fos_Prod
-  "L111.RsrcCurves_EJ_R_Ffos",
-
-  # output of module_energy_LA118.hydro
-  "L118.out_EJ_R_elec_hydro_Yfut",
-
-  # outputs of module_energy_LA121.liquids
-  "L121.in_EJ_R_unoil_F_Yh",
-  "L121.in_EJ_R_TPES_crude_Yh",
-  "L121.in_EJ_R_TPES_unoil_Yh",
-  "L121.share_R_TPES_biofuel_tech",
-  "L121.BiomassOilRatios_kgGJ_R_C"
+  # # outputs of module_emissions_L102.nonco2_ceds_R_S_Y
+  # "L102.ceds_GFED_nonco2_tg_R_S_F",
+  # "L102.ceds_GFED_nonco2_tg_C_S_F",
+  # "L102.ceds_int_shipping_nonco2_tg_S_F",
+  #
+  # # outputs of module_energy_LA101.en_bal_IEA
+  # "L101.en_bal_EJ_R_Si_Fi_Yh_full",
+  # "L101.en_bal_EJ_ctry_Si_Fi_Yh_full",
+  # "L101.in_EJ_ctry_trn_Fi_Yh",
+  # "L101.in_EJ_ctry_bld_Fi_Yh",
+  #
+  # # output of module_energy_LA111.rsrc_fos_Prod
+  # "L111.RsrcCurves_EJ_R_Ffos",
+  #
+  # # output of module_energy_LA118.hydro
+  # "L118.out_EJ_R_elec_hydro_Yfut",
+  #
+  # # outputs of module_energy_LA121.liquids
+  # "L121.in_EJ_R_unoil_F_Yh",
+  # "L121.in_EJ_R_TPES_crude_Yh",
+  # "L121.in_EJ_R_TPES_unoil_Yh",
+  # "L121.share_R_TPES_biofuel_tech",
+  # "L121.BiomassOilRatios_kgGJ_R_C"
 )
 
 #' PREBUILT_DATA
