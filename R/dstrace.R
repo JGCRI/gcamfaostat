@@ -18,10 +18,7 @@
 #' @importFrom assertthat assert_that
 #' @author BBL
 #' @export
-#' @examples
-#' dstrace("L100.FAO_ag_Exp_t")
-#' dstrace("L100.FAO_ag_Exp_t", direction = "downstream")
-#' dstrace("L100.FAO_ag_Exp_t", direction = "both", graph = TRUE)
+
 dstrace <- function(object_name, direction = "upstream", graph = FALSE,
                     gcam_data_map = NULL,
                     previous_tracelist = NULL, recurse = TRUE, print = TRUE, ...) {
@@ -198,9 +195,7 @@ dstrace_plot <- function(object_name, tracelist, upstream, downstream, ...) {
 #' element list with linked object and tracelist information. If called and \code{object_name} is the name of a
 #' code chunk (as opposed to that of a data object), the relevant help page will be pulled up.
 #' @export
-#' @examples
-#' info("L100.FAO_ag_Exp_t")
-#' info("module_aglu_L222.land_input_2")
+
 info <- function(object_name, gcam_data_map = NULL, previous_tracelist = NULL, upstream = TRUE, downstream = TRUE, print = TRUE) {
 
   if(is.null(gcam_data_map)) {

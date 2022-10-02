@@ -43,11 +43,6 @@ What other data products feed into some particular data system object?
 Conversely, to what other products does some object feed? These are the kinds
 of questions that \code{dstrace} can help answer.
 }
-\examples{
-dstrace("L100.FAO_ag_Exp_t")
-dstrace("L100.FAO_ag_Exp_t", direction = "downstream")
-dstrace("L100.FAO_ag_Exp_t", direction = "both", graph = TRUE)
-}
 \author{
 BBL
 }

@@ -5,7 +5,7 @@
 \alias{PREBUILT_DATA}
 \title{A list of prebuilt data objects. These are used when the proprietary IEA
 energy data files are not available, and thus
-\code{\link{module_energy_LA100.IEA_downscale_ctry}} is not able to run.
+module_energy_LA100.IEA_downscale_ctry is not able to run.
 Its immediate downstream dependencies then used the prebuilt versions of
 their outputs stored in this object.}
 \format{
@@ -17,7 +17,7 @@ PREBUILT_DATA
 \description{
 A list of prebuilt data objects. These are used when the proprietary IEA
 energy data files are not available, and thus
-\code{\link{module_energy_LA100.IEA_downscale_ctry}} is not able to run.
+module_energy_LA100.IEA_downscale_ctry is not able to run.
 Its immediate downstream dependencies then used the prebuilt versions of
 their outputs stored in this object.
 }

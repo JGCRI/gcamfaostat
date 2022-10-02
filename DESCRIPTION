@@ -55,6 +55,8 @@ Suggests:
     usethis (>= 1.4.0),
     drake (>= 6.2.1),
     gcamdata.compdata,
+    stringr,
+    tidyselect,
     knitr,
     rmarkdown
 Remotes: github::JGCRI/gcamdata.compdata@gcam6_outputs

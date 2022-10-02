@@ -714,7 +714,7 @@ FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION <-
 
 #' FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL
 #'
-#' @param .DF
+#' @param .DF Input data frame
 #' @param SUDAN2012_BREAK If T break Sudan before 2012 based on 2013- 2016 data
 #' @param SUDAN2012_MERGE If T merge South Sudan into Sudan
 #'

@@ -530,7 +530,7 @@ prebuilt_data_names <- c(
 #'
 #' A list of prebuilt data objects. These are used when the proprietary IEA
 #' energy data files are not available, and thus
-#' \code{\link{module_energy_LA100.IEA_downscale_ctry}} is not able to run.
+#' module_energy_LA100.IEA_downscale_ctry is not able to run.
 #' Its immediate downstream dependencies (currently, four chunks) then use the
 #' prebuilt versions of their outputs stored in this object.
 #' @author BBL

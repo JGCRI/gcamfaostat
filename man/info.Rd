@@ -34,7 +34,3 @@ code chunk (as opposed to that of a data object), the relevant help page will be
 \description{
 Print and return information about an object.
 }
-\examples{
-info("L100.FAO_ag_Exp_t")
-info("module_aglu_L222.land_input_2")
-}

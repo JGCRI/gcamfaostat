@@ -11,45 +11,10 @@ module_aglu_LA100.FAO_SUA_PrimaryEquivalent(command, ...)
 
 \item{...}{other optional parameters, depending on command}
 
-\item{.RM_IntraRegTrade}{If TRUE, intra-regional trade is removed after aggregation}
-
-\item{.TM_Bilateral}{A data frame of bilateral trade data}
-
-\item{.RM_TRIANGLE_INEQUALITY}{If TRUE, adjust gross trade in SUA data to ensure regional export is smaller than production for an SUA item}
-
-\item{.source_item}{Source items or primary items in the processing}
-
-\item{.sink_item}{Sink items or processed items in the processing}
-
-\item{.SOURCE_ITEM}{Source items or primary items in the processing}
-
-\item{.SINK_ITEM}{Sink items or processed items in the processing}
-
-\item{.OUTPUT_SPECIFIC_EXTRACTION_RATE}{A data frame with item and output_specific_extraction_rate.
-# In some cases, prescale sink item SUA using output_specific_extraction_rate can improve the processing.
-# e.g., when coproduction shares are not fixed.}
-
-\item{.COMM}{Primary commodity in the FAO item mapping (APE_comm).}
-
-\item{.MAPPING}{Mapping of SUA items to primary products by level of nestings. Mapping_SUA_PrimaryEquivalent was constructed.}
-
-\item{.DF_SUA}{Input SUA data frame}
-
-\item{.ITEM_SUFFIX}{Adding a suffix (_APE) for item in primary equivalent in output. Note that an aggregated primary commodity is also kept.}
-
-\item{.RECUR_TOP_NEST}{Bottom nest_level in mapping. If 1, all the way through APE but if 2 only run to top but 1 nest}
-
-\item{.DF}{An input dataframe with an element col including Import and Export}
-
-\item{.MIN_TRADE_PROD_RATIO}{Trade will be removed if world total export or import over production is smaller than .MIN_TRADE_PROD_RATIO (1% default value)}
-
-\item{.Reg_VAR}{Region variable name; default is ("area_code")}
-
-\item{.GROUP_VAR}{Group variable; default is ("item_code", "year")}
 }
 \value{
 Depends on \code{command}: either a vector of required inputs, a vector of output names, or (if
-  \code{command} is "MAKE") all the generated outputs: \code{GCAM_AgLU_SUA_APE_1973_2019},
+  \code{command} is "MAKE") all the generated outputs: \code{GCAM_AgLU_SUA_APE_2010_2019},
   \code{FAO_AgProd_Kt_All},\code{FAO_AgArea_Kha_All},\code{FAO_Food_Macronutrient_All_2010_2019},
   \code{FAO_Food_MacronutrientRate_2010_2019_MaxValue}
 
@@ -74,9 +39,6 @@ A supply-utilization accounting data frame of a data tier in source item equival
 Recursively aggregate nest into primary equivalent using from bottom to top
 
 SUA data frame in primary equivalent
-Balance gross trade
-
-The same dataframe with balanced world export and import.
 }
 \description{
 The function is used as an option in SUA_REG_Agg
@@ -93,8 +55,6 @@ The function is used in Proc_primarize
 The function is used in Proc_primarize
 
 The function is a recursive wrapper of Proc_primarize
-
-Scale gross export and import in all regions to make them equal at the world level.
 }
 \details{
 Generate supply utilization balance in primary equivalent
