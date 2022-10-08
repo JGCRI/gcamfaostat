@@ -33,3 +33,6 @@ IEA_EnergyBalances_2019.csv.gz
 
 # pkgdown stuff
 docs/*
+
+# FAOSTATA raw zip
+inst/extdata/aglu/FAO/FAOSTAT/*.zip
