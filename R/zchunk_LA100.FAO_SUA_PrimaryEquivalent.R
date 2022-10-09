@@ -1,6 +1,6 @@
 # Copyright 2019 Battelle Memorial Institute; see the LICENSE file.
 
-#' module_aglu_LA100.FAO_SUA_PrimaryEquivalent
+#' module_aglu_L100_FAOSTAT_SUA_PrimaryEquivalent
 #'
 #' Generate supply utilization balance in primary equivalent
 #'
@@ -21,7 +21,7 @@
 #' @importFrom tidyr complete drop_na gather nesting spread replace_na
 #' @importFrom tibble tibble
 #' @author XZ 2022
-module_aglu_LA100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
+module_aglu_L100_FAOSTAT_SUA_PrimaryEquivalent <- function(command, ...) {
 
   MODULE_INPUTS <-
     c(FILE = "aglu/AGLU_ctry",

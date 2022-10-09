@@ -694,38 +694,61 @@ FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION <-
     Number_of_Regions_After_Dissolution <- AFFECTED_AREA_CODE %>% length -1
 
     .DF1 %>% filter(year < YEAR_DISSOLVE_DONE) %>%
-      select(-area_code, -area) %>%
+      select(-area_code) %>%
       right_join(
         .DF1 %>% filter(year %in% c(YEAR_DISSOLVE_DONE:(YEAR_DISSOLVE_DONE + YEAR_AFTER_DISSOLVE_ACCOUNT))) %>%
           dplyr::group_by_at(dplyr::vars(-year, -value)) %>%
           replace_na(list(value = 0)) %>%
-          summarise(value = sum(value)) %>% ungroup() %>%
-          dplyr::group_by_at(dplyr::vars(-value, -area, -area_code)) %>%
+          summarise(value = sum(value), .groups = "drop") %>%
+          dplyr::group_by_at(dplyr::vars(-value, -area_code)) %>%
           mutate(Share = value/sum(value)) %>%
           # using average share if data after dissolved does not exist
           mutate(NODATA = if_else(sum(value) == 0, T, F)) %>%
           mutate(Share = if_else(NODATA == T, 1/Number_of_Regions_After_Dissolution, Share)) %>%
           ungroup() %>%select(-value, -NODATA),
-        by = names(.) %>% setdiff(c("year", "value", "area", "area_code"))
+        by = names(.) %>% setdiff(c("year", "value", "area_code"))
       ) %>% mutate(value = value * Share) %>% select(-Share)
 
   }
-
 
 #' FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL
 #'
 #' @param .DF Input data frame
 #' @param SUDAN2012_BREAK If T break Sudan before 2012 based on 2013- 2016 data
 #' @param SUDAN2012_MERGE If T merge South Sudan into Sudan
+#' @param .FAO_AREA_CODE_COL
+#' @param .AREA_COL
 #'
 #' @return data with historical periods of dissolved region disaggregated to small pieces.
 
 FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL <- function(.DF,
+                                                       .FAO_AREA_CODE_COL = "area_code",
+                                                       .AREA_COL = "area",
                                                        SUDAN2012_BREAK = F,
                                                        SUDAN2012_MERGE = T){
 
-  assertthat::assert_that("area_code" %in% names(.DF),
+  assertthat::assert_that(.FAO_AREA_CODE_COL %in% names(.DF),
                           msg = "Date frame is required and need a col of area_code")
+
+  # Remove area if exist
+  .DF0 <- .DF
+  if (all_of(.AREA_COL) %in% names(.DF)) {
+    .DF %>% select(-all_of(.AREA_COL)) -> .DF }
+
+  if(.FAO_AREA_CODE_COL != "area_code"){
+    # Check if "area_code" exist, replace to area_code_TEMP
+    if ("area_code" %in% names(.DF)) {
+      assertthat::assert_that("area_code_TEMP" %in% names(.DF) == F)
+      .DF %>% rename(area_code_TEMP = area_code) -> .DF
+    }
+
+    # rename .FAO_AREA_CODE_COL to area_code
+
+    .DF %>% rename(area_code = .FAO_AREA_CODE_COL) -> .DF
+
+    # Will need to replace back later
+  }
+
 
   # Define area code based on FAO ----
   # first one is dissolved area
@@ -795,11 +818,32 @@ FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL <- function(.DF,
 
     .DF2 %>%
       mutate(area_code = replace(area_code, area_code %in% area_code_Sudan, area_code_Sudan[1])) %>%
-      dplyr::group_by_at(dplyr::vars(-value, -area)) %>%
+      dplyr::group_by_at(dplyr::vars(-value)) %>%
       summarise(value = sum(value, na.rm = T), .groups = "drop") %>%
-      ungroup() %>%
-      # Get area back
-      left_join(.DF2 %>% distinct(area, area_code), by = "area_code") -> .DF2
+      ungroup() -> .DF2
+  }
+
+
+
+  if(.FAO_AREA_CODE_COL != "area_code"){
+
+    # rename .FAO_AREA_CODE_COL to area_code
+    .DF2[[.FAO_AREA_CODE_COL]] <- .DF2[["area_code"]]
+    .DF2 <- .DF2[, !names(.DF2) %in% "area_code"]
+
+    # Check if "area_code_TEMP" exist, replace to area_code
+    if ("area_code_TEMP" %in% names(.DF2)) {
+      assertthat::assert_that("area_code" %in% names(.DF2) == F)
+      .DF2 %>% rename(area_code = area_code_TEMP) -> .DF2
+    }
+  }
+
+
+
+  if (all_of(.AREA_COL) %in% names(.DF0)) {
+    .DF2 %>%# Get area back
+      left_join(.DF0 %>% distinct_at(vars(all_of(.AREA_COL), .FAO_AREA_CODE_COL)),
+                by = .FAO_AREA_CODE_COL) -> .DF2
   }
 
   return(.DF2)

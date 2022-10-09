@@ -1,0 +1,20 @@
+# File: Mapping_FBSH_SCL_OilCake.csv
+# Title: Mapping of FAO oilseed oil and cake items from different FAOSTAT dataset source
+# Units: NA
+# Description: This mapping is used to extrapolate oilseed cake rate based on available historical data
+# Note that FAO did not update nonfood use data (CB) after 2013 so we need to estimate oilseed cake based on rates
+# FBSH_item_cake from CB. FBSH_item_oil from FBSH. SCL has oil item but not cake items. Rape and Mustard Cake duplicated in mapping since new data separated the two.
+# Last update: 8-10-2022 (XZ)
+# Column types: ccccc
+# ----------
+SCL_item_oil,SCL_item_cake,FBSH_item_cake,FBSH_item_oil,FBSH_item_seed
+"Oil, cottonseed","Cake, cottonseed",Cottonseed Cake,Cottonseed Oil,Cottonseed
+"Oil, sesame","Cake, sesame seed",Sesameseed Cake,Sesameseed Oil,Sesameseed
+"Oil, sunflower","Cake, sunflower",Sunflowerseed Cake,Sunflowerseed Oil,Sunflowerseed
+"Oil, coconut (copra)","Cake, copra",Copra Cake,Coconut Oil,Coconut
+"Oil, groundnut","Cake, groundnuts",Groundnut Cake,Groundnut Oil,Groundnut
+"Oil, palm kernel","Cake, palm kernel",Palmkernel Cake,Palmkernel Oil,Palmkernel
+"Oil, soybean","Cake, soybeans",Soyabean Cake,Soyabean Oil,Soyabean
+"Oil, rapeseed","Cake, rapeseed",Rape and Mustard Cake,Rape and Mustard Oil,Rape and Mustard
+"Oil, mustard","Cake, mustard",Rape and Mustard Cake,Rape and Mustard Oil,Rape and Mustard
+"Oil, vegetable origin nes","Cake, others","Oilseed Cakes, Other","Oilcrops Oil, Other","Oilcrops, Other"

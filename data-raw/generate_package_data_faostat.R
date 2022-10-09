@@ -7,6 +7,7 @@
 library(dplyr)
 library(tidyr)
 
+source("data-raw/generate_package_data_faostat_helper_funcs.R")
 
 # Dir for FAOSTAT raw data ----
 DIR_RAW_DATA_FAOSTAT <- "inst/extdata/aglu/FAO/FAOSTAT"
@@ -16,80 +17,6 @@ dir.create(DIR_PREBUILT_FAOSTAT, showWarnings = FALSE)
 
 
 
-
-# Helper functions ----
-FAOSTAT_metadata <- function (code = NULL){
-  FAOxml <- XML::xmlParse(xml2::read_xml("http://fenixservices.fao.org/faostat/static/bulkdownloads/datasets_E.xml"))
-  metadata <- XML::xmlToDataFrame(FAOxml, stringsAsFactors = FALSE)
-  names(metadata) <- tolower(gsub("\\.", "_", names(metadata)))
-
-  # Bug fix for CB; can remove later if FAOSTAT udpate the link later
-  metadata["CB" == metadata[, "datasetcode"],"filelocation"] <-
-    "https://fenixservices.fao.org/faostat/static/bulkdownloads/CommodityBalances_(non-food)_E_All_Data_(Normalized).zip"
-
-  if (!is.null(code)) {
-    metadata <- metadata[code == metadata[, "datasetcode"],]
-  }
-
-    return(metadata)
-}
-
-FAOSTAT_download_bulk <- function(DATASETCODE,
-                                     DATA_FOLDER = DIR_RAW_DATA_FAOSTAT){
-
-  assertthat::assert_that(is.character(DATASETCODE))
-  assertthat::assert_that(is.character(DATA_FOLDER))
-
-
-  lapply(DATASETCODE, function(d){
-    metadata <- FAOSTAT_metadata(code = d)
-    url_bulk = metadata$filelocation
-
-    file_name <- basename(url_bulk)
-    download.file(url_bulk, file.path(DATA_FOLDER, file_name))
-  })
-
-}
-
-FAOSTAT_load_raw_data <- function(DATASETCODE,
-                                  DATA_FOLDER = DIR_RAW_DATA_FAOSTAT){
-  assertthat::assert_that(is.character(DATASETCODE))
-  assertthat::assert_that(is.character(DATA_FOLDER))
-
-  metadata <- FAOSTAT_metadata()
-
-    # Loop through each code
-    for (CODE in DATASETCODE) {
-
-      metadata %>% filter(datasetcode == CODE) -> metadata1
-
-      zip_file_name <- file.path(DATA_FOLDER, basename(metadata1$filelocation))
-      assertthat::assert_that(file.exists(zip_file_name))
-      # assuming the csv in zip has the same base name
-      csv_file_name <- gsub(".zip$", ".csv", basename(zip_file_name))
-
-      df <- readr::read_csv(unz(zip_file_name, csv_file_name), col_types = NULL)
-      # Lower case col names and use _ as delimiter
-      names(df) <- tolower(gsub("\\.| ", "_", names(df)))
-      # Assigned to global env
-      assign(CODE, df, envir = parent.env(environment()))
-    }
-
-}
-
-
-#remove accent and apostrophe for cols in a df
-rm_accent <- function(.df, ...){
-
-  assertthat::assert_that(
-    length(intersect(c(...), names(.df))) == length(c(...)),
-    msg = "Columns listed not included in the data frame")
-
-  .df %>%
-    mutate_at(c(...), iconv,  to = 'ASCII//TRANSLIT') %>%
-    mutate_at(c(...), .funs = gsub, pattern = "\\'", replacement = "")
-
-}
 
 # ********************************----
 
@@ -434,11 +361,12 @@ TM2 %>%
   left_join(TM1 %>% distinct(area = partner_countries, area_code = partner_country_code), by = c("area_code")) %>%
   left_join(TM1 %>% distinct(source = partner_countries, source_code = partner_country_code), by = c("source_code")) %>%
   rm_accent("item", "area", "source") %>%
-  mutate(value = value / 1000, unit = "1000 tonnes") ->
+  mutate(unit = "tonnes") ->
   TM3
 rm(TM1, TM2)
 
 TM3 %>% spread(year, value) -> TM4
+
 
 # save and clean
 saveRDS(TM4, file.path(DIR_PREBUILT_FAOSTAT,"TM_wide.rds")); rm(TM3, TM4)
