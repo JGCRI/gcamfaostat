@@ -936,9 +936,9 @@ module_aglu_L100_FAOSTAT_SUA_PrimaryEquivalent <- function(command, ...) {
                                            macronutrient_value)) %>%
       # calculate total Cal, protein and fat in food
       # value was in 1000 ton or 10^ 9 g
-      mutate(value = macronutrient_value * Food_Kt/ 1000,
+      mutate(value = macronutrient_value * Food_Kt,
              value = if_else(macronutrient %in% c("fatperc", "proteinperc"),
-                             value / 100, value)) %>%
+                             value / 100 / 1000, value)) %>% # unit from perc to Mt
       select(-macronutrient_value, -macronutrient_value_World, -Food_Kt) %>%
       # rename element with units
       mutate(macronutrient = case_when(
