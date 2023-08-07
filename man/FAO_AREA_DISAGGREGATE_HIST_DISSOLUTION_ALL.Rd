@@ -6,12 +6,16 @@
 \usage{
 FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL(
   .DF,
+  .FAO_AREA_CODE_COL = "area_code",
+  .AREA_COL = "area",
   SUDAN2012_BREAK = F,
   SUDAN2012_MERGE = T
 )
 }
 \arguments{
 \item{.DF}{Input data frame}
+
+\item{.AREA_COL}{}
 
 \item{SUDAN2012_BREAK}{If T break Sudan before 2012 based on 2013- 2016 data}
 

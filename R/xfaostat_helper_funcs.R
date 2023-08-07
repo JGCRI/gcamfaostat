@@ -54,8 +54,10 @@ FAOSTAT_load_raw_data <- function(DATASETCODE,
     df <- readr::read_csv(unz(zip_file_name, csv_file_name), col_types = NULL)
     # Lower case col names and use _ as delimiter
     names(df) <- tolower(gsub("\\.| ", "_", names(df)))
-    # Assigned to global env
+    # Assigned to parent env
     assign(CODE, df, envir = parent.env(environment()))
+    # Assigned to current env
+    #assign(CODE, df, envir = environment())
   }
 
 }
