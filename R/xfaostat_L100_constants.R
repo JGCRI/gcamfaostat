@@ -7,7 +7,8 @@
   DIR_RAW_DATA_FAOSTAT <- system.file("extdata", "aglu/FAO/FAOSTAT", package = "gcamdata")
 
 
-
+  # Output GCAM csv
+  DIR_OUT_CSV <- "inst/extdata/aglu/FAO"
 
 
   # Balance elements; used in Get_SUA_TEMPLATE and SUA_bal_adjust

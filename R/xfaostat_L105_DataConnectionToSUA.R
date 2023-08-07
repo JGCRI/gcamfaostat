@@ -22,7 +22,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       FILE = "aglu/FAO/Mapping_FBSH_SCL_OilCake")
 
   MODULE_OUTPUTS <-
-    c("GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019")
+    c("Bal_new_all")
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -759,11 +759,10 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
     ### output GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019 and clean memory ----
     Bal_new_all %>%
-      spread(year, value) %>%
-      add_title("GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019") %>%
+      add_title("Bal_new_all") %>%
       add_units("Ktonne") %>%
       add_comments("Preprocessed FAO SUA 2010 - 2019") ->
-      GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019
+      Bal_new_all
 
 
     return_data(MODULE_OUTPUTS)
