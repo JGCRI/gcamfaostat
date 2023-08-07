@@ -18,7 +18,8 @@
 module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(FILE = "aglu/FAO/FAO_items")
+    c(FILE = "aglu/FAO/FAO_items",
+      FILE = "aglu/FAO/Mapping_FBSH_SCL_OilCake")
 
   MODULE_OUTPUTS <-
     c("GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019")
@@ -495,7 +496,8 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     ### 3.5.1 Get oil cake production data based on cake rate from CB_FBS_CakeRate ----
 
     # Get the mapping of oil and cake items between FBSH, CB and SCL
-    Mapping_FBSH_SCL_OilCake <- readr::read_csv(file.path("inst/extdata/aglu/FAO", "Mapping_FBSH_SCL_OilCake.csv"), comment = "#")
+    # read in already
+    #Mapping_FBSH_SCL_OilCake <- readr::read_csv(file.path("inst/extdata/aglu/FAO", "Mapping_FBSH_SCL_OilCake.csv"), comment = "#")
 
     # The reference period is 2011: 2013 for cake rate calculation
     # Merge oil and cake data
