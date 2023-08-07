@@ -716,8 +716,8 @@ FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION <-
 #' @param .DF Input data frame
 #' @param SUDAN2012_BREAK If T break Sudan before 2012 based on 2013- 2016 data
 #' @param SUDAN2012_MERGE If T merge South Sudan into Sudan
-#' @param .FAO_AREA_CODE_COL
-#' @param .AREA_COL
+#' @param .FAO_AREA_CODE_COL Name of col of area
+#' @param .AREA_COL Name of col of area code
 #'
 #' @return data with historical periods of dissolved region disaggregated to small pieces.
 
@@ -842,7 +842,7 @@ FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL <- function(.DF,
 
   if (all_of(.AREA_COL) %in% names(.DF0)) {
     .DF2 %>%# Get area back
-      left_join(.DF0 %>% distinct_at(vars(all_of(.AREA_COL), .FAO_AREA_CODE_COL)),
+      left_join(.DF0 %>% dplyr::distinct(across(c(.AREA_COL, .FAO_AREA_CODE_COL))) ,
                 by = .FAO_AREA_CODE_COL) -> .DF2
   }
 

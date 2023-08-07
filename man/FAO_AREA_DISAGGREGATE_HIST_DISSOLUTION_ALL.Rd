@@ -15,7 +15,9 @@ FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL(
 \arguments{
 \item{.DF}{Input data frame}
 
-\item{.AREA_COL}{}
+\item{.FAO_AREA_CODE_COL}{Name of col of area}
+
+\item{.AREA_COL}{Name of col of area code}
 
 \item{SUDAN2012_BREAK}{If T break Sudan before 2012 based on 2013- 2016 data}
 

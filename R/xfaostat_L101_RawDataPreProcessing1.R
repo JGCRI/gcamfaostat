@@ -102,12 +102,12 @@ module_xfaostat_L101_RawDataPreProcessing1 <- function(command, ...) {
     # Using index to fill in missing across years
     PP1 %>%
       filter(element_code %in% c(5532, 5539)) %>%
-      select(area_code, area, item_code, item, element_code, element, year, value, unit) %>%
+      select(area_code, area, item_code, item, element, year, value) %>%
       # Not completing year and area here
       spread(element, value) %>%
       left_join(
         PP1 %>% filter(element_code %in% c(5532, 5539)) %>%
-          select(area_code, area, item_code, item, element_code, element, year, value, unit) %>%
+          select(area_code, area, item_code, item, element, year, value) %>%
           spread(element, value) %>%
           rename(pp_base = `Producer Price (USD/tonne)`,
                  pp_baseindex = `Producer Price Index (2014-2016 = 100)`) %>%
@@ -133,7 +133,7 @@ module_xfaostat_L101_RawDataPreProcessing1 <- function(command, ...) {
       add_comments("Preprocessed FAOSTAT producer prices") ->
       PP
 
-    rm(PP, PP1, PP2)
+    rm(PP1, PP2)
 
     # Food balance and Supply-Utilization-Account
 
@@ -156,7 +156,7 @@ module_xfaostat_L101_RawDataPreProcessing1 <- function(command, ...) {
       add_units("tonne") %>%
       add_comments("Preprocessed FAOSTAT SCL") ->
       FBS
-    rm(FBS, FBS1)
+    rm(FBS1)
 
 
     ## *[SCL] SUA: supply utilization accounting ----
@@ -185,7 +185,7 @@ module_xfaostat_L101_RawDataPreProcessing1 <- function(command, ...) {
        add_units("tonne") %>%
        add_comments("Preprocessed FAOSTAT SCL") ->
       SCL
-     rm(SCL, SCL1)
+     rm(SCL1)
 
 
     return_data(MODULE_OUTPUTS)

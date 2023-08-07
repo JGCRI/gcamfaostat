@@ -60,7 +60,7 @@ module_xfaostat_L101_RawDataPreProcessing3 <- function(command, ...) {
       select(area_code, area, item_code, item, element_code, element, year, value, unit) %>%
       rm_accent("item", "area") -> TCL1
 
-    ### output OA and clean memory ----
+    ### output TCL and clean memory ----
     TCL1 %>%
       add_title("FAO TCL") %>%
       add_units("tonne") %>%
@@ -132,6 +132,13 @@ module_xfaostat_L101_RawDataPreProcessing3 <- function(command, ...) {
 
     rm(TM3, TM4)
     rm(QCL_area_code)
+
+    ### output OA and clean memory ----
+    TM %>%
+      add_title("FAO TM") %>%
+      add_units("tonne") %>%
+      add_comments("Preprocessed FAO TM_wide") ->
+      TM_wide
 
 
     return_data(MODULE_OUTPUTS)

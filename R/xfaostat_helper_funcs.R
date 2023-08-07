@@ -57,7 +57,7 @@ FAOSTAT_load_raw_data <- function(DATASETCODE,
     # Assigned to parent env
     assign(CODE, df, envir = parent.env(environment()))
     # Assigned to current env
-    #assign(CODE, df, envir = environment())
+    #assign(CODE, df, envir = .GlobalEnv)
   }
 
 }
@@ -168,13 +168,92 @@ FAO_AREA_RM_NONEXIST <- function(.DF,
 }
 
 
+# Fill in based on relationship between NUMERATOR_c and DENOMINATOR_c
+# E.g., yield = production / area
+# NUMERATOR_c will be linearly interpolated forward then NUMERATOR_FILL_DIRECTION
+# Yield will be filled down-up
+# World average yield is used when only NUMERATOR_c or DENOMINATOR_c is available
+FF_FILL_NUMERATOR_DENOMINATOR <- function(.DF, NUMERATOR_c, DENOMINATOR_c,
+                                          NUMERATOR_FILL_DIRECTION = "down"){
+  .DF %>% rename(NUMERATOR = NUMERATOR_c, DENOMINATOR = DENOMINATOR_c) %>%
+    mutate(Yield = if_else(DENOMINATOR > 0, NUMERATOR / DENOMINATOR, NA_real_)) %>%
+    group_by(area_code, area, item_code, item) %>%
+    # setting NUMERATOR to NA if both prod and area are 0; it improves NUMERATOR interpolation
+    mutate(NUMERATOR = if_else(NUMERATOR == 0 & DENOMINATOR == 0, NA_real_, NUMERATOR)) %>%
+    # linearly interpolate NUMERATOR and fill in yield down-up
+    mutate(NUMERATOR = gcamdata::approx_fun(year, NUMERATOR)) %>%
+    tidyr::fill(NUMERATOR, .direction = NUMERATOR_FILL_DIRECTION) %>%
+    tidyr::fill(Yield, .direction = "downup") %>%
+    ungroup() %>%
+    # Calculate area based on checked NUMERATOR and yield
+    mutate(DENOMINATOR = if_else(is.na(DENOMINATOR) & Yield != 0,
+                                 NUMERATOR / Yield, DENOMINATOR)) %>%
+    # setting back to zero when both NA
+    replace_na(list(NUMERATOR = 0, DENOMINATOR = 0)) %>%
+    select(-Yield) ->
+    .DF1
+
+  .DF1 %>%
+    group_by(item_code, year) %>%
+    summarise(NUMERATOR = sum(NUMERATOR),
+              DENOMINATOR = sum(DENOMINATOR), .groups = "drop") %>%
+    mutate(Yield_Mean = NUMERATOR / DENOMINATOR) %>%
+    ungroup() %>%
+    select(item_code, year, Yield_Mean) %>%
+    group_by(item_code) %>%
+    tidyr::fill(Yield_Mean, .direction = "downup") %>%
+    ungroup() ->
+    DF1_Yield_Mean
+
+  # Fill some missing yield values with ex-ante world average yield
+  # Only matters for items with missing prod for all years but with positive area
+  # Could have used regional yield ratio to world of a set of item or an anchor item with higher uncertainty though (depending on the anchor)
+
+  .DF1 %>%
+    left_join(DF1_Yield_Mean, by = c("item_code", "year")) %>%
+    mutate(DENOMINATOR = if_else(DENOMINATOR == 0 & NUMERATOR > 0, NUMERATOR / Yield_Mean,  DENOMINATOR),
+           NUMERATOR = if_else(DENOMINATOR > 0 & NUMERATOR == 0, DENOMINATOR* Yield_Mean,  NUMERATOR)) %>%
+    select(-Yield_Mean) %>%
+    gather(element, value, DENOMINATOR, NUMERATOR) %>%
+    mutate(element = replace(element, element == "DENOMINATOR", DENOMINATOR_c)) %>%
+    mutate(element = replace(element, element == "NUMERATOR", NUMERATOR_c)) ->
+    .DF2
+  return((.DF2))
+}
+
+
+# A function to full join data frame to check mappings with common code
+FF_join_checkmap <- function(DFs, COL_by, COL_rename){
+  lapply(DFs, function(df){
+
+    get(df, envir = parent.frame(n = 3)) %>%
+      select(all_of(COL_by), any_of(COL_rename)) %>% distinct() %>%
+      dplyr::rename_at(vars(any_of(COL_rename)), list(~paste0(df, "_", .)))
+  }) %>% purrr:: reduce(full_join, by = COL_by)
+}
+
+# Count item_code and area_code by year
+FF_check_count_plot <- function(.DF, .ELEMENT = c()){
+  if (.ELEMENT %>% length() == 0 ) {
+    .DF %>% distinct(element) %>% pull -> .ELEMENT
+  }
+  .DF %>% group_by(year, element) %>%
+    summarise(Country = length(unique(area_code)),
+              Item = length(unique(item_code)), .groups = "drop") %>%
+    gather(header, count, -year, -element) %>%
+    filter(element %in% .ELEMENT) %>%
+    ggplot() + facet_wrap(~header, scales = "free") +
+    geom_line(aes(x = year, y = count, color = element)) +
+    theme_bw()
+}
+
 assert_FBS_balance <- function(.DF){
 
 
   # assert .DF structure
   assert_that(is.data.frame(.DF))
   assertthat::assert_that(all(c("element") %in% names(.DF)))
-  assertthat::assert_that(is.grouped_df(.DF) == F)
+  assertthat::assert_that(dplyr::is.grouped_df(.DF) == F)
 
   # Check data
   # 1. Positive value except stock variation and residues
@@ -211,8 +290,8 @@ assert_FBS_balance <- function(.DF){
              filter(`Opening stocks` + `Stock Variation` - `Closing stocks` != 0) %>% nrow() == 0 &
              .DF %>% filter(element %in% c("Opening stocks", "Closing stocks", "Stock Variation")) %>%
              spread(element, value) %>% group_by(area_code, item_code) %>%
-             arrange(area_code, item_code, year) %>%
-             mutate(bal = abs(lag(`Closing stocks`) - `Opening stocks`)) %>%
+             dplyr::arrange(area_code, item_code, year) %>%
+             mutate(bal = abs(dplyr::lag(`Closing stocks`) - `Opening stocks`)) %>%
              filter(is.na(bal) == F, bal > 0.0001) %>% nrow() == 0)){
     message("Good! Storage in balance across time") } else{
       warning("Stock imbalance across time or inconsistent stock variation")
@@ -241,7 +320,7 @@ SUA_bal_adjust <- function(.df){
     select(- `Tourist consumption`) %>%
     #Maintain stock balance across time; SCL data (2010-) quality was high
     #Calculate closing stock, when negative, shift up stocks in all years.
-    group_by(area_code, item_code) %>% arrange(-year, item_code) %>%
+    group_by(area_code, item_code) %>% dplyr::arrange(-year, item_code) %>%
     mutate(cumSV = cumsum(`Stock Variation`) - first(`Stock Variation`),
            `Opening stocks1` = first(`Opening stocks`) - cumSV) %>%
     select(-cumSV, -`Opening stocks`) %>%
@@ -269,190 +348,6 @@ SUA_bal_adjust <- function(.df){
     mutate(element = factor(element, levels = Bal_element_new))
 }
 
-
-# Function to dissaggregate dissolved regions in historical years ----
-# copyed in gcamdata
-
-#' FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION
-#'
-#' @param .DF dataframe to disaggregate
-#' @param AFFECTED_AREA_CODE  FAO area codes for regions affected; first one should be pre-dissolved region (e.g., USSR) followed by post-dissolved regions.
-#' @param YEAR_DISSOLVE_DONE  First year after dissolution
-#' @param YEAR_AFTER_DISSOLVE_ACCOUNT Number of years of data after dissolution used for sharing historical data
-#'
-#' @return Disaggregated data for the historical period for of the dissolved region
-#'
-FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION <-
-  function(.DF,
-           AFFECTED_AREA_CODE, #first one should be dissolved area
-           YEAR_DISSOLVE_DONE,
-           # using 3 year data after dissolution for sharing
-           YEAR_AFTER_DISSOLVE_ACCOUNT = 3){
-
-    .DF %>%
-      # filter dissolved region related areas by their years
-      filter((area_code %in% AFFECTED_AREA_CODE[-1] & year >= YEAR_DISSOLVE_DONE)|
-               (area_code %in% AFFECTED_AREA_CODE[1] & year <= YEAR_DISSOLVE_DONE)) ->
-      .DF1
-
-    Number_of_Regions_After_Dissolution <- AFFECTED_AREA_CODE %>% length -1
-
-    .DF1 %>% filter(year < YEAR_DISSOLVE_DONE) %>%
-      select(-area_code) %>%
-      right_join(
-        .DF1 %>% filter(year %in% c(YEAR_DISSOLVE_DONE:(YEAR_DISSOLVE_DONE + YEAR_AFTER_DISSOLVE_ACCOUNT))) %>%
-          dplyr::group_by_at(dplyr::vars(-year, -value)) %>%
-          replace_na(list(value = 0)) %>%
-          summarise(value = sum(value), .groups = "drop") %>%
-          dplyr::group_by_at(dplyr::vars(-value, -area_code)) %>%
-          mutate(Share = value/sum(value)) %>%
-          # using average share if data after dissolved does not exist
-          mutate(NODATA = if_else(sum(value) == 0, T, F)) %>%
-          mutate(Share = if_else(NODATA == T, 1/Number_of_Regions_After_Dissolution, Share)) %>%
-          ungroup() %>%select(-value, -NODATA),
-        by = names(.) %>% setdiff(c("year", "value", "area_code"))
-      ) %>% mutate(value = value * Share) %>% select(-Share)
-
-  }
-
-#' FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL
-#'
-#' @param .DF Input data frame
-#' @param SUDAN2012_BREAK If T break Sudan before 2012 based on 2013- 2016 data
-#' @param SUDAN2012_MERGE If T merge South Sudan into Sudan
-#' @param .FAO_AREA_CODE_COL
-#' @param .AREA_COL
-#'
-#' @return data with historical periods of dissolved region disaggregated to small pieces.
-
-FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL <- function(.DF,
-                                                       .FAO_AREA_CODE_COL = "area_code",
-                                                       .AREA_COL = "area",
-                                                       SUDAN2012_BREAK = F,
-                                                       SUDAN2012_MERGE = T){
-
-  assertthat::assert_that(all(.FAO_AREA_CODE_COL %in% names(.DF)),
-                          msg = "Date frame is required and need a col of area_code")
-
-  # Remove area if exist
-  .DF0 <- .DF
-  if (all_of(.AREA_COL) %in% names(.DF)) {
-    .DF %>% select(-all_of(.AREA_COL)) -> .DF }
-
-  if(.FAO_AREA_CODE_COL != "area_code"){
-    # Check if "area_code" exist, replace to area_code_TEMP
-    if ("area_code" %in% names(.DF)) {
-      assertthat::assert_that("area_code_TEMP" %in% names(.DF) == F)
-      .DF %>% rename(area_code_TEMP = area_code) -> .DF
-    }
-
-    # rename .FAO_AREA_CODE_COL to area_code
-
-    .DF %>% rename(area_code = .FAO_AREA_CODE_COL) -> .DF
-
-    # Will need to replace back later
-  }
-
-
-  # Define area code based on FAO ----
-  # first one is dissolved area
-  # In 1991 USSR(228) collapsed into 15 countries
-  area_code_USSR = c(228, 1, 52, 57, 63, 73, 108, 113, 119, 126, 146, 185, 208, 213, 230, 235)
-  # first one is Russia
-
-  # In 1992 Yugoslav SFR dissolved into 5 countries
-  # Yugoslav SFR (248)
-  # Croatia (98)
-  # North Macedonia (154)
-  # Slovenia (198)
-  # Bosnia and Herzegovina (80)
-  # Serbia and Montenegro (186)
-  # In 2006 further broke into 2:
-  # Montenegro (273)
-  # Serbia (272)
-  # These regions will be merged for all years in data as most models aggregated them into a single region
-  area_code_Yugoslav <- c(248, 98, 154, 198, 80, 186)
-  area_code_SerbiaandMontenegro <- c(186, 273, 272)
-  # In 1999/2000 Belgium-Luxembourg (15) partitioned in 1999 to 255 (Belgium) and 256 (Luxembourg)
-  area_code_Belgium_Luxembourg <- c(15, 255, 256)
-  # In 1993 Czechoslovakia (51) to Czechia (167) and Slovakia (199)
-  area_code_Czechoslovakia <- c(51, 167, 199)
-  # In 2011 Sudan (former) (206) broke into South Sudan (277) and Sudan (276)
-  area_code_Sudan <- c(206, 276, 277)
-  # Ethiopia PDR (62) dissolved into Ethiopia (238) and Eritrea (178) in 1993
-  area_code_Ethiopia <- c(62, 238, 178)
-
-  .DF %>%
-    # remove Yugoslav by their years first and area_code_SerbiaandMontenegro later
-    filter(!(area_code %in% area_code_Yugoslav[1] )) %>%
-    bind_rows(FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION(.DF, area_code_Yugoslav, 1992, 3))->
-    .DF1
-
-
-  FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION(.DF1, area_code_USSR, 1992, 3) %>%
-    bind_rows(FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION(.DF1, area_code_SerbiaandMontenegro, 2006, 3)) %>%
-    bind_rows(FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION(.DF1, area_code_Belgium_Luxembourg, 2000, 3)) %>%
-    bind_rows(FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION(.DF1, area_code_Czechoslovakia, 1993, 3)) %>%
-    bind_rows(FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION(.DF1, area_code_Ethiopia, 1993, 3)) ->
-    DF_FAO_AREA_DISAGGREGATE_HIST
-
-  .DF1 %>%
-    # remove USSR by their years
-    filter(!(area_code %in% area_code_USSR[1])) %>%
-    # remove Serbia & Montenegro by their years
-    filter(!(area_code %in% area_code_SerbiaandMontenegro[1] )) %>%
-    # remove Belgium_Luxembourg by their years
-    filter(!(area_code %in% area_code_Belgium_Luxembourg[1])) %>%
-    # remove area_code_Czechoslovakia by their years
-    filter(!(area_code %in% area_code_Czechoslovakia[1] )) %>%
-    # remove area_code_Ethiopia by their years
-    filter(!(area_code %in% area_code_Ethiopia[1] )) %>%
-    bind_rows(DF_FAO_AREA_DISAGGREGATE_HIST) ->
-    .DF2
-
-  if (SUDAN2012_BREAK == T) {
-    .DF2 %>%
-      # remove area_code_Sudan by their years
-      filter(!(area_code %in% area_code_Sudan[1] )) %>%
-      bind_rows(FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION(.DF1, area_code_Sudan, 2012, 3)) ->
-      .DF2
-  }
-
-  if (SUDAN2012_MERGE == T) {
-
-    .DF2 %>%
-      mutate(area_code = replace(area_code, area_code %in% area_code_Sudan, area_code_Sudan[1])) %>%
-      dplyr::group_by_at(dplyr::vars(-value)) %>%
-      summarise(value = sum(value, na.rm = T), .groups = "drop") %>%
-      ungroup() -> .DF2
-  }
-
-
-
-  if(.FAO_AREA_CODE_COL != "area_code"){
-
-    # rename .FAO_AREA_CODE_COL to area_code
-    .DF2[[.FAO_AREA_CODE_COL]] <- .DF2[["area_code"]]
-    .DF2 <- .DF2[, !names(.DF2) %in% "area_code"]
-
-    # Check if "area_code_TEMP" exist, replace to area_code
-    if ("area_code_TEMP" %in% names(.DF2)) {
-      assertthat::assert_that("area_code" %in% names(.DF2) == F)
-      .DF2 %>% rename(area_code = area_code_TEMP) -> .DF2
-    }
-  }
-
-
-
-  if (all_of(.AREA_COL) %in% names(.DF0)) {
-    .DF2 %>%# Get area back
-      left_join(.DF0 %>% distinct_at(vars(all_of(.AREA_COL), .FAO_AREA_CODE_COL)),
-                by = .FAO_AREA_CODE_COL) -> .DF2
-  }
-
-  return(.DF2)
-
-}
 
 
 # Count item_code and area_code by year

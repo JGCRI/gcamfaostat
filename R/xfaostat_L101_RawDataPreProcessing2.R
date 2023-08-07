@@ -46,11 +46,6 @@ module_xfaostat_L101_RawDataPreProcessing2 <- function(command, ...) {
 
     QCL_area_code <- QCL_area_code_map %>% distinct(area_code) %>% pull()
 
-    # *[QCL] FAOSTAT Production and area ----
-
-    ## Load raw data
-    FAOSTAT_load_raw_data(DATASETCODE = "QCL", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT)
-
 
     # Food balance and Supply-Utilization-Account
 
@@ -147,7 +142,7 @@ module_xfaostat_L101_RawDataPreProcessing2 <- function(command, ...) {
       FBSH_CB
 
     rm(SHELL_RATE_groundnuts, Mill_RATE_rice);
-    rm(FBSH_CB1, FBSH, CB, dup_item_code)
+    rm(FBSH_CB1, dup_item_code)
 
 
     # *[OA]: Population ----
@@ -166,7 +161,7 @@ module_xfaostat_L101_RawDataPreProcessing2 <- function(command, ...) {
       add_units("tonne") %>%
       add_comments("Preprocessed FAO OA") ->
       OA
-    rm(OA, OA1)
+    rm(OA1)
     rm(QCL_area_code)
 
 
