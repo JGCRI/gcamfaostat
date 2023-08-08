@@ -1,8 +1,8 @@
 # Copyright 2019 Battelle Memorial Institute; see the LICENSE file.
 
-#' module_xfaostat_L101_RawDataPreProcessing3
+#' module_xfaostat_L101_RawDataPreProc5_TCL_TM
 #'
-#' Preprocess raw faostat data part 3
+#' Preprocess raw faostat data part 5 Trade
 #'
 #' @param command API command to execute
 #' @param ... other optional parameters, depending on command
@@ -15,11 +15,10 @@
 #' @importFrom tibble tibble
 #' @importFrom tidyr complete drop_na gather nesting spread replace_na
 #' @author XZ 2023
-module_xfaostat_L101_RawDataPreProcessing3 <- function(command, ...) {
+module_xfaostat_L101_RawDataPreProc5_TCL_TM <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(FILE = "aglu/AGLU_ctry",
-      "QCL_area_code_map")
+    c("QCL_area_code_map")
 
   MODULE_OUTPUTS <-
     c("TCL",  "TM_wide"   # Gross and bilateral trade

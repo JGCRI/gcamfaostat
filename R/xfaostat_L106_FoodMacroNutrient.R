@@ -1,6 +1,6 @@
 # Copyright 2019 Battelle Memorial Institute; see the LICENSE file.
 
-#' module_xfaostat_L104_FoodMacroNutrient
+#' module_xfaostat_L106_FoodMacroNutrient
 #'
 #' Preprocess producer prices
 #'
@@ -15,7 +15,7 @@
 #' @importFrom tibble tibble
 #' @importFrom tidyr complete drop_na gather nesting spread replace_na fill
 #' @author XZ 2023
-module_xfaostat_L104_FoodMacroNutrient <- function(command, ...) {
+module_xfaostat_L106_FoodMacroNutrient <- function(command, ...) {
 
   MODULE_INPUTS <-
     c("SCL",

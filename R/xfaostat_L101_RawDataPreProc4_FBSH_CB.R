@@ -1,8 +1,8 @@
 # Copyright 2019 Battelle Memorial Institute; see the LICENSE file.
 
-#' module_xfaostat_L101_RawDataPreProcessing2
+#' module_xfaostat_L101_RawDataPreProc4_FBSH_CB
 #'
-#' Preprocess raw faostat data part 2
+#' Preprocess raw faostat data part 4 FBSH and CB
 #'
 #' @param command API command to execute
 #' @param ... other optional parameters, depending on command
@@ -15,18 +15,16 @@
 #' @importFrom tibble tibble
 #' @importFrom tidyr complete drop_na gather nesting spread replace_na
 #' @author XZ 2023
-module_xfaostat_L101_RawDataPreProcessing2 <- function(command, ...) {
+module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(FILE = "aglu/AGLU_ctry",
-      "QCL_area_code_map")
+    c("QCL_area_code_map")
 
   MODULE_OUTPUTS <-
-    c("FBSH",             # Old food balance sheet
-      "CB",               # Old non food utilization accounting
-      "FBSH_CB",          # Combined FBSH and CB
-      "OA"                # Population
-    )
+    c(#"FBSH",             # Old food balance sheet
+      #"CB",               # Old non food utilization accounting
+      "FBSH_CB")          # Combined FBSH and CB
+
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -42,8 +40,7 @@ module_xfaostat_L101_RawDataPreProcessing2 <- function(command, ...) {
 
     get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
-
-
+    # Get area code ----
     QCL_area_code <- QCL_area_code_map %>% distinct(area_code) %>% pull()
 
 
@@ -61,20 +58,18 @@ module_xfaostat_L101_RawDataPreProcessing2 <- function(command, ...) {
       rm_accent("item", "area") -> FBSH1
 
 
-    ### output FBSH and clean memory ----
-
+    ### output FBSH ----
     FBSH1 %>%
       add_title("FAO FBSH") %>%
       add_units("tonne") %>%
       add_comments("Preprocessed FAO FBSH") ->
       FBSH
 
-    rm(FBSH1)
-
 
     ## *[CB] Non-food Balance ----
 
     FAOSTAT_load_raw_data("CB")    # Old FBS-nonfood -2013
+
     CB %>% distinct(element, element_code, unit)
     # Keep population (old)
     CB %>% filter(item_code < 2901,
@@ -90,9 +85,6 @@ module_xfaostat_L101_RawDataPreProcessing2 <- function(command, ...) {
       add_units("tonne") %>%
       add_comments("Preprocessed FAO CB") ->
       CB
-
-    rm(CB1)
-
 
     ## *FBSH_CB merge the two----
     # load processed data
@@ -140,30 +132,6 @@ module_xfaostat_L101_RawDataPreProcessing2 <- function(command, ...) {
       add_units("tonne") %>%
       add_comments("Preprocessed FAO FBSH_CB") ->
       FBSH_CB
-
-    rm(SHELL_RATE_groundnuts, Mill_RATE_rice);
-    rm(FBSH_CB1, dup_item_code)
-
-
-    # *[OA]: Population ----
-
-    FAOSTAT_load_raw_data("OA")    # Population
-    OA %>% distinct(element, element_code)
-    OA %>% distinct(item, item_code)
-
-    OA %>% filter(element_code == 511, item_code == 3010)  %>%
-      select(area_code, area, item_code, item, element_code, element, year, value, unit) %>%
-      rm_accent("item", "area") -> OA1
-
-    ### output OA and clean memory ----
-    OA1 %>%
-      add_title("FAO OA") %>%
-      add_units("tonne") %>%
-      add_comments("Preprocessed FAO OA") ->
-      OA
-    rm(OA1)
-    rm(QCL_area_code)
-
 
     return_data(MODULE_OUTPUTS)
 

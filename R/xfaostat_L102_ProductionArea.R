@@ -20,11 +20,13 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
   MODULE_INPUTS <-
     c(FILE = "aglu/FAO/FAO_an_items_PRODSTAT",
       FILE = "aglu/FAO/FAO_ag_items_PRODSTAT",
-        "QCL", "FBS", "FBSH")
+        "QCL", "FBS", "FBSH_CB")
 
   MODULE_OUTPUTS <-
     c("QCL_PROD",
-      "QCL_ALL")
+      "QCL_AN_LIVEANIMAL",
+      "QCL_AN_PRIMARY_MILK",
+      "QCL_CROP_PRIMARY")
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -363,7 +365,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       FBS %>% filter(year >= 2010, element_code == 5511, # production
                      item_code %in% c(FBS_COMM_FISH %>% pull(item_code))) %>%
       bind_rows(
-        FBSH %>% filter(year < 2010, element_code == 5511, # production
+        FBSH_CB %>% filter(year < 2010, element_code == 5511, # production
                         item_code %in% c(FBS_COMM_FISH %>% pull(item_code)))
       ) %>% mutate(value = value *1000,
                    unit = "tonnes",
@@ -390,6 +392,26 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       bind_rows(FBS_FISH %>% mutate(item_set = "FBS_COMM_FISH"))->
       QCL_ALL
 
+
+    QCL_AN_LIVEANIMAL %>%
+      add_title("FAO live animal stock and production") %>%
+      add_units("various") %>%
+      add_comments("Detailed FAO QCL data processing for live animal and production") ->
+      QCL_AN_LIVEANIMAL
+
+    QCL_AN_PRIMARY_MILK %>%
+      add_title("FAO milk animal stock and production") %>%
+      add_units("various") %>%
+      add_comments("Detailed FAO QCL data processing for dairy animal and production") ->
+      QCL_AN_PRIMARY_MILK
+
+    QCL_CROP_PRIMARY %>%
+      add_title("FAO primary crop area and production") %>%
+      add_units("various") %>%
+      add_comments("Detailed FAO QCL data processing for crop area and production") ->
+      QCL_CROP_PRIMARY
+
+
     # Production only
     QCL_ALL %>% filter(element_code == 5510) ->
       QCL_PROD
@@ -414,11 +436,11 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
     QCL_ALL %>% distinct(item)  # 160 primary crop + 45 primary an + 54 others + 17 +12
 
 
-    QCL_ALL %>%
-      add_title("FAO crop and livestock production and crop area") %>%
-      add_units("various") %>%
-      add_comments("Detailed FAO QCL data processing. FBS fish data is used") ->
-      QCL_ALL
+    # QCL_ALL %>%
+    #   add_title("FAO crop and livestock production and crop area") %>%
+    #   add_units("various") %>%
+    #   add_comments("Detailed FAO QCL data processing. FBS fish data is used") ->
+    #   QCL_ALL
 
 
 
