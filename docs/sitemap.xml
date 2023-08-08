@@ -133,7 +133,13 @@
     <loc>/reference/fast_left_join.html</loc>
   </url>
   <url>
+    <loc>/reference/FF_check_count_plot.html</loc>
+  </url>
+  <url>
     <loc>/reference/FF_FILL_NUMERATOR_DENOMINATOR.html</loc>
+  </url>
+  <url>
+    <loc>/reference/FF_join_checkmap.html</loc>
   </url>
   <url>
     <loc>/reference/FF_summary.html</loc>
@@ -248,6 +254,9 @@
   </url>
   <url>
     <loc>/reference/module_xfaostat_L301_LandCover.html</loc>
+  </url>
+  <url>
+    <loc>/reference/module_xfaostat_L401_Fertilizer.html</loc>
   </url>
   <url>
     <loc>/reference/Moving_average.html</loc>

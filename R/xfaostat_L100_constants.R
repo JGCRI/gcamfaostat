@@ -1,6 +1,15 @@
-# Copyright 2019 Battelle Memorial Institute; see the LICENSE file.
 
-# General behavior constants ======================================================================
+
+  # Directories ----
+
+  #DIR_RAW_DATA_FAOSTAT <- system.file("extdata", "aglu/FAO/FAOSTAT", package = "gcamdata")
+
+  DIR_RAW_DATA_FAOSTAT <- "inst/extdata/aglu/FAO/FAOSTAT"
+  OUTPUT_Export_CSV = T
+  # Output GCAM csv
+  DIR_OUTPUT_CSV <- "inst/extdata/aglu/FAO/temp"
+  dir.create(file.path(DIR_OUTPUT_CSV), showWarnings = FALSE)
+
 
 
   # Historical years of focus ----
@@ -12,19 +21,12 @@
   Hist_Year_FBS <- seq(2010, 2019) # New FBS years
   MIN_HIST_PP_YEAR = 2010 # first producer price year
 
-# having issues with package check here
-# comment this line out when building package
-  #DIR_RAW_DATA_FAOSTAT <- system.file("extdata", "aglu/FAO/FAOSTAT", package = "gcamdata")
-  DIR_RAW_DATA_FAOSTAT <- "inst/extdata/aglu/FAO/FAOSTAT"
 
 
-  OUTPUT_Export_CSV = T
-  # Output GCAM csv
-  DIR_OUTPUT_CSV <- "inst/extdata/aglu/FAO/temp"
-  dir.create(file.path(DIR_OUTPUT_CSV), showWarnings = FALSE)
 
-
-  # Balance elements; used in Get_SUA_TEMPLATE and SUA_bal_adjust
+  # Balance elements ----
+  #*******************************************
+  # used in Get_SUA_TEMPLATE and SUA_bal_adjust
 
   c("Opening stocks", "Production", "Import",
     "Export", "Processed", "Food", "Feed", "Seed", "Other uses", "Loss", "Closing stocks",
@@ -44,3 +46,11 @@
   REGIONAL_NUTRIENT_MASS_CONV_OUTLIER_BOUNDARY <- 0.15
   Hist_MEAN_Year_NUTRIENT_MASS_CONV <- 2010:2019 # average cal per g
 
+
+
+  # Other utils ----
+  #*******************************************
+  # decimal places in ggplot
+  scaleFUN <- function(x) sprintf("%.0f", x)
+
+  #*******************************************

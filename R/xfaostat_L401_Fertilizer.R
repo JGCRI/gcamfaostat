@@ -15,7 +15,7 @@
 #' @importFrom tibble tibble
 #' @importFrom tidyr complete drop_na gather nesting spread replace_na fill
 #' @author XZ 2023
-module_xfaostatL401_Fertilizer <- function(command, ...) {
+module_xfaostat_L401_Fertilizer <- function(command, ...) {
 
   MODULE_INPUTS <-
     c(FILE = "aglu/FAO/FAO_an_items_PRODSTAT",
@@ -59,7 +59,6 @@ module_xfaostatL401_Fertilizer <- function(command, ...) {
       complete(nesting(area_code, area), nesting(item_code, item), nesting(element_code, element, unit), year) %>%
       rm_accent("item", "area") -> RFN1
 
-    rm(RFN) # clean
 
     ## RFN1_Production ----
     RFN1 %>%

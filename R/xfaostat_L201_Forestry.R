@@ -60,7 +60,6 @@ module_xfaostat_L201_Forestry <- function(command, ...) {
              unit) %>%
       filter(!is.na(value)) %>%
       rm_accent("item", "area") -> FO1
-    rm(FO)
 
     # 215 unique areas with production data
     FO_area <-

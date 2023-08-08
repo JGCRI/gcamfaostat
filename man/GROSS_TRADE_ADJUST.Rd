@@ -16,9 +16,9 @@ GROSS_TRADE_ADJUST(
 
 \item{.MIN_TRADE_PROD_RATIO}{Trade will be removed if world total export or import over production is smaller than .MIN_TRADE_PROD_RATIO (1% default value)}
 
-\item{.Reg_VAR}{Region variable name; default is ("area_code")}
+\item{.Reg_VAR}{Region variable name; default is area_code}
 
-\item{.GROUP_VAR}{Group variable; default is ("item_code", "year")}
+\item{.GROUP_VAR}{Group variable; default is item_code and year}
 }
 \value{
 The same dataframe with balanced world export and import.

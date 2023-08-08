@@ -27,22 +27,6 @@ FAOSTAT_metadata <- function (code = NULL){
   return(metadata)
 }
 
-FAOSTAT_download_bulk <- function(DATASETCODE,
-                                  DATA_FOLDER = DIR_RAW_DATA_FAOSTAT){
-
-  assertthat::assert_that(is.character(DATASETCODE))
-  assertthat::assert_that(is.character(DATA_FOLDER))
-
-
-  lapply(DATASETCODE, function(d){
-    metadata <- FAOSTAT_metadata(code = d)
-    url_bulk = metadata$filelocation
-
-    file_name <- basename(url_bulk)
-    download.file(url_bulk, file.path(DATA_FOLDER, file_name))
-  })
-
-}
 
 
 
@@ -86,34 +70,6 @@ FAOSTAT_load_raw_data <- function(DATASETCODE,
 
 }
 
-
-#remove accent and apostrophe for cols in a df
-#' rm_accent: Remove accent and prime in selected columns of a data frame
-#'
-#' @param .df Input data frame
-#' @param ... A character set of column names
-#' @importFrom  magrittr %>%
-#' @importFrom  assertthat assert_that
-#' @importFrom  dplyr intersect mutate_at
-#'
-#' @return A data frame with accent and prime removed
-#' @export
-
-rm_accent <- function(.df, ...){
-
-  assertthat::assert_that(
-    length(intersect(c(...), names(.df))) == length(c(...)),
-    msg = "Columns listed not included in the data frame")
-
-  # .df %>%
-  #   mutate_at(c(...), iconv,  to = 'ASCII//TRANSLIT') %>%
-  #   mutate_at(c(...), .funs = gsub, pattern = "\\'", replacement = "")
-
-  .df %>%
-    mutate(dplyr::across(c(...), iconv, to = 'ASCII//TRANSLIT')) %>%
-    mutate(dplyr::across(c(...), gsub, pattern = "\\'", replacement = ""))
-
-}
 
 
 
@@ -313,7 +269,16 @@ FF_FILL_NUMERATOR_DENOMINATOR <- function(.DF, NUMERATOR_c, DENOMINATOR_c,
 }
 
 
-# A function to full join data frame to check mappings with common code
+#' FF_join_checkmap: full-join data frames by a common COL_by variable to checking mapping
+#'
+#' @param DFs Data frames to be full joined.
+#' @param COL_by By variable in join.
+#' @param COL_rename Other common variables to rename (by adding df names as prefix) before the join.
+#' @importFrom  magrittr %>%
+#' @importFrom dplyr rename_at select any_of all_of full_join
+#' @importFrom purrr reduce
+#' @return A joined data frame
+#' @export
 FF_join_checkmap <- function(DFs, COL_by, COL_rename){
   lapply(DFs, function(df){
 
@@ -323,7 +288,17 @@ FF_join_checkmap <- function(DFs, COL_by, COL_rename){
   }) %>% purrr:: reduce(full_join, by = COL_by)
 }
 
-# Count item_code and area_code by year
+#' FF_check_count_plot: count item_code and area_code by year
+#'
+#' @param .DF Input data frame
+#' @param .ELEMENT A set of elements (in Char) to focus. If empty, all elements are summarized
+#' @importFrom  dplyr summarize
+#' @importFrom  magrittr %>%
+#' @importFrom  tidyr gather
+#' @importFrom  ggplot2 ggplot aes facet_wrap geom_line theme_bw
+#'
+#' @return A plot summarizing the time-series of changing the count of item_code and area_code (grouped by element).
+#' @export
 FF_check_count_plot <- function(.DF, .ELEMENT = c()){
   if (.ELEMENT %>% length() == 0 ) {
     .DF %>% distinct(element) %>% pull -> .ELEMENT
@@ -336,6 +311,34 @@ FF_check_count_plot <- function(.DF, .ELEMENT = c()){
     ggplot() + facet_wrap(~header, scales = "free") +
     geom_line(aes(x = year, y = count, color = element)) +
     theme_bw()
+}
+
+#remove accent and apostrophe for cols in a df
+#' rm_accent: Remove accent and prime in selected columns of a data frame
+#'
+#' @param .df Input data frame
+#' @param ... A character set of column names
+#' @importFrom  magrittr %>%
+#' @importFrom  assertthat assert_that
+#' @importFrom  dplyr intersect mutate_at
+#'
+#' @return A data frame with accent and prime removed
+#' @export
+
+rm_accent <- function(.df, ...){
+
+  assertthat::assert_that(
+    length(intersect(c(...), names(.df))) == length(c(...)),
+    msg = "Columns listed not included in the data frame")
+
+  # .df %>%
+  #   mutate_at(c(...), iconv,  to = 'ASCII//TRANSLIT') %>%
+  #   mutate_at(c(...), .funs = gsub, pattern = "\\'", replacement = "")
+
+  .df %>%
+    mutate(dplyr::across(c(...), iconv, to = 'ASCII//TRANSLIT')) %>%
+    mutate(dplyr::across(c(...), gsub, pattern = "\\'", replacement = ""))
+
 }
 
 assert_FBS_balance <- function(.DF){
@@ -441,33 +444,6 @@ SUA_bal_adjust <- function(.df){
 
 
 
-#' FAOSTAT_check_count_plot: count item_code and area_code by year
-#'
-#' @param .DF Input data frame
-#' @param .ELEMENT A set of elements (in Char) to focus. If empty, all elements are summarized
-#' @importFrom  dplyr summarize
-#' @importFrom  magrittr %>%
-#' @importFrom  tidyr gather
-#' @importFrom  ggplot2 ggplot aes facet_wrap geom_line theme_bw
-#'
-#' @return A plot summarizing the time-series of changing the count of item_code and area_code (grouped by element).
-#' @export
-
-FAOSTAT_check_count_plot <- function(.DF, .ELEMENT = c()){
-  if (.ELEMENT %>% length() == 0 ) {
-    .DF %>% distinct(element) %>% pull -> .ELEMENT
-  }
-  .DF %>% group_by(year, element) %>%
-    summarise(Country = length(unique(area_code)),
-              Item = length(unique(item_code)), .groups = "drop") %>%
-    gather(header, count, -year, -element) %>%
-    filter(element %in% .ELEMENT) %>%
-    ggplot() + facet_wrap(~header, scales = "free") +
-    geom_line(aes(x = year, y = count, color = element)) +
-    theme_bw()
-}
-
-
 
 #' Function saving dataset to csv file with headers
 #'
@@ -520,10 +496,12 @@ output_csv_data <- function(gcam_dataset, col_type_nonyear,
 
 #' Balance gross trade
 #' @description Scale gross export and import in all regions to make them equal at the world level.
+#'
 #' @param .DF An input dataframe with an element col including Import and Export
 #' @param .MIN_TRADE_PROD_RATIO Trade will be removed if world total export or import over production is smaller than .MIN_TRADE_PROD_RATIO (1% default value)
-#' @param .Reg_VAR Region variable name; default is ("area_code")
-#' @param .GROUP_VAR Group variable; default is ("item_code", "year")
+#' @param .Reg_VAR Region variable name; default is area_code
+#' @param .GROUP_VAR Group variable; default is item_code and year
+#'
 #' @return The same dataframe with balanced world export and import.
 
 GROSS_TRADE_ADJUST <- function(.DF,
@@ -568,6 +546,24 @@ GROSS_TRADE_ADJUST <- function(.DF,
       element %in% c("Import") ~ value * ImportScaler,
       TRUE ~ value)) %>%
     select(-ExportScaler, -ImportScaler)
+
+}
+
+
+FAOSTAT_download_bulk <- function(DATASETCODE,
+                                  DATA_FOLDER = DIR_RAW_DATA_FAOSTAT){
+
+  assertthat::assert_that(is.character(DATASETCODE))
+  assertthat::assert_that(is.character(DATA_FOLDER))
+
+
+  lapply(DATASETCODE, function(d){
+    metadata <- FAOSTAT_metadata(code = d)
+    url_bulk = metadata$filelocation
+
+    file_name <- basename(url_bulk)
+    download.file(url_bulk, file.path(DATA_FOLDER, file_name))
+  })
 
 }
 

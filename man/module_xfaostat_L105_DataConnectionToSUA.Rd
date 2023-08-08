@@ -10,30 +10,17 @@ module_xfaostat_L105_DataConnectionToSUA(command, ...)
 \item{command}{API command to execute}
 
 \item{...}{other optional parameters, depending on command}
-
-\item{.DF}{An input dataframe with an element col including Import and Export}
-
-\item{.MIN_TRADE_PROD_RATIO}{Trade will be removed if world total export or import over production is smaller than .MIN_TRADE_PROD_RATIO (1% default value)}
-
-\item{.Reg_VAR}{Region variable name; default is ("area_code")}
-
-\item{.GROUP_VAR}{Group variable; default is ("item_code", "year")}
 }
 \value{
 Depends on \code{command}: either a vector of required inputs, a vector of output names, or (if
   \code{command} is "MAKE") all the generated outputs
-
-The same dataframe with balanced world export and import.
 }
 \description{
-Scale gross export and import in all regions to make them equal at the world level.
+Connect datasets to build SUA
 }
 \details{
-Connect datasets to build SUA
-
-This chunk compiles balanced supply utilization data in primary equivalent in GCAM region and commodities.
+This chunk compiles balanced supply utilization data bu connecting FAO datasets.
 }
 \author{
 XZ 2023
-Balance gross trade
 }
