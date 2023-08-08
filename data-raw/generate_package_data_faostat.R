@@ -1,4 +1,18 @@
 
+# FAOSTAT AgLU data Archive for GCAM v7
+
+Archive_faostat_url <- "https://zenodo.org/record/8007286/files/"
+url <- "https://zenodo.org/record/8007286/files/Population_E_All_Data_(Normalized).zip"
+
+"https://zenodo.org/record/8007286/files/Population_E_All_Data_(Normalized).zip"
+
+"https://zenodo.org/record/8007286/files/Trade_DetailedTradeMatrix_E_All_Data_(Normalized).zip"
+
+"https://zenodo.org/record/8007286/files/Trade_CropsLivestock_E_All_Data_(Normalized).zip"
+
+
+
+
 # This script has two objectives:
 # 1. Download FAOSTAT data from API
 # 2. Read and generate FAOSTAT package data. Save data to RDS files
