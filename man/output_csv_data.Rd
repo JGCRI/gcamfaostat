@@ -32,9 +32,6 @@ output_csv_data(
 
 \item{GZIP}{IF TRUE}
 }
-\value{
-
-}
 \description{
 Function saving dataset to csv file with headers
 }

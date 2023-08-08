@@ -219,7 +219,6 @@ FAO_AREA_RM_NONEXIST <- function(.DF,
 #' @param COL_CNTY Country column name
 #' @param COL_ITEM Item column name
 #' @importFrom dplyr summarize
-#' @importFrom gcamdata gather_years
 #' @importFrom  magrittr %>%
 #'
 #' @return A data frame with summary information,
@@ -228,7 +227,8 @@ FAO_AREA_RM_NONEXIST <- function(.DF,
 FF_summary <- function(DF, COL_CNTY = "area", COL_ITEM = "item"){
   assert_that(is.character(DF))
 
-  get(DF) %>% gcamdata::gather_years() -> .tbl1
+  get(DF) %>%
+    gather_years() -> .tbl1
   list_out<- list(
     dataset_code = DF,
     ncountry = length(unique(.tbl1[COL_CNTY])%>% pull()),
@@ -271,7 +271,8 @@ FF_FILL_NUMERATOR_DENOMINATOR <- function(.DF, NUMERATOR_c, DENOMINATOR_c,
     # setting NUMERATOR to NA if both prod and area are 0; it improves NUMERATOR interpolation
     mutate(NUMERATOR = if_else(NUMERATOR == 0 & DENOMINATOR == 0, NA_real_, NUMERATOR)) %>%
     # linearly interpolate NUMERATOR and fill in yield down-up
-    mutate(NUMERATOR = gcamdata::approx_fun(year, NUMERATOR)) %>%
+    mutate(NUMERATOR = approx_fun(year, NUMERATOR)) %>%
+    #mutate(NUMERATOR = gcamdata::approx_fun(year, NUMERATOR)) %>%
     tidyr::fill(NUMERATOR, .direction = NUMERATOR_FILL_DIRECTION) %>%
     tidyr::fill(Yield, .direction = "downup") %>%
     ungroup() %>%
@@ -479,7 +480,6 @@ FAOSTAT_check_count_plot <- function(.DF, .ELEMENT = c()){
 #' @param out_dir output directory
 #' @param GZIP IF TRUE
 #'
-#' @return
 #' @export
 
 output_csv_data <- function(gcam_dataset, col_type_nonyear,

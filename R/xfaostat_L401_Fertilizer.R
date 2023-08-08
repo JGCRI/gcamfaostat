@@ -42,7 +42,7 @@ module_xfaostatL401_Fertilizer <- function(command, ...) {
     FAOSTAT_load_raw_data(DATASETCODE = "RFN", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT)
 
     ## Proprocess and quick clean ----
-    FF_summary("RFN")
+    #FF_summary("RFN")
     RFN %>% distinct(element, element_code, unit)
     RFN %>% distinct(area, area_code)
     RFN %>% distinct(item, item_code)

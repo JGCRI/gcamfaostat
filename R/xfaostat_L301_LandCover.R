@@ -44,7 +44,7 @@ module_xfaostat_L301_LandCover <- function(command, ...) {
     FAOSTAT_load_raw_data(DATASETCODE = "RL", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT)
 
     ## Proprocess and quick clean ----
-    FF_summary("RL")
+    #FF_summary("RL")
     RL %>% distinct(element, element_code, unit)
     RL %>% distinct(area, area_code)
     RL %>% distinct(item, item_code)
