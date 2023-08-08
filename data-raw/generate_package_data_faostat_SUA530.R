@@ -327,60 +327,7 @@ SUA_TEMPLATE_LEFT_JOIN <- function(.DF, .DS, .DS_TM_Assert_Item = T){
 
 
 ## 2.3. FN: Balance gross trade ----
-# Fn adjusting gross trade in all regions to be consistent with average (world export and import)
-
-#' Balance gross trade
-#' @description Scale gross export and import in all regions to make them equal at the world level.
-#' @param .DF An input dataframe with an element col including Import and Export
-#' @param .MIN_TRADE_PROD_RATIO Trade will be removed if world total export or import over production is smaller than .MIN_TRADE_PROD_RATIO (1% default value)
-#' @param .Reg_VAR Region variable name; default is ("area_code")
-#' @param .GROUP_VAR Group variable; default is ("item_code", "year")
-#' @return The same dataframe with balanced world export and import.
-
-GROSS_TRADE_ADJUST <- function(.DF,
-                               .MIN_TRADE_PROD_RATIO = 0.01,
-                               .Reg_VAR = 'area_code',
-                               .GROUP_VAR = c("item_code", "year")){
-
-  # assert .DF structure
-  assertthat::assert_that(all(c("element", .GROUP_VAR) %in% names(.DF)))
-  assertthat::assert_that(is.grouped_df(.DF) == F)
-  assertthat::assert_that(all(c("Import", "Export", "Production") %in%
-                                c(.DF %>% distinct(element) %>% pull)))
-
-  .DF %>%
-    # Join ExportScaler and ImportScaler
-    left_join(
-      .DF %>%
-        #group_by_at(vars(all_of(.GROUP_VAR), element)) %>%
-        #summarise(value = sum(value, na.rm = T), .groups = "drop") %>%
-        spread(element, value) %>%
-        group_by_at(vars(all_of(.GROUP_VAR))) %>%
-        # filter out items with zero world trade or production
-        # and replace na to zero later for scaler
-        replace_na(list(Export = 0, Import = 0, Production = 0)) %>%
-        filter(sum(Export) != 0, sum(Import) != 0, sum(Production) != 0) %>%
-        # world trade should be later than .MIN_TRADE_PROD_RATIO to have meaningful data
-        # depending on item group, .MIN_TRADE_PROD_RATIO can be set differently
-        filter(sum(Export) / sum(Production) > .MIN_TRADE_PROD_RATIO) %>%
-        filter(sum(Import) / sum(Production) > .MIN_TRADE_PROD_RATIO) %>%
-        # finally,
-        # use average gross trade value to calculate trade scaler
-        # the trade scalers will be applied to all regions
-        mutate(ExportScaler = (sum(Export) + sum(Import))/ 2 / sum(Export),
-               ImportScaler = (sum(Export) + sum(Import))/ 2 / sum(Import)) %>%
-        select(all_of(c(.Reg_VAR, .GROUP_VAR)), ExportScaler, ImportScaler) %>%
-        ungroup(),
-      by = c(all_of(c(.Reg_VAR, .GROUP_VAR)))) %>%
-    replace_na(list(ExportScaler = 0, ImportScaler = 0)) %>%
-    # If world export, import, or prod is 0, trade will be zero
-    mutate(value = case_when(
-      element %in% c("Export") ~ value * ExportScaler,
-      element %in% c("Import") ~ value * ImportScaler,
-      TRUE ~ value)) %>%
-    select(-ExportScaler, -ImportScaler)
-
-}
+#Function moved to helper functions
 
 
 # 3. Process items in FAO_items to get Balanced SUA data ----

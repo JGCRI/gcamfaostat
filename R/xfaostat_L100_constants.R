@@ -2,13 +2,26 @@
 
 # General behavior constants ======================================================================
 
+
+  # Historical years of focus ----
+  #*******************************************
+  FAOSTAT_Hist_Year <- seq(1970, 2020)
+  Hist_Year_Bilateral <- seq(1992, 2020)
+  Hist_Year_Gross <- seq(1973, 1991)
+  Hist_Year_FBSH <- seq(1973, 2013)
+  Hist_Year_FBS <- seq(2010, 2019) # New FBS years
+  MIN_HIST_PP_YEAR = 2010 # first producer price year
+
 # having issues with package check here
 # comment this line out when building package
-  DIR_RAW_DATA_FAOSTAT <- system.file("extdata", "aglu/FAO/FAOSTAT", package = "gcamdata")
+  #DIR_RAW_DATA_FAOSTAT <- system.file("extdata", "aglu/FAO/FAOSTAT", package = "gcamdata")
+  DIR_RAW_DATA_FAOSTAT <- "inst/extdata/aglu/FAO/FAOSTAT"
 
 
+  OUTPUT_Export_CSV = T
   # Output GCAM csv
-  DIR_OUT_CSV <- "inst/extdata/aglu/FAO"
+  DIR_OUTPUT_CSV <- "inst/extdata/aglu/FAO/temp"
+  dir.create(file.path(DIR_OUTPUT_CSV), showWarnings = FALSE)
 
 
   # Balance elements; used in Get_SUA_TEMPLATE and SUA_bal_adjust

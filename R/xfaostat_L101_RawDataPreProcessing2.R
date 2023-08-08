@@ -2,7 +2,7 @@
 
 #' module_xfaostat_L101_RawDataPreProcessing2
 #'
-#' Preprocess raw faostat data
+#' Preprocess raw faostat data part 2
 #'
 #' @param command API command to execute
 #' @param ... other optional parameters, depending on command

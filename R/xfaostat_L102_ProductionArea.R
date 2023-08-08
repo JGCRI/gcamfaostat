@@ -1,6 +1,6 @@
 # Copyright 2019 Battelle Memorial Institute; see the LICENSE file.
 
-#' module_xfaostat_L102_QCLProductionArea
+#' module_xfaostat_L102_ProductionArea
 #'
 #' Preprocess raw faostat data
 #'
@@ -15,7 +15,7 @@
 #' @importFrom tibble tibble
 #' @importFrom tidyr complete drop_na gather nesting spread replace_na fill
 #' @author XZ 2023
-module_xfaostat_L102_QCLProductionArea <- function(command, ...) {
+module_xfaostat_L102_ProductionArea <- function(command, ...) {
 
   MODULE_INPUTS <-
     c(FILE = "aglu/FAO/FAO_an_items_PRODSTAT",
@@ -309,7 +309,7 @@ module_xfaostat_L102_QCLProductionArea <- function(command, ...) {
     QCL_COMM_AN_LIVEANIMAL %>% mutate(item_code = item_code + 1) %>%
       right_join(QCL_COMM_AN_PRIMARY_MEAT1 %>%
                    bind_rows(QCL_COMM_AN_PRIMARY_MEAT2) %>%
-                   rename(item_meat = item) )
+                   rename(item_meat = item), by = "item_code" )
 
     QCL_AN_PRIMARY_MEAT1 %>% bind_rows(
       QCL_AN_PRIMARY_MEAT2) %>%

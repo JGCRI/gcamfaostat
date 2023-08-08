@@ -1,12 +1,22 @@
 
+# Functions start with FF or FAOSTAT indicate Functions processing FAO data
 
-# Helper functions for downloading FAOSTAT data ----
+
+#' FAOSTAT_metadata: get the most recent metadata from FAOSTAT API and return a summary data frame
+#' @description Download and parse the metadata file from the FAOSTAT portal. FAOSTAT_metadata was adapted from the FAOSTAT package.
+#' @param datasetcode Dataset code in FAO metadata, e.g., QCL is the production dataset. If NULL, full metadata will be pulled.
+#' @importFrom  XML xmlParse xmlToDataFrame
+#' @importFrom  xml2 read_xml
+#' @return Dataframe including the metadata of FAOSTAT including URL for download, updating date, detailed descriptions, etc.
+#' @export
+#'
+#' @examples FAOSTAT_metadata
 FAOSTAT_metadata <- function (code = NULL){
   FAOxml <- XML::xmlParse(xml2::read_xml("http://fenixservices.fao.org/faostat/static/bulkdownloads/datasets_E.xml"))
   metadata <- XML::xmlToDataFrame(FAOxml, stringsAsFactors = FALSE)
   names(metadata) <- tolower(gsub("\\.", "_", names(metadata)))
 
-  # Bug fix for CB; can remove later if FAOSTAT udpate the link later
+  # Bug fix for CB; can remove later if FAOSTAT update the link later
   metadata["CB" == metadata[, "datasetcode"],"filelocation"] <-
     "https://fenixservices.fao.org/faostat/static/bulkdownloads/CommodityBalances_(non-food)_E_All_Data_(Normalized).zip"
 
@@ -34,10 +44,23 @@ FAOSTAT_download_bulk <- function(DATASETCODE,
 
 }
 
+
+
+#' FAOSTAT_load_raw_data: load raw csv data
+#' @description Read csv data and "." in column name is substituted with "_".
+#' @param DATASETCODE Dataset code in FAO metadata or the name of a csv file.
+#' @param DATA_FOLDER Path to the folder storing the data.
+#' @importFrom  readr read_csv
+#' @importFrom  magrittr %>%
+#' @importFrom  assertthat assert_that
+#' @export
+
 FAOSTAT_load_raw_data <- function(DATASETCODE,
                                   DATA_FOLDER = DIR_RAW_DATA_FAOSTAT){
   assertthat::assert_that(is.character(DATASETCODE))
   assertthat::assert_that(is.character(DATA_FOLDER))
+
+  my_env <- new.env()
 
   metadata <- FAOSTAT_metadata()
 
@@ -55,6 +78,7 @@ FAOSTAT_load_raw_data <- function(DATASETCODE,
     # Lower case col names and use _ as delimiter
     names(df) <- tolower(gsub("\\.| ", "_", names(df)))
     # Assigned to parent env
+    #assign(CODE, df, envir = parent.frame())
     assign(CODE, df, envir = parent.env(environment()))
     # Assigned to current env
     #assign(CODE, df, envir = .GlobalEnv)
@@ -64,6 +88,17 @@ FAOSTAT_load_raw_data <- function(DATASETCODE,
 
 
 #remove accent and apostrophe for cols in a df
+#' rm_accent: Remove accent and prime in selected columns of a data frame
+#'
+#' @param .df Input data frame
+#' @param ... A character set of column names
+#' @importFrom  magrittr %>%
+#' @importFrom  assertthat assert_that
+#' @importFrom  dplyr intersect mutate_at
+#'
+#' @return A data frame with accent and prime removed
+#' @export
+
 rm_accent <- function(.df, ...){
 
   assertthat::assert_that(
@@ -83,7 +118,16 @@ rm_accent <- function(.df, ...){
 
 
 
-# Helper function for processing FAOSTAT data
+#' FAO_AREA_RM_NONEXIST: remove nonexistent FAO region using area_code, e.g., USSR after 1991
+#' @description This function was developed when exploring FAO production data.
+#' Additional small regions/areas are also remove due to low data quality.
+#'
+#' @param .DF A input data frame
+#' @param RM_AREA_CODE Additional area_codes to remove, e.g., small regions with low data quality.
+#' @param SUDAN2012_MERGE If TRUE, only keep one merged Sudan region
+#'
+#' @return A data frame with nonexistent area and area_code removed
+#' @export
 
 FAO_AREA_RM_NONEXIST <- function(.DF,
                                  SUDAN2012_MERGE = F,
@@ -168,11 +212,57 @@ FAO_AREA_RM_NONEXIST <- function(.DF,
 }
 
 
-# Fill in based on relationship between NUMERATOR_c and DENOMINATOR_c
-# E.g., yield = production / area
-# NUMERATOR_c will be linearly interpolated forward then NUMERATOR_FILL_DIRECTION
-# Yield will be filled down-up
-# World average yield is used when only NUMERATOR_c or DENOMINATOR_c is available
+
+#' FF_summary summarize a loaded FAO dataset
+#'
+#' @param DF A data frame
+#' @param COL_CNTY Country column name
+#' @param COL_ITEM Item column name
+#' @importFrom dplyr summarize
+#' @importFrom gcamdata gather_years
+#' @importFrom  magrittr %>%
+#'
+#' @return A data frame with summary information,
+#' @export
+
+FF_summary <- function(DF, COL_CNTY = "area", COL_ITEM = "item"){
+  assert_that(is.character(DF))
+
+  get(DF) %>% gcamdata::gather_years() -> .tbl1
+  list_out<- list(
+    dataset_code = DF,
+    ncountry = length(unique(.tbl1[COL_CNTY])%>% pull()),
+    nitem = length(unique(.tbl1[COL_ITEM])%>% pull()),
+    nyear = length(unique(.tbl1$year)),
+    start_year = min(unique(.tbl1$year)),
+    end_year = max(unique(.tbl1$year)) ,
+    NA_perc = paste0(round(.tbl1 %>%
+                             summarize(sum(is.na(value))/n()) %>%
+                             as.numeric() *100 , 1), "%"),
+    nelement = length(unique(.tbl1$element)),
+    element = paste(unique(.tbl1$element),collapse = ", ")
+
+  )
+
+  data.frame(t(sapply(list_out %>% unlist(),c)))
+}
+
+
+#' FF_FILL_NUMERATOR_DENOMINATOR Fill in missing values considering relationship between two variables
+#' @description Fill in based on relationship between NUMERATOR_c and DENOMINATOR_c.
+#' E.g., yield = production / area. NUMERATOR_c will be linearly interpolated forward
+#' then NUMERATOR_FILL_DIRECTION. Yield will be filled down-up, World average yield
+#' is used when only NUMERATOR_c or DENOMINATOR_c is available
+#' @param .DF Input data frame
+#' @param NUMERATOR_c NUMERATOR col name (production) in the ratio
+#' @param DENOMINATOR_c DENOMINATOR col name (area) in the ratio
+#' @param NUMERATOR_FILL_DIRECTION Direction of filling in NUMERATOR
+#' @import dplyr
+#' @importFrom tidyr fill replace_na
+#'
+#' @return A data frame with missing values filled
+#' @export
+
 FF_FILL_NUMERATOR_DENOMINATOR <- function(.DF, NUMERATOR_c, DENOMINATOR_c,
                                           NUMERATOR_FILL_DIRECTION = "down"){
   .DF %>% rename(NUMERATOR = NUMERATOR_c, DENOMINATOR = DENOMINATOR_c) %>%
@@ -350,7 +440,18 @@ SUA_bal_adjust <- function(.df){
 
 
 
-# Count item_code and area_code by year
+#' FAOSTAT_check_count_plot: count item_code and area_code by year
+#'
+#' @param .DF Input data frame
+#' @param .ELEMENT A set of elements (in Char) to focus. If empty, all elements are summarized
+#' @importFrom  dplyr summarize
+#' @importFrom  magrittr %>%
+#' @importFrom  tidyr gather
+#' @importFrom  ggplot2 ggplot aes facet_wrap geom_line theme_bw
+#'
+#' @return A plot summarizing the time-series of changing the count of item_code and area_code (grouped by element).
+#' @export
+
 FAOSTAT_check_count_plot <- function(.DF, .ELEMENT = c()){
   if (.ELEMENT %>% length() == 0 ) {
     .DF %>% distinct(element) %>% pull -> .ELEMENT
@@ -365,19 +466,21 @@ FAOSTAT_check_count_plot <- function(.DF, .ELEMENT = c()){
     theme_bw()
 }
 
-# decimal places in ggplot
-scaleFUN <- function(x) sprintf("%.0f", x)
 
-lookup <- function(.lookupvalue, .lookup_df, .lookup_col, .target_col){
 
-  assert_that(is.character(.lookupvalue))
-  assert_that(is.data.frame(.lookup_df))
-  assert_that(.lookup_col %in% colnames(.lookup_df))
-  assert_that(.target_col %in% colnames(.lookup_df))
-
-  .lookup_df[grep(paste0("^",.lookupvalue,"$"),
-                  .lookup_df[, .lookup_col]), .target_col]
-}
+#' Function saving dataset to csv file with headers
+#'
+#' @param gcam_dataset dataframe name to be saved
+#' @param col_type_nonyear column type that is non-year; numeric for years will be pasted
+#' @param title title in header
+#' @param unit  unit in header
+#' @param description description in header
+#' @param code fao dataset domain code
+#' @param out_dir output directory
+#' @param GZIP IF TRUE
+#'
+#' @return
+#' @export
 
 output_csv_data <- function(gcam_dataset, col_type_nonyear,
                             title, unit, description = NA,
@@ -385,12 +488,9 @@ output_csv_data <- function(gcam_dataset, col_type_nonyear,
                             out_dir = out_dir,
                             GZIP = F){
 
-  if (!missing(code)) {code = code} else {
-    code = lookup(gcam_dataset, data_map, "name", "FAO_domain_code")
-  }
+  if (!missing(code)) {code = code}
 
-
-  col_type = paste0(col_type_nonyear, paste0(rep("n", ncol(get(gcam_dataset)) - nchar(col_type_nonyear)), collapse = "") )
+  col_type = paste0(col_type_nonyear, paste0(rep("n", ncol(get(gcam_dataset, envir = parent.frame())) - nchar(col_type_nonyear)), collapse = "") )
 
   cmnts <- c(
     paste0("File: ", gcam_dataset, ifelse(GZIP, ".csv.gz", ".csv")),
@@ -407,10 +507,81 @@ output_csv_data <- function(gcam_dataset, col_type_nonyear,
 
   if (GZIP == F) {
     cat(paste("#", cmnts), file = fqfn, sep = "\n", append = TRUE)
-    readr::write_csv(get(gcam_dataset), fqfn, append = TRUE, col_names = TRUE, na = "")
+    readr::write_csv(get(gcam_dataset, envir = parent.frame()), fqfn, append = TRUE, col_names = TRUE, na = "")
   } else {
     cat(paste("#", cmnts), file = gzfile(paste0(fqfn, ".gz")), sep = "\n", append = TRUE)
-    readr::write_csv(get(gcam_dataset), gzfile(paste0(fqfn, ".gz")), append = TRUE, col_names = TRUE, na = "")
+    readr::write_csv(get(gcam_dataset, envir = parent.frame()), gzfile(paste0(fqfn, ".gz")), append = TRUE, col_names = TRUE, na = "")
   }
 }
 
+
+
+# Fn adjusting gross trade in all regions to be consistent with average (world export and import)
+
+#' Balance gross trade
+#' @description Scale gross export and import in all regions to make them equal at the world level.
+#' @param .DF An input dataframe with an element col including Import and Export
+#' @param .MIN_TRADE_PROD_RATIO Trade will be removed if world total export or import over production is smaller than .MIN_TRADE_PROD_RATIO (1% default value)
+#' @param .Reg_VAR Region variable name; default is ("area_code")
+#' @param .GROUP_VAR Group variable; default is ("item_code", "year")
+#' @return The same dataframe with balanced world export and import.
+
+GROSS_TRADE_ADJUST <- function(.DF,
+                               .MIN_TRADE_PROD_RATIO = 0.01,
+                               .Reg_VAR = 'area_code',
+                               .GROUP_VAR = c("item_code", "year")){
+
+  # assert .DF structure
+  assertthat::assert_that(all(c("element", .GROUP_VAR) %in% names(.DF)))
+  assertthat::assert_that(dplyr::is.grouped_df(.DF) == F)
+  assertthat::assert_that(all(c("Import", "Export", "Production") %in%
+                                c(.DF %>% distinct(element) %>% pull)))
+
+  .DF %>%
+    # Join ExportScaler and ImportScaler
+    left_join(
+      .DF %>%
+        #group_by_at(vars(all_of(.GROUP_VAR), element)) %>%
+        #summarise(value = sum(value, na.rm = T), .groups = "drop") %>%
+        spread(element, value) %>%
+        group_by_at(vars(all_of(.GROUP_VAR))) %>%
+        # filter out items with zero world trade or production
+        # and replace na to zero later for scaler
+        replace_na(list(Export = 0, Import = 0, Production = 0)) %>%
+        filter(sum(Export) != 0, sum(Import) != 0, sum(Production) != 0) %>%
+        # world trade should be later than .MIN_TRADE_PROD_RATIO to have meaningful data
+        # depending on item group, .MIN_TRADE_PROD_RATIO can be set differently
+        filter(sum(Export) / sum(Production) > .MIN_TRADE_PROD_RATIO) %>%
+        filter(sum(Import) / sum(Production) > .MIN_TRADE_PROD_RATIO) %>%
+        # finally,
+        # use average gross trade value to calculate trade scaler
+        # the trade scalers will be applied to all regions
+        mutate(ExportScaler = (sum(Export) + sum(Import))/ 2 / sum(Export),
+               ImportScaler = (sum(Export) + sum(Import))/ 2 / sum(Import)) %>%
+        select(all_of(c(.Reg_VAR, .GROUP_VAR)), ExportScaler, ImportScaler) %>%
+        ungroup(),
+      by = c(all_of(c(.Reg_VAR, .GROUP_VAR)))) %>%
+    replace_na(list(ExportScaler = 0, ImportScaler = 0)) %>%
+    # If world export, import, or prod is 0, trade will be zero
+    mutate(value = case_when(
+      element %in% c("Export") ~ value * ExportScaler,
+      element %in% c("Import") ~ value * ImportScaler,
+      TRUE ~ value)) %>%
+    select(-ExportScaler, -ImportScaler)
+
+}
+
+
+# decimal places in ggplot
+scaleFUN <- function(x) sprintf("%.0f", x)
+
+lookup <- function(.lookupvalue, .lookup_df, .lookup_col, .target_col){
+
+  assert_that(is.character(.lookupvalue))
+  assert_that(is.data.frame(.lookup_df))
+  assert_that(.lookup_col %in% colnames(.lookup_df))
+  assert_that(.target_col %in% colnames(.lookup_df))
+
+  .lookup_df[grep(paste0("^",.lookupvalue,"$"),
+                  .lookup_df[, .lookup_col]), .target_col]
+}

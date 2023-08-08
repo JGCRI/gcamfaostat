@@ -112,13 +112,31 @@
     <loc>/reference/extract_prebuilt_data.html</loc>
   </url>
   <url>
+    <loc>/reference/FAOSTAT_check_count_plot.html</loc>
+  </url>
+  <url>
+    <loc>/reference/FAOSTAT_load_raw_data.html</loc>
+  </url>
+  <url>
+    <loc>/reference/FAOSTAT_metadata.html</loc>
+  </url>
+  <url>
     <loc>/reference/FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION.html</loc>
   </url>
   <url>
     <loc>/reference/FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL.html</loc>
   </url>
   <url>
+    <loc>/reference/FAO_AREA_RM_NONEXIST.html</loc>
+  </url>
+  <url>
     <loc>/reference/fast_left_join.html</loc>
+  </url>
+  <url>
+    <loc>/reference/FF_FILL_NUMERATOR_DENOMINATOR.html</loc>
+  </url>
+  <url>
+    <loc>/reference/FF_summary.html</loc>
   </url>
   <url>
     <loc>/reference/fill_exp_decay_extrapolate.html</loc>
@@ -163,6 +181,9 @@
     <loc>/reference/graph_chunks.html</loc>
   </url>
   <url>
+    <loc>/reference/GROSS_TRADE_ADJUST.html</loc>
+  </url>
+  <url>
     <loc>/reference/index.html</loc>
   </url>
   <url>
@@ -196,10 +217,19 @@
     <loc>/reference/module_aglu_L100.FAO_SUA_PrimaryEquivalent.html</loc>
   </url>
   <url>
+    <loc>/reference/module_xfaostatL401_Fertilizer.html</loc>
+  </url>
+  <url>
     <loc>/reference/module_xfaostat_L101_RawDataPreProcessing1.html</loc>
   </url>
   <url>
     <loc>/reference/module_xfaostat_L101_RawDataPreProcessing2.html</loc>
+  </url>
+  <url>
+    <loc>/reference/module_xfaostat_L101_RawDataPreProcessing3.html</loc>
+  </url>
+  <url>
+    <loc>/reference/module_xfaostat_L102_ProductionArea.html</loc>
   </url>
   <url>
     <loc>/reference/module_xfaostat_L102_QCLProductionArea.html</loc>
@@ -214,6 +244,12 @@
     <loc>/reference/module_xfaostat_L105_DataConnectionToSUA.html</loc>
   </url>
   <url>
+    <loc>/reference/module_xfaostat_L201_Forestry.html</loc>
+  </url>
+  <url>
+    <loc>/reference/module_xfaostat_L301_LandCover.html</loc>
+  </url>
+  <url>
     <loc>/reference/Moving_average.html</loc>
   </url>
   <url>
@@ -224,6 +260,9 @@
   </url>
   <url>
     <loc>/reference/outputs_of.html</loc>
+  </url>
+  <url>
+    <loc>/reference/output_csv_data.html</loc>
   </url>
   <url>
     <loc>/reference/parse_csv_header.html</loc>
@@ -254,6 +293,9 @@
   </url>
   <url>
     <loc>/reference/return_modified.html</loc>
+  </url>
+  <url>
+    <loc>/reference/rm_accent.html</loc>
   </url>
   <url>
     <loc>/reference/run_chunk.html</loc>

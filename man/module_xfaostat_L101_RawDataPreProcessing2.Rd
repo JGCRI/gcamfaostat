@@ -16,7 +16,7 @@ Depends on \code{command}: either a vector of required inputs, a vector of outpu
   \code{command} is "MAKE") all the generated outputs
 }
 \description{
-Preprocess raw faostat data
+Preprocess raw faostat data part 2
 }
 \details{
 This chunk compiles balanced supply utilization data in primary equivalent in GCAM region and commodities.
