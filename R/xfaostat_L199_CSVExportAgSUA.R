@@ -1,6 +1,6 @@
 # Copyright 2019 Battelle Memorial Institute; see the LICENSE file.
 
-#' module_xfaostat_L200_ExportCSV
+#' module_xfaostat_L199_ExportCSV
 #'
 #' Generate supply utilization balance in primary equivalent
 #'
@@ -15,7 +15,7 @@
 #' @importFrom tibble tibble
 #' @importFrom tidyr complete drop_na gather nesting spread replace_na
 #' @author XZ 2022
-module_xfaostat_L200_ExportCSV <- function(command, ...) {
+module_xfaostat_L199_ExportCSV <- function(command, ...) {
 
   MODULE_INPUTS <-
     c("Bal_new_all",

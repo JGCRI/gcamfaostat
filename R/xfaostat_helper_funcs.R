@@ -341,6 +341,14 @@ rm_accent <- function(.df, ...){
 
 }
 
+
+#' assert processed food balance sheet or supply utilization account is balanced
+#'
+#' @param .DF Input data frame
+#'
+#' @return massages or warnings
+#' @export
+
 assert_FBS_balance <- function(.DF){
 
 
@@ -394,9 +402,15 @@ assert_FBS_balance <- function(.DF){
 }
 
 
-# Be careful with the unit as value / 1000 here
-# Light adjustments to merge Tourist consumption into food
-# And maintain balance across dimensions
+
+
+#' Balance Supply Utilization Accounting data
+#' @description Be careful with the unit as value divided by 1000 here; Light adjustments to merge Tourist consumption into food
+#' @param .df Input SUA data frame
+#'
+#' @return  SUA dataset that is balanced across different dimensions
+#' @export
+#'
 SUA_bal_adjust <- function(.df){
 
   SCL_element_new <-
@@ -498,7 +512,7 @@ output_csv_data <- function(gcam_dataset, col_type_nonyear,
 #' @description Scale gross export and import in all regions to make them equal at the world level.
 #'
 #' @param .DF An input dataframe with an element col including Import and Export
-#' @param .MIN_TRADE_PROD_RATIO Trade will be removed if world total export or import over production is smaller than .MIN_TRADE_PROD_RATIO (1% default value)
+#' @param .MIN_TRADE_PROD_RATIO Trade will be removed if world total export or import over production is smaller than .MIN_TRADE_PROD_RATIO, 0.01 default value
 #' @param .Reg_VAR Region variable name; default is area_code
 #' @param .GROUP_VAR Group variable; default is item_code and year
 #'
@@ -550,34 +564,91 @@ GROSS_TRADE_ADJUST <- function(.DF,
 }
 
 
-FAOSTAT_download_bulk <- function(DATASETCODE,
-                                  DATA_FOLDER = DIR_RAW_DATA_FAOSTAT){
+
+
+#' FF_rawdata_info: extract meta info of data (e.g., zip files) in a folder
+#'
+#' @param DATA_FOLDER The folder including raw zipped csv data from FAOSTAT.
+#' @param DATASETCODE Dataset code in FAO metadata, e.g., QCL is the production dataset.
+#' @param DOWNLOAD_NONEXIST A logical variable. If TRUE, nonexist dataset will be downloaded.
+#' @importFrom  assertthat assert_that
+#' @importFrom  tibble rownames_to_column
+#' @importFrom  magrittr %>%
+#' @importFrom  dplyr transmute right_join filter mutate if_else
+#'
+#' @return A data frame summarizing the local raw data info (e.g., size, downloaded date, etc.) if DOWNLOAD_NONEXIST == FALSE.
+#' Otherwise, nonexistent files will be downloaded and the function should be rerun.
+#' @export
+
+FF_rawdata_info <- function(
+    DATA_FOLDER = DIR_RAW_DATA,
+    DATASETCODE,
+    DOWNLOAD_NONEXIST = F){
+
+  assertthat::assert_that(is.character(DATASETCODE))
+  assertthat::assert_that(is.logical(DOWNLOAD_NONEXIST))
+  # Add check path later [ToDo]
+
+  file.info(dir(DATA_FOLDER, full.names = T)) %>%
+    tibble::rownames_to_column(var = "filelocation") %>%
+    # Filter zip dir to ensure FAO files
+    filter(isdir == F,
+           grepl("zip$", filelocation)) %>%
+    transmute(filelocation = basename(filelocation),
+              ctime = as.Date(ctime), mtime = as.Date(mtime)) %>%
+    # Join the latest metadata
+    # Note that FAO raw data had a typo (missing space) in Trade_CropsLivestock_E_All_Data_(Normalized).zip
+    # Temporary fix here
+    # This was fixed in 2022 updates
+    right_join(FF_metadata() %>% filter(datasetcode %in% DATASETCODE) %>%
+                 mutate(filelocation = basename(filelocation)), #%>%
+               #mutate(filelocation = replace(filelocation,
+               #                              filelocation == "Trade_CropsLivestock_E_All_Data_(Normalized).zip",
+               #                              "Trade_Crops_Livestock_E_All_Data_(Normalized).zip")),
+               by = "filelocation") %>%
+    transmute(datasetcode, datasetname,
+              FAOupdate = dateupdate, Localupdate = mtime,
+              needupdate = if_else(is.na(Localupdate), T, FAOupdate > Localupdate),
+              filelocation, filesize
+    ) ->
+    required_data_summary
+
+  # Pull dataset code for non-exists
+  required_data_summary %>%
+    filter(is.na(Localupdate)) %>%
+    pull(datasetcode) -> datasetcode_nonexist
+
+  # Download nonexist
+  if (DOWNLOAD_NONEXIST == T & length(datasetcode_nonexist) >0) {
+    lapply(datasetcode_nonexist,
+           FF_download_faostat_bulk, DATA_FOLDER)
+    print("Run the function again to check updates.")
+  } else{
+    return(required_data_summary)
+  }
+}
+
+#' FF_download_faostat_bulk: Bulk download raw data from FAOSTAT API by dataset code
+#'
+#' @param DATASETCODE Dataset code in FAO metadata, e.g., QCL is the production dataset.
+#' @param DATA_FOLDER Destination folder for storing raw data
+#'
+#' @export
+
+FF_download_faostat_bulk <- function(DATASETCODE,
+                                     DATA_FOLDER = DIR_RAW_DATA_FAOSTAT){
 
   assertthat::assert_that(is.character(DATASETCODE))
   assertthat::assert_that(is.character(DATA_FOLDER))
 
-
-  lapply(DATASETCODE, function(d){
-    metadata <- FAOSTAT_metadata(code = d)
-    url_bulk = metadata$filelocation
-
-    file_name <- basename(url_bulk)
-    download.file(url_bulk, file.path(DATA_FOLDER, file_name))
-  })
-
+  metadata <- FF_metadata(datasetcode = DATASETCODE)
+  url_bulk = metadata$filelocation
+  file_name <- basename(url_bulk)
+  download.file(url_bulk, file.path(DATA_FOLDER, file_name))
 }
+
+
 
 
 # decimal places in ggplot
 scaleFUN <- function(x) sprintf("%.0f", x)
-
-lookup <- function(.lookupvalue, .lookup_df, .lookup_col, .target_col){
-
-  assert_that(is.character(.lookupvalue))
-  assert_that(is.data.frame(.lookup_df))
-  assert_that(.lookup_col %in% colnames(.lookup_df))
-  assert_that(.target_col %in% colnames(.lookup_df))
-
-  .lookup_df[grep(paste0("^",.lookupvalue,"$"),
-                  .lookup_df[, .lookup_col]), .target_col]
-}

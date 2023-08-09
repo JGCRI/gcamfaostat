@@ -2,7 +2,7 @@
 
   # Directories ----
 
-  #DIR_RAW_DATA_FAOSTAT <- system.file("extdata", "aglu/FAO/FAOSTAT", package = "gcamdata")
+
 
   DIR_RAW_DATA_FAOSTAT <- "inst/extdata/aglu/FAO/FAOSTAT"
   OUTPUT_Export_CSV = T

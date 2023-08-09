@@ -14,7 +14,7 @@ GROSS_TRADE_ADJUST(
 \arguments{
 \item{.DF}{An input dataframe with an element col including Import and Export}
 
-\item{.MIN_TRADE_PROD_RATIO}{Trade will be removed if world total export or import over production is smaller than .MIN_TRADE_PROD_RATIO (1% default value)}
+\item{.MIN_TRADE_PROD_RATIO}{Trade will be removed if world total export or import over production is smaller than .MIN_TRADE_PROD_RATIO, 0.01 default value}
 
 \item{.Reg_VAR}{Region variable name; default is area_code}
 

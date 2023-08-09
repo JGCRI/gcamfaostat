@@ -4,6 +4,12 @@
     <loc>/404.html</loc>
   </url>
   <url>
+    <loc>/articles/gcamfaostat.html</loc>
+  </url>
+  <url>
+    <loc>/articles/index.html</loc>
+  </url>
+  <url>
     <loc>/authors.html</loc>
   </url>
   <url>
@@ -110,9 +116,6 @@
   </url>
   <url>
     <loc>/reference/extract_prebuilt_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/FAOSTAT_check_count_plot.html</loc>
   </url>
   <url>
     <loc>/reference/FAOSTAT_load_raw_data.html</loc>
@@ -223,9 +226,6 @@
     <loc>/reference/module_aglu_L100.FAO_SUA_PrimaryEquivalent.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostatL401_Fertilizer.html</loc>
-  </url>
-  <url>
     <loc>/reference/module_xfaostat_L101_RawDataPreProc1_QCL.html</loc>
   </url>
   <url>
@@ -241,25 +241,10 @@
     <loc>/reference/module_xfaostat_L101_RawDataPreProc5_TCL_TM.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostat_L101_RawDataPreProcessing1.html</loc>
-  </url>
-  <url>
-    <loc>/reference/module_xfaostat_L101_RawDataPreProcessing2.html</loc>
-  </url>
-  <url>
-    <loc>/reference/module_xfaostat_L101_RawDataPreProcessing3.html</loc>
-  </url>
-  <url>
     <loc>/reference/module_xfaostat_L102_ProductionArea.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostat_L102_QCLProductionArea.html</loc>
-  </url>
-  <url>
     <loc>/reference/module_xfaostat_L103_ProducerPrices.html</loc>
-  </url>
-  <url>
-    <loc>/reference/module_xfaostat_L104_FoodMacroNutrient.html</loc>
   </url>
   <url>
     <loc>/reference/module_xfaostat_L104_ProductionAreaAddFodder.html</loc>
@@ -271,7 +256,7 @@
     <loc>/reference/module_xfaostat_L106_FoodMacroNutrient.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostat_L200_ExportCSV.html</loc>
+    <loc>/reference/module_xfaostat_L199_ExportCSV.html</loc>
   </url>
   <url>
     <loc>/reference/module_xfaostat_L201_Forestry.html</loc>
