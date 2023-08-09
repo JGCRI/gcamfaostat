@@ -19,7 +19,14 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
   MODULE_INPUTS <-
     c(FILE = "aglu/FAO/FAO_items",
-      FILE = "aglu/FAO/Mapping_FBSH_SCL_OilCake")
+      FILE = "aglu/FAO/Mapping_FBSH_SCL_OilCake",
+      "QCL_PROD",
+      "QCL_AN_LIVEANIMAL_MEATEQ",
+      "TCL",
+      "TM_bilateral",
+      "FBSH_CB",
+      "FBS",
+      "SCL")
 
   MODULE_OUTPUTS <-
     c("Bal_new_all")
@@ -39,20 +46,8 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
 
-    FAOSTAT_RDS <- c("QCL_PROD", "TCL", "TM_wide", "FBSH", "CB", "FBS", "SCL")
-
-    DIR_PREBUILT_FAOSTAT <- "data/PREBUILT_FAOSTAT"
-    Hist_Year_FBS <- 2010:2019
-
-    lapply(FAOSTAT_RDS, function(d){
-      assertthat::assert_that(file.exists(file.path(DIR_PREBUILT_FAOSTAT, paste0(d, ".rds"))))
-      assign(d, readRDS(file.path(DIR_PREBUILT_FAOSTAT, paste0(d, ".rds"))),
-             envir = parent.env(environment()))
-    })
-
-
     # Get area code in QCL that is consistent with FBS e.g., after 2010 only
-    QCL_PROD %>% filter(year %in% Hist_Year_FBS) %>%  distinct(area_code) %>% pull ->
+    QCL_PROD %>% filter(year %in% FAOSTAT_Hist_Year_FBS) %>%  distinct(area_code) %>% pull ->
       QCL_area_code_FBS
 
     ## 1.2. Get FAO supply-utilization SCL ready ----
@@ -72,9 +67,8 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     ##  1.3. Get gross trade data from bilateral (TM) ----
     #  Trade is balanced if aggregating bilateral but need to filter in QCL_area_code_FBS
 
-    TM_wide %>%
-      # gather years
-      gcamdata::gather_years() %>% drop_na() %>%
+    TM_bilateral %>%
+      filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
       filter(area_code %in% QCL_area_code_FBS,
              source_code %in% QCL_area_code_FBS,
              element %in% c("Import Quantity")) %>%
@@ -82,23 +76,25 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       group_by(area_code, item_code, element, year) %>%
       summarise(value = sum(value, na.rm = T), .groups = "drop") %>%
       bind_rows(
-        TM_wide %>%
-          gcamdata::gather_years() %>% drop_na() %>%
+        TM_bilateral %>%
+          filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
           filter(area_code %in% QCL_area_code_FBS,
                  source_code %in% QCL_area_code_FBS,
                  element %in% c("Import Quantity")) %>%
           mutate(element = "Export") %>%
           group_by(area_code = source_code, item_code, element, year) %>%
           summarise(value = sum(value, na.rm = T), .groups = "drop") ) -> TCL_TM
-    rm(TM_wide)
+    rm(TM_bilateral)
 
     ## 1.4. Get gross trade data from FAO gross trade (TCL) ----
     TCL %>%
+      filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
       filter(area_code %in% QCL_area_code_FBS,
              element %in% c("Import Quantity")) %>%
       mutate(element = "Import") %>%
       bind_rows(
         TCL %>%
+          filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
           filter(area_code %in% QCL_area_code_FBS,
                  element %in% c("Export Quantity")) %>%
           mutate(element = "Export") ) %>%
@@ -107,6 +103,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
     ## 1.5. Get FBS data (FBS) ----
     FBS %>%
+      filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
       # keep only balance items
       filter(!element_code %in% c(645, 664, 674, 684)) %>%
       # simplify elements and make them consistent with SUA
@@ -128,16 +125,16 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     ## 1.7. Filter data by year and merge regions needed----
     # Merge Sudan regions to be consistent with data
     # Mainly for storage data concerns
-    # And only keep data > min(Hist_Year_FBS)
-    for (.DF in c("SCL", "TCL_TM", "TCL_gross", "FBSH", "CB", "FBS", "QCL_PROD")) {
-      get(.DF) %>% filter(year >= min(Hist_Year_FBS)) %>%
+    # And only keep data > min(FAOSTAT_Hist_Year_FBS)
+    for (.DF in c("SCL", "TCL_TM", "TCL_gross", "FBSH_CB", "FBS", "QCL_PROD")) {
+      get(.DF) %>% filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
         # merge Sudan and South Sudan
         FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL(SUDAN2012_MERGE = T) %>%
         assign(x = .DF, envir = parent.env(environment()))  }
 
 
     # Update area code in QCL
-    QCL_PROD %>% filter(year %in% Hist_Year_FBS) %>%  distinct(area_code) %>% pull ->
+    QCL_PROD %>% filter(year %in% FAOSTAT_Hist_Year_FBS) %>%  distinct(area_code) %>% pull ->
       QCL_area_code_FBS
 
 
@@ -150,7 +147,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     # The template will be joined by data from different sources later
     # Note that item code is usually used to ensure a best match but item can also be used
     # Note that Sudan after 2012 (South Sudan and Sudan) are merged
-    Get_SUA_TEMPLATE <- function(.ITEM_CODE = NULL, .ITEM = NULL, .YEAR = Hist_Year_FBS){
+    Get_SUA_TEMPLATE <- function(.ITEM_CODE = NULL, .ITEM = NULL, .YEAR = FAOSTAT_Hist_Year_FBS){
 
       #Item code will be used first if available
       if (!is.null(.ITEM_CODE)) {
@@ -452,11 +449,11 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     # Merge oil and cake data
     Mapping_FBSH_SCL_OilCake %>%
       # Join oilseed oil production from FBSH in the reference periods
-      left_join(FBSH %>% filter(year %in% 2011:2013, element == "Production") %>%
+      left_join(FBSH_CB %>% filter(year %in% 2011:2013, element == "Production") %>%
                   transmute(area_code, FBSH_item_oil = item, year, oil = value),
                 by = "FBSH_item_oil") %>%
       # Join oilseed cake production from CB
-      left_join(CB %>% filter(year %in% 2011:2013, element == "Production") %>%
+      left_join(FBSH_CB %>% filter(year %in% 2011:2013, element == "Production") %>%
                   # Convert unit for consistency to Kton
                   transmute(area_code, FBSH_item_cake = item, year, cake = value /1000),
                 by = c("FBSH_item_cake", "area_code", "year")) %>%
@@ -642,8 +639,6 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     # But accounting delta allows more accurate estimate of feed uses
     # E.g., additional feed demand due to animal expansion
 
-    readRDS(file.path(DIR_PREBUILT_FAOSTAT,"QCL_AN_LIVEANIMAL_MEATEQ.rds")) -> QCL_AN_LIVEANIMAL_MEATEQ
-
     QCL_AN_LIVEANIMAL_MEATEQ %>%
       select(area_code, item_code, year, value) %>%
       #mutate(item = gsub("Meat", "AnMeatEq", item)) %>%
@@ -703,7 +698,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
     assert_FBS_balance(.DF = Bal_new_all)
 
-    rm(TCL_gross, TCL_TM, SCL, FBS, FBSH, CB, FAO_items)
+    rm(TCL_gross, TCL_TM, SCL, FBS, FBSH_CB, FAO_items)
     rm(list = ls(pattern = "Bal_new_tier*"))
 
     ### output GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019 and clean memory ----

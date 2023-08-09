@@ -15,11 +15,12 @@
   # Historical years of focus ----
   #*******************************************
   FAOSTAT_Hist_Year <- seq(1970, 2020)
-  Hist_Year_Bilateral <- seq(1992, 2020)
-  Hist_Year_Gross <- seq(1973, 1991)
-  Hist_Year_FBSH <- seq(1973, 2013)
-  Hist_Year_FBS <- seq(2010, 2019) # New FBS years
+  #Bilateral trade year starts from 1986 but higher quality after 1992
+  FAOSTAT_Hist_Year_Bilateral <- seq(1992, 2020)
+  FAOSTAT_Hist_Year_FBSH <- seq(1973, 2013)
+  FAOSTAT_Hist_Year_FBS <- seq(2010, 2019) # New FBS years
   MIN_HIST_PP_YEAR = 2010 # first producer price year
+
 
 
 

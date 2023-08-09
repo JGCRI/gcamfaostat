@@ -26,6 +26,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
     c("QCL_PROD",
       "QCL_AN_LIVEANIMAL",
       "QCL_AN_PRIMARY_MILK",
+      "QCL_AN_LIVEANIMAL_MEATEQ",
       "QCL_CROP_PRIMARY")
 
   if(command == driver.DECLARE_INPUTS) {
@@ -395,6 +396,12 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       add_units("various") %>%
       add_comments("Detailed FAO QCL data processing for dairy animal and production") ->
       QCL_AN_PRIMARY_MILK
+
+    QCL_AN_LIVEANIMAL_MEATEQ %>%
+      add_title("FAO live animal stock meat equivalent") %>%
+      add_units("various") %>%
+      add_comments("Detailed FAO QCL data processing for live animal stock meat equivalent") ->
+      QCL_AN_LIVEANIMAL_MEATEQ
 
     QCL_CROP_PRIMARY %>%
       add_title("FAO primary crop area and production") %>%

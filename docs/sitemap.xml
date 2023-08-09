@@ -226,6 +226,21 @@
     <loc>/reference/module_xfaostatL401_Fertilizer.html</loc>
   </url>
   <url>
+    <loc>/reference/module_xfaostat_L101_RawDataPreProc1_QCL.html</loc>
+  </url>
+  <url>
+    <loc>/reference/module_xfaostat_L101_RawDataPreProc2_PP_PD_OA.html</loc>
+  </url>
+  <url>
+    <loc>/reference/module_xfaostat_L101_RawDataPreProc3_SCL_FBS.html</loc>
+  </url>
+  <url>
+    <loc>/reference/module_xfaostat_L101_RawDataPreProc4_FBSH_CB.html</loc>
+  </url>
+  <url>
+    <loc>/reference/module_xfaostat_L101_RawDataPreProc5_TCL_TM.html</loc>
+  </url>
+  <url>
     <loc>/reference/module_xfaostat_L101_RawDataPreProcessing1.html</loc>
   </url>
   <url>
@@ -247,7 +262,16 @@
     <loc>/reference/module_xfaostat_L104_FoodMacroNutrient.html</loc>
   </url>
   <url>
+    <loc>/reference/module_xfaostat_L104_ProductionAreaAddFodder.html</loc>
+  </url>
+  <url>
     <loc>/reference/module_xfaostat_L105_DataConnectionToSUA.html</loc>
+  </url>
+  <url>
+    <loc>/reference/module_xfaostat_L106_FoodMacroNutrient.html</loc>
+  </url>
+  <url>
+    <loc>/reference/module_xfaostat_L200_ExportCSV.html</loc>
   </url>
   <url>
     <loc>/reference/module_xfaostat_L201_Forestry.html</loc>

@@ -21,8 +21,9 @@ module_xfaostat_L101_RawDataPreProc5_TCL_TM <- function(command, ...) {
     c("QCL_area_code_map")
 
   MODULE_OUTPUTS <-
-    c("TCL",  "TM_wide"   # Gross and bilateral trade
-      )
+    c("TCL",       # Gross trade
+      "TM_bilateral")   # Bilateral trade
+
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -40,7 +41,7 @@ module_xfaostat_L101_RawDataPreProc5_TCL_TM <- function(command, ...) {
 
 
 
-    FAOSTAT_RDS <- c("TCL", "TM_wide")
+    FAOSTAT_RDS <- c("TCL", "TM_bilateral")
 
     DIR_PREBUILT_FAOSTAT <- "data/PREBUILT_FAOSTAT"
 
@@ -57,11 +58,12 @@ module_xfaostat_L101_RawDataPreProc5_TCL_TM <- function(command, ...) {
       add_comments("Preprocessed FAO TCL") ->
       TCL
 
-    TM_wide %>%
+    TM_bilateral %>%
       add_title("FAO TM") %>%
       add_units("tonne") %>%
       add_comments("Preprocessed FAO TM_wide") ->
-      TM_wide
+      TM_bilateral
+
 
 
 #
@@ -102,7 +104,7 @@ module_xfaostat_L101_RawDataPreProc5_TCL_TM <- function(command, ...) {
 #              item_code < 1700,
 #              # Bilateral trade year starts from 1986 but higher quality after 1992
 #              # Subset data also to shrink the size
-#              year >= 1992,
+#              year >= min(FAOSTAT__Year_Bilateral),
 #              partner_country_code %in% QCL_area_code,
 #              reporter_country_code %in% QCL_area_code) %>%
 #       select(reporter_country_code, reporter_countries,
@@ -142,24 +144,15 @@ module_xfaostat_L101_RawDataPreProc5_TCL_TM <- function(command, ...) {
 #       TM3
 #     rm(TM1, TM2)
 #
-#     TM3 %>% spread(year, value) -> TM4
+#     TM3 %>% mutate(value = value / 1000, unit = "1000 tons") -> TM_bilateral
 #
-#     ### output OA and clean memory ----
-#     TM4 %>%
+#     ### output TM_bilateral ----
+#     TM_bilateral %>%
 #       add_title("FAO TM") %>%
 #       add_units("tonne") %>%
 #       add_comments("Preprocessed FAO TM") ->
-#       TM
-#
-#     rm(TM3, TM4)
-#     rm(QCL_area_code)
-#
-#     ### output TM and clean memory ----
-#     TM %>%
-#       add_title("FAO TM") %>%
-#       add_units("tonne") %>%
-#       add_comments("Preprocessed FAO TM_wide") ->
-#       TM_wide
+#       TM_bilateral
+
 
 
     return_data(MODULE_OUTPUTS)
