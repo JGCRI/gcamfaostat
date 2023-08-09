@@ -18,7 +18,7 @@
 module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(FILE = "aglu/fao/FAOSTAT/Other_supplementary/GDP_deflator_Taiwan",
+    c(FILE = "aglu/FAO/FAOSTAT/Other_supplementary/GDP_deflator_Taiwan",
       "QCL_area_code_map")
 
   MODULE_OUTPUTS <-
@@ -112,16 +112,13 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
 
     FAOSTAT_load_raw_data(DATASETCODE = "PD", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT)
     # read in Taiwan values as FAO does not have Taiwan price data
-    GDP_deflator_Taiwan <-
-      readr::read_csv("data_raw/Other_supplementary/GDP_deflator_Taiwan.csv",
-                      comment = "#")
-
+    # GDP_deflator_Taiwan
 
     PD %>% distinct(element, element_code, unit)
     PD %>% distinct(item, item_code)
 
     PD %>% filter(
-      year %in% Hist_Year,
+      year %in% FAOSTAT_Hist_Year,
       area_code < 350,
       area_code %in% QCL_area_code,
       # only keep regions with production

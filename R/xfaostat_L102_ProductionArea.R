@@ -345,15 +345,6 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       FF_join_checkmap(c("QCL_COMM_AN_PRIMARY", "FAO_an_items_PRODSTAT"), "item_code", "item") %>%
       mutate(match = if_else(QCL_COMM_AN_PRIMARY_item == FAO_an_items_PRODSTAT_item, T, F))
 
-    # checkitem <-
-    #   QCL_COMM_AN_PRIMARY %>%
-    #   select(item_code, item) %>% distinct() %>%
-    #   dplyr::rename_at(vars(any_of("item")), list(~paste0("QCL_COMM_AN_PRIMARY", "_", .))) %>%
-    #   full_join(FAO_an_items_PRODSTAT %>%
-    #               select(item_code, item) %>% distinct() %>%
-    #               dplyr::rename_at(vars(any_of("item")), list(~paste0("FAO_an_items_PRODSTAT", "_", .))),
-    #             by = "item_code") %>%
-    #   mutate(match = if_else(QCL_COMM_AN_PRIMARY_item == FAO_an_items_PRODSTAT_item, T, F))
 
     checkitem %>% filter(is.na(match)|match == F)
     FBS_COMM_FISH <- checkitem %>% filter(is.na(QCL_COMM_AN_PRIMARY_item)) %>%

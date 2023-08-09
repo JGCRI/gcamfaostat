@@ -30,9 +30,7 @@ module_xfaostat_L200_ExportCSV <- function(command, ...) {
       "SUA_food_macronutrient_rate")
 
   MODULE_OUTPUTS <-
-    c("GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019",
-      "GCAMDATA_FAOSTAT_MacroNutrientRate_179Regs_426Items_2010to2019Mean",
-      "GCAMDATA_FAOSTAT_FBSH_CB_173Regs_118Items_1973to2009")
+    c()
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -96,13 +94,15 @@ module_xfaostat_L200_ExportCSV <- function(command, ...) {
 
     ## *GCAMDATA_FAOSTAT_FBSH_CB_173Regs_118Items_1973to2009 ----
 
-    FBSH_CB%>%
-      # merge Sudan and South Sudan
-      FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL(SUDAN2012_MERGE = T) ->
-      FBSH_CB
+    FBSH_CB %>%
+        select(-element_code) %>%
+        # merge Sudan and South Sudan
+        FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL(SUDAN2012_MERGE = T) ->
+        FBSH_CB
 
 
-    FBSH_CB %>% mutate(unit = "1000 tonnes", value = value / 1000) %>%
+    FBSH_CB %>%
+      mutate(unit = "1000 tonnes", value = value / 1000) %>%
       filter(year <= 2009)  %>%
       filter(!is.na(year)) %>%
       spread(year, value) ->

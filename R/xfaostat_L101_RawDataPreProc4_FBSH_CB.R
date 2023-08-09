@@ -41,7 +41,8 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
     get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
     # Get area code ----
-    QCL_area_code <- QCL_area_code_map %>% distinct(area_code) %>% pull()
+    QCL_area_code <-
+      QCL_area_code_map %>% distinct(area_code) %>% pull()
 
 
     # Food balance and Supply-Utilization-Account
@@ -51,10 +52,17 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
     FAOSTAT_load_raw_data("FBSH")  # Old FBS -2013
     FBSH %>% distinct(element, element_code, unit)
     # Keep population (old)
-    FBSH %>% filter(item_code < 2901,
-                    !element_code %in% c(5301),
+    FBSH %>% filter(item_code < 2901,!element_code %in% c(5301),
                     area_code %in% QCL_area_code) %>%
-      select(area_code, area, item_code, item, element_code, element, year, value, unit) %>%
+      select(area_code,
+             area,
+             item_code,
+             item,
+             element_code,
+             element,
+             year,
+             value,
+             unit) %>%
       rm_accent("item", "area") -> FBSH1
 
 
@@ -72,10 +80,17 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
 
     CB %>% distinct(element, element_code, unit)
     # Keep population (old)
-    CB %>% filter(item_code < 2901,
-                  !element_code %in% c(5300),
+    CB %>% filter(item_code < 2901,!element_code %in% c(5300),
                   area_code %in% QCL_area_code) %>%
-      select(area_code, area, item_code, item, element_code, element, year, value, unit) %>%
+      select(area_code,
+             area,
+             item_code,
+             item,
+             element_code,
+             element,
+             year,
+             value,
+             unit) %>%
       rm_accent("item", "area") -> CB1
 
     ### output CB and clean memory ----
@@ -90,7 +105,7 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
     # load processed data
 
     FBSH %>% distinct(item_code) %>%
-      dplyr::intersect(CB %>% distinct(item_code) ) %>%
+      dplyr::intersect(CB %>% distinct(item_code)) %>%
       pull ->
       dup_item_code
 
@@ -99,10 +114,20 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
       bind_rows(CB %>% filter(!item_code %in% dup_item_code)) %>%
       select(-unit) %>%
       filter(!element_code %in% c(645, 664, 674, 684, 511)) %>%  # remove non-balance items
-      mutate(element = gsub(" Quantity| supply quantity \\(tonnes\\)| \\(non-food\\)", "", element)) %>%
-      mutate( element = replace(element, element == "Losses", "Loss"),
-              element = replace(element, element == "Processing", "Processed")) %>%
+      mutate(element = gsub(
+        " Quantity| supply quantity \\(tonnes\\)| \\(non-food\\)",
+        "",
+        element
+      )) %>%
+      mutate(
+        element = replace(element, element == "Losses", "Loss"),
+        element = replace(element, element == "Processing", "Processed")
+      ) %>%
+      # remove element code since FBSH and CB have different ones
       select(-element_code) %>%
+      # but adding back the FBSH one since FBS and FBSH have the same one
+      left_join(FBSH %>% distinct(element, element_code),
+                by = "element") %>%
       mutate(unit = "tonnes") ->
       FBSH_CB
 
@@ -111,17 +136,25 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
     SHELL_RATE_groundnuts <- 0.7
     Mill_RATE_rice <- 0.667
 
-    FBSH_CB %>% distinct(element, unit)
+    FBSH_CB %>% distinct(element, element_code, unit)
     FBSH_CB %>%
       filter(!item_code %in% c(2805, 2556)) %>%
       # Adjust to Rice and products and Groundnuts in FBS and bind
       bind_rows(
         FBSH_CB %>% filter(item_code %in%  c(2805)) %>%
-          mutate(item = "Rice and products", item_code = 2807,
-                 value = value / Mill_RATE_rice) %>%
-          bind_rows(FBSH_CB %>% filter(item_code %in%  c(2556)) %>%
-                      mutate(item = "Groundnuts", item_code = 2552,
-                             value = value / SHELL_RATE_groundnuts) )
+          mutate(
+            item = "Rice and products",
+            item_code = 2807,
+            value = value / Mill_RATE_rice
+          ) %>%
+          bind_rows(
+            FBSH_CB %>% filter(item_code %in%  c(2556)) %>%
+              mutate(
+                item = "Groundnuts",
+                item_code = 2552,
+                value = value / SHELL_RATE_groundnuts
+              )
+          )
       ) ->
       FBSH_CB1
 
