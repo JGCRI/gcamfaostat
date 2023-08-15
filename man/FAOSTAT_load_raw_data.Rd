@@ -4,12 +4,18 @@
 \alias{FAOSTAT_load_raw_data}
 \title{FAOSTAT_load_raw_data: load raw csv data}
 \usage{
-FAOSTAT_load_raw_data(DATASETCODE, DATA_FOLDER = DIR_RAW_DATA_FAOSTAT)
+FAOSTAT_load_raw_data(
+  DATASETCODE,
+  DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+  GET_MAPPINGCODE = NULL
+)
 }
 \arguments{
 \item{DATASETCODE}{Dataset code in FAO metadata or the name of a csv file.}
 
 \item{DATA_FOLDER}{Path to the folder storing the data.}
+
+\item{GET_MAPPINGCODE}{if NULL return data if char return other mapping files}
 }
 \description{
 Read csv data and "." in column name is substituted with "_".

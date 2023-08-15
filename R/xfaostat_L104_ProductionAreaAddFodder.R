@@ -62,7 +62,7 @@ module_xfaostat_L104_ProductionAreaAddFodder <- function(command, ...) {
     FAO_fodder_Prod_t_HA_ha_PRODSTAT_2011 %>%
       filter(year %in% FAOSTAT_Hist_Year) %>%
       filter(area_code %in% QCL_area_code) %>%
-      FAO_AREA_RM_NONEXIST() ->
+      FAOSTAT_AREA_RM_NONEXIST() ->
       FAO_fodder_Prod_t_HA_ha_PRODSTAT_2011
 
     # Low data quality compared to USDA briefly (partial region coverage, e.g., no Brazil or Africa)
@@ -92,7 +92,7 @@ module_xfaostat_L104_ProductionAreaAddFodder <- function(command, ...) {
       mutate(area_code = if_else(area_code == 206 & year >= 2012, 276, area_code),
              area = if_else(area == "Sudan (former)" & year >= 2012, "Sudan", area)) %>%
       # Remove area x year that should no exist
-      FAO_AREA_RM_NONEXIST %>%
+      FAOSTAT_AREA_RM_NONEXIST %>%
       left_join(UnitMap, by = "element") ->
       QCL_FODDERCROP
 
@@ -101,7 +101,10 @@ module_xfaostat_L104_ProductionAreaAddFodder <- function(command, ...) {
     QCL_FODDERCROP %>%
       add_title("Processed fodder crop production and area") %>%
       add_units("tonne and ha") %>%
-      add_comments("Data is from old GCAM data v5.4") ->
+      add_comments("Data is from old GCAM data v5.4") %>%
+      add_precursors("aglu/FAO/FAOSTAT/Other_supplementary/FAO_fodder_Prod_t_HA_ha_PRODSTAT_2011",
+                     "aglu/FAO/FAO_ag_items_PRODSTAT",
+                     "QCL_area_code_map")->
       QCL_FODDERCROP
 
 

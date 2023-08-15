@@ -18,20 +18,20 @@
 module_xfaostat_L199_ExportCSV <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c("Bal_new_all",
-      "FBSH_CB",
+    c("PD",
+      "Bal_new_all",
+      "FBSH_CB_wide",
       "QCL_PROD",
       "QCL_AN_LIVEANIMAL",
       "QCL_AN_PRIMARY_MILK",
       "QCL_CROP_PRIMARY",
       "QCL_FODDERCROP",
       "QCL_PRIMARY_PROD_PV",
-      "TM_bilateral",
-      "PD",
+      "TM_bilateral_wide",
       "SUA_food_macronutrient_rate")
 
   MODULE_OUTPUTS <-
-    c("xfaostat_L199_DUMMY")
+    c("xfaostat_L199_GCAMDATA_FAOSTAT_CSV")
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -45,7 +45,36 @@ module_xfaostat_L199_ExportCSV <- function(command, ...) {
 
 
     # adding dummy output ----
-    xfaostat_L199_DUMMY <- data.frame()
+    xfaostat_L199_GCAMDATA_FAOSTAT_CSV <-
+      tibble(CSV_export = c("GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019",
+                   "GCAMDATA_FAOSTAT_BiTrade_194Regs_400Items_2010to2020",
+                   "GCAMDATA_FAOSTAT_FBSH_CB_173Regs_118Items_1973to2009",
+                   "GCAMDATA_FAOSTAT_ProdArea_195Regs_271Prod160AreaItems_1973to2020",
+                   "GCAMDATA_FAOSTAT_ProdArea_96Regs_16FodderItems_1973to2020",
+                   "GCAMDATA_FAOSTAT_AnimalStock_202Regs_22Items_1973to2020",
+                   "GCAMDATA_FAOSTAT_ProducerPrice_170Regs_185PrimaryItems_2010to2020",
+                   "FAO_GDP_Deflators",
+                   "GCAMDATA_FAOSTAT_MacroNutrientRate_179Regs_426Items_2010to2019Mean"
+                   ))
+
+    xfaostat_L199_GCAMDATA_FAOSTAT_CSV %>%
+      add_title("Export CSV to DIR_OUTPUT_CSV") %>%
+      add_units("NA") %>%
+      add_comments("Export CSV") %>%
+      add_precursors("PD",
+                     "Bal_new_all",
+                     "FBSH_CB_wide",
+                     "QCL_PROD",
+                     "QCL_AN_LIVEANIMAL",
+                     "QCL_AN_PRIMARY_MILK",
+                     "QCL_CROP_PRIMARY",
+                     "QCL_FODDERCROP",
+                     "QCL_PRIMARY_PROD_PV",
+                     "TM_bilateral_wide",
+                     "SUA_food_macronutrient_rate") ->
+      xfaostat_L199_GCAMDATA_FAOSTAT_CSV
+
+
 
     if (OUTPUT_Export_CSV == T) {
       # Load required inputs ----
@@ -53,10 +82,22 @@ module_xfaostat_L199_ExportCSV <- function(command, ...) {
       get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
 
+
+
       # Bilateral trade ----
       ## *GCAMDATA_FAOSTAT_BiTrade_194Regs_400Items_2010to2020 ----
 
+      TM_bilateral_wide %>% gather_years() %>%
+        filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
+        filter(value > 0) %>%
+        FAOSTAT_AREA_RM_NONEXIST() %>%
+        rename(area_code1 = area_code, area_code = source_code) %>%
+        FAOSTAT_AREA_RM_NONEXIST() %>%
+        rename(source_code = area_code, area_code = area_code1) ->
+        TM_bilateral
+
       TM_bilateral %>%
+        mutate(value = value / 1000) %>% # change unit to 1000 tonnes
         # only export quality data years
         filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
         FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL(SUDAN2012_MERGE = T) %>%
@@ -83,7 +124,6 @@ module_xfaostat_L199_ExportCSV <- function(command, ...) {
       )
 
 
-
       # SUA and FBS ----
       ## *GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019 ----
 
@@ -103,6 +143,10 @@ module_xfaostat_L199_ExportCSV <- function(command, ...) {
       )
 
       ## *GCAMDATA_FAOSTAT_FBSH_CB_173Regs_118Items_1973to2009 ----
+      FBSH_CB_wide %>% gather_years() %>%
+        FAOSTAT_AREA_RM_NONEXIST() -> FBSH_CB
+
+      rm(FBSH_CB_wide)
 
       FBSH_CB %>%
         select(-element_code) %>%
@@ -119,7 +163,7 @@ module_xfaostat_L199_ExportCSV <- function(command, ...) {
 
       output_csv_data(
         "GCAMDATA_FAOSTAT_FBSH_CB_173Regs_118Items_1973to2009",
-        col_type_nonyear = "iiccc",
+        col_type_nonyear = "iicccc",
         title = "Old FAO food balance sheet in primary equilvalent in 1973 to 2009",
         unit = "1000 tonnes",
         code = "FBSH",
@@ -239,7 +283,7 @@ module_xfaostat_L199_ExportCSV <- function(command, ...) {
       ###** GDP deflators ----
 
       FAO_GDP_Deflators <-
-        PD %>% FAO_AREA_RM_NONEXIST(RM_AREA_CODE = NULL) %>%
+        PD %>% FAOSTAT_AREA_RM_NONEXIST(RM_AREA_CODE = NULL) %>%
         spread(year, value)
 
       output_csv_data(

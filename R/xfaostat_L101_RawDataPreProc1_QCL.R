@@ -18,11 +18,11 @@
 module_xfaostat_L101_RawDataPreProc1_QCL <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(FILE = "aglu/AGLU_ctry")
+    c(OPTIONAL_FILE = "aglu/FAO/FAOSTAT/Trade_CropsLivestock_E_All_Data_(Normalized)_PalceHolder")
 
   MODULE_OUTPUTS <-
-    c("QCL",              # Ag production quantity and harvested area
-      "QCL_area_code_map" # Country code
+    c("QCL_wide",          # Ag production quantity and harvested area
+      "QCL_area_code_map"  # Country code
     )
 
   if(command == driver.DECLARE_INPUTS) {
@@ -40,13 +40,24 @@ module_xfaostat_L101_RawDataPreProc1_QCL <- function(command, ...) {
     get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
 
+    if(Process_Raw_FAO_Data == FALSE) {
+
+      # Prebuilt data is read here ----
+      QCL_wide <- extract_prebuilt_data("QCL_wide")
+      QCL_area_code_map <- extract_prebuilt_data("QCL_area_code_map")
+
+      } else {
+
+
     # *[QCL] FAOSTAT Production and area ----
 
     ## Load raw data
     FAOSTAT_load_raw_data(DATASETCODE = "QCL", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT)
 
+    QCL %>% distinct(element_code, element)
 
     QCL %>%
+      filter(year >= min(FAOSTAT_Hist_Year)) %>%
       # Remove aggregated areas and items
       filter(area_code < 350, item_code < 1700) %>%
       select(area_code,
@@ -67,21 +78,31 @@ module_xfaostat_L101_RawDataPreProc1_QCL <- function(command, ...) {
       # remove accent
       rm_accent("item", "area") -> QCL1
 
-    ### output QCL_area_code_map ----
+    QCL1 %>% spread(year, value) ->
+      QCL_wide
+
+
+    ### output QCL_area_code_map and QCL ----
     # Other data uses OCL area for consistency
-    QCL1 %>%
+    QCL_wide %>%
       distinct(area_code, area) %>%
       add_title("FAO primary production country and code") %>%
       add_units("NA") %>%
-      add_comments("FAO Country and code") ->
+      add_comments("FAO Country and code") %>%
+      add_precursors("aglu/FAO/FAOSTAT/Trade_CropsLivestock_E_All_Data_(Normalized)_PalceHolder") ->
       QCL_area_code_map
 
-    ### output QCL ----
-    QCL1 %>%
-      add_title("FAO primary production") %>%
-      add_units("USD/tonne") %>%
-      add_comments("Preprocessed FAOSTAT primary production") ->
-      QCL
+    QCL_wide %>%
+      add_title("FAO primary production (QCL)", overwrite = TRUE) %>%
+      add_units("ha/tonne") %>%
+      add_comments("Preprocessed FAOSTAT primary production") %>%
+      add_precursors("aglu/FAO/FAOSTAT/Trade_CropsLivestock_E_All_Data_(Normalized)_PalceHolder") ->
+      QCL_wide
+
+      verify_identical_prebuilt(QCL_area_code_map)
+      verify_identical_prebuilt(QCL_wide)
+
+      }
 
     return_data(MODULE_OUTPUTS)
 

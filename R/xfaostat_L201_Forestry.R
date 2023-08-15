@@ -18,9 +18,7 @@
 module_xfaostat_L201_Forestry <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(FILE = "aglu/FAO/FAO_an_items_PRODSTAT",
-      FILE = "aglu/FAO/FAO_ag_items_PRODSTAT"
-      )
+    c("FO_Roundwood")
 
   MODULE_OUTPUTS <-
     c("GCAMDATA_FAOSTAT_ForProdTrade_215Regs_Roundwood_1973to2020",
@@ -42,32 +40,16 @@ module_xfaostat_L201_Forestry <- function(command, ...) {
 
 
 
-    FAOSTAT_load_raw_data(DATASETCODE = "FO", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT)
-
     ## Proprocess and quick clean ----
-    # Only keep roundwood
-    FO %>% filter(year %in% FAOSTAT_Hist_Year,
-                  area_code < 350,     # Rm aggregated area
-                  item_code == 1861) %>% # Roundwood
-      select(area_code,
-             area,
-             item_code,
-             item,
-             element_code,
-             element,
-             year,
-             value,
-             unit) %>%
-      filter(!is.na(value)) %>%
-      rm_accent("item", "area") -> FO1
+
 
     # 215 unique areas with production data
     FO_area <-
-      FO1 %>% filter(element_code == 5516) %>% distinct(area, area_code)
-    FO1 %>% distinct(element, element_code, unit) -> UnitMap
+      FO_Roundwood %>% filter(element_code == 5516) %>% distinct(area, area_code)
+    FO_Roundwood %>% distinct(element, element_code, unit) -> UnitMap
 
-    ## FO1_Prod: Production ----
-    FO1 %>%
+    ## FO_Roundwood_Prod: Production ----
+    FO_Roundwood %>%
       # Areas with production data
       right_join(FO_area, by = c("area_code", "area")) %>%
       filter(element_code %in% c(5516)) %>%  # Production
@@ -85,11 +67,11 @@ module_xfaostat_L201_Forestry <- function(command, ...) {
       ungroup() %>%
       tidyr::replace_na(list(value = 0)) %>%
       # Remove area x year that should not exist
-      FAO_AREA_RM_NONEXIST(RM_AREA_CODE = NULL)  ->
-      F01_Prod
+      FAOSTAT_AREA_RM_NONEXIST(RM_AREA_CODE = NULL)  ->
+      FO_Roundwood_Prod
 
-    ## FO1_Export_Q_V: Export  ----
-    FO1 %>%
+    ## FO_Roundwood_Export_Q_V: Export  ----
+    FO_Roundwood %>%
       # Areas with production data
       right_join(FO_area, by = c("area_code", "area")) %>%
       filter(element_code %in% c(5922 , 5916)) %>%  # Export quantity and value
@@ -106,13 +88,13 @@ module_xfaostat_L201_Forestry <- function(command, ...) {
       FF_FILL_NUMERATOR_DENOMINATOR(NUMERATOR_c = "Export Value",
                                     DENOMINATOR_c = "Export Quantity")  %>%
       # Remove area x year that should not exist
-      FAO_AREA_RM_NONEXIST(RM_AREA_CODE = NULL) %>%
+      FAOSTAT_AREA_RM_NONEXIST(RM_AREA_CODE = NULL) %>%
       # Get unit and element_code back
       left_join(UnitMap, by = "element") ->
-      FO1_Export_Q_V
+      FO_Roundwood_Export_Q_V
 
-    ## FO1_Import_Q_V: Export  ----
-    FO1 %>%
+    ## FO_Roundwood_Import_Q_V: Export  ----
+    FO_Roundwood %>%
       right_join(FO_area, by = c("area_code", "area")) %>%
       filter(element_code %in% c(5622 , 5616)) %>%  # Export quantity and value
       # Complete all dimensions
@@ -128,10 +110,10 @@ module_xfaostat_L201_Forestry <- function(command, ...) {
       FF_FILL_NUMERATOR_DENOMINATOR(NUMERATOR_c = "Import Value",
                                     DENOMINATOR_c = "Import Quantity")  %>%
       # Remove area x year that should not exist
-      FAO_AREA_RM_NONEXIST(RM_AREA_CODE = NULL) %>%
+      FAOSTAT_AREA_RM_NONEXIST(RM_AREA_CODE = NULL) %>%
       # Get unit and element_code back
       left_join(UnitMap, by = "element")  ->
-      FO1_Import_Q_V
+      FO_Roundwood_Import_Q_V
 
     ## Bind and Balance ----
 
@@ -139,9 +121,9 @@ module_xfaostat_L201_Forestry <- function(command, ...) {
     # Adjust Export as Production * Export_Production_ratio
     # initial value in constants.R was For_Export_Production_Ratio_Adj = 0.9
 
-    F01_Prod %>%
-      bind_rows(FO1_Export_Q_V %>% filter(element == "Export Quantity")) %>%
-      bind_rows(FO1_Import_Q_V %>% filter(element == "Import Quantity")) %>%
+    FO_Roundwood_Prod %>%
+      bind_rows(FO_Roundwood_Export_Q_V %>% filter(element == "Export Quantity")) %>%
+      bind_rows(FO_Roundwood_Import_Q_V %>% filter(element == "Import Quantity")) %>%
       mutate(element = gsub(" Quantity", "", element)) %>%
       select(-unit, -element_code) %>%
       GROSS_TRADE_ADJUST %>%
@@ -163,7 +145,7 @@ module_xfaostat_L201_Forestry <- function(command, ...) {
       For_Balance
 
     # clean up
-    rm(FO_area, UnitMap, FO1, F01_Prod, FO1_Import_Q_V)
+    rm(FO_area, UnitMap, FO_Roundwood, FO_Roundwood_Prod, FO_Roundwood_Import_Q_V)
 
 
     ## Produce output and export CSV ----
@@ -172,19 +154,21 @@ module_xfaostat_L201_Forestry <- function(command, ...) {
       spread(year, value)
 
     GCAMDATA_FAOSTAT_ForExportPrice_214Regs_Roundwood_1973to2020 <-
-      FO1_Export_Q_V %>% spread(year, value)
+      FO_Roundwood_Export_Q_V %>% spread(year, value)
 
 
     GCAMDATA_FAOSTAT_ForProdTrade_215Regs_Roundwood_1973to2020 %>%
       add_title("FAO forestry production, export, and import (roundwood total) by country_year") %>%
       add_units("m3 ") %>%
-      add_comments("Data is preprocessed and generated by gcamdata-FAOSTAT. Gross trade is balanced") ->
+      add_comments("Data is preprocessed and generated by gcamdata-FAOSTAT. Gross trade is balanced") %>%
+      add_precursors("FO_Roundwood") ->
       GCAMDATA_FAOSTAT_ForProdTrade_215Regs_Roundwood_1973to2020
 
     GCAMDATA_FAOSTAT_ForExportPrice_214Regs_Roundwood_1973to2020 %>%
       add_title("FAO forests export qunatity and export value by country_year") %>%
       add_units("m3 and 1000 USD") %>%
-      add_comments("Data is generated by gcamdata-FAOSTAT for deriving export prices") ->
+      add_comments("Data is generated by gcamdata-FAOSTAT for deriving export prices") %>%
+      add_precursors("FO_Roundwood") ->
       GCAMDATA_FAOSTAT_ForExportPrice_214Regs_Roundwood_1973to2020
 
 

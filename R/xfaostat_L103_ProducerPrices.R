@@ -20,7 +20,8 @@ module_xfaostat_L103_ProducerPrices <- function(command, ...) {
   MODULE_INPUTS <-
     c(FILE = "aglu/FAO/FAO_an_items_PRODSTAT",
       FILE = "aglu/FAO/FAO_ag_items_PRODSTAT",
-        "QCL_PROD", "PP")
+      "QCL_PROD",
+      "PP_wide")
 
   MODULE_OUTPUTS <-
     c("QCL_PRIMARY_PROD_PV")
@@ -38,6 +39,12 @@ module_xfaostat_L103_ProducerPrices <- function(command, ...) {
     # Load required inputs ----
 
     get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
+
+
+    PP_wide %>% gather_years() %>%
+      FAOSTAT_AREA_RM_NONEXIST() ->
+      PP
+
 
     FAO_an_items_PRODSTAT <- FAO_an_items_PRODSTAT %>% filter(!is.na(GCAM_commodity))
     FAO_ag_items_PRODSTAT <- FAO_ag_items_PRODSTAT %>% filter(!is.na(GCAM_commodity))
@@ -119,7 +126,7 @@ module_xfaostat_L103_ProducerPrices <- function(command, ...) {
       FF_FILL_NUMERATOR_DENOMINATOR(NUMERATOR_c = "Prod_Value",
                                     DENOMINATOR_c = "Production") %>%
       # Remove area x year that should no exist
-      FAO_AREA_RM_NONEXIST %>%
+      FAOSTAT_AREA_RM_NONEXIST %>%
       left_join(UnitMap %>%
                   bind_rows(UnitMap %>% mutate(element = "Prod_Value", unit = "USD")),
                 by = "element") ->
@@ -130,7 +137,11 @@ module_xfaostat_L103_ProducerPrices <- function(command, ...) {
     QCL_PRIMARY_PROD_PV %>%
       add_title("FAO crop and livestock production and crop area") %>%
       add_units("USD and tonne") %>%
-      add_comments("Detailed FAO QCL data processing. FBS fish data is used") ->
+      add_comments("Detailed FAO QCL data processing. FBS fish data is used") %>%
+      add_precursors("aglu/FAO/FAO_an_items_PRODSTAT",
+                     "aglu/FAO/FAO_ag_items_PRODSTAT",
+                     "QCL_PROD",
+                     "PP_wide") ->
       QCL_PRIMARY_PROD_PV
 
     return_data(MODULE_OUTPUTS)

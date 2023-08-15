@@ -1,372 +1,402 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/404.html</loc>
   </url>
   <url>
-    <loc>/articles/gcamfaostat.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/articles/gcamfaostat.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/articles/getting-started/getting-started.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/articles/index.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/authors.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/index.html</loc>
   </url>
   <url>
-    <loc>/reference/add_carbon_info.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/reference/add_column_types_header_line.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/add_carbon_info.html</loc>
   </url>
   <url>
-    <loc>/reference/add_comments.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/add_column_types_header_line.html</loc>
   </url>
   <url>
-    <loc>/reference/add_data.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/add_comments.html</loc>
   </url>
   <url>
-    <loc>/reference/add_flags.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/add_data.html</loc>
   </url>
   <url>
-    <loc>/reference/add_legacy_name.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/add_flags.html</loc>
   </url>
   <url>
-    <loc>/reference/add_node_leaf_names.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/add_legacy_name.html</loc>
   </url>
   <url>
-    <loc>/reference/add_precursors.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/add_node_leaf_names.html</loc>
   </url>
   <url>
-    <loc>/reference/add_reference.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/add_precursors.html</loc>
   </url>
   <url>
-    <loc>/reference/add_title.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/add_reference.html</loc>
   </url>
   <url>
-    <loc>/reference/add_units.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/add_title.html</loc>
   </url>
   <url>
-    <loc>/reference/append_GLU.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/add_units.html</loc>
   </url>
   <url>
-    <loc>/reference/approx_fun.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/append_GLU.html</loc>
   </url>
   <url>
-    <loc>/reference/approx_fun_constant.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/approx_fun.html</loc>
   </url>
   <url>
-    <loc>/reference/change_iso_code.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/approx_fun_constant.html</loc>
   </url>
   <url>
-    <loc>/reference/check_chunk_outputs.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/assert_FBS_balance.html</loc>
   </url>
   <url>
-    <loc>/reference/chunk_inputs.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/change_iso_code.html</loc>
   </url>
   <url>
-    <loc>/reference/chunk_outputs.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/check_chunk_outputs.html</loc>
   </url>
   <url>
-    <loc>/reference/chunk_readylist.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/chunk_inputs.html</loc>
   </url>
   <url>
-    <loc>/reference/compute_BC_OC.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/chunk_outputs.html</loc>
   </url>
   <url>
-    <loc>/reference/compute_BC_OC_elc.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/chunk_readylist.html</loc>
   </url>
   <url>
-    <loc>/reference/compute_BC_OC_transport.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/compute_BC_OC.html</loc>
   </url>
   <url>
-    <loc>/reference/create_datamap_from_cache.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/compute_BC_OC_elc.html</loc>
   </url>
   <url>
-    <loc>/reference/downscale_FAO_country.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/compute_BC_OC_transport.html</loc>
   </url>
   <url>
-    <loc>/reference/driver.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/create_datamap_from_cache.html</loc>
   </url>
   <url>
-    <loc>/reference/driver_drake.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/downscale_FAO_country.html</loc>
   </url>
   <url>
-    <loc>/reference/dstrace.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/driver.html</loc>
   </url>
   <url>
-    <loc>/reference/dstrace_chunks.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/driver_drake.html</loc>
   </url>
   <url>
-    <loc>/reference/dstrace_plot.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/dstrace.html</loc>
   </url>
   <url>
-    <loc>/reference/empty_data.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/dstrace_chunks.html</loc>
   </url>
   <url>
-    <loc>/reference/evaluate_smooth_res_curve.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/dstrace_plot.html</loc>
   </url>
   <url>
-    <loc>/reference/extract_header_info.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/empty_data.html</loc>
   </url>
   <url>
-    <loc>/reference/extract_prebuilt_data.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/evaluate_smooth_res_curve.html</loc>
   </url>
   <url>
-    <loc>/reference/FAOSTAT_load_raw_data.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/extract_header_info.html</loc>
   </url>
   <url>
-    <loc>/reference/FAOSTAT_metadata.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/extract_prebuilt_data.html</loc>
   </url>
   <url>
-    <loc>/reference/FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/FAOSTAT_AREA_RM_NONEXIST.html</loc>
   </url>
   <url>
-    <loc>/reference/FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/FAOSTAT_load_raw_data.html</loc>
   </url>
   <url>
-    <loc>/reference/FAO_AREA_RM_NONEXIST.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/FAOSTAT_metadata.html</loc>
   </url>
   <url>
-    <loc>/reference/fast_left_join.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION.html</loc>
   </url>
   <url>
-    <loc>/reference/FF_check_count_plot.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL.html</loc>
   </url>
   <url>
-    <loc>/reference/FF_FILL_NUMERATOR_DENOMINATOR.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/FAO_AREA_RM_NONEXIST.html</loc>
   </url>
   <url>
-    <loc>/reference/FF_join_checkmap.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/fast_left_join.html</loc>
   </url>
   <url>
-    <loc>/reference/FF_summary.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/FF_check_count_plot.html</loc>
   </url>
   <url>
-    <loc>/reference/fill_exp_decay_extrapolate.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/FF_download_faostat_bulk.html</loc>
   </url>
   <url>
-    <loc>/reference/find_chunks.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/FF_FILL_NUMERATOR_DENOMINATOR.html</loc>
   </url>
   <url>
-    <loc>/reference/find_csv_file.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/FF_join_checkmap.html</loc>
   </url>
   <url>
-    <loc>/reference/find_header.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/FF_rawdata_info.html</loc>
   </url>
   <url>
-    <loc>/reference/gather_years.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/FF_summary.html</loc>
   </url>
   <url>
-    <loc>/reference/GCAM_DATA_MAP.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/fill_exp_decay_extrapolate.html</loc>
   </url>
   <url>
-    <loc>/reference/gdp_deflator.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/find_chunks.html</loc>
   </url>
   <url>
-    <loc>/reference/get_comments.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/find_csv_file.html</loc>
   </url>
   <url>
-    <loc>/reference/get_data.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/find_header.html</loc>
   </url>
   <url>
-    <loc>/reference/get_data_list.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/gather_years.html</loc>
   </url>
   <url>
-    <loc>/reference/get_flags.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/GCAM_DATA_MAP.html</loc>
   </url>
   <url>
-    <loc>/reference/get_relative_to_workdir.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/gdp_deflator.html</loc>
   </url>
   <url>
-    <loc>/reference/get_ssp_regions.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/get_comments.html</loc>
   </url>
   <url>
-    <loc>/reference/graph_chunks.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/get_data.html</loc>
   </url>
   <url>
-    <loc>/reference/GROSS_TRADE_ADJUST.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/get_data_list.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/get_flags.html</loc>
   </url>
   <url>
-    <loc>/reference/info.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/get_relative_to_workdir.html</loc>
   </url>
   <url>
-    <loc>/reference/inputs_of.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/get_ssp_regions.html</loc>
   </url>
   <url>
-    <loc>/reference/is_data_list.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/graph_chunks.html</loc>
   </url>
   <url>
-    <loc>/reference/left_join_error_no_match.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/GROSS_TRADE_ADJUST.html</loc>
   </url>
   <url>
-    <loc>/reference/left_join_keep_first_only.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/LEVEL2_DATA_NAMES.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/info.html</loc>
   </url>
   <url>
-    <loc>/reference/load_csv_files.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/inputs_of.html</loc>
   </url>
   <url>
-    <loc>/reference/load_from_cache.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/is_data_list.html</loc>
   </url>
   <url>
-    <loc>/reference/missing_data.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/left_join_error_no_match.html</loc>
   </url>
   <url>
-    <loc>/reference/module_aglu_L100.FAO_SUA_PrimaryEquivalent.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/left_join_keep_first_only.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostat_L101_RawDataPreProc1_QCL.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/LEVEL2_DATA_NAMES.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostat_L101_RawDataPreProc2_PP_PD_OA.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/load_csv_files.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostat_L101_RawDataPreProc3_SCL_FBS.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/load_from_cache.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostat_L101_RawDataPreProc4_FBSH_CB.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/missing_data.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostat_L101_RawDataPreProc5_TCL_TM.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_aglu_L100.FAO_SUA_PrimaryEquivalent.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostat_L102_ProductionArea.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L101_RawDataPreProc1_QCL.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostat_L103_ProducerPrices.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L101_RawDataPreProc2_PP_PD_OA.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostat_L104_ProductionAreaAddFodder.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L101_RawDataPreProc3_SCL_FBS.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostat_L105_DataConnectionToSUA.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L101_RawDataPreProc4_FBSH_CB.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostat_L106_FoodMacroNutrient.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L101_RawDataPreProc5_TCL.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostat_L199_ExportCSV.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L101_RawDataPreProc5_TCL_TM.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostat_L201_Forestry.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L101_RawDataPreProc6_TM.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostat_L301_LandCover.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L101_RawDataPreProc7_FO.html</loc>
   </url>
   <url>
-    <loc>/reference/module_xfaostat_L401_Fertilizer.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L101_RawDataPreProc8_RL_RFN.html</loc>
   </url>
   <url>
-    <loc>/reference/Moving_average.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L102_ProductionArea.html</loc>
   </url>
   <url>
-    <loc>/reference/NEI_to_GCAM.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L103_ProducerPrices.html</loc>
   </url>
   <url>
-    <loc>/reference/normalize_files.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L104_ProductionAreaAddFodder.html</loc>
   </url>
   <url>
-    <loc>/reference/outputs_of.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L105_DataConnectionToSUA.html</loc>
   </url>
   <url>
-    <loc>/reference/output_csv_data.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L106_FoodMacroNutrient.html</loc>
   </url>
   <url>
-    <loc>/reference/parse_csv_header.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L199_ExportCSV.html</loc>
   </url>
   <url>
-    <loc>/reference/PREBUILT_DATA.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L201_Forestry.html</loc>
   </url>
   <url>
-    <loc>/reference/protect_integer_cols.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L301_LandCover.html</loc>
   </url>
   <url>
-    <loc>/reference/reduce_mgd_carbon.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/module_xfaostat_L401_Fertilizer.html</loc>
   </url>
   <url>
-    <loc>/reference/remove_data.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/Moving_average.html</loc>
   </url>
   <url>
-    <loc>/reference/rename_SO2.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/NEI_to_GCAM.html</loc>
   </url>
   <url>
-    <loc>/reference/repeat_add_columns.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/normalize_files.html</loc>
   </url>
   <url>
-    <loc>/reference/replace_GLU.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/outputs_of.html</loc>
   </url>
   <url>
-    <loc>/reference/return_data.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/output_csv_data.html</loc>
   </url>
   <url>
-    <loc>/reference/return_modified.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/parse_csv_header.html</loc>
   </url>
   <url>
-    <loc>/reference/rm_accent.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/PREBUILT_DATA.html</loc>
   </url>
   <url>
-    <loc>/reference/run_chunk.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/protect_integer_cols.html</loc>
   </url>
   <url>
-    <loc>/reference/same_attributes_as.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/reduce_mgd_carbon.html</loc>
   </url>
   <url>
-    <loc>/reference/same_precursors_as.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/remove_data.html</loc>
   </url>
   <url>
-    <loc>/reference/save_chunkdata.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/rename_SO2.html</loc>
   </url>
   <url>
-    <loc>/reference/screen_forbidden.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/repeat_add_columns.html</loc>
   </url>
   <url>
-    <loc>/reference/set_subsector_shrwt.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/replace_GLU.html</loc>
   </url>
   <url>
-    <loc>/reference/set_traded_names.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/return_data.html</loc>
   </url>
   <url>
-    <loc>/reference/set_water_input_name.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/return_modified.html</loc>
   </url>
   <url>
-    <loc>/reference/set_years.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/rm_accent.html</loc>
   </url>
   <url>
-    <loc>/reference/smooth_res_curve_approx_error.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/run_chunk.html</loc>
   </url>
   <url>
-    <loc>/reference/standardize_iso.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/same_attributes_as.html</loc>
   </url>
   <url>
-    <loc>/reference/tibbelize_outputs.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/same_precursors_as.html</loc>
   </url>
   <url>
-    <loc>/reference/verify_identical_prebuilt.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/save_chunkdata.html</loc>
   </url>
   <url>
-    <loc>/reference/warn_datachunk_bypass.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/screen_forbidden.html</loc>
   </url>
   <url>
-    <loc>/reference/warn_data_injects.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/set_subsector_shrwt.html</loc>
   </url>
   <url>
-    <loc>/reference/warn_mismarked_fileinputs.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/set_traded_names.html</loc>
   </url>
   <url>
-    <loc>/reference/write_to_all_regions.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/set_water_input_name.html</loc>
   </url>
   <url>
-    <loc>/reference/write_to_all_states.html</loc>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/set_years.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/smooth_res_curve_approx_error.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/standardize_iso.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/SUA_bal_adjust.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/tibbelize_outputs.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/verify_identical_prebuilt.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/warn_datachunk_bypass.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/warn_data_injects.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/warn_mismarked_fileinputs.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/write_to_all_regions.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamdata-faostat/reference/write_to_all_states.html</loc>
   </url>
 </urlset>

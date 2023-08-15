@@ -20,7 +20,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
   MODULE_INPUTS <-
     c(FILE = "aglu/FAO/FAO_an_items_PRODSTAT",
       FILE = "aglu/FAO/FAO_ag_items_PRODSTAT",
-        "QCL", "FBS", "FBSH_CB")
+        "QCL_wide", "FBS_wide", "FBSH_CB_wide")
 
   MODULE_OUTPUTS <-
     c("QCL_PROD",
@@ -42,6 +42,19 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
     # Load required inputs ----
 
     get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
+
+    # wide to long
+    QCL_wide %>% gather_years() %>%
+      FAOSTAT_AREA_RM_NONEXIST() -> QCL
+
+    FBS_wide %>% gather_years() %>%
+      FAOSTAT_AREA_RM_NONEXIST() -> FBS
+
+    FBSH_CB_wide %>% gather_years() %>%
+      FAOSTAT_AREA_RM_NONEXIST() -> FBSH_CB
+
+
+
 
     FAO_an_items_PRODSTAT <- FAO_an_items_PRODSTAT %>% filter(!is.na(GCAM_commodity))
     FAO_ag_items_PRODSTAT <- FAO_ag_items_PRODSTAT %>% filter(!is.na(GCAM_commodity))
@@ -98,7 +111,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       FF_FILL_NUMERATOR_DENOMINATOR(NUMERATOR_c = "Production",
                                     DENOMINATOR_c = "Area harvested") %>%
       # Remove area x year that should no exist
-      FAO_AREA_RM_NONEXIST %>%
+      FAOSTAT_AREA_RM_NONEXIST %>%
       left_join(UnitMap, by = "element") ->
       QCL_CROP_PRIMARY
 
@@ -152,7 +165,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       FF_FILL_NUMERATOR_DENOMINATOR(NUMERATOR_c = "Production",
                                     DENOMINATOR_c = "Producing Animals/Slaughtered") %>%
       # Remove area x year that should no exist
-      FAO_AREA_RM_NONEXIST %>%
+      FAOSTAT_AREA_RM_NONEXIST %>%
       left_join(UnitMap, by = "element") ->
       QCL_AN_PRIMARY_MEAT1
 
@@ -172,7 +185,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       FF_FILL_NUMERATOR_DENOMINATOR(NUMERATOR_c = "Production",
                                     DENOMINATOR_c = "Producing Animals/Slaughtered") %>%
       # Remove area x year that should no exist
-      FAO_AREA_RM_NONEXIST %>%
+      FAOSTAT_AREA_RM_NONEXIST %>%
       left_join(UnitMap, by = "element") ->
       QCL_AN_PRIMARY_MEAT2
 
@@ -192,7 +205,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       FF_FILL_NUMERATOR_DENOMINATOR(NUMERATOR_c = "Production",
                                     DENOMINATOR_c = "Laying") %>%
       # Remove area x year that should no exist
-      FAO_AREA_RM_NONEXIST %>%
+      FAOSTAT_AREA_RM_NONEXIST %>%
       left_join(UnitMap %>%
                   filter(element_code %in% c(5510, 5313)), by = "element") ->
       QCL_AN_PRIMARY_EGG
@@ -214,7 +227,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       FF_FILL_NUMERATOR_DENOMINATOR(NUMERATOR_c = "Production",
                                     DENOMINATOR_c = "Milk Animals") %>%
       # Remove area x year that should no exist
-      FAO_AREA_RM_NONEXIST %>%
+      FAOSTAT_AREA_RM_NONEXIST %>%
       left_join(UnitMap, by = "element") ->
       QCL_AN_PRIMARY_MILK
 
@@ -235,7 +248,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       tidyr::fill(value, .direction = "down") %>%
       replace_na(list(value = 0)) %>%
       ungroup() %>%
-      FAO_AREA_RM_NONEXIST ->
+      FAOSTAT_AREA_RM_NONEXIST ->
       QCL_AN_PRIMARY_BEE
 
     ### QCL_COMM_AN_PRIMARY_FATOFFALHIDE ----
@@ -257,7 +270,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       tidyr::fill(value, .direction = "down") %>%
       replace_na(list(value = 0)) %>%
       ungroup() %>%
-      FAO_AREA_RM_NONEXIST ->
+      FAOSTAT_AREA_RM_NONEXIST ->
       QCL_AN_PRIMARY_FATOFFALHIDE
 
 
@@ -276,7 +289,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       tidyr::fill(value, .direction = "down") %>%
       replace_na(list(value = 0)) %>%
       ungroup() %>%
-      FAO_AREA_RM_NONEXIST -> QCL_OTHERPROC
+      FAOSTAT_AREA_RM_NONEXIST -> QCL_OTHERPROC
 
     ## QCL_COMM_AN_LIVEANIMAL ----
     #*******************************************
@@ -295,7 +308,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       tidyr::fill(value, .direction = "down") %>%
       replace_na(list(value = 0)) %>%
       ungroup() %>%
-      FAO_AREA_RM_NONEXIST -> QCL_AN_LIVEANIMAL
+      FAOSTAT_AREA_RM_NONEXIST -> QCL_AN_LIVEANIMAL
 
 
     ## QCL_AN_LIVEANIMAL_MEATEQ ----
@@ -310,7 +323,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
 
     # live animal item_code + 1 matches primary meat code
     QCL_COMM_AN_LIVEANIMAL %>% mutate(item_code = item_code + 1) %>%
-      right_join(QCL_COMM_AN_PRIMARY_MEAT1 %>%
+      full_join(QCL_COMM_AN_PRIMARY_MEAT1 %>%
                    bind_rows(QCL_COMM_AN_PRIMARY_MEAT2) %>%
                    rename(item_meat = item), by = "item_code" )
 
@@ -359,12 +372,14 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       bind_rows(
         FBSH_CB %>% filter(year < 2010, element_code == 5511, # production
                         item_code %in% c(FBS_COMM_FISH %>% pull(item_code)))
-      ) %>% mutate(value = value *1000,
-                   unit = "tonnes",
-                   element_code = 5510 # changed here for consistency
+      ) %>%
+      replace_na(list(value = 0)) %>%
+      mutate(value = value *1000,
+             unit = "tonnes",
+             element_code = 5510 # changed here for consistency
       ) %>%
       select(area_code, area, item_code, item, element, element_code, year, value, unit) %>%
-      FAO_AREA_RM_NONEXIST
+      FAOSTAT_AREA_RM_NONEXIST
 
 
 
@@ -388,25 +403,31 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
     QCL_AN_LIVEANIMAL %>%
       add_title("FAO live animal stock and production") %>%
       add_units("various") %>%
-      add_comments("Detailed FAO QCL data processing for live animal and production") ->
+      add_comments("Detailed FAO QCL data processing for live animal and production") %>%
+      add_precursors("aglu/FAO/FAO_an_items_PRODSTAT",
+                     "aglu/FAO/FAO_ag_items_PRODSTAT",
+                     "QCL_wide", "FBS_wide", "FBSH_CB_wide") ->
       QCL_AN_LIVEANIMAL
 
     QCL_AN_PRIMARY_MILK %>%
       add_title("FAO milk animal stock and production") %>%
       add_units("various") %>%
-      add_comments("Detailed FAO QCL data processing for dairy animal and production") ->
+      add_comments("Detailed FAO QCL data processing for dairy animal and production") %>%
+      same_precursors_as(QCL_AN_LIVEANIMAL) ->
       QCL_AN_PRIMARY_MILK
 
     QCL_AN_LIVEANIMAL_MEATEQ %>%
       add_title("FAO live animal stock meat equivalent") %>%
       add_units("various") %>%
-      add_comments("Detailed FAO QCL data processing for live animal stock meat equivalent") ->
+      add_comments("Detailed FAO QCL data processing for live animal stock meat equivalent") %>%
+      same_precursors_as(QCL_AN_LIVEANIMAL) ->
       QCL_AN_LIVEANIMAL_MEATEQ
 
     QCL_CROP_PRIMARY %>%
       add_title("FAO primary crop area and production") %>%
       add_units("various") %>%
-      add_comments("Detailed FAO QCL data processing for crop area and production") ->
+      add_comments("Detailed FAO QCL data processing for crop area and production") %>%
+      same_precursors_as(QCL_AN_LIVEANIMAL) ->
       QCL_CROP_PRIMARY
 
 
@@ -417,7 +438,8 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
     QCL_PROD %>%
       add_title("FAO primary production") %>%
       add_units("tonnes") %>%
-      add_comments("FAO primary production") ->
+      add_comments("FAO primary production") %>%
+      same_precursors_as(QCL_AN_LIVEANIMAL) ->
       QCL_PROD
 
     # No NA

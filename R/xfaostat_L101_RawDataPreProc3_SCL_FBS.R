@@ -18,11 +18,13 @@
 module_xfaostat_L101_RawDataPreProc3_SCL_FBS <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c("QCL_area_code_map")
+    c(OPTIONAL_FILE = "aglu/FAO/FAOSTAT/SUA_Crops_Livestock_E_All_Data_(Normalized)_PalceHolder",
+      OPTIONAL_FILE = "aglu/FAO/FAOSTAT/FoodBalanceSheets_E_All_Data_(Normalized)_PalceHolder",
+      "QCL_area_code_map")
 
   MODULE_OUTPUTS <-
-    c("SCL",              # Supply utilization accounting
-      "FBS")              # New food balance sheet
+    c("SCL_wide",              # Supply utilization accounting
+      "FBS_wide")              # New food balance sheet
 
 
   if(command == driver.DECLARE_INPUTS) {
@@ -39,6 +41,15 @@ module_xfaostat_L101_RawDataPreProc3_SCL_FBS <- function(command, ...) {
 
     get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
+
+    if(Process_Raw_FAO_Data == FALSE) {
+
+      # Prebuilt data is read here ----
+      SCL_wide <- extract_prebuilt_data("SCL_wide")
+      FBS_wide <- extract_prebuilt_data("FBS_wide")
+
+    } else {
+
     # Get area code ----
     QCL_area_code <-
       QCL_area_code_map %>% distinct(area_code) %>% pull()
@@ -50,7 +61,20 @@ module_xfaostat_L101_RawDataPreProc3_SCL_FBS <- function(command, ...) {
     SCL %>% distinct(element, element_code, unit)
 
 
-    if (is.numeric(SCL$item_code)) {
+    if (is.character(SCL$item_code)){
+
+      FAOSTAT_load_raw_data("SCL", GET_MAPPINGCODE = "ItemCodes")
+
+      SCL %>% rename(cpc_code = item_code) %>%
+        left_join_error_no_match(
+          SCL_ItemCodes %>% distinct(cpc_code, item_code) %>%
+            mutate(cpc_code = gsub("^'", "", cpc_code)), by = "cpc_code") %>%
+        select(-cpc_code) ->
+        SCL
+
+    }
+
+    if (is.numeric(SCL$item_code)){
       SCL %>% filter(item_code <= 1700, item_code != 1) -> SCL
     }
 
@@ -72,14 +96,20 @@ module_xfaostat_L101_RawDataPreProc3_SCL_FBS <- function(command, ...) {
              unit) %>%
       rm_accent("item", "area") -> SCL1
 
+    SCL1 %>% spread(year, value) ->
+      SCL_wide
+    rm(SCL1)
 
     ### output SCL----
-    SCL1 %>%
-      add_title("FAO SCL") %>%
+    SCL_wide %>%
+      add_title("FAO supply utilization account dataset, 2010+, wide") %>%
       add_units("tonne") %>%
-      add_comments("Preprocessed FAOSTAT SCL") ->
-      SCL
-    rm(SCL1)
+      add_comments("Preprocessed FAOSTAT SCL")  %>%
+      add_precursors("aglu/FAO/FAOSTAT/SUA_Crops_Livestock_E_All_Data_(Normalized)_PalceHolder",
+                     "QCL_area_code_map") ->
+      SCL_wide
+
+    verify_identical_prebuilt(SCL_wide)
 
 
     # Food balance and Supply-Utilization-Account
@@ -106,14 +136,21 @@ module_xfaostat_L101_RawDataPreProc3_SCL_FBS <- function(command, ...) {
              unit) %>%
       rm_accent("item", "area") -> FBS1
 
+    FBS1 %>% spread(year, value) ->
+      FBS_wide
 
     ### output FBS ----
-    FBS1 %>%
-      add_title("FAO SCL") %>%
-      add_units("tonne") %>%
-      add_comments("Preprocessed FAOSTAT SCL") ->
-      FBS
+    FBS_wide %>%
+      add_title("FAO food balance sheet, 2010-") %>%
+      add_units("1000 tonne") %>%
+      add_comments("Preprocessed FAOSTAT SCL") %>%
+      add_precursors("aglu/FAO/FAOSTAT/FoodBalanceSheets_E_All_Data_(Normalized)_PalceHolder",
+                     "QCL_area_code_map") ->
+      FBS_wide
 
+    verify_identical_prebuilt(FBS_wide)
+
+    }
 
     return_data(MODULE_OUTPUTS)
 

@@ -1,11 +1,5 @@
 # Copyright 2019 Battelle Memorial Institute; see the LICENSE file.
 
-#' A list of column orderings keyed by the ModelInterface header so that we
-#' can ensure tables being sent to be converted to XML by the ModelInterface
-#' have their columns arranged in the order the ModelInterface is expecting them.
-#'
-#' @format A list object where [[header]] <- character vector of column names:
-"LEVEL2_DATA_NAMES"
 
 #' GCAM_DATA_MAP
 #'
@@ -17,12 +11,11 @@
 #' which is used by \code{dstrace} and various other graphing and diagnostic utilities.
 #' @author BBL
 #' @format A tibble with columns: name (chunk that produces the data), output (name of the data object),
-#' precursors (colon seperated list of precursors), title, units, comments, flags (typically metadata for processing)
+#' precursors (colon separated list of precursors), title, units, comments, flags (typically metadata for processing)
 "GCAM_DATA_MAP"
 
-#' A list of prebuilt data objects. These are used when the proprietary IEA
-#' energy data files are not available, and thus
-#' module_energy_LA100.IEA_downscale_ctry is not able to run.
+#' A list of prebuilt data objects. FAOSTAT raw data, those generated in modules
+#' xfaostat_L101_RawDataPreProc*, are included to facilitate the processing.
 #' Its immediate downstream dependencies then used the prebuilt versions of
 #' their outputs stored in this object.
 #'

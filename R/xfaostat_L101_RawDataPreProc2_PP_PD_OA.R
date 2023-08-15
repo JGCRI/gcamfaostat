@@ -18,11 +18,15 @@
 module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(FILE = "aglu/FAO/FAOSTAT/Other_supplementary/GDP_deflator_Taiwan",
+    c(OPTIONAL_FILE = "aglu/FAO/FAOSTAT/Prices_E_All_Data_(Normalized)_PalceHolder",
+      OPTIONAL_FILE = "aglu/FAO/FAOSTAT/Deflators_E_All_Data_(Normalized)_PalceHolder",
+      OPTIONAL_FILE = "aglu/FAO/FAOSTAT/Population_E_All_Data_(Normalized)_PalceHolder",
+      FILE = "aglu/FAO/FAOSTAT/Other_supplementary/GDP_deflator_Taiwan",
       "QCL_area_code_map")
 
-  MODULE_OUTPUTS <-
-    c("PP",               # Producer prices
+
+    MODULE_OUTPUTS <-
+    c("PP_wide",          # Producer prices
       "PD",               # GDP deflator
       "OA")               # Population
 
@@ -39,6 +43,16 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
     # Load required inputs ----
 
     get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
+
+
+    if(Process_Raw_FAO_Data == FALSE) {
+
+      # Prebuilt data is read here ----
+      PP_wide <- extract_prebuilt_data("PP_wide")
+      PD <- extract_prebuilt_data("PD")
+      OA <- extract_prebuilt_data("OA")
+
+    } else {
 
     # Get area code ----
     QCL_area_code <- QCL_area_code_map %>% distinct(area_code) %>% pull()
@@ -97,15 +111,19 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
       gather(element, value, `Producer Price (USD/tonne)`) %>%
       mutate(element_code = 5532) -> PP2
 
+    PP2 %>% spread(year, value) ->
+      PP_wide
+
 
     ### output PP ----
-    PP2 %>%
+    PP_wide %>%
       add_title("FAO producer prices") %>%
       add_units("USD/tonne") %>%
       add_comments("Preprocessed FAOSTAT producer prices") %>%
-      add_precursors("QCL_area_code_map") ->
-      PP
-
+      add_precursors("QCL_area_code_map",
+                     "aglu/FAO/FAOSTAT/Prices_E_All_Data_(Normalized)_PalceHolder") ->
+      PP_wide
+    verify_identical_prebuilt(PP_wide)
 
     # [PD] FAO_GDP_deflators ----
     #**************************************
@@ -156,9 +174,11 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
       add_units("Unitless") %>%
       add_comments("Preprocessed FAOSTAT regional gdp deflators") %>%
       add_precursors("QCL_area_code_map",
-                     "aglu/fao/FAOSTAT/Other_supplementary/GDP_deflator_Taiwan") ->
+                     "aglu/FAO/FAOSTAT/Deflators_E_All_Data_(Normalized)_PalceHolder",
+                     "aglu/FAO/FAOSTAT/Other_supplementary/GDP_deflator_Taiwan") ->
       PD
 
+    verify_identical_prebuilt(PD)
 
 
     # *[OA]: Population ----
@@ -187,8 +207,12 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
     OA1 %>%
       add_title("FAO population") %>%
       add_units("tonne") %>%
-      add_comments("Preprocessed FAO OA") ->
+      add_comments("Preprocessed FAO OA") %>%
+      add_precursors("aglu/FAO/FAOSTAT/Population_E_All_Data_(Normalized)_PalceHolder") ->
       OA
+
+    verify_identical_prebuilt(OA)
+    }
 
     return_data(MODULE_OUTPUTS)
 

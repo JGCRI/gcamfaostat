@@ -1,0 +1,163 @@
+url: https://realxinzhao.github.io/gcamdata-faostat/
+
+home:
+  title: Prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling
+  sidebar:
+    structure: [links, license, community, authors, dev]
+
+
+development:
+  mode: auto
+
+
+navbar:
+  type: inverse
+  left:
+    - icon: fa-home
+      href: index.html
+    - text: "Getting Started"
+      href: articles/getting-started/getting-started.html
+    - text: "Vignettes"
+    - icon: fa-file-code-o
+      text: "Reference"
+      href: reference/index.html
+      
+reference:
+  - title: Running gcamfaostat
+  - contents:
+      - driver_drake
+      - driver
+      - dstrace
+      - info
+      - inputs_of
+      - load_from_cache
+      - outputs_of
+      - create_datamap_from_cache
+  - title: gcamfaostat modules
+    contents:
+      - module_xfaostat_L101_RawDataPreProc1_QCL
+      - module_xfaostat_L101_RawDataPreProc2_PP_PD_OA
+      - module_xfaostat_L101_RawDataPreProc3_SCL_FBS
+      - module_xfaostat_L101_RawDataPreProc4_FBSH_CB
+      - module_xfaostat_L101_RawDataPreProc5_TCL
+      - module_xfaostat_L101_RawDataPreProc6_TM
+      - module_xfaostat_L101_RawDataPreProc7_FO
+      - module_xfaostat_L101_RawDataPreProc8_RL_RFN
+      - module_xfaostat_L102_ProductionArea
+      - module_xfaostat_L103_ProducerPrices
+      - module_xfaostat_L104_ProductionAreaAddFodder
+      - module_xfaostat_L105_DataConnectionToSUA
+      - module_xfaostat_L106_FoodMacroNutrient
+      - module_xfaostat_L199_ExportCSV
+      - module_xfaostat_L201_Forestry
+      - module_xfaostat_L301_LandCover
+      - module_xfaostat_L401_Fertilizer
+  - title: gcamdata AgLU modules
+  - contents:     
+      - module_aglu_L100.FAO_SUA_PrimaryEquivalent
+  - title: gcamfaostat Chunk Helper Functions
+    contents: 
+      - FAOSTAT_AREA_RM_NONEXIST
+      - FAOSTAT_load_raw_data
+      - FAOSTAT_metadata
+      - FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION
+      - FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL
+      - FF_check_count_plot
+      - FF_download_faostat_bulk
+      - FF_FILL_NUMERATOR_DENOMINATOR
+      - FF_join_checkmap
+      - FF_rawdata_info
+      - FF_summary
+      - GROSS_TRADE_ADJUST
+      - SUA_bal_adjust      
+      - output_csv_data
+      - rm_accent
+      - assert_FBS_balance      
+  - title: Add to Output Data
+    contents:
+      - add_comments
+      - add_flags
+      - add_legacy_name
+      - add_precursors
+      - add_reference
+      - add_title
+      - add_units
+      - same_attributes_as
+      - same_precursors_as
+  - title: Prebuilt data
+    contents:
+      - GCAM_DATA_MAP
+      - PREBUILT_DATA
+  - title: gcamdata Chunk Helper Functions
+    contents:
+      - add_carbon_info
+      - add_node_leaf_names
+      - approx_fun
+      - approx_fun_constant
+      - append_GLU
+      - change_iso_code
+      - downscale_FAO_country
+      - dstrace_chunks
+      - dstrace_plot
+      - evaluate_smooth_res_curve
+      - extract_prebuilt_data
+      - fast_left_join
+      - fill_exp_decay_extrapolate
+      - gather_years
+      - gdp_deflator
+      - get_ssp_regions
+      - graph_chunks
+      - left_join_error_no_match
+      - left_join_keep_first_only
+      - NEI_to_GCAM
+      - protect_integer_cols
+      - reduce_mgd_carbon
+      - rename_SO2
+      - repeat_add_columns
+      - replace_GLU
+      - return_data
+      - return_modified
+      - save_chunkdata
+      - set_subsector_shrwt
+      - set_traded_names
+      - set_water_input_name
+      - set_years
+      - smooth_res_curve_approx_error
+      - standardize_iso
+      - verify_identical_prebuilt
+      - write_to_all_regions
+      - write_to_all_states
+      - Moving_average
+  - title: internal
+    contents:
+      - add_column_types_header_line
+      - add_data
+      - check_chunk_outputs
+      - chunk_inputs
+      - chunk_outputs
+      - chunk_readylist
+      - compute_BC_OC
+      - compute_BC_OC_elc
+      - compute_BC_OC_transport
+      - empty_data
+      - extract_header_info
+      - find_chunks
+      - find_csv_file
+      - find_header
+      - get_comments
+      - get_data
+      - get_data_list
+      - get_flags
+      - get_relative_to_workdir
+      - is_data_list
+      - load_csv_files
+      - missing_data
+      - normalize_files
+      - parse_csv_header
+      - remove_data
+      - run_chunk
+      - screen_forbidden
+      - tibbelize_outputs
+      - warn_data_injects
+      - warn_datachunk_bypass
+      - warn_mismarked_fileinputs

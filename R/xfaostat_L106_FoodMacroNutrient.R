@@ -18,8 +18,8 @@
 module_xfaostat_L106_FoodMacroNutrient <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c("SCL",
-      "FBS",
+    c("SCL_wide",
+      "FBS_wide",
       "OA",
       FILE = "aglu/FAO/FAO_an_items_cal_SUA",
       FILE = "aglu/FAO/MAPPING_FAO_FBS_SUA")
@@ -41,6 +41,12 @@ module_xfaostat_L106_FoodMacroNutrient <- function(command, ...) {
 
     get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
+
+    SCL_wide %>% gather_years() %>%
+      FAOSTAT_AREA_RM_NONEXIST() -> SCL
+
+    FBS_wide %>% gather_years() %>%
+      FAOSTAT_AREA_RM_NONEXIST() -> FBS
 
 
     # Background----
@@ -241,7 +247,12 @@ module_xfaostat_L106_FoodMacroNutrient <- function(command, ...) {
     SUA_food_macronutrient_rate %>%
       add_title("FAO food calories and macronutrient rate") %>%
       add_units("rates") %>%
-      add_comments("Detailed FAO food calories and macrotunitent info for 414 SUA items + 12 fish items") ->
+      add_comments("Detailed FAO food calories and macrotunitent info for 414 SUA items + 12 fish items") %>%
+      add_precursors("SCL_wide",
+                     "FBS_wide",
+                     "OA",
+                     "aglu/FAO/FAO_an_items_cal_SUA",
+                     "aglu/FAO/MAPPING_FAO_FBS_SUA") ->
       SUA_food_macronutrient_rate
 
     # P.S. ----

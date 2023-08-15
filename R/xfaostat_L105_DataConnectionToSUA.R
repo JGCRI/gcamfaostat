@@ -22,11 +22,11 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       FILE = "aglu/FAO/Mapping_FBSH_SCL_OilCake",
       "QCL_PROD",
       "QCL_AN_LIVEANIMAL_MEATEQ",
-      "TCL",
-      "TM_bilateral",
-      "FBSH_CB",
-      "FBS",
-      "SCL")
+      "TCL_wide",
+      "TM_bilateral_wide",
+      "FBSH_CB_wide",
+      "FBS_wide",
+      "SCL_wide")
 
   MODULE_OUTPUTS <-
     c("Bal_new_all")
@@ -44,6 +44,31 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     # Load required inputs ----
 
     get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
+
+
+    # Wide to long ----
+
+    SCL_wide %>% gather_years() %>%
+      filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
+      FAOSTAT_AREA_RM_NONEXIST() -> SCL
+
+    FBS_wide %>% gather_years() %>%
+      filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
+      FAOSTAT_AREA_RM_NONEXIST() -> FBS
+
+    FBSH_CB_wide %>% gather_years() %>%
+      filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
+      FAOSTAT_AREA_RM_NONEXIST() -> FBSH_CB
+
+    TCL_wide %>% gather_years() %>%
+      filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
+      FAOSTAT_AREA_RM_NONEXIST() -> TCL
+
+    TM_bilateral_wide %>% gather_years() %>%
+      filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
+      filter(value > 0) -> TM_bilateral
+
+    rm(SCL_wide, FBS_wide, FBSH_CB_wide, TCL_wide, TM_bilateral_wide)
 
 
     # Get area code in QCL that is consistent with FBS e.g., after 2010 only
@@ -156,7 +181,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
                     item_code = .ITEM_CODE,
                     element = SCL_element_new) %>%
           # Adding this to fix Sudan breakup after 2010
-          FAO_AREA_RM_NONEXIST(SUDAN2012_MERGE = T) -> .DF
+          FAOSTAT_AREA_RM_NONEXIST(SUDAN2012_MERGE = T) -> .DF
         return(.DF)
       }
 
@@ -166,7 +191,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
                     item = .ITEM,
                     element = SCL_element_new) %>%
           # Adding this to fix Sudan breakup after 2010
-          FAO_AREA_RM_NONEXIST(SUDAN2012_MERGE = T) -> .DF
+          FAOSTAT_AREA_RM_NONEXIST(SUDAN2012_MERGE = T) -> .DF
         return(.DF)
       }
 
@@ -351,7 +376,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
     # 3. Process items in FAO_items to get Balanced SUA data ----
     ## 3.1 Bal_new_tier1 ----
-    # Tier1 includes 169 items with best sources e.g. bilateral trade (TM)  prodstat (QCL) and supply-utilization-account (SCL)
+    # Tier1 includes 168 items with best sources e.g. bilateral trade (TM)  prodstat (QCL) and supply-utilization-account (SCL)
     #  SCL has balanced data processed by FAO but the quality was poor with low consistency
 
     Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 1) %>% pull(item_code)) %>%
@@ -389,7 +414,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
 
     ## 3.3 Bal_new_tier3 ----
-    # Tier3 includes 60 items that had QCL but no bilateral trade data
+    # Tier3 includes 61 items that had QCL but no bilateral trade data
     # so use gross trade from SCL
 
     Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 3) %>% pull(item_code)) %>%
@@ -455,7 +480,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       # Join oilseed cake production from CB
       left_join(FBSH_CB %>% filter(year %in% 2011:2013, element == "Production") %>%
                   # Convert unit for consistency to Kton
-                  transmute(area_code, FBSH_item_cake = item, year, cake = value /1000),
+                  transmute(area_code, FBSH_item_cake = item, year, cake = value),
                 by = c("FBSH_item_cake", "area_code", "year")) %>%
       # Sum across time
       group_by_at(vars(-year, -oil, -cake)) %>%
@@ -705,7 +730,16 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     Bal_new_all %>%
       add_title("Bal_new_all") %>%
       add_units("Ktonne") %>%
-      add_comments("Preprocessed FAO SUA 2010 - 2019") ->
+      add_comments("Preprocessed FAO SUA 2010 - 2019") %>%
+      add_precursors("aglu/FAO/FAO_items",
+                     "aglu/FAO/Mapping_FBSH_SCL_OilCake",
+                     "QCL_PROD",
+                     "QCL_AN_LIVEANIMAL_MEATEQ",
+                     "TCL_wide",
+                     "TM_bilateral_wide",
+                     "FBSH_CB_wide",
+                     "FBS_wide",
+                     "SCL_wide")->
       Bal_new_all
 
 

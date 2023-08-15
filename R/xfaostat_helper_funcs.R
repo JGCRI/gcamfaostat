@@ -32,15 +32,19 @@ FAOSTAT_metadata <- function (code = NULL){
 
 #' FAOSTAT_load_raw_data: load raw csv data
 #' @description Read csv data and "." in column name is substituted with "_".
+#'
 #' @param DATASETCODE Dataset code in FAO metadata or the name of a csv file.
+#' @param GET_MAPPINGCODE if NULL return data if char return other mapping files
 #' @param DATA_FOLDER Path to the folder storing the data.
+#'
 #' @importFrom  readr read_csv
 #' @importFrom  magrittr %>%
 #' @importFrom  assertthat assert_that
 #' @export
 
 FAOSTAT_load_raw_data <- function(DATASETCODE,
-                                  DATA_FOLDER = DIR_RAW_DATA_FAOSTAT){
+                                  DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+                                  GET_MAPPINGCODE = NULL){
   assertthat::assert_that(is.character(DATASETCODE))
   assertthat::assert_that(is.character(DATA_FOLDER))
 
@@ -48,25 +52,49 @@ FAOSTAT_load_raw_data <- function(DATASETCODE,
 
   metadata <- FAOSTAT_metadata()
 
-  # Loop through each code
-  for (CODE in DATASETCODE) {
+  if (is.null(GET_MAPPINGCODE)) {
+    # Loop through each code
+    for (CODE in DATASETCODE) {
 
-    metadata %>% filter(datasetcode == CODE) -> metadata1
+      metadata %>% filter(datasetcode == CODE) -> metadata1
 
-    zip_file_name <- file.path(DATA_FOLDER, basename(metadata1$filelocation))
-    assertthat::assert_that(file.exists(zip_file_name))
-    # assuming the csv in zip has the same base name
-    csv_file_name <- gsub(".zip$", ".csv", basename(zip_file_name))
+      zip_file_name <- file.path(DATA_FOLDER, basename(metadata1$filelocation))
+      assertthat::assert_that(file.exists(zip_file_name))
+      # assuming the csv in zip has the same base name
+      csv_file_name <- gsub(".zip$", ".csv", basename(zip_file_name))
 
-    df <- readr::read_csv(unz(zip_file_name, csv_file_name), col_types = NULL)
-    # Lower case col names and use _ as delimiter
-    names(df) <- tolower(gsub("\\.| ", "_", names(df)))
-    # Assigned to parent env
-    #assign(CODE, df, envir = parent.frame())
-    assign(CODE, df, envir = parent.env(environment()))
-    # Assigned to current env
-    #assign(CODE, df, envir = .GlobalEnv)
-  }
+      df <- readr::read_csv(unz(zip_file_name, csv_file_name), col_types = NULL)
+      # Lower case col names and use _ as delimiter
+      names(df) <- tolower(gsub("\\.| ", "_", names(df)))
+      # Assigned to parent env
+      #assign(CODE, df, envir = parent.frame())
+      assign(CODE, df, envir = parent.env(environment()))
+      # Assigned to current env
+      #assign(CODE, df, envir = .GlobalEnv)
+    }
+  } else if(is.character(GET_MAPPINGCODE) == T){
+
+    for (CODE in DATASETCODE) {
+
+      metadata %>% filter(datasetcode == CODE) -> metadata1
+
+      zip_file_name <- file.path(DATA_FOLDER, basename(metadata1$filelocation))
+      assertthat::assert_that(file.exists(zip_file_name))
+      # assuming the csv in zip has the same base name
+      csv_file_name <- gsub(".zip$", ".csv", basename(zip_file_name))
+
+      csv_file_name <- gsub("All_Data_\\(Normalized\\)", GET_MAPPINGCODE, csv_file_name)
+
+      df <- readr::read_csv(unz(zip_file_name, csv_file_name), col_types = NULL)
+      # Lower case col names and use _ as delimiter
+      names(df) <- tolower(gsub("\\.| ", "_", names(df)))
+      # Assigned to parent env
+      assign(paste0(CODE, "_", GET_MAPPINGCODE), df, envir = parent.env(environment()))
+      # Assigned to current env
+      #assign(paste0(CODE, "_", GET_MAPPINGCODE), df, envir = .GlobalEnv)
+    }
+
+  } else {stop("Wrong GET_MAPPINGCODE")}
 
 }
 
@@ -74,7 +102,7 @@ FAOSTAT_load_raw_data <- function(DATASETCODE,
 
 
 
-#' FAO_AREA_RM_NONEXIST: remove nonexistent FAO region using area_code, e.g., USSR after 1991
+#' FAOSTAT_AREA_RM_NONEXIST: remove nonexistent FAO region using area_code, e.g., USSR after 1991
 #' @description This function was developed when exploring FAO production data.
 #' Additional small regions/areas are also remove due to low data quality.
 #'
@@ -85,7 +113,7 @@ FAOSTAT_load_raw_data <- function(DATASETCODE,
 #' @return A data frame with nonexistent area and area_code removed
 #' @export
 
-FAO_AREA_RM_NONEXIST <- function(.DF,
+FAOSTAT_AREA_RM_NONEXIST <- function(.DF,
                                  SUDAN2012_MERGE = F,
                                  RM_AREA_CODE = c(69, 87, 127, 135, 145, 182, 299)){
 
@@ -518,6 +546,7 @@ output_csv_data <- function(gcam_dataset, col_type_nonyear,
 #'
 #' @return The same dataframe with balanced world export and import.
 
+
 GROSS_TRADE_ADJUST <- function(.DF,
                                .MIN_TRADE_PROD_RATIO = 0.01,
                                .Reg_VAR = 'area_code',
@@ -533,10 +562,8 @@ GROSS_TRADE_ADJUST <- function(.DF,
     # Join ExportScaler and ImportScaler
     left_join(
       .DF %>%
-        #group_by_at(vars(all_of(.GROUP_VAR), element)) %>%
-        #summarise(value = sum(value, na.rm = T), .groups = "drop") %>%
         spread(element, value) %>%
-        group_by_at(vars(all_of(.GROUP_VAR))) %>%
+        dplyr::group_by_at(vars(dplyr::all_of(.GROUP_VAR))) %>%
         # filter out items with zero world trade or production
         # and replace na to zero later for scaler
         replace_na(list(Export = 0, Import = 0, Production = 0)) %>%
@@ -550,9 +577,9 @@ GROSS_TRADE_ADJUST <- function(.DF,
         # the trade scalers will be applied to all regions
         mutate(ExportScaler = (sum(Export) + sum(Import))/ 2 / sum(Export),
                ImportScaler = (sum(Export) + sum(Import))/ 2 / sum(Import)) %>%
-        select(all_of(c(.Reg_VAR, .GROUP_VAR)), ExportScaler, ImportScaler) %>%
+        select(dplyr::all_of(c(.Reg_VAR, .GROUP_VAR)), ExportScaler, ImportScaler) %>%
         ungroup(),
-      by = c(all_of(c(.Reg_VAR, .GROUP_VAR)))) %>%
+      by = c(dplyr::all_of(c(.Reg_VAR, .GROUP_VAR)))) %>%
     replace_na(list(ExportScaler = 0, ImportScaler = 0)) %>%
     # If world export, import, or prod is 0, trade will be zero
     mutate(value = case_when(

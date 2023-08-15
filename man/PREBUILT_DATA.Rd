@@ -3,9 +3,8 @@
 \docType{data}
 \name{PREBUILT_DATA}
 \alias{PREBUILT_DATA}
-\title{A list of prebuilt data objects. These are used when the proprietary IEA
-energy data files are not available, and thus
-module_energy_LA100.IEA_downscale_ctry is not able to run.
+\title{A list of prebuilt data objects. FAOSTAT raw data, those generated in modules
+xfaostat_L101_RawDataPreProc*, are included to facilitate the processing.
 Its immediate downstream dependencies then used the prebuilt versions of
 their outputs stored in this object.}
 \format{
@@ -15,9 +14,8 @@ A list object where [[object_name]] <- tibble:
 PREBUILT_DATA
 }
 \description{
-A list of prebuilt data objects. These are used when the proprietary IEA
-energy data files are not available, and thus
-module_energy_LA100.IEA_downscale_ctry is not able to run.
+A list of prebuilt data objects. FAOSTAT raw data, those generated in modules
+xfaostat_L101_RawDataPreProc*, are included to facilitate the processing.
 Its immediate downstream dependencies then used the prebuilt versions of
 their outputs stored in this object.
 }

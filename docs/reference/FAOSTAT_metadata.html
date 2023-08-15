@@ -6,7 +6,7 @@
     
 
     <div class="container template-reference-topic">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -17,24 +17,28 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gcamdata</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
-  <a href="../reference/index.html">Reference</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
+  <a href="../index.html">
+    <span class="fa fa-home"></span>
      
-    <span class="caret"></span>
   </a>
-  <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/gcamfaostat.html">Introduction to gcamfaostat</a>
-    </li>
-  </ul></li>
+</li>
+<li>
+  <a href="../articles/getting-started/getting-started.html">Getting Started</a>
+</li>
+<li class="dropdown-header">Vignettes</li>
+<li>
+  <a href="../reference/index.html">
+    <span class="fa fa-file-code-o"></span>
+     
+    Reference
+  </a>
+</li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -73,21 +77,19 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">FAOSTAT_metadata</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> function (code = NULL){</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   FAOxml &lt;- XML::xmlParse(xml2::read_xml("http://fenixservices.fao.org/faostat/static/bulkdownloads/datasets_E.xml"))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   metadata &lt;- XML::xmlToDataFrame(FAOxml, stringsAsFactors = FALSE)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   names(metadata) &lt;- tolower(gsub("\\.", "_", names(metadata)))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   # Bug fix for CB; can remove later if FAOSTAT update the link later</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   metadata["CB" == metadata[, "datasetcode"],"filelocation"] &lt;-</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     "https://fenixservices.fao.org/faostat/static/bulkdownloads/CommodityBalances_(non-food)_E_All_Data_(Normalized).zip"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   if (!is.null(code)) {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     metadata &lt;- metadata[code == metadata[, "datasetcode"],]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   return(metadata)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> function (code = NULL) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     FAOxml &lt;- XML::xmlParse(xml2::read_xml("http://fenixservices.fao.org/faostat/static/bulkdownloads/datasets_E.xml"))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     metadata &lt;- XML::xmlToDataFrame(FAOxml, stringsAsFactors = FALSE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     names(metadata) &lt;- tolower(gsub("\\.", "_", names(metadata)))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     metadata["CB" == metadata[, "datasetcode"], "filelocation"] &lt;- "https://fenixservices.fao.org/faostat/static/bulkdownloads/CommodityBalances_(non-food)_E_All_Data_(Normalized).zip"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (!is.null(code)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         metadata &lt;- metadata[code == metadata[, "datasetcode"], </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     return(metadata)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x0000000044f9ed20&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: namespace:gcamdata&gt;</span>
 </code></pre></div>
     </div>

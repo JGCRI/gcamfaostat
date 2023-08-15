@@ -1,0 +1,81 @@
+url: https://realxinzhao.github.io/gcamdata-faostat/
+
+home:
+  title: Prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling
+  sidebar:
+    structure: [links, license, community, authors, dev]
+
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#0054AD"
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem
+  includes:
+    in_header:
+      <script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script>
+
+development:
+  mode: auto
+
+
+navbar:
+  type: inverse
+  left:
+    - icon: fa-home
+      href: index.html
+    - text: "Getting Started"
+      href: articles/getting-started/getting-started.html
+    - text: Vignettes
+    - icon: fa-file-code-o
+      text: "Reference"
+      href: reference/index.html
+      
+reference:
+  - title: Running gcamfaostat
+  - contents:
+      - driver_drake
+      - driver
+      - dstrace
+      - info
+      - inputs_of
+      - load_from_cache
+      - outputs_of
+      - create_datamap_from_cache
+  - title: gcamfaostat modules
+    contents:
+      - module_xfaostat_L101_RawDataPreProc1_QCL
+      - module_xfaostat_L101_RawDataPreProc2_PP_PD_OA
+      - module_xfaostat_L101_RawDataPreProc3_SCL_FBS
+      - module_xfaostat_L101_RawDataPreProc4_FBSH_CB
+      - module_xfaostat_L101_RawDataPreProc5_TCL
+      - module_xfaostat_L101_RawDataPreProc6_TM
+      - module_xfaostat_L101_RawDataPreProc7_FO
+      - module_xfaostat_L101_RawDataPreProc8_RL_RFN
+      - module_xfaostat_L102_ProductionArea
+      - module_xfaostat_L103_ProducerPrices
+      - module_xfaostat_L104_ProductionAreaAddFodder
+      - module_xfaostat_L105_DataConnectionToSUA
+      - module_xfaostat_L106_FoodMacroNutrient
+      - module_xfaostat_L199_ExportCSV
+      - module_xfaostat_L201_Forestry
+      - module_xfaostat_L301_LandCover
+      - module_xfaostat_L401_Fertilizer
+  - title: gcamdata AgLU modules
+  - contents:     
+      - module_aglu_L100.FAO_SUA_PrimaryEquivalent
+  - title: gcamfaostat Chunk Helper Functions
+    contents: 
+      - FAOSTAT_AREA_RM_NONEXIST
+      - FAOSTAT_load_raw_data
+      - FAOSTAT_metadata
+      - FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION
+      - FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL
+      - FF_check_count_plot
+      - FF_download_faostat_bulk
+      - FF_FILL_NUMERATOR_DENOMINATOR
+      - FF_join_checkmap
+      - FF_rawdata_info
+      - FF_summary
+      - GROSS_TRADE_ADJUST
+      - SUA_bal_adjust

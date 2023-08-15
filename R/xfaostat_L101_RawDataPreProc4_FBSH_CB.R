@@ -18,12 +18,14 @@
 module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c("QCL_area_code_map")
+    c(OPTIONAL_FILE = "aglu/FAO/FAOSTAT/FoodBalanceSheetsHistoric_E_All_Data_(Normalized)_PalceHolder",
+      OPTIONAL_FILE = "aglu/FAO/FAOSTAT/CommodityBalances_(non-food)_E_All_Data_(Normalized)_PalceHolder",
+      "QCL_area_code_map")
 
   MODULE_OUTPUTS <-
-    c(#"FBSH",             # Old food balance sheet
-      #"CB",               # Old non food utilization accounting
-      "FBSH_CB")          # Combined FBSH and CB
+    c(#"FBSH",                 # Old food balance sheet
+      #"CB",                   # Old non food utilization accounting
+      "FBSH_CB_wide")          # Combined FBSH and CB
 
 
   if(command == driver.DECLARE_INPUTS) {
@@ -40,7 +42,15 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
 
     get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
-    # Get area code ----
+
+    if(Process_Raw_FAO_Data == FALSE) {
+
+      # Prebuilt data is read here ----
+      FBSH_CB_wide <- extract_prebuilt_data("FBSH_CB_wide")
+
+    } else {
+
+    ## Get area code ----
     QCL_area_code <-
       QCL_area_code_map %>% distinct(area_code) %>% pull()
 
@@ -52,8 +62,11 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
     FAOSTAT_load_raw_data("FBSH")  # Old FBS -2013
     FBSH %>% distinct(element, element_code, unit)
     # Keep population (old)
-    FBSH %>% filter(item_code < 2901,!element_code %in% c(5301),
-                    area_code %in% QCL_area_code) %>%
+    FBSH %>%
+      filter(item_code < 2901,
+             year >= min(FAOSTAT_Hist_Year_FBSH),
+             !element_code %in% c(5301),
+             area_code %in% QCL_area_code) %>%
       select(area_code,
              area,
              item_code,
@@ -65,22 +78,15 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
              unit) %>%
       rm_accent("item", "area") -> FBSH1
 
-
-    ### output FBSH ----
-    FBSH1 %>%
-      add_title("FAO FBSH") %>%
-      add_units("tonne") %>%
-      add_comments("Preprocessed FAO FBSH") ->
-      FBSH
-
-
     ## *[CB] Non-food Balance ----
 
     FAOSTAT_load_raw_data("CB")    # Old FBS-nonfood -2013
 
     CB %>% distinct(element, element_code, unit)
     # Keep population (old)
-    CB %>% filter(item_code < 2901,!element_code %in% c(5300),
+    CB %>% filter(item_code < 2901,
+                  year >= min(FAOSTAT_Hist_Year_FBSH),
+                  !element_code %in% c(5300),
                   area_code %in% QCL_area_code) %>%
       select(area_code,
              area,
@@ -91,28 +97,33 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
              year,
              value,
              unit) %>%
-      rm_accent("item", "area") -> CB1
+      rm_accent("item", "area") %>%
+      mutate(value = value / 1000,
+             unit = "1000 tonnes") -> CB1 # convert to Kton
 
-    ### output CB and clean memory ----
-
-    CB1 %>%
-      add_title("FAO CB") %>%
-      add_units("tonne") %>%
-      add_comments("Preprocessed FAO CB") ->
-      CB
 
     ## *FBSH_CB merge the two----
     # load processed data
 
-    FBSH %>% distinct(item_code) %>%
+    FBSH1 %>% distinct(item_code) %>%
       dplyr::intersect(CB %>% distinct(item_code)) %>%
       pull ->
       dup_item_code
 
+    FBSH1 %>% distinct(element, element_code) %>%
+      filter(!element_code %in% c(645, 664, 674, 684, 511)) %>%  # remove non-balance items
+      mutate(element = gsub(
+        " Quantity| supply quantity \\(tonnes\\)| \\(non-food\\)",
+        "",
+        element
+      )) %>%
+      mutate(
+        element = replace(element, element == "Losses", "Loss"),
+        element = replace(element, element == "Processing", "Processed")
+      ) -> element_code_map
 
-    FBSH %>% mutate(value = value * 1000) %>% # convert to ton
-      bind_rows(CB %>% filter(!item_code %in% dup_item_code)) %>%
-      select(-unit) %>%
+    FBSH1 %>%
+      bind_rows(CB1 %>% filter(!item_code %in% dup_item_code)) %>%
       filter(!element_code %in% c(645, 664, 674, 684, 511)) %>%  # remove non-balance items
       mutate(element = gsub(
         " Quantity| supply quantity \\(tonnes\\)| \\(non-food\\)",
@@ -126,9 +137,8 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
       # remove element code since FBSH and CB have different ones
       select(-element_code) %>%
       # but adding back the FBSH one since FBS and FBSH have the same one
-      left_join(FBSH %>% distinct(element, element_code),
-                by = "element") %>%
-      mutate(unit = "tonnes") ->
+      left_join(element_code_map,
+                by = "element") ->
       FBSH_CB
 
     # Rice and products and Groundnuts related adjustments
@@ -158,13 +168,23 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
       ) ->
       FBSH_CB1
 
+    FBSH_CB1 %>% spread(year, value) ->
+      FBSH_CB_wide
+
     ### output FBSH_CB and clean memory ----
 
-    FBSH_CB1 %>%
-      add_title("FAO FBSH_CB", overwrite = T) %>%
-      add_units("tonne") %>%
-      add_comments("Preprocessed FAO FBSH_CB") ->
-      FBSH_CB
+    FBSH_CB_wide %>%
+      add_title("FAO FBSH and CB, food and commodity balance before 2013, wide", overwrite = T) %>%
+      add_units("1000 tonne") %>%
+      add_comments("Preprocessed FAO FBSH_CB") %>%
+      add_precursors("aglu/FAO/FAOSTAT/FoodBalanceSheetsHistoric_E_All_Data_(Normalized)_PalceHolder",
+                     "aglu/FAO/FAOSTAT/CommodityBalances_(non-food)_E_All_Data_(Normalized)_PalceHolder",
+                     "QCL_area_code_map") ->
+      FBSH_CB_wide
+
+    verify_identical_prebuilt(FBSH_CB_wide)
+    }
+
 
     return_data(MODULE_OUTPUTS)
 
