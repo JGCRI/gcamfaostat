@@ -1,7 +1,7 @@
 # Copyright 2019 Battelle Memorial Institute; see the LICENSE file.
 
 # utils.R
-
+PACKAGE_NAME <- "gcamfaostat"
 
 #' find_header
 #'
@@ -223,7 +223,7 @@ find_csv_file <- function(filename, optional, quiet = FALSE) {
 
   extensions <- c(".csv", ".csv.gz", "")
   for(ex in extensions) {
-    fqfn <- system.file("extdata", paste0(filename, ex), package = "gcamdata")
+    fqfn <- system.file("extdata", paste0(filename, ex), package = PACKAGE_NAME)
     if(fqfn != "") {
       # check if a relative path to the file is shorter than the absolute in
       # hopes of being able to stay within windows file path length limits

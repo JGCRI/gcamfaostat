@@ -1,7 +1,7 @@
 # Copyright 2019 Battelle Memorial Institute; see the LICENSE file.
 
 # driver.R
-
+PACKAGE_NAME <- "gcamfaostat"
 
 TEMP_DATA_INJECT <- "temp-data-inject/"
 
@@ -201,7 +201,7 @@ driver <- function(all_data = empty_data(),
     warning("It is highly reccommended to utilize `xml_suffix` to distinguish XML inputs derived from `user_modifications`")
     }
 
-  if(!quiet) cat("GCAM Data System v", as.character(utils::packageVersion("gcamdata")), "\n", sep = "")
+  if(!quiet) cat("GCAM Data System v", as.character(utils::packageVersion(PACKAGE_NAME)), "\n", sep = "")
 
   chunklist <- find_chunks()
   if(!quiet) cat("Found", nrow(chunklist), "chunks\n")
@@ -524,7 +524,7 @@ driver_drake <- function(
     assert_that(!return_data_map_only)
   }
 
-  if(!quiet) message("GCAM Data System v", as.character(utils::packageVersion("gcamdata")), sep = "")
+  if(!quiet) message("GCAM Data System v", as.character(utils::packageVersion(PACKAGE_NAME)), sep = "")
 
   chunklist <- find_chunks()
   if(!quiet) message("Found ", nrow(chunklist), " chunks")
@@ -699,7 +699,7 @@ driver_drake <- function(
       # Also note we explicitly list just the inputs required for the chunk which is
       # different than in driver where we give `all_data`, again this is for drake so it
       # can match up target names to commands and develop the dependencies between them.
-      nsprefix <- if_else(chunk %in% user_modifications, "", "gcamdata:::")
+      nsprefix <- if_else(chunk %in% user_modifications, "", paste0(PACKAGE_NAME, ":::"))
       command <- c(command, paste0(nsprefix, chunk, "('", driver.MAKE, "', c(", paste(make.names(input_names), collapse = ","), "))"))
 
       # A chunk should in principle generate many output targets however drake assumes
@@ -756,7 +756,7 @@ driver_drake <- function(
   # Separate plan for prebuilt_data -- we will track each name and clear the cache for it's chunk if
   # there are any changes
   prebuilt_data_plan <- tibble(target = names(PREBUILT_DATA)) %>%
-    mutate(command = paste0("gcamdata::PREBUILT_DATA[['", target, "']]"),
+    mutate(command = paste0(PACKAGE_NAME, "::PREBUILT_DATA[['", target, "']]"),
            target = paste0("PREBUILT_", target))
   # Still bind to gcamdata_plan so that the first time drake is used, constants will be cached
   gcamdata_plan <- bind_rows(constants_plan, prebuilt_data_plan, gcamdata_plan)

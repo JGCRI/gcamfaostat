@@ -4,7 +4,7 @@
 \alias{normalize_files}
 \title{normalize_files}
 \usage{
-normalize_files(root = system.file("extdata", package = "gcamdata"))
+normalize_files(root = system.file("extdata", package = PACKAGE_NAME))
 }
 \arguments{
 \item{root}{Folder root to scan, character}

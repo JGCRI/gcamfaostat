@@ -1,5 +1,5 @@
 # Copyright 2019 Battelle Memorial Institute; see the LICENSE file.
-
+PACKAGE_NAME <- "gcamfaostat"
 
 #' chunk_readylist
 #'
@@ -198,7 +198,7 @@ admin.LINEDATA <- structure(list(
 #' @details Some GCAM input datafiles have bad line endings, and/or
 #' don't have a final newline. This utility script converts all files to have Unix line endings (\code{\\n}) and a final newline.
 #' @author BBL
-normalize_files <- function(root = system.file("extdata", package = "gcamdata")) {
+normalize_files <- function(root = system.file("extdata", package = PACKAGE_NAME)) {
   assert_that(is.character(root))
   message("Root: ", root)
 
