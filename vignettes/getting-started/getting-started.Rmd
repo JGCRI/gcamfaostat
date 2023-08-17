@@ -23,13 +23,13 @@ We suggest using RStudio.
 
 ## Clone this repository
 
-On the command line: navigate to your desired folder location and then enter `git clone https://github.com/JGCRI/gcamdata.git` 
+On the command line: navigate to your desired folder location and then enter `git clone https://github.com/JGCRI/gcamfaostat.git` 
 
-If using GitHub Desktop: Go to https://github.com/jgcri/gcamdata and click the green "Code" button. Then click "Open with GitHub Desktop".
+If using GitHub Desktop: Go to https://github.com/jgcri/gcamfaostat and click the green "Code" button. Then click "Open with GitHub Desktop".
 
 ## Loading the `gcamdata` package
 
-Open the `gcamdata` folder you just cloned and double-click the `gcamdata.Rproj` file. RStudio should open the project.
+Open the `gcamdata` folder you just cloned and double-click the `gcamfaostat.Rproj` file. RStudio should open the project.
 
 If you have not installed `devtools` before, first enter the following into the R console
 ```{r eval = FALSE}
@@ -47,7 +47,7 @@ You may also need to install package dependencies, for example using:
 ```R
 devtools::install_deps()
 ```
-However, there are known issues with some recent package dependencies (i.e. `readr 2.0`, `tidyr 1.2`)
+
 
 For this reason, we suggest using `renv`, described below. 
 
