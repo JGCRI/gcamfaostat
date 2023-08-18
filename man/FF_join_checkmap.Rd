@@ -4,7 +4,7 @@
 \alias{FF_join_checkmap}
 \title{FF_join_checkmap: full-join data frames by a common COL_by variable to checking mapping}
 \usage{
-FF_join_checkmap(DFs, COL_by, COL_rename)
+FF_join_checkmap(DFs, COL_by, COL_rename, .ENVIR = .GlobalEnv)
 }
 \arguments{
 \item{DFs}{Data frames to be full joined.}
@@ -12,6 +12,8 @@ FF_join_checkmap(DFs, COL_by, COL_rename)
 \item{COL_by}{By variable in join.}
 
 \item{COL_rename}{Other common variables to rename (by adding df names as prefix) before the join.}
+
+\item{.ENVIR}{Environment of the input data frames}
 }
 \value{
 A joined data frame

@@ -7,7 +7,8 @@
 FAOSTAT_load_raw_data(
   DATASETCODE,
   DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
-  GET_MAPPINGCODE = NULL
+  GET_MAPPINGCODE = NULL,
+  .Envir = .GlobalEnv
 )
 }
 \arguments{
@@ -15,7 +16,9 @@ FAOSTAT_load_raw_data(
 
 \item{DATA_FOLDER}{Path to the folder storing the data.}
 
-\item{GET_MAPPINGCODE}{if NULL return data if char return other mapping files}
+\item{GET_MAPPINGCODE}{If NULL return data if char return other mapping files}
+
+\item{.Envir}{Qutput environment}
 }
 \description{
 Read csv data and "." in column name is substituted with "_".
