@@ -33,10 +33,7 @@ module_xfaostat_L101_RawDataPreProc7_FO <- function(command, ...) {
 
     all_data <- list(...)[[1]]
 
-    # Load required inputs ----
-
-
-    get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
+    Curr_Envir <- environment()
 
 
 
@@ -46,7 +43,11 @@ module_xfaostat_L101_RawDataPreProc7_FO <- function(command, ...) {
 
 
     } else {
-      FAOSTAT_load_raw_data(DATASETCODE = "FO", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT)
+
+      # Load required inputs ----
+      get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
+
+      FAOSTAT_load_raw_data(DATASETCODE = "FO", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT, .Envir = Curr_Envir)
 
       # Only keep roundwood
       FO %>% filter(year %in% FAOSTAT_Hist_Year,

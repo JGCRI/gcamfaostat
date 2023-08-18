@@ -40,19 +40,20 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
 
     all_data <- list(...)[[1]]
 
-    # Load required inputs ----
-
-    get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
+    Curr_Envir <- environment()
 
 
     if(Process_Raw_FAO_Data == FALSE) {
 
-      # Prebuilt data is read here ----
+      # Load from Prebuilt data ----
       PP_wide <- extract_prebuilt_data("PP_wide")
       PD <- extract_prebuilt_data("PD")
       OA <- extract_prebuilt_data("OA")
 
     } else {
+
+    # Load required inputs ----
+    get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
     # Get area code ----
     QCL_area_code <- QCL_area_code_map %>% distinct(area_code) %>% pull()
@@ -60,7 +61,7 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
 
     # *[PP] Producer price ----
 
-    FAOSTAT_load_raw_data(DATASETCODE = "PP", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT)
+    FAOSTAT_load_raw_data(DATASETCODE = "PP", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT, .Envir = Curr_Envir)
     # check data
     PP %>% distinct(element, element_code, unit)
 
@@ -128,7 +129,7 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
     # [PD] FAO_GDP_deflators ----
     #**************************************
 
-    FAOSTAT_load_raw_data(DATASETCODE = "PD", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT)
+    FAOSTAT_load_raw_data(DATASETCODE = "PD", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT, .Envir = Curr_Envir)
     # read in Taiwan values as FAO does not have Taiwan price data
     # GDP_deflator_Taiwan
 
@@ -183,7 +184,7 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
 
     # *[OA]: Population ----
 
-    FAOSTAT_load_raw_data(DATASETCODE = "OA", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT)
+    FAOSTAT_load_raw_data(DATASETCODE = "OA", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT, .Envir = Curr_Envir)
 
     OA %>% distinct(element, element_code)
     OA %>% distinct(item, item_code)

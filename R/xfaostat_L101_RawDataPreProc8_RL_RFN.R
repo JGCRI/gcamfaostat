@@ -35,10 +35,7 @@ module_xfaostat_L101_RawDataPreProc8_RL_RFN <- function(command, ...) {
 
     all_data <- list(...)[[1]]
 
-    # Load required inputs ----
-
-    get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
-
+    Curr_Envir <- environment()
 
 
     if(Process_Raw_FAO_Data == FALSE) {
@@ -50,8 +47,10 @@ module_xfaostat_L101_RawDataPreProc8_RL_RFN <- function(command, ...) {
 
     } else {
 
+      # Load required inputs ----
+      get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
-      FAOSTAT_load_raw_data(DATASETCODE = "RL", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT)
+      FAOSTAT_load_raw_data(DATASETCODE = "RL", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT, .Envir = Curr_Envir)
 
       RL %>%
         filter(year %in% FAOSTAT_Hist_Year,

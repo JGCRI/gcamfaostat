@@ -66,9 +66,9 @@ module_xfaostat_L103_ProducerPrices <- function(command, ...) {
 
     #FF_check_count_plot(QCL_PRIMARY) # 205 items
     #FF_check_count_plot(PP) # PP %>% distinct(area)
-
+    Curr_Envir <- environment()
     # check items
-    FF_join_checkmap(c("QCL_PRIMARY", "PP"), "item_code", "item") -> A
+    FF_join_checkmap(c("QCL_PRIMARY", "PP"), "item_code", "item", .ENVIR = Curr_Envir) -> A
     A %>% filter(!is.na(QCL_PRIMARY_item)) %>% filter(is.na(PP_item)) -> PP_NO_DATA_ITEM
     # 20 items out of 205 were missing; mostly animal offals, fats or skins
 

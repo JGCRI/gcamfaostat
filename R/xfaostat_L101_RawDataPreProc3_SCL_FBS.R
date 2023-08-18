@@ -37,9 +37,7 @@ module_xfaostat_L101_RawDataPreProc3_SCL_FBS <- function(command, ...) {
 
     all_data <- list(...)[[1]]
 
-    # Load required inputs ----
-
-    get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
+    Curr_Envir <- environment()
 
 
     if(Process_Raw_FAO_Data == FALSE) {
@@ -50,20 +48,23 @@ module_xfaostat_L101_RawDataPreProc3_SCL_FBS <- function(command, ...) {
 
     } else {
 
+    # Load required inputs ----
+    get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
+
     # Get area code ----
     QCL_area_code <-
       QCL_area_code_map %>% distinct(area_code) %>% pull()
 
     ## *[SCL] SUA: supply utilization accounting ----
 
-    FAOSTAT_load_raw_data("SCL")   # SUA      2010+
+    FAOSTAT_load_raw_data("SCL", .Envir = Curr_Envir)   # SUA      2010+
 
     SCL %>% distinct(element, element_code, unit)
 
 
     if (is.character(SCL$item_code)){
 
-      FAOSTAT_load_raw_data("SCL", GET_MAPPINGCODE = "ItemCodes")
+      FAOSTAT_load_raw_data("SCL", GET_MAPPINGCODE = "ItemCodes", .Envir = Curr_Envir)
 
       SCL %>% rename(cpc_code = item_code) %>%
         left_join_error_no_match(
@@ -117,7 +118,7 @@ module_xfaostat_L101_RawDataPreProc3_SCL_FBS <- function(command, ...) {
     ## *[FBS] new food balance sheet (2010-) ----
 
     ## Load raw data
-    FAOSTAT_load_raw_data("FBS") # New FBS  2010+
+    FAOSTAT_load_raw_data("FBS", .Envir = Curr_Envir) # New FBS  2010+
     FBS %>% distinct(element, element_code, unit)
 
     FBS %>% filter(

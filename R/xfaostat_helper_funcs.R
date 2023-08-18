@@ -34,8 +34,9 @@ FAOSTAT_metadata <- function (code = NULL){
 #' @description Read csv data and "." in column name is substituted with "_".
 #'
 #' @param DATASETCODE Dataset code in FAO metadata or the name of a csv file.
-#' @param GET_MAPPINGCODE if NULL return data if char return other mapping files
+#' @param GET_MAPPINGCODE If NULL return data if char return other mapping files
 #' @param DATA_FOLDER Path to the folder storing the data.
+#' @param .Envir Qutput environment
 #'
 #' @importFrom  readr read_csv
 #' @importFrom  magrittr %>%
@@ -44,7 +45,8 @@ FAOSTAT_metadata <- function (code = NULL){
 
 FAOSTAT_load_raw_data <- function(DATASETCODE,
                                   DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
-                                  GET_MAPPINGCODE = NULL){
+                                  GET_MAPPINGCODE = NULL,
+                                  .Envir = .GlobalEnv){
   assertthat::assert_that(is.character(DATASETCODE))
   assertthat::assert_that(is.character(DATA_FOLDER))
 
@@ -66,11 +68,8 @@ FAOSTAT_load_raw_data <- function(DATASETCODE,
       df <- readr::read_csv(unz(zip_file_name, csv_file_name), col_types = NULL)
       # Lower case col names and use _ as delimiter
       names(df) <- tolower(gsub("\\.| ", "_", names(df)))
-      # Assigned to parent env
-      #assign(CODE, df, envir = parent.frame())
-      assign(CODE, df, envir = parent.env(environment()))
-      # Assigned to current env
-      #assign(CODE, df, envir = .GlobalEnv)
+      # Assigned to .Envir
+      assign(CODE, df, envir = .Envir)
     }
   } else if(is.character(GET_MAPPINGCODE) == T){
 
@@ -88,10 +87,8 @@ FAOSTAT_load_raw_data <- function(DATASETCODE,
       df <- readr::read_csv(unz(zip_file_name, csv_file_name), col_types = NULL)
       # Lower case col names and use _ as delimiter
       names(df) <- tolower(gsub("\\.| ", "_", names(df)))
-      # Assigned to parent env
-      assign(paste0(CODE, "_", GET_MAPPINGCODE), df, envir = parent.env(environment()))
-      # Assigned to current env
-      #assign(paste0(CODE, "_", GET_MAPPINGCODE), df, envir = .GlobalEnv)
+      # Assigned to .Envir
+      assign(CODE, df, envir = .Envir)
     }
 
   } else {stop("Wrong GET_MAPPINGCODE")}
@@ -301,16 +298,19 @@ FF_FILL_NUMERATOR_DENOMINATOR <- function(.DF, NUMERATOR_c, DENOMINATOR_c,
 #'
 #' @param DFs Data frames to be full joined.
 #' @param COL_by By variable in join.
+#' @param .ENVIR Environment of the input data frames
 #' @param COL_rename Other common variables to rename (by adding df names as prefix) before the join.
+#'
 #' @importFrom  magrittr %>%
 #' @importFrom dplyr rename_at select any_of all_of full_join
 #' @importFrom purrr reduce
 #' @return A joined data frame
 #' @export
-FF_join_checkmap <- function(DFs, COL_by, COL_rename){
+FF_join_checkmap <- function(DFs, COL_by, COL_rename,
+                             .ENVIR = .GlobalEnv){
   lapply(DFs, function(df){
 
-    get(df, envir = parent.frame(n = 3)) %>%
+    get(df, envir = .ENVIR) %>%
       select(all_of(COL_by), any_of(COL_rename)) %>% distinct() %>%
       dplyr::rename_at(vars(any_of(COL_rename)), list(~paste0(df, "_", .)))
   }) %>% purrr:: reduce(full_join, by = COL_by)

@@ -36,9 +36,8 @@ module_xfaostat_L101_RawDataPreProc5_TCL <- function(command, ...) {
 
     all_data <- list(...)[[1]]
 
-    # Load required inputs ----
+    Curr_Envir <- environment()
 
-    get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
 
     if(Process_Raw_FAO_Data == FALSE) {
@@ -48,24 +47,14 @@ module_xfaostat_L101_RawDataPreProc5_TCL <- function(command, ...) {
 
     } else {
 
-
-      # FAOSTAT_RDS <- c("TCL")
-      #
-      # DIR_PREBUILT_FAOSTAT <- "data/PREBUILT_FAOSTAT"
-      #
-      # lapply(FAOSTAT_RDS, function(d){
-      #   assertthat::assert_that(file.exists(file.path(DIR_PREBUILT_FAOSTAT, paste0(d, ".rds"))))
-      #   assign(d, readRDS(file.path(DIR_PREBUILT_FAOSTAT, paste0(d, ".rds"))),
-      #          envir = parent.env(environment()))
-      # })
-      #
-      # TCL %>% filter(year >= min(FAOSTAT_Hist_Year_TCL)) %>%  spread(year, value) -> TCL_wide
+    # Load required inputs ----
+    get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
 
     QCL_area_code <- QCL_area_code_map %>% distinct(area_code) %>% pull()
 
     # *[TCL] Gross trade ----
-    FAOSTAT_load_raw_data("TCL")   # Gross trade
+    FAOSTAT_load_raw_data("TCL", .Envir = Curr_Envir)   # Gross trade
 
     TCL %>% distinct(element, element_code, unit)
     TCL %>% distinct(item, item_code)

@@ -15,9 +15,8 @@ OUTPUT_Export_CSV <- TRUE
 ## Fao raw data folder
 DIR_RAW_DATA_FAOSTAT <- "inst/extdata/aglu/FAO/FAOSTAT"
 ## Output GCAM csv
-#DIR_OUTPUT_CSV <- "inst/extdata/aglu/FAO/temp"
-DIR_OUTPUT_CSV <- "outputs/CSV"
-dir.create(file.path(DIR_OUTPUT_CSV), showWarnings = FALSE)
+DIR_OUTPUT_CSV <- file.path("outputs", "CSV")
+dir.create(DIR_OUTPUT_CSV, recursive = T, showWarnings = FALSE)
 
 
 # Historical years of focus ----

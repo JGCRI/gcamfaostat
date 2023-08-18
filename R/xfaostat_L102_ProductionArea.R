@@ -354,9 +354,13 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
     FBS %>% distinct(element, element_code, unit)
 
     # Get fish items through mapping
-
+    Curr_Envir <- environment()
     checkitem <-
-      FF_join_checkmap(c("QCL_COMM_AN_PRIMARY", "FAO_an_items_PRODSTAT"), "item_code", "item") %>%
+      FF_join_checkmap(DFs = c("QCL_COMM_AN_PRIMARY", "FAO_an_items_PRODSTAT"),
+                       COL_by = "item_code",
+                       COL_rename =  "item",
+                       .ENVIR = Curr_Envir
+                       ) %>%
       mutate(match = if_else(QCL_COMM_AN_PRIMARY_item == FAO_an_items_PRODSTAT_item, T, F))
 
 
@@ -467,13 +471,13 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
     # P.S.  Check primary product mapping ----
 
     # checkitem <-
-    #   FF_join_checkmap(c("QCL_COMM_CROP_PRIMARY", "FAO_ag_items_PRODSTAT"), "item_code", "item") %>%
+    #  FF_join_checkmap(c("QCL_COMM_CROP_PRIMARY", "FAO_ag_items_PRODSTAT"), "item_code", "item",.ENVIR = Curr_Envir) %>%
     #   mutate(match = if_else(QCL_COMM_CROP_PRIMARY_item == FAO_ag_items_PRODSTAT_item , T, F))
     # checkitem %>% filter(is.na(match)|match == F)
     # # 160 primary items (matching here) + 15/16 fodder crops
     #
     # checkitem <-
-    #   FF_join_checkmap(c("QCL_COMM_AN_PRIMARY", "FAO_an_items_PRODSTAT"), "item_code", "item") %>%
+    #   FF_join_checkmap(c("QCL_COMM_AN_PRIMARY", "FAO_an_items_PRODSTAT"), "item_code", "item",.ENVIR = Curr_Envir) %>%
     #   mutate(match = if_else(QCL_COMM_AN_PRIMARY_item == FAO_an_items_PRODSTAT_item, T, F))
     # checkitem %>% filter(is.na(match)|match == F)
     # # Snails, not sea production came from SCL

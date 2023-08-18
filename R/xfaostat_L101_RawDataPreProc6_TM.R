@@ -35,9 +35,7 @@ module_xfaostat_L101_RawDataPreProc6_TM <- function(command, ...) {
 
     all_data <- list(...)[[1]]
 
-    # Load required inputs ----
-
-    get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
+    Curr_Envir <- environment()
 
 
     if(Process_Raw_FAO_Data == FALSE) {
@@ -47,17 +45,8 @@ module_xfaostat_L101_RawDataPreProc6_TM <- function(command, ...) {
 
     } else {
 
-
-      # FAOSTAT_RDS <- c("TM_bilateral_wide")
-      #
-      # DIR_PREBUILT_FAOSTAT <- "data"
-      #
-      # lapply(FAOSTAT_RDS, function(d){
-      #   assertthat::assert_that(file.exists(file.path(DIR_PREBUILT_FAOSTAT, paste0(d, ".rds"))))
-      #   assign(d, readRDS(file.path(DIR_PREBUILT_FAOSTAT, paste0(d, ".rds"))),
-      #          envir = parent.env(environment()))
-      # })
-
+      # Load required inputs ----
+      get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
 
       # Get area code ----
@@ -66,7 +55,7 @@ module_xfaostat_L101_RawDataPreProc6_TM <- function(command, ...) {
 
     # *[TM] Bilateral trade ----
     #*FAO has better quality bilateral data since 1992, covering most SUA items
-    FAOSTAT_load_raw_data("TM")    # Bilateral trade
+    FAOSTAT_load_raw_data("TM", .Envir = Curr_Envir)    # Bilateral trade
 
     TM %>%
       # Only keep quantities for elements with a unit of tonnes
@@ -143,3 +132,15 @@ module_xfaostat_L101_RawDataPreProc6_TM <- function(command, ...) {
     stop("Unknown command")
   }
 }
+
+# FAOSTAT_RDS <- c("TM_bilateral_wide")
+#
+# DIR_PREBUILT_FAOSTAT <- "data"
+#
+# lapply(FAOSTAT_RDS, function(d){
+#   assertthat::assert_that(file.exists(file.path(DIR_PREBUILT_FAOSTAT, paste0(d, ".rds"))))
+#   assign(d, readRDS(file.path(DIR_PREBUILT_FAOSTAT, paste0(d, ".rds"))),
+#          envir = parent.env(environment()))
+# })
+
+

@@ -38,9 +38,8 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
 
     all_data <- list(...)[[1]]
 
-    # Load required inputs ----
+    Curr_Envir <- environment()
 
-    get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
 
     if(Process_Raw_FAO_Data == FALSE) {
@@ -49,6 +48,9 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
       FBSH_CB_wide <- extract_prebuilt_data("FBSH_CB_wide")
 
     } else {
+
+    # Load required inputs ----
+    get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
     ## Get area code ----
     QCL_area_code <-
@@ -59,7 +61,7 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
 
     ## *[FBSH] old food balance sheet (-2013) ----
 
-    FAOSTAT_load_raw_data("FBSH")  # Old FBS -2013
+    FAOSTAT_load_raw_data("FBSH", .Envir = Curr_Envir)  # Old FBS -2013
     FBSH %>% distinct(element, element_code, unit)
     # Keep population (old)
     FBSH %>%
@@ -80,7 +82,7 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
 
     ## *[CB] Non-food Balance ----
 
-    FAOSTAT_load_raw_data("CB")    # Old FBS-nonfood -2013
+    FAOSTAT_load_raw_data("CB", .Envir = Curr_Envir)    # Old FBS-nonfood -2013
 
     CB %>% distinct(element, element_code, unit)
     # Keep population (old)

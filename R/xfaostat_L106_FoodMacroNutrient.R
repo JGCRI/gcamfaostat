@@ -84,14 +84,14 @@ module_xfaostat_L106_FoodMacroNutrient <- function(command, ...) {
     # Quick checks----
     #*******************************************
     # Check area
-
+    Curr_Envir <- environment()
     # 19 countries not in FBS/SUA but in QCL
     # including (3 populous) Somalia, South Sudan, and Singapore (UAE was recently added in FAOSTAT)
-    FF_join_checkmap(c("FBS", "SCL"), "area_code", "area") -> checkarea
+    FF_join_checkmap(c("FBS", "SCL"), "area_code", "area", .ENVIR = Curr_Envir) -> checkarea
 
     #Check element
-    FF_join_checkmap(c("FBS", "SCL"), "item_code", "item") -> checkitem
-    FF_join_checkmap(c("FBS", "SCL"), "element_code", "element") -> checkelement
+    FF_join_checkmap(c("FBS", "SCL"), "item_code", "item", .ENVIR = Curr_Envir) -> checkitem
+    FF_join_checkmap(c("FBS", "SCL"), "element_code", "element", .ENVIR = Curr_Envir) -> checkelement
     #*******************************************
     # Check calories calculation first to make sure we can trace appropriately
     # the key here is elements, deal with missing values, and conversion rate (cal/g)

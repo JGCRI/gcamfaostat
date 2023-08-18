@@ -35,24 +35,25 @@ module_xfaostat_L101_RawDataPreProc1_QCL <- function(command, ...) {
 
     all_data <- list(...)[[1]]
 
-    # Load required inputs ----
-
-    get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
+    Curr_Envir <- environment()
 
 
     if(Process_Raw_FAO_Data == FALSE) {
 
-      # Prebuilt data is read here ----
+    # Load from Prebuilt data ----
       QCL_wide <- extract_prebuilt_data("QCL_wide")
       QCL_area_code_map <- extract_prebuilt_data("QCL_area_code_map")
 
       } else {
 
+    # Load required inputs ----
+    get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
+
 
     # *[QCL] FAOSTAT Production and area ----
 
     ## Load raw data
-    FAOSTAT_load_raw_data(DATASETCODE = "QCL", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT)
+    FAOSTAT_load_raw_data(DATASETCODE = "QCL", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT, .Envir = Curr_Envir)
 
     QCL %>% distinct(element_code, element)
 
