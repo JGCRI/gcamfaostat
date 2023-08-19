@@ -32,6 +32,10 @@ module_xfaostat_L101_RawDataPreProc6_TM <- function(command, ...) {
   } else if(command == driver.MAKE) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
+    QCL_area_code_map <- element_code <- element <- area_code <- item_code <- area <-
+      item <- unit <- TM <- partner_country_code <- reporter_country_code <- reporter_countries <-
+      partner_countries <- `Export Quantity` <- `Import Quantity` <- importer <- exporter <-
+      expflow <- impflow <- source_code <- NULL
 
     all_data <- list(...)[[1]]
 
@@ -108,7 +112,7 @@ module_xfaostat_L101_RawDataPreProc6_TM <- function(command, ...) {
       TM_bilateral_wide
 
     # size has been a key concern here
-    utils:::format.object_size(object.size(TM_bilateral_wide), "auto")
+    #utils:::format.object_size(object.size(TM_bilateral_wide), "auto")
 
 
     ### output TM ----

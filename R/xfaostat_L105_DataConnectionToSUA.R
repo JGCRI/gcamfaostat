@@ -38,6 +38,13 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
   } else if(command == driver.MAKE) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
+    SCL_wide <- element_code <- element <- area_code <- item_code <- area <-
+      item <- unit <- FBS_wide <- FBSH_CB_wide <- TCL_wide <- TM_bilateral_wide <-
+      QCL_PROD <- FAO_items <- tier <- QCL <- Mapping_FBSH_SCL_OilCake <- oil <-
+      cake <- SCL_item_oil <- SCL_item_cake <- cake_rate <- cake_rate_world <-
+      DS_key_coproduct_item <- Production <- Import <- Export <- DS_demand <-
+      DS_production <- CoproductRate <- QCL_AN_LIVEANIMAL_MEATEQ <- `Closing stocks` <-
+      `Opening stocks` <- `Stock Variation` <- NULL
 
     all_data <- list(...)[[1]]
 
@@ -201,6 +208,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     ## 2.2. FN: Join data to template by source ----
 
     SUA_TEMPLATE_LEFT_JOIN <- function(.DF, .DS, .DS_TM_Assert_Item = T){
+
 
       ## Start SUA_TEMPLATE_LEFT_JOIN ----
 

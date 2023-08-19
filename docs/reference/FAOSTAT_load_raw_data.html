@@ -61,7 +61,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">FAOSTAT_load_raw_data</span><span class="op">(</span>
   <span class="va">DATASETCODE</span>,
   DATA_FOLDER <span class="op">=</span> <span class="va">DIR_RAW_DATA_FAOSTAT</span>,
-  GET_MAPPINGCODE <span class="op">=</span> <span class="cn">NULL</span>
+  GET_MAPPINGCODE <span class="op">=</span> <span class="cn">NULL</span>,
+  .Envir <span class="op">=</span> <span class="va">.GlobalEnv</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -76,7 +77,11 @@
 
 
 <dt>GET_MAPPINGCODE</dt>
-<dd><p>if NULL return data if char return other mapping files</p></dd>
+<dd><p>If NULL return data if char return other mapping files</p></dd>
+
+
+<dt>.Envir</dt>
+<dd><p>Qutput environment</p></dd>
 
 </dl></div>
 

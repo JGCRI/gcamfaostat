@@ -25,7 +25,6 @@ module_xfaostat_L101_RawDataPreProc5_TCL <- function(command, ...) {
     c("TCL_wide")            # Gross trade
 
 
-
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
   } else if(command == driver.DECLARE_OUTPUTS) {
@@ -33,6 +32,8 @@ module_xfaostat_L101_RawDataPreProc5_TCL <- function(command, ...) {
   } else if(command == driver.MAKE) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
+    QCL_area_code_map <- element_code <- element <- area_code <- item_code <- area <-
+      item <- unit <- TCL <- NULL
 
     all_data <- list(...)[[1]]
 

@@ -33,6 +33,11 @@ module_xfaostat_L103_ProducerPrices <- function(command, ...) {
   } else if(command == driver.MAKE) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
+    PP_wide <- element_code <- element <- area_code <- item_code <- area <-
+      item <- unit <- QCL_PROD <- item_set <- GCAM_commodity <- QCL_PRIMARY_item <-
+      PP_item <- Production <- Prod_Value <- PP_index <- World_PP_index <-
+      PP_Multiplier <- PP_item_world <- NULL
+
 
     all_data <- list(...)[[1]]
 

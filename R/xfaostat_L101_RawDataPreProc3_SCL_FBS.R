@@ -34,6 +34,8 @@ module_xfaostat_L101_RawDataPreProc3_SCL_FBS <- function(command, ...) {
   } else if(command == driver.MAKE) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
+    QCL_area_code_map <- element_code <- element <- area_code <- item_code <- area <-
+      item <- unit <- SCL_ItemCodes <- cpc_code <- FBS <- NULL
 
     all_data <- list(...)[[1]]
 

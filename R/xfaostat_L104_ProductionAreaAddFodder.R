@@ -32,6 +32,9 @@ module_xfaostat_L104_ProductionAreaAddFodder <- function(command, ...) {
   } else if(command == driver.MAKE) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
+    QCL_area_code_map <- element_code <- element <- area_code <- item_code <- area <-
+      item <- unit <- QCL_FODDERCROP_item <- FAO_ag_items_PRODSTAT_item <-
+      FAO_ag_items_PRODSTAT <- NULL
 
     all_data <- list(...)[[1]]
 

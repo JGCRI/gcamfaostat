@@ -7,7 +7,7 @@
 FAOSTAT_metadata(code = NULL)
 }
 \arguments{
-\item{datasetcode}{Dataset code in FAO metadata, e.g., QCL is the production dataset. If NULL, full metadata will be pulled.}
+\item{code}{FAOSTAT dataset code if filtering specific dataset; NULL by default and return all dataset info}
 }
 \value{
 Dataframe including the metadata of FAOSTAT including URL for download, updating date, detailed descriptions, etc.

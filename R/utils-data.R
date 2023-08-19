@@ -248,6 +248,9 @@ get_data <- function(all_data, name, strip_attributes = FALSE) {
 #' @param environ The environment into which the data should be loaded.  If NULL (the default)
 #' the caller's environment will be used.
 get_data_list <- function(all_data, data_list, strip_attributes = FALSE, environ = NULL) {
+
+  tail <- NULL
+
   # expecting a (potentially named) character vector for data_list
   assertthat::assert_that(is.character(data_list))
   data_list_names <- names(data_list)
@@ -428,6 +431,9 @@ is_data_list <- function(data_list) {
 #' @param pb \code{PREBUILT_DATA} object; overridden only for testing
 #' @return The data object (a tibble).
 extract_prebuilt_data <- function(object_name, pb = NULL) {
+
+  PREBUILT_DATA <- NULL
+
   if(is.null(pb)) {
     pb <- PREBUILT_DATA
   }
@@ -449,6 +455,7 @@ extract_prebuilt_data <- function(object_name, pb = NULL) {
 #' @note Called primarily for its side effects: a warning is issued for each non-identical object.
 #' @return A logical indicating whether a mismatch occurred.
 verify_identical_prebuilt <- function(..., pb = NULL) {
+  verify_identical_prebuilt <- NULL
   if(is.null(pb)) {
     pb <- PREBUILT_DATA
   }

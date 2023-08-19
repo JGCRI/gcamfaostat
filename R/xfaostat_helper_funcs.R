@@ -3,8 +3,10 @@
 
 
 #' FAOSTAT_metadata: get the most recent metadata from FAOSTAT API and return a summary data frame
+#'
+#' @param code FAOSTAT dataset code if filtering specific dataset; NULL by default and return all dataset info
+#'
 #' @description Download and parse the metadata file from the FAOSTAT portal. FAOSTAT_metadata was adapted from the FAOSTAT package.
-#' @param datasetcode Dataset code in FAO metadata, e.g., QCL is the production dataset. If NULL, full metadata will be pulled.
 #' @importFrom  XML xmlParse xmlToDataFrame
 #' @importFrom  xml2 read_xml
 #' @return Dataframe including the metadata of FAOSTAT including URL for download, updating date, detailed descriptions, etc.
@@ -114,6 +116,8 @@ FAOSTAT_AREA_RM_NONEXIST <- function(.DF,
                                  SUDAN2012_MERGE = F,
                                  RM_AREA_CODE = c(69, 87, 127, 135, 145, 182, 299)){
 
+  area_code <- year <- datasetcode <- NULL
+
   assertthat::assert_that("area_code" %in% names(.DF),
                           msg = "Date frame is required and need a col of area_code")
 
@@ -206,6 +210,9 @@ FAOSTAT_AREA_RM_NONEXIST <- function(.DF,
 #' @export
 
 FF_summary <- function(DF, COL_CNTY = "area", COL_ITEM = "item"){
+
+  value <- NULL
+
   assert_that(is.character(DF))
 
   get(DF) %>%
@@ -246,6 +253,11 @@ FF_summary <- function(DF, COL_CNTY = "area", COL_ITEM = "item"){
 
 FF_FILL_NUMERATOR_DENOMINATOR <- function(.DF, NUMERATOR_c, DENOMINATOR_c,
                                           NUMERATOR_FILL_DIRECTION = "down"){
+
+  DENOMINATOR <- NUMERATOR <- area_code <- area <- item_code <- item <-
+    year <- Yield <- Yield_Mean <- element <- value <- NULL
+
+
   .DF %>% rename(NUMERATOR = NUMERATOR_c, DENOMINATOR = DENOMINATOR_c) %>%
     mutate(Yield = if_else(DENOMINATOR > 0, NUMERATOR / DENOMINATOR, NA_real_)) %>%
     group_by(area_code, area, item_code, item) %>%
@@ -328,6 +340,9 @@ FF_join_checkmap <- function(DFs, COL_by, COL_rename,
 #' @return A plot summarizing the time-series of changing the count of item_code and area_code (grouped by element).
 #' @export
 FF_check_count_plot <- function(.DF, .ELEMENT = c()){
+
+  element <- year <- area_code <- item_code <- header <- NULL
+
   if (.ELEMENT %>% length() == 0 ) {
     .DF %>% distinct(element) %>% pull -> .ELEMENT
   }
@@ -378,6 +393,11 @@ rm_accent <- function(.df, ...){
 #' @export
 
 assert_FBS_balance <- function(.DF){
+
+  element_code <- element <- area_code <- item_code <- area <-
+    item <- unit <- Production <- Import <- Export <- Food <- Feed <- Loss <-
+    Processed <- Seed <- `Other uses` <- `Regional supply` <- `Regional demand` <-
+    Residuals <- bal <- `Closing stocks` <- `Opening stocks` <- `Stock Variation` <- NULL
 
 
   # assert .DF structure
@@ -552,6 +572,9 @@ GROSS_TRADE_ADJUST <- function(.DF,
                                .Reg_VAR = 'area_code',
                                .GROUP_VAR = c("item_code", "year")){
 
+  element <- value <- Export <- Import <- Production <- ExportScaler <-
+    ImportScaler <-
+
   # assert .DF structure
   assertthat::assert_that(all(c("element", .GROUP_VAR) %in% names(.DF)))
   assertthat::assert_that(dplyr::is.grouped_df(.DF) == F)
@@ -612,6 +635,11 @@ FF_rawdata_info <- function(
     DATASETCODE,
     DOWNLOAD_NONEXIST = F){
 
+  DIR_RAW_DATA <- isdir <- filelocation <- ctime <- mtime <- FF_metadata <-
+    datasetcode <- datasetname <- dateupdate <- Localupdate <- FAOupdate <-
+    filesize <- NULL
+
+
   assertthat::assert_that(is.character(DATASETCODE))
   assertthat::assert_that(is.logical(DOWNLOAD_NONEXIST))
   # Add check path later [ToDo]
@@ -664,6 +692,8 @@ FF_rawdata_info <- function(
 
 FF_download_faostat_bulk <- function(DATASETCODE,
                                      DATA_FOLDER = DIR_RAW_DATA_FAOSTAT){
+
+  FF_metadata <- `download.file` <- NULL
 
   assertthat::assert_that(is.character(DATASETCODE))
   assertthat::assert_that(is.character(DATA_FOLDER))

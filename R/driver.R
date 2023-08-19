@@ -180,7 +180,8 @@ driver <- function(all_data = empty_data(),
     return_data_names <- union(inputs_of(return_inputs_of), outputs_of(return_outputs_of))
   }
 
-  optional <- input <- from_file <- name <- NULL    # silence notes from package check.
+  optional <- input <- from_file <- name <-  data_mod <- `xml.XML_SUFFIX` <-
+    output <- NULL    # silence notes from package check.
 
   assert_that(is.null(stop_before) | is.character(stop_before))
   assert_that(is.null(stop_after) | is.character(stop_after))
@@ -499,7 +500,8 @@ driver_drake <- function(
     return_data_names <- union(inputs_of(return_inputs_of), outputs_of(return_outputs_of))
   }
 
-  optional <- input <- from_file <- name <- to_xml <-  NULL    # silence notes from package check.
+  optional <- input <- from_file <- name <- to_xml <- data_mod <- output <- . <-
+    PREBUILT_DATA <-NULL    # silence notes from package check.
 
   assert_that(is.null(stop_before) | is.character(stop_before))
   assert_that(is.null(stop_after) | is.character(stop_after))
@@ -692,7 +694,7 @@ driver_drake <- function(
       # add the chunk to the target list
       target <- c(target, chunk)
       # Generate the command to run the chunk as:
-      # `target <- gcamdata:::chunk( "MAKE", c(input1, input2, inputN) )`
+      # `target <- gcamfaostat:::chunk( "MAKE", c(input1, input2, inputN) )`
       # Note we bypass run_chunk here otherwise drake isn't able to associate
       # the source code for the chunk with the command and the "make" functionality
       # would break.

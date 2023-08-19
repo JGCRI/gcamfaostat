@@ -40,6 +40,10 @@ module_xfaostat_L199_ExportCSV <- function(command, ...) {
   } else if(command == driver.MAKE) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
+    area_code <- source_code <- area_code1 <- item_code <- Bal_new_all <- element <- FBSH_CB_wide <-
+      element_code <- QCL_CROP_PRIMARY <- QCL_PROD <- unit <- QCL_FODDERCROP <- QCL_AN_LIVEANIMAL <-
+      QCL_AN_PRIMARY_MILK <- QCL_PRIMARY_PROD_PV <- area <- PD <- SUA_food_macronutrient_rate  <-
+      TM_bilateral_wide <- NULL
 
     all_data <- list(...)[[1]]
 

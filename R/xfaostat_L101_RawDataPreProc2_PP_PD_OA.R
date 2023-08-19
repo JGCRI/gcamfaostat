@@ -37,6 +37,9 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
   } else if(command == driver.MAKE) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
+    QCL_area_code_map <- element_code <- element <- area_code <- item_code <- area <-
+      item <- unit <- PP <- `Producer Price (USD/tonne)` <- pp_base <- pp_baseindex <-
+      `Producer Price Index (2014-2016 = 100)` <- GDP_deflator_Taiwan <- NULL
 
     all_data <- list(...)[[1]]
 

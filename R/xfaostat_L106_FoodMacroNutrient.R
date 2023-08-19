@@ -34,6 +34,14 @@ module_xfaostat_L106_FoodMacroNutrient <- function(command, ...) {
   } else if(command == driver.MAKE) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
+    FBS_label <- item <-.<- `Calories/Year` <- `Food supply quantity (tonnes)` <-
+      `Proteins/Year` <- `Fats/Year` <- calperg <- proteinperc <- fatperc <-
+      value_world <- value_reg <- Diff <- p_Diff <- quantile <- `Food supply quantity (kg/capita/yr)` <-
+      `Protein supply quantity (g/capita/day)` <- `Fat supply quantity (g/capita/day)` <-
+      FAO_an_items_cal_SUA <- Mcal_t <- fat_Perc  <- protein_Perc <- FAO_FBS_code <-
+      SCL_item_code <- CPC_code <- MAPPING_FAO_FBS_SUA <- unit <- element <-
+      area_code <- item_code <- element_code <- OA <- FBS_wide <- SCL_wide <-
+      `Food supply (kcal/capita/day)` <- NULL
 
     all_data <- list(...)[[1]]
 

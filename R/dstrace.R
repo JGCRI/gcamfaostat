@@ -40,7 +40,7 @@ dstrace <- function(object_name, direction = "upstream", graph = FALSE,
   # Initialization
   upstream <- grepl("^(up|both)", direction)
   downstream <- grepl("^(down|both)", direction)
-  output <- precursors <- . <- NULL  # silence package check notes
+  output <- precursors <- . <- GCAM_DATA_MAP <- NULL  # silence package check notes
 
   # If this is the first time (no recursion yet), create a new tracelist
   if(is.null(previous_tracelist)) {
@@ -197,6 +197,8 @@ dstrace_plot <- function(object_name, tracelist, upstream, downstream, ...) {
 #' @export
 
 info <- function(object_name, gcam_data_map = NULL, previous_tracelist = NULL, upstream = TRUE, downstream = TRUE, print = TRUE) {
+
+  GCAM_DATA_MAP <- NULL
 
   if(is.null(gcam_data_map)) {
     gcam_data_map <- GCAM_DATA_MAP

@@ -3,6 +3,30 @@
 # utils.R
 PACKAGE_NAME <- "gcamfaostat"
 
+
+# silence package check
+utils::globalVariables(c(
+  ".", "APE_comm", "APE_comm_source", "Area", "harvested", "Closing stocks",
+  "Export", "FALSE", "FAO_ag_items_PRODSTAT",  "Feed", "Food",
+  "GCAMDATA_FAOSTAT_BiTrade_194Regs_400Items_2010to2020",
+  "GCAMDATA_FAOSTAT_FBSH_CB_173Regs_118Items_1973to2009",
+  "GCAMDATA_FAOSTAT_MacroNutrientRate_179Regs_426Items_2010to2019Mean",
+  "GCAMDATA_FAOSTAT_ProdArea_195Regs_271Prod160AreaItems_1973to2020",
+  "GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019", "Import",
+  "Import_Demand_Share", "Loss", "Mapping_SUA_PrimaryEquivalent", "Opening stocks",
+  "Opening stocks1", "Ostock", "Ostock_Demand_Share", "Ostock_demand", "Other uses",
+  "PREBUILT_DATA", "Processed", "Production", "Q25asMin", "Regional demand",
+  "Regional supply", "Residuals", "SUA_item_code_map", "Seed", "Stock Variation",
+  "Stockshifter", "TCL", "TRUE", "Tourist", "consumption", "area_code", "bal_domestic",
+  "bal_domestic_current", "bal_domestic_lag", "bal_import", "bal_source", "cumSV",
+  "data", "datasetcode", "element", "extraction_rate", "extraction_rate_Q25",
+  "extraction_rate_lag", "extraction_rate_trade", "extraction_rate_world",
+  "import", "import_demand", "is_demand", "is_import", "is_opening", "is_supply",
+  "is_tibble", "item_code", "item_set", "minimium_extraction_rate", "nest_level",
+  "output_specific_extraction_rate", "residual", "set_traded_names", "set_years",
+  "share", "sink_item", "sink_item_code", "source_GCAM_region_ID", "source_code",
+  "source_item_code", "value", "value1", "year"))
+
 #' find_header
 #'
 #' Read a file line-by-line to find how far its header extends, and return it.
@@ -311,6 +335,8 @@ save_chunkdata <- function(chunkdata, write_inputs = FALSE, create_dirs = FALSE,
   assert_that(is.logical(write_inputs))
   assert_that(is.logical(create_dirs))
   assert_that(is.character(outputs_dir))
+
+  set_xml_file_helper <- NULL
 
   # Create directory if necessary, and remove any previous outputs
   if(create_dirs) {

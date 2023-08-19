@@ -30,6 +30,8 @@ module_xfaostat_L101_RawDataPreProc7_FO <- function(command, ...) {
   } else if(command == driver.MAKE) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
+    FO <- element_code <- element <- area_code <- item_code <- area <-
+      item <- unit <- NULL
 
     all_data <- list(...)[[1]]
 

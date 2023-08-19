@@ -36,6 +36,10 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
   } else if(command == driver.MAKE) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
+    QCL_wide <- element_code <- element <- area_code <- item_code <- area <-
+      item <- unit <- FBS_wide <- FBSH_CB_wide <- GCAM_commodity <- Production <-
+      `Producing Animals/Slaughtered` <- Yield <- QCL_COMM_AN_PRIMARY_item <-
+      FAO_an_items_PRODSTAT_item <- NULL
 
     all_data <- list(...)[[1]]
 
@@ -243,7 +247,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       complete(nesting(area_code, area, item_code, item), nesting(element_code, element, unit), year) %>%
       group_by(area_code, area, item_code, item, element_code, element, unit) %>%
       # linearly interpolate value forward
-      mutate(value = gcamdata::approx_fun(year, value)) %>%
+      mutate(value = approx_fun(year, value)) %>%
       # fill down only to fill the last year
       tidyr::fill(value, .direction = "down") %>%
       replace_na(list(value = 0)) %>%
@@ -265,7 +269,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       complete(nesting(area_code, area, item_code, item, element_code, element, unit), year) %>%
       group_by(area_code, area, item_code, item, element_code, element, unit) %>%
       # linearly interpolate value forward
-      mutate(value = gcamdata::approx_fun(year, value)) %>%
+      mutate(value = approx_fun(year, value)) %>%
       # fill down only to fill the last year
       tidyr::fill(value, .direction = "down") %>%
       replace_na(list(value = 0)) %>%
@@ -285,7 +289,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       complete(nesting(area_code, area, item_code, item, element_code, element, unit), year) %>%
       group_by(area_code, area, item_code, item) %>%
       # linearly interpolate production and fill in yield down-up
-      mutate(value = gcamdata::approx_fun(year, value)) %>%
+      mutate(value = approx_fun(year, value)) %>%
       tidyr::fill(value, .direction = "down") %>%
       replace_na(list(value = 0)) %>%
       ungroup() %>%
@@ -304,7 +308,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       complete(nesting(area_code, area, item_code, item, element_code, element, unit), year) %>%
       group_by(area_code, area, item_code, item, element_code, element, unit) %>%
       # linearly interpolate value forward
-      mutate(value = gcamdata::approx_fun(year, value)) %>%
+      mutate(value = approx_fun(year, value)) %>%
       tidyr::fill(value, .direction = "down") %>%
       replace_na(list(value = 0)) %>%
       ungroup() %>%

@@ -30,6 +30,7 @@ module_xfaostat_L301_LandCover <- function(command, ...) {
   } else if(command == driver.MAKE) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
+    item_code <- item <- area_code <- area <- unit <- element_code <- element <- RL <- NULL
 
     all_data <- list(...)[[1]]
 
@@ -73,7 +74,7 @@ module_xfaostat_L301_LandCover <- function(command, ...) {
       group_by(area_code, area, item_code, item) %>%
       # linearly interpolate only forward!
       # then NA = 0
-      mutate(value = gcamdata::approx_fun(year, value)) %>%
+      mutate(value = approx_fun(year, value)) %>%
       # Also fill area backward
       fill(value, .direction = "downup") %>%
       replace_na(list(value = 0)) %>%
@@ -90,7 +91,7 @@ module_xfaostat_L301_LandCover <- function(command, ...) {
       group_by(area_code, area, item_code, item) %>%
       # linearly interpolate only forward!
       # then NA = 0
-      mutate(value = gcamdata::approx_fun(year, value)) %>%
+      mutate(value = approx_fun(year, value)) %>%
       # NOT fill area backward
       # fill(value, .direction = "downup") %>%
       # replace_na(list(value = 0)) %>%
@@ -107,7 +108,7 @@ module_xfaostat_L301_LandCover <- function(command, ...) {
       group_by(area_code, area, item_code, item) %>%
       # linearly interpolate only forward!
       # then NA = 0
-      mutate(value = gcamdata::approx_fun(year, value)) %>%
+      mutate(value = approx_fun(year, value)) %>%
       # NOT fill area backward
       # fill(value, .direction = "downup") %>%
       # replace_na(list(value = 0)) %>%

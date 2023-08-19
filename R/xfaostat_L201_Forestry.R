@@ -31,6 +31,8 @@ module_xfaostat_L201_Forestry <- function(command, ...) {
   } else if(command == driver.MAKE) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
+    item_code <- item <- area_code <- area <- unit <- element_code <- element <-
+      Demand <- Export <- Import <- Production <- FO_Roundwood <- NULL
 
     all_data <- list(...)[[1]]
 
@@ -63,7 +65,7 @@ module_xfaostat_L201_Forestry <- function(command, ...) {
       group_by(area_code, area, item_code, item) %>%
       # linearly interpolate only forward!
       # then NA = 0
-      mutate(value = gcamdata::approx_fun(year, value)) %>%
+      mutate(value = approx_fun(year, value)) %>%
       ungroup() %>%
       tidyr::replace_na(list(value = 0)) %>%
       # Remove area x year that should not exist

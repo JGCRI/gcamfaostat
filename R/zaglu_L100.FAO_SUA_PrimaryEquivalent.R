@@ -55,6 +55,14 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
   } else if(command == driver.MAKE) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
+    Mapping_item_FBS_GCAM <- GCAM_commodity <- region <- element <- source_primary <-
+      source_item <- Prod_diff <- Processed <- `Stock Variation` <- Production <-
+      Import <- Export <- Food <- Feed <- `Other uses` <- `Regional supply` <-
+      `Regional demand` <- item <- GCAM_subsector <- GCAM_subsector <-  CropMeat <-
+      FAO_an_items_PRODSTAT <- GCAMDATA_FAOSTAT_ProdArea_96Regs_16FodderItems_1973to2020 <-
+      macronutrient <- macronutrient_value <- calperg <- proteinperc <-
+      macronutrient_value_World <- Food_Kt <- area_code <- area <- AGLU_ctry <-
+      iso_GCAM_regID <- GCAM_region_ID <- GCAM_region_names <-  NULL
 
     all_data <- list(...)[[1]]
 
@@ -579,9 +587,9 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
       select(item_code, GCAM_commodity)%>%
       filter(!is.na(GCAM_commodity)) %>%
       left_join(FBSH_CB, by = "item_code")  %>%
-      gcamdata::left_join_error_no_match(AGLU_ctry %>% select(area = FAO_country, iso), by = "area") %>%
-      gcamdata::left_join_error_no_match(iso_GCAM_regID %>% select(iso, GCAM_region_ID), by = "iso") %>%
-      gcamdata::left_join_error_no_match(GCAM_region_names, by = "GCAM_region_ID") %>%
+      left_join_error_no_match(AGLU_ctry %>% select(area = FAO_country, iso), by = "area") %>%
+      left_join_error_no_match(iso_GCAM_regID %>% select(iso, GCAM_region_ID), by = "iso") %>%
+      left_join_error_no_match(GCAM_region_names, by = "GCAM_region_ID") %>%
       dplyr::group_by_at(vars(area = region, year, GCAM_commodity, element)) %>%
       summarise(value = sum(value), .groups = "drop") %>%
       # complete element
@@ -599,9 +607,9 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
       inner_join(
         Mapping_SUA_PrimaryEquivalent %>% filter(source_primary == T) %>%
           distinct(GCAM_commodity, item = source_item), by = "item") %>%
-      gcamdata::left_join_error_no_match(AGLU_ctry %>% select(area = FAO_country, iso), by = "area") %>%
-      gcamdata::left_join_error_no_match(iso_GCAM_regID %>% select(iso, GCAM_region_ID), by = "iso") %>%
-      gcamdata::left_join_error_no_match(GCAM_region_names, by = "GCAM_region_ID") %>%
+      left_join_error_no_match(AGLU_ctry %>% select(area = FAO_country, iso), by = "area") %>%
+      left_join_error_no_match(iso_GCAM_regID %>% select(iso, GCAM_region_ID), by = "iso") %>%
+      left_join_error_no_match(GCAM_region_names, by = "GCAM_region_ID") %>%
       dplyr::group_by_at(vars(area = region, year, GCAM_commodity, element)) %>%
       summarise(value = sum(value), .groups = "drop") ->
       QCL_PROD_GCAM
@@ -667,6 +675,9 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
 
     # 4.1. Helper functions ----
     Check_Balance_SUA <- function(.DF){
+      NULL -> element -> GCAM_commodity -> Import -> Export -> Production -> Food ->
+        Feed -> `Other uses` -> `Regional supply` -> `Regional demand` -> bal ->
+        region
 
       assertthat::assert_that(all(c("element") %in% names(.DF)))
       assertthat::assert_that(all(c("Import", "Export", "Production",
