@@ -1,0 +1,26 @@
+---
+title: "news"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{news}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(gcamfaostat)
+```
+
+# gcamfaostat 1.0.0
+
+**First release TBD**
+The first release of gcamfaostat 1.0.0 includes the data generated for the Global Change Analysis Model v7.0 [GCAM v7.0](https://github.com/JGCRI/gcam-core/releases/tag/gcam-v7.0). The source data downloaded from FAOSTAT is archived at a [Zenodo repository]( https://zenodo.org/deposit/8260225).
+

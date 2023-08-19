@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">gcamfaostat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -45,15 +45,35 @@
      
   </a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fas fa-book"></span>
+     
+    Vignettes
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
 <li>
-  <a href="articles/getting-started/getting-started.html">Getting Started</a>
+      <a href="articles/getting-started.html">getting started</a>
+    </li>
+    <li>
+      <a href="articles/usermod_vignette.html">User Modification Functions</a>
+    </li>
+  </ul>
 </li>
-<li class="dropdown-header">Vignettes</li>
 <li>
   <a href="reference/index.html">
     <span class="fa fa-file-code-o"></span>
      
     Reference
+  </a>
+</li>
+<li>
+  <a href="articles/news.html">
+    <span class="fa fa-newspaper-o"></span>
+     
+    News
   </a>
 </li>
       </ul>
@@ -70,13 +90,51 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-
 <div class="section level1">
-<div class="page-header"><h1 id="gcamdata-faostat">gcamdata-faostat<a class="anchor" aria-label="anchor" href="#gcamdata-faostat"></a>
+<div class="page-header"><h1 id="gcamfaostat">gcamfaostat<a class="anchor" aria-label="anchor" href="#gcamfaostat"></a>
 </h1></div>
-<p>Functions in this R package (<strong>gcamdata-faostat</strong>) download, clean, processe, connect, and visualize data from FAOSTAT for global economic and integrated assessment modeling. The package is built based on the existing gcamdata package structure for consistency, transparency, and traceability.</p>
+<p><strong>gcamfaostat</strong> is an R package to prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling. The Food and Agriculture Organization Statistical Database (<a href="https://www.fao.org/faostat/en/#data" class="external-link">FAOSTAT</a>) provdes open access data on country-level agricultural production, trade, food, nutrients, prices, land use, etc, servering as the most important data source for global agroeconomic and multisector dynamic models. <strong>gcamfaostat</strong> aims to shorten the distance between the FAOSTAT raw data to economic modeling.</p>
+</div>
+<div class="section level1">
+<h1 id="gcamfaostat-and-gcamdata">gcamfaostat and gcamdata<a class="anchor" aria-label="anchor" href="#gcamfaostat-and-gcamdata"></a>
+</h1>
+<p><strong>gcamfaostat</strong> is built based on an existing R package, <strong><a href="https://jgcri.github.io/gcamdata/index.html" class="external-link">gcamdata</a></strong>, which has similar functions to<strong>gcamfaostat</strong> though <strong>gcamdata</strong> includes broader aspects of data inputs and is designed for the global multisector dynamic model <strong>GCAM</strong>. <strong>gcamfaostat</strong> utilizes the robust, reproducible and transparent data processing systems built in <strong><a href="https://github.com/JGCRI/gcam-core" class="external-link">gcamdata</a></strong>. The two packages are consistent, while <strong>gcamfaostat</strong> focuses on agroeconomic data processing and can provide input data for <strong>gcamdata</strong> (and thus GCAM) and other models that rely on FAOSTAT data.</p>
 <p>The goals of this version are: (1) Check FAOSTAT data updates and download necessary datasets (2) Develop a new method of primary equivalent aggregation to aggregate supply-utilization-accounting (SUA) data for items along the supply chain (e.g., wheat flour, bran, and germ to wheat-primary-equivalent). The method preserves balance across space (trade balance), time (storage carryover), supply-utilization, and the combination of these dimensions with minimal adjustments. (3) Apply the new method of primary equivalent aggregation to aggregating FAO ~500 SUA (SCL) items to ~100 primary equivalent items in FAO Food Balance Sheet (FBS). (4) Compare the balanced data compiled using different methods and visualize the difference.</p>
+</div>
+<div class="section level1">
+<h1 id="user-guide">User Guide<a class="anchor" aria-label="anchor" href="#user-guide"></a>
+</h1>
+<p>The package is documented in the <a href="https://realxinzhao.github.io/gcamfaostat/index.html">online manual</a></p>
+</div>
+<div class="section level1">
+<h1 id="download-and-install">Download and install:<a class="anchor" aria-label="anchor" href="#download-and-install"></a>
+</h1>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"realxinzhao/gcamfaostat"</span><span class="op">)</span></code></pre></div>
+</div>
+<div class="section level1">
+<h1 id="loading-and-run-the-gcamdata-package">Loading and run the gcamdata package<a class="anchor" aria-label="anchor" href="#loading-and-run-the-gcamdata-package"></a>
+</h1>
+<p>Open the <code>gcamfaostat.Rproj</code> file in the <code>gcamfaostat</code> folder. RStudio should open the project.</p>
+<p>To load the <code>gcamdata</code> package, enter:</p>
+<p><code>{r eval = FALSE} devtools::load_all()</code></p>
+<div class="section level2">
+<h2 id="run-the-driver">Run the driver<a class="anchor" aria-label="anchor" href="#run-the-driver"></a>
+</h2>
+<p>There are two ways to run the driver: 1. <code>{r eval = FALSE} driver_drake()</code> <code><a href="reference/driver_drake.html">driver_drake()</a></code> runs the driver and stores the outputs in a hidden cache. When you run <code><a href="reference/driver_drake.html">driver_drake()</a></code> again it will skip steps that are up-to-date. This is useful if you will be adjusting the data inputs and code and running the data system multiple times. For this reason, we almost always recommend using <code><a href="reference/driver_drake.html">driver_drake()</a></code>. More details can be found in the <a href="https://jgcri.github.io/gcamdata/articles/driverdrake_vignette.html" class="external-link">vignette</a>.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>
+<code>{r eval = FALSE} driver()</code> See <a href="https://jgcri.github.io/gcamdata/reference/driver.html" class="external-link">the documentation</a> for more options when running the driver, such as what outputs to generate or when to stop.</li>
+</ol>
+</div>
+<div class="section level2">
+<h2 id="output-files">Output files<a class="anchor" aria-label="anchor" href="#output-files"></a>
+</h2>
+<p>Users can specify the output directory (<code>DIR_OUTPUT_CSV</code>) that stores the output csv files in <code>constants.R</code>. The default directory is <code>outputs/CSV</code>. The the file will be exported when <code>OUTPUT_Export_CSV == TRUE</code> (an option in <code>constants.R</code>).<br>
+Users can also make use of the functions to trace the processing by step, when<code><a href="reference/driver_drake.html">driver_drake()</a></code> is employed.</p>
 <p>Copyright 2019 Battelle Memorial Institute; see the LICENSE file.</p>
+</div>
 </div>
 
   </div>
