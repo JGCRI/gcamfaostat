@@ -4,60 +4,6 @@
 # Module specific helper functions
 
 
-#' write_to_all_regions
-#'
-#' Copy data table to all regions, selecting which columns to keep.
-#'
-#' @param data Base tibble to start from
-#' @param names Character vector indicating the column names of the returned tibble
-#' @param GCAM_region_names Tibble with GCAM region names and ID numbers
-#' @param has_traded Logical indicating whether any rows in the base table have "traded" goods; if true,
-#' \code{\link{set_traded_names}} will be called
-#' @param apply_selected_only Logical indicating whether \code{\link{set_traded_names}} is applied to
-#' the whole tibble, or only selected rows
-#' @param set_market Logical indicating whether to create a \code{market.name} column whose values are equal
-#' to \code{region} prior to \code{\link{set_traded_names}} re-setting \code{region} names
-#' @note Used for data that GCAM contains within each region, but whose values are not actually differentiated by region.
-#' @return Tibble with data written out to all GCAM regions.
-write_to_all_regions <- function(data, names, GCAM_region_names, has_traded = FALSE,
-                                 apply_selected_only = TRUE, set_market = FALSE) {
-  assert_that(is_tibble(data))
-  assert_that(is.character(names))
-  assert_that(is_tibble(GCAM_region_names))
-  assert_that(is.logical(has_traded))
-  assert_that(is.logical(apply_selected_only))
-  assert_that(is.logical(set_market))
-
-  GCAM_region_ID <- NULL  # silence package check notes
-
-  if("logit.year.fillout" %in% names) {
-    data$logit.year.fillout <- "start-year"
-  }
-  if("price.exp.year.fillout" %in% names) {
-    data$price.exp.year.fillout <- "start-year"
-  }
-
-  data %>%
-    set_years %>%
-    repeat_add_columns(select(GCAM_region_names, GCAM_region_ID)) %>%
-    left_join_error_no_match(GCAM_region_names, by = "GCAM_region_ID") ->
-    data_new
-
-  if("market.name" %in% names) {
-    data_new$market.name <- data_new$region
-  }
-  if(has_traded) {
-    if(set_market) {
-      data_new$market.name <- data_new$region
-    }
-    data_new <- set_traded_names(data_new, GCAM_region_names$region, apply_selected_only)
-  }
-  data_new[names]
-}
-
-
-
-
 
 #' downscale_FAO_country
 #'

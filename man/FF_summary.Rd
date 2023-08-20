@@ -4,7 +4,7 @@
 \alias{FF_summary}
 \title{FF_summary summarize a loaded FAO dataset}
 \usage{
-FF_summary(DF, COL_CNTY = "area", COL_ITEM = "item")
+FF_summary(DF, COL_CNTY = "area", COL_ITEM = "item", .ENVIR = .GlobalEnv)
 }
 \arguments{
 \item{DF}{A data frame}

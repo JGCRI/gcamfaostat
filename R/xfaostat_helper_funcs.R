@@ -478,13 +478,14 @@ FAOSTAT_AREA_RM_NONEXIST <- function(.DF,
 #' @return A data frame with summary information,
 #' @export
 
-FF_summary <- function(DF, COL_CNTY = "area", COL_ITEM = "item"){
+FF_summary <- function(DF, COL_CNTY = "area", COL_ITEM = "item",
+                       .ENVIR = .GlobalEnv){
 
   value <- NULL
 
   assert_that(is.character(DF))
 
-  get(DF) %>%
+  get(DF, envir = .ENVIR) %>%
     gather_years() -> .tbl1
   list_out<- list(
     dataset_code = DF,

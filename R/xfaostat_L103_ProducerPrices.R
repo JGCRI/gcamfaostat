@@ -121,7 +121,7 @@ module_xfaostat_L103_ProducerPrices <- function(command, ...) {
     QV %>% filter(Production > 0) %>%
       left_join(PP_item_WORLD, by = c("item_code", "year")) %>%
       left_join(PP_Multiplier_REG_WORLD, by = "area_code") %>%
-      mutate(Prod_Value = ifelse(is.na(Prod_Value),
+      mutate(Prod_Value = if_else(is.na(Prod_Value),
                                  PP_item_world * PP_Multiplier * Production, Prod_Value)) %>%
       select(-PP, -PP_item_world, -PP_Multiplier) ->
       QV1

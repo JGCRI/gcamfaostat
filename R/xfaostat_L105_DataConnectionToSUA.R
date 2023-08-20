@@ -139,8 +139,8 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       # keep only balance items
       filter(!element_code %in% c(645, 664, 674, 684)) %>%
       # simplify elements and make them consistent with SUA
-      mutate(element = gsub(" Quantity| supply quantity \\(tonnes\\)| \\(non-food\\)", "", element)) %>%
-      mutate(element = replace(element, element == "Losses", "Loss"),
+      mutate(element = gsub(" Quantity| supply quantity \\(tonnes\\)| \\(non-food\\)", "", element),
+             element = replace(element, element == "Losses", "Loss"),
              element = replace(element, element == "Processing", "Processed")) %>%
       # convert units back to tonnes first since FBS originally used 1000 tons
       mutate(value = value * 1000, unit = "tonnes")->
@@ -564,8 +564,8 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       SUA_TEMPLATE_LEFT_JOIN("QCL") %>%
       SUA_TEMPLATE_LEFT_JOIN("TM", .DS_TM_Assert_Item = F) %>%
       SUA_TEMPLATE_LEFT_JOIN("TCL_gross", .DS_TM_Assert_Item = F) %>%
-      mutate(TCL = if_else(is.na(TCL), TCL_gross, TCL)) %>%
-      mutate(value = case_when(
+      mutate(TCL = if_else(is.na(TCL), TCL_gross, TCL),
+             value = case_when(
         element %in% c("Area harvested", "Production") ~ QCL, #prod in QCL is used and not overwritten
         element %in% c("Export", "Import") ~ TCL,
         element %in% SCL_element_new ~ 0) ) %>%
@@ -575,15 +575,15 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       spread(element, value) %>%
       # Processing to add demand based on DS_demand in FAO_items
       # Only an exclusive use is assumed
-      mutate(Processed = ifelse(item_code %in% c(FAO_items %>%
+      mutate(Processed = if_else(item_code %in% c(FAO_items %>%
                                                    filter(tier == 6, grepl("Processed", DS_demand)) %>%
                                                    pull(item_code) ) & (Production + Import - Export) > 0,
                                 (Production + Import - Export), 0),
-             Food = ifelse(item_code %in% c(FAO_items %>%
+             Food = if_else(item_code %in% c(FAO_items %>%
                                               filter(tier == 6, grepl("Food", DS_demand)) %>%
                                               pull(item_code) ) & (Production + Import - Export) > 0,
                            (Production + Import - Export), 0),
-             `Other uses` = ifelse(item_code %in% c(FAO_items %>%
+             `Other uses` = if_else(item_code %in% c(FAO_items %>%
                                                       filter(tier == 6, grepl("Other", DS_demand)) %>%
                                                       pull(item_code) ) & (Production + Import - Export) > 0,
                                    (Production + Import - Export), 0)) %>%
@@ -643,10 +643,10 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       spread(element, value) %>%
       # Processing to add demand based on DS_demand in FAO_items
       # Only an exclusive use is assumed
-      mutate(Feed = ifelse(item_code %in% c(FAO_items %>% filter(tier == 8, grepl("Feed", DS_demand)) %>%
+      mutate(Feed = if_else(item_code %in% c(FAO_items %>% filter(tier == 8, grepl("Feed", DS_demand)) %>%
                                               pull(item_code) ) & Production > 0,
                            Production, 0),
-             `Other uses` = ifelse(item_code %in% c(FAO_items %>% filter(tier == 8, grepl("Other", DS_demand)) %>%
+             `Other uses` = if_else(item_code %in% c(FAO_items %>% filter(tier == 8, grepl("Other", DS_demand)) %>%
                                                       pull(item_code) ) & Production > 0,
                                    Production, 0) ) %>%
       gather(element, value, -area_code, -item_code, -year) %>%

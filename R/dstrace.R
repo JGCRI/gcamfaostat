@@ -198,7 +198,6 @@ dstrace_plot <- function(object_name, tracelist, upstream, downstream, ...) {
 
 info <- function(object_name, gcam_data_map = NULL, previous_tracelist = NULL, upstream = TRUE, downstream = TRUE, print = TRUE) {
 
-  GCAM_DATA_MAP <- NULL
 
   if(is.null(gcam_data_map)) {
     gcam_data_map <- GCAM_DATA_MAP

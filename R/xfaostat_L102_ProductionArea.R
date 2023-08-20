@@ -365,10 +365,10 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
                        COL_rename =  "item",
                        .ENVIR = Curr_Envir
                        ) %>%
-      mutate(match = if_else(QCL_COMM_AN_PRIMARY_item == FAO_an_items_PRODSTAT_item, T, F))
+      mutate(M = if_else(QCL_COMM_AN_PRIMARY_item == FAO_an_items_PRODSTAT_item, T, F))
 
 
-    checkitem %>% filter(is.na(match)|match == F)
+    checkitem %>% filter(is.na(M)|M == F)
     FBS_COMM_FISH <- checkitem %>% filter(is.na(QCL_COMM_AN_PRIMARY_item)) %>%
       dplyr::transmute(item_code, item = FAO_an_items_PRODSTAT_item) %>%
       filter(item_code %in% c(2761 : 2782))

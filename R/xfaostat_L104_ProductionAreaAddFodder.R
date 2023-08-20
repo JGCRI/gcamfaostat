@@ -115,8 +115,8 @@ module_xfaostat_L104_ProductionAreaAddFodder <- function(command, ...) {
     FF_join_checkmap(DFs = c("QCL_FODDERCROP", "FAO_ag_items_PRODSTAT"),
                      COL_by = "item_code",
                      COL_rename = "item", .ENVIR = Curr_Envir) %>%
-      mutate(match = if_else(QCL_FODDERCROP_item == FAO_ag_items_PRODSTAT_item , T, F))-> checkitem
-    checkitem %>% filter(match == T)
+      mutate(M = if_else(QCL_FODDERCROP_item == FAO_ag_items_PRODSTAT_item , T, F))-> checkitem
+    checkitem %>% filter(M == T)
     # 15 fodder crops + 1 pumpkin removed in mapping
     rm(FAO_ag_items_PRODSTAT, checkitem)
 

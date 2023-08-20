@@ -195,8 +195,8 @@ module_xfaostat_L199_ExportCSV <- function(command, ...) {
         bind_rows(QCL_PROD %>%
                     filter(!is.na(year))) %>%
         select(-element_code) %>%
-        mutate(value = value / 1000) %>%
-        mutate(unit = if_else(unit == "tonnes", "1000 tonnes", "1000 ha")) %>%
+        mutate(value = value / 1000,
+               unit = if_else(unit == "tonnes", "1000 tonnes", "1000 ha")) %>%
         spread(year, value) ->
         GCAMDATA_FAOSTAT_ProdArea_195Regs_271Prod160AreaItems_1973to2020
 
@@ -204,8 +204,8 @@ module_xfaostat_L199_ExportCSV <- function(command, ...) {
       QCL_FODDERCROP %>%
         filter(!is.na(year)) %>%
         select(-element_code) %>%
-        mutate(value = value / 1000) %>%
-        mutate(unit = if_else(unit == "tonnes", "1000 tonnes", "1000 ha")) %>%
+        mutate(value = value / 1000,
+               unit = if_else(unit == "tonnes", "1000 tonnes", "1000 ha")) %>%
         spread(year, value) ->
         GCAMDATA_FAOSTAT_ProdArea_96Regs_16FodderItems_1973to2020
 

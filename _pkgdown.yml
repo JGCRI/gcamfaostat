@@ -102,7 +102,6 @@ reference:
       - graph_chunks
       - left_join_error_no_match
       - left_join_keep_first_only
-      - write_to_all_regions
       - repeat_add_columns
       - standardize_iso
       - change_iso_code
