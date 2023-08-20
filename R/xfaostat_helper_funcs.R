@@ -359,7 +359,7 @@ FAOSTAT_load_raw_data <- function(DATASETCODE,
       # Lower case col names and use _ as delimiter
       names(df) <- tolower(gsub("\\.| ", "_", names(df)))
       # Assigned to .Envir
-      assign(CODE, df, envir = .Envir)
+      assign(paste(CODE, GET_MAPPINGCODE, sep = "_"), df, envir = .Envir)
     }
 
   } else {stop("Wrong GET_MAPPINGCODE")}

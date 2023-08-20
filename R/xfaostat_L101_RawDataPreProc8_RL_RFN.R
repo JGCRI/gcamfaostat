@@ -73,7 +73,7 @@ module_xfaostat_L101_RawDataPreProc8_RL_RFN <- function(command, ...) {
 
 
       # RFN ----
-      FAOSTAT_load_raw_data(DATASETCODE = "RFN", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT)
+      FAOSTAT_load_raw_data(DATASETCODE = "RFN", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT, .Envir = Curr_Envir)
 
       RFN %>%
         filter(year %in% FAOSTAT_Hist_Year,
