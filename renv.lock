@@ -661,6 +661,17 @@
       "Hash": "18e9c28c1d3ca1560ce30658b22ce104",
       "Requirements": []
     },
+    "mockr": {
+      "Package": "mockr",
+      "Version": "0.2.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "94fb0fbd659d4f439dafa71213cbeca1",
+      "Requirements": [
+        "rlang",
+        "withr"
+      ]
+    },
     "munsell": {
       "Package": "munsell",
       "Version": "0.5.0",
