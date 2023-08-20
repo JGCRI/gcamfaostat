@@ -19,7 +19,7 @@
 #' @importFrom assertthat assert_that
 #' @importFrom dplyr summarize bind_rows filter if_else inner_join left_join mutate rename select n group_by_at
 #' first case_when vars
-#' @importFrom tibble tibble
+#' @importFrom tibble tibble is_tibble
 #' @importFrom tidyr complete drop_na gather nesting spread replace_na
 #' @author XZ 2022
 module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {

@@ -154,7 +154,13 @@
     <loc>https://realxinzhao.github.io/gcamfaostat/reference/FF_check_count_plot.html</loc>
   </url>
   <url>
+    <loc>https://realxinzhao.github.io/gcamfaostat/reference/FF_download_FAOSTAT.html</loc>
+  </url>
+  <url>
     <loc>https://realxinzhao.github.io/gcamfaostat/reference/FF_download_faostat_bulk.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamfaostat/reference/FF_download_RemoteArchive.html</loc>
   </url>
   <url>
     <loc>https://realxinzhao.github.io/gcamfaostat/reference/FF_FILL_NUMERATOR_DENOMINATOR.html</loc>
@@ -182,6 +188,9 @@
   </url>
   <url>
     <loc>https://realxinzhao.github.io/gcamfaostat/reference/gather_years.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamfaostat/reference/gcamfaostat_metadata.html</loc>
   </url>
   <url>
     <loc>https://realxinzhao.github.io/gcamfaostat/reference/GCAM_DATA_MAP.html</loc>

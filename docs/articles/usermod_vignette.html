@@ -55,7 +55,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/getting-started.html">getting started</a>
+      <a href="../articles/getting-started.html">Getting Started</a>
     </li>
     <li>
       <a href="../articles/usermod_vignette.html">User Modification Functions</a>
@@ -133,7 +133,7 @@ list it under <code>driver.DECLARE_MODIFY</code>, but do not modify
 GCAM_region_names, so it is listed under
 <code>driver.DECLARE_INPUTS</code>. Then, we set the shareweight column
 of the first row of A322.subsector_shrwt to <code>NEW.SHWT</code>.
-Finally, we use a new <code><a href="../reference/return_modified.html">return_modified()</a></code> function to return
+Finally, we use a new <code>return_modified()</code> function to return
 the modified A322.subsector_shrwt (note that we have to include the path
 for input files).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -164,7 +164,7 @@ for input files).</p>
     <span class="co"># which means including the file path for input files</span>
     <span class="co"># i.e. "energy/A322.subsector_shrwt" not "A322.subsector_shrwt"  </span>
     <span class="co"># Other objects can be listed out just like for `return_data`</span>
-    <span class="fu"><a href="../reference/return_modified.html">return_modified</a></span><span class="op">(</span><span class="st">"energy/A322.subsector_shrwt"</span> <span class="op">=</span> <span class="va">A322.subsector_shrwt</span><span class="op">)</span>
+    <span class="fu">return_modified</span><span class="op">(</span><span class="st">"energy/A322.subsector_shrwt"</span> <span class="op">=</span> <span class="va">A322.subsector_shrwt</span><span class="op">)</span>
 
   <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
     <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"Unknown command"</span><span class="op">)</span>

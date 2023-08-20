@@ -86,7 +86,7 @@ See a video tutorial here:
 <iframe width="560" height="315" src="https://www.youtube.com/embed/EO6NPCf7lKc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Run the driver
-You should now be ready to run the driver, which is the main processing function that generates intermediate data outputs and xml files for GCAM. There are two ways to run the driver:
+Users should now be ready to run the driver, which is the main processing function that generates intermediate data outputs and final output (csv or xml) files for gcamdata or GCAM. There are two ways to run the driver:
 
 1. 
 ```{r eval = FALSE}

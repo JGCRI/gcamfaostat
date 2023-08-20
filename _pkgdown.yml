@@ -18,7 +18,7 @@ navbar:
     - text: "Vignettes"
       icon: fas fa-book
       menu:
-        - text: "getting started"
+        - text: "Getting Started"
           href: articles/getting-started.html
         - text: "User Modification Functions"
           href: articles/usermod_vignette.html
@@ -34,6 +34,7 @@ navbar:
 reference:
   - title: Running gcamfaostat
   - contents:
+      - gcamfaostat_metadata
       - driver_drake
       - driver
       - dstrace
@@ -66,24 +67,49 @@ reference:
       - module_aglu_L100.FAO_SUA_PrimaryEquivalent
   - title: gcamfaostat Chunk Helper Functions
     contents: 
-      - FAOSTAT_AREA_RM_NONEXIST
-      - FAOSTAT_load_raw_data
       - FAOSTAT_metadata
+      - FF_rawdata_info
+      - FF_download_FAOSTAT
+      - FF_download_RemoteArchive
+      - FAOSTAT_load_raw_data
+      - FAOSTAT_AREA_RM_NONEXIST
       - FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION
       - FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL
-      - FF_check_count_plot
-      - FF_download_faostat_bulk
       - FF_FILL_NUMERATOR_DENOMINATOR
-      - FF_join_checkmap
-      - FF_rawdata_info
       - FF_summary
+      - FF_join_checkmap
+      - FF_check_count_plot
+      - rm_accent
       - GROSS_TRADE_ADJUST
       - SUA_bal_adjust      
-      - output_csv_data
-      - rm_accent
-      - assert_FBS_balance      
-  - title: Add to Output Data
+      - assert_FBS_balance  
+      - output_csv_data 
+      - Moving_average      
+      - downscale_FAO_country
+  - title: Prebuilt data
     contents:
+      - GCAM_DATA_MAP
+      - PREBUILT_DATA
+      - extract_prebuilt_data
+      - verify_identical_prebuilt
+  - title: gcamdata internal functions (data processing)
+    contents:
+      - approx_fun
+      - approx_fun_constant
+      - fast_left_join
+      - gather_years
+      - gdp_deflator
+      - graph_chunks
+      - left_join_error_no_match
+      - left_join_keep_first_only
+      - write_to_all_regions
+      - repeat_add_columns
+      - standardize_iso
+      - change_iso_code
+  - title: gcamdata internal functions (data tracing)
+    contents:
+      - add_column_types_header_line      
+      - add_data
       - add_comments
       - add_flags
       - add_legacy_name
@@ -93,34 +119,15 @@ reference:
       - add_units
       - same_attributes_as
       - same_precursors_as
-  - title: Prebuilt data
-    contents:
-      - GCAM_DATA_MAP
-      - PREBUILT_DATA
-  - title: gcamdata Chunk Helper Functions
-    contents:
-      - approx_fun
-      - approx_fun_constant
-      - downscale_FAO_country
+      - get_comments
+      - get_data
+      - get_data_list
+      - get_flags
+      - get_relative_to_workdir
+      - return_data
+      - save_chunkdata
       - dstrace_chunks
       - dstrace_plot
-      - extract_prebuilt_data
-      - fast_left_join
-      - gather_years
-      - gdp_deflator
-      - graph_chunks
-      - left_join_error_no_match
-      - left_join_keep_first_only
-      - return_data
-      - return_modified
-      - save_chunkdata
-      - verify_identical_prebuilt
-      - write_to_all_regions
-      - Moving_average
-  - title: internal
-    contents:
-      - add_column_types_header_line
-      - add_data
       - check_chunk_outputs
       - chunk_inputs
       - chunk_outputs
@@ -130,11 +137,6 @@ reference:
       - find_chunks
       - find_csv_file
       - find_header
-      - get_comments
-      - get_data
-      - get_data_list
-      - get_flags
-      - get_relative_to_workdir
       - is_data_list
       - load_csv_files
       - missing_data
@@ -147,7 +149,6 @@ reference:
       - warn_data_injects
       - warn_datachunk_bypass
       - warn_mismarked_fileinputs
-      - repeat_add_columns
-      - standardize_iso
-      - change_iso_code
       - protect_integer_cols
+
+

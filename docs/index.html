@@ -55,7 +55,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/getting-started.html">getting started</a>
+      <a href="articles/getting-started.html">Getting Started</a>
     </li>
     <li>
       <a href="articles/usermod_vignette.html">User Modification Functions</a>
@@ -118,15 +118,16 @@
 </h1>
 <p>Open the <code>gcamfaostat.Rproj</code> file in the <code>gcamfaostat</code> folder. RStudio should open the project.</p>
 <p>To load the <code>gcamdata</code> package, enter:</p>
-<p><code>{r eval = FALSE} devtools::load_all()</code></p>
+<p><code><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">devtools::load_all()</a></code></p>
 <div class="section level2">
 <h2 id="run-the-driver">Run the driver<a class="anchor" aria-label="anchor" href="#run-the-driver"></a>
 </h2>
-<p>There are two ways to run the driver: 1. <code>{r eval = FALSE} driver_drake()</code> <code><a href="reference/driver_drake.html">driver_drake()</a></code> runs the driver and stores the outputs in a hidden cache. When you run <code><a href="reference/driver_drake.html">driver_drake()</a></code> again it will skip steps that are up-to-date. This is useful if you will be adjusting the data inputs and code and running the data system multiple times. For this reason, we almost always recommend using <code><a href="reference/driver_drake.html">driver_drake()</a></code>. More details can be found in the <a href="https://jgcri.github.io/gcamdata/articles/driverdrake_vignette.html" class="external-link">vignette</a>.</p>
+<p>There are two ways to run the driver: 1. <code><a href="reference/driver_drake.html">driver_drake()</a></code></p>
+<p><code><a href="reference/driver_drake.html">driver_drake()</a></code> runs the driver and stores the outputs in a hidden cache. When you run <code><a href="reference/driver_drake.html">driver_drake()</a></code> again it will skip steps that are up-to-date. This is useful if you will be adjusting the data inputs and code and running the data system multiple times. For this reason, we almost always recommend using <code><a href="reference/driver_drake.html">driver_drake()</a></code>. More details can be found in the <a href="https://jgcri.github.io/gcamdata/articles/driverdrake_vignette.html" class="external-link">vignette</a>.</p>
 <ol start="2" style="list-style-type: decimal">
-<li>
-<code>{r eval = FALSE} driver()</code> See <a href="https://jgcri.github.io/gcamdata/reference/driver.html" class="external-link">the documentation</a> for more options when running the driver, such as what outputs to generate or when to stop.</li>
+<li><code><a href="reference/driver.html">driver()</a></code></li>
 </ol>
+<p>See <a href="https://jgcri.github.io/gcamdata/reference/driver.html" class="external-link">the documentation</a> for more options when running the driver, such as what outputs to generate or when to stop.</p>
 </div>
 <div class="section level2">
 <h2 id="output-files">Output files<a class="anchor" aria-label="anchor" href="#output-files"></a>

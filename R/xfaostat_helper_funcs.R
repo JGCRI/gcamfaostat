@@ -2,6 +2,273 @@
 # Functions start with FF or FAOSTAT indicate Functions processing FAO data
 
 
+
+
+#' gcamfaostat_metadata: generate metadata information of the input data
+#'
+#' @param OnlyReturnDatasetCostRequired If TRUE only return dataset codes set in the function
+#'
+#' @return Information of FAOSTAT input dataset
+
+gcamfaostat_metadata <- function(OnlyReturnDatasetCostRequired = FALSE){
+
+  assertthat::assert_that(OnlyReturnDatasetCostRequired == TRUE|OnlyReturnDatasetCostRequired == FALSE)
+
+  # Data code needed ----
+  FAO_dataset_code_required <-
+    c("QCL",          # Ag production quantity and harvested area
+      "PP",   "PD",   # Producer prices and regional deflator
+      "TCL",  "TM",   # Gross and bilateral trade
+      "SCL",          # Supply utilization accounting
+      "FBS",  "FBSH", # New and old food balance sheet
+      "CB",           # Old non food utilization accounting
+      "RFN",          # Fertilizer by nutrient
+      "RL",           # Land Use
+      "FO",           # Forest production and trade
+      "OA"            # Population
+    )
+
+  if (OnlyReturnDatasetCostRequired == T) {
+    return(FAO_dataset_code_required)
+  }
+
+  DIR_FAOSTAT_METADATA <- file.path(DIR_RAW_DATA_FAOSTAT, "metadata_log")
+  dir.create(DIR_FAOSTAT_METADATA, showWarnings = F)
+
+  # Save a table includes all FAOSTAT data info and links
+  fao_metadata <- FAOSTAT_metadata() %>% filter(datasetcode %in% FAO_dataset_code_required)
+  readr::write_csv(fao_metadata, file.path(DIR_FAOSTAT_METADATA, paste0("FAOSTAT_METADATA_", Sys.Date(),".csv")))
+  rlang::inform(paste0("A Full FAOSTAT metadata downloaded and updated in `",
+                       file.path(DIR_RAW_DATA_FAOSTAT, "metadata_log", "`")))
+  rlang::inform("---------------------------------------------------------")
+
+  rlang::inform(paste0("Here is the infomation of FAOSTAT dataset processed in this R package"))
+
+  DataCodePrebuilt <-
+    PREBUILT_DATA %>% names() %>% strsplit(split = "_") %>% unlist %>%
+    setdiff(c("wide", "Roundwood", "code", "area", "bilateral", "map"))
+
+  FF_rawdata_info(DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+                  DATASETCODE = FAO_dataset_code_required,
+                  DOWNLOAD_NONEXIST = F) %>% arrange(Localupdate) %>%
+    mutate(Exist_Prebuilt = if_else(datasetcode %in% DataCodePrebuilt, TRUE, FALSE),
+           Exist_Local = if_else(is.na(localfilesize), FALSE, TRUE)) %>%
+    transmute(`Dataset Code` = datasetcode, Exist_Local, Exist_Prebuilt,
+              `Dataset Name` = datasetname,
+              `FAO update date` = gsub("T00:00:00", "", FAOupdate),
+              #`Local file size` = localfilesize,
+              `FAO size` = remotefilezize) -> metainfo
+
+  print(metainfo)
+
+  rlang::inform("---------------------------------------------------------")
+
+  rlang::inform("If Exist_Prebuilt == TRUE for all, package is ready to be built based on the Prebuilt data. Note that prebuilt data were generated using FAOSTAT data archived in Zenodo.")
+
+  rlang::inform("---------------------------------------------------------")
+  rlang::inform("To build the package from raw data, users need to download the data to local either from the Zenodo archive (using function `FF_download_RemoteArchive`) or from the FAOSTAT (using function `FF_download_FAOSTAT`), and set `Process_Raw_FAO_Data` in constants.R to TRUE. Note that `FF_rawdata_info` has options to download all nonexist data together.")
+
+}
+
+#' FF_download_FAOSTAT: Bulk download raw data from FAOSTAT API by dataset code
+#'
+#' @param DATASETCODE Dataset code in FAO metadata, e.g., QCL is the production dataset.
+#' @param DATA_FOLDER Destination folder for storing raw data
+#' @param OverWrite If FALSE, check if the dataset exists and stop if exists; overwrite if TRUE
+#'
+#' @export
+
+FF_download_FAOSTAT <- function(DATASETCODE,
+                                DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+                                OverWrite = FALSE){
+
+  FAOSTAT_metadata <- `download.file` <- NULL
+
+  assertthat::assert_that(is.character(DATASETCODE))
+  assertthat::assert_that(is.character(DATA_FOLDER))
+  assertthat::assert_that(OverWrite == TRUE|OverWrite == FALSE)
+
+  dir.create(DIR_RAW_DATA_FAOSTAT, showWarnings = F)
+
+
+
+  # Get metadata info for dataset CODE
+  FAOSTAT_metadata() %>% filter(datasetcode == DATASETCODE) -> metadata
+
+  # Assert the code has info
+  assertthat::assert_that(nrow(metadata) > 0,
+                          msg = paste0("Dataset code,", DATASETCODE, " doesn't exist in metadata!"))
+
+  # Prepare the file path, both local and remote
+  zip_file_name <- file.path(DATA_FOLDER, basename(metadata$filelocation))
+  DatasetURL <- metadata$filelocation
+
+  # Check if file exist
+  if (OverWrite == FALSE) {
+    assertthat::assert_that(!file.exists(zip_file_name),
+                            msg = "File exists. Remove file or set 'OverWrite = TURE' to download new file.")
+  }
+
+
+  # Download zip file from Remote
+  rlang::inform(paste0("Starting download data", DATASETCODE, " ..."))
+
+  options(timeout = max(300, getOption("timeout")))
+
+  utils::download.file(url = DatasetURL,
+                       destfile = zip_file_name)
+
+  rlang::inform("Download complete.")
+
+}
+
+
+#' FF_download_RemoteArchive: Download raw data from remote archive (Zenodo)
+#'
+#' @param DATASETCODE Dataset code in FAO metadata, e.g., QCL is the production dataset.
+#' @param RemoteArchiveURL Zenodo URL, default (GCAM v7) = "https://zenodo.org/record/8260225/files/"
+#' @param DATA_FOLDER Folder stores raw data; default sets to DIR_RAW_DATA_FAOSTAT
+#' @param OverWrite If FALSE, check if the dataset exists and stop if exists; overwrite if TRUE
+
+#' @export
+
+FF_download_RemoteArchive <-
+  function(DATASETCODE = NULL,
+           RemoteArchiveURL = "https://zenodo.org/record/8260225/files/",
+           DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+           OverWrite = FALSE){
+
+    assertthat::assert_that(is.character(DATASETCODE))
+    assertthat::assert_that(is.character(RemoteArchiveURL))
+    assertthat::assert_that(is.character(DATA_FOLDER))
+    assertthat::assert_that(OverWrite == TRUE|OverWrite == FALSE)
+
+    dir.create(DATA_FOLDER, showWarnings = F)
+
+
+
+    # Get metadata info for dataset CODE
+    FAOSTAT_metadata() %>% filter(datasetcode == DATASETCODE) -> metadata
+
+    # Assert the code has info
+    assertthat::assert_that(nrow(metadata) > 0,
+                            msg = paste0("Dataset code,", DATASETCODE, " doesn't exist in metadata!"))
+
+    # Prepare the file path, both local and remote
+    zip_file_name <- file.path(DATA_FOLDER, basename(metadata$filelocation))
+    DatasetURL <- paste0(RemoteArchiveURL, basename(zip_file_name))
+
+    # Check if file exist
+    if (OverWrite == FALSE) {
+      assertthat::assert_that(!file.exists(zip_file_name),
+                              msg = "File exists. Remove file or set 'OverWrite = TURE' to download new file.")
+    }
+
+
+    # Download zip file from Remote
+    rlang::inform(paste0("Starting download data", DATASETCODE, " ..."))
+
+    options(timeout = max(300, getOption("timeout")))
+
+    utils::download.file(url = DatasetURL,
+                         destfile = zip_file_name,
+                         mode = "wb")
+
+    rlang::inform("Download complete.")
+  }
+
+
+
+#' FF_rawdata_info: extract meta info of data (e.g., zip files) in a folder
+#'
+#' @param DATA_FOLDER The folder including raw zipped csv data from FAOSTAT.
+#' @param DATASETCODE Dataset code in FAO metadata, e.g., QCL is the production dataset.
+#' @param DOWNLOAD_NONEXIST A logical variable. If TRUE, nonexist dataset will be downloaded.
+#' @param FAOSTAT_or_Archive If DOWNLOAD_NONEXIST == TRUE, down data from FAOSTAT if FAOSTAT_or_Archive ="FAOSTAT" and from Zenodo if FAOSTAT_or_Archive ="Archive"
+#'
+#' @importFrom  assertthat assert_that
+#' @importFrom  tibble rownames_to_column
+#' @importFrom  magrittr %>%
+#' @importFrom  dplyr transmute right_join filter mutate if_else
+#'
+#' @return A data frame summarizing the local raw data info (e.g., size, downloaded date, etc.) if DOWNLOAD_NONEXIST == FALSE.
+#' Otherwise, nonexistent files will be downloaded and the function should be rerun.
+#' @export
+
+FF_rawdata_info <- function(
+    DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+    DATASETCODE,
+    DOWNLOAD_NONEXIST = FALSE,
+    FAOSTAT_or_Archive = "Archive"){
+
+  DIR_RAW_DATA <- isdir <- filelocation <- ctime <- mtime <- FF_metadata <-
+    datasetcode <- datasetname <- dateupdate <- Localupdate <- FAOupdate <-
+    filesize <- NULL
+
+
+  assertthat::assert_that(is.character(DATASETCODE))
+  assertthat::assert_that(is.logical(DOWNLOAD_NONEXIST))
+  assertthat::assert_that(FAOSTAT_or_Archive == "FAOSTAT"|FAOSTAT_or_Archive == "Archive")
+  assertthat::assert_that(file.exists(DATA_FOLDER))
+
+  file.info(dir(DATA_FOLDER, full.names = T)) %>%
+    tibble::rownames_to_column(var = "filelocation") %>%
+    # Filter zip dir to ensure FAO files
+    filter(isdir == F,
+           grepl("zip$", filelocation)) %>%
+    transmute(filelocation = basename(filelocation),
+              ctime = as.Date(ctime), mtime = as.Date(mtime),
+              localfilesize = utils:::format.object_size(size, "KB", digits = 0)) %>%
+    # Join the latest metadata
+    # Note that FAO raw data had a typo (missing space) in Trade_CropsLivestock_E_All_Data_(Normalized).zip
+    # Temporary fix here
+    # This was fixed in 2022 updates
+    right_join(FAOSTAT_metadata() %>% filter(datasetcode %in% DATASETCODE) %>%
+                 mutate(filelocation = basename(filelocation)), #%>%
+               #mutate(filelocation = replace(filelocation,
+               #                              filelocation == "Trade_CropsLivestock_E_All_Data_(Normalized).zip",
+               #                              "Trade_Crops_Livestock_E_All_Data_(Normalized).zip")),
+               by = "filelocation") %>%
+    transmute(datasetcode, datasetname,
+              FAOupdate = dateupdate, Localupdate = mtime,
+              Mayneedupdate = if_else(is.na(Localupdate), T, FAOupdate > Localupdate),
+              filelocation, localfilesize, remotefilezize = filesize
+    ) ->
+    required_data_summary
+
+  # Download dataset code for non-exists
+  required_data_summary %>%
+    filter(is.na(Localupdate)) %>%
+    pull(datasetcode) -> datasetcode_nonexist
+
+
+  # Download nonexist
+  if (DOWNLOAD_NONEXIST == T & length(datasetcode_nonexist) >0) {
+
+    if (FAOSTAT_or_Archive == "FAOSTAT") {
+
+      rlang::inform(paste0("Download nonexist dataset now from ", FAOSTAT_or_Archive, " ..."))
+
+      lapply(datasetcode_nonexist,
+             FF_download_faostat_bulk, DATA_FOLDER, OverWrite = FALSE)
+    } else
+      if(FAOSTAT_or_Archive == "Archive"){
+
+
+        rlang::inform(paste0("Download nonexist dataset now from ", FAOSTAT_or_Archive, " using default URL..."))
+        lapply(datasetcode_nonexist,
+               FF_download_RemoteArchive, DATA_FOLDER = DATA_FOLDER, OverWrite = FALSE)
+
+      }
+
+    rlang::inform("Download complete. Run the function again to check updates.")
+
+  } else{
+    return(required_data_summary)
+  }
+}
+
+
 #' FAOSTAT_metadata: get the most recent metadata from FAOSTAT API and return a summary data frame
 #'
 #' @param code FAOSTAT dataset code if filtering specific dataset; NULL by default and return all dataset info
@@ -61,6 +328,8 @@ FAOSTAT_load_raw_data <- function(DATASETCODE,
     for (CODE in DATASETCODE) {
 
       metadata %>% filter(datasetcode == CODE) -> metadata1
+      assertthat::assert_that(nrow(metadata1) > 0,
+                              msg = paste0("Dataset code,", CODE, " doesn't exist in metadata!"))
 
       zip_file_name <- file.path(DATA_FOLDER, basename(metadata1$filelocation))
       assertthat::assert_that(file.exists(zip_file_name))
@@ -616,93 +885,7 @@ GROSS_TRADE_ADJUST <- function(.DF,
 
 
 
-#' FF_rawdata_info: extract meta info of data (e.g., zip files) in a folder
-#'
-#' @param DATA_FOLDER The folder including raw zipped csv data from FAOSTAT.
-#' @param DATASETCODE Dataset code in FAO metadata, e.g., QCL is the production dataset.
-#' @param DOWNLOAD_NONEXIST A logical variable. If TRUE, nonexist dataset will be downloaded.
-#' @importFrom  assertthat assert_that
-#' @importFrom  tibble rownames_to_column
-#' @importFrom  magrittr %>%
-#' @importFrom  dplyr transmute right_join filter mutate if_else
-#'
-#' @return A data frame summarizing the local raw data info (e.g., size, downloaded date, etc.) if DOWNLOAD_NONEXIST == FALSE.
-#' Otherwise, nonexistent files will be downloaded and the function should be rerun.
-#' @export
 
-FF_rawdata_info <- function(
-    DATA_FOLDER = DIR_RAW_DATA,
-    DATASETCODE,
-    DOWNLOAD_NONEXIST = F){
-
-  DIR_RAW_DATA <- isdir <- filelocation <- ctime <- mtime <- FF_metadata <-
-    datasetcode <- datasetname <- dateupdate <- Localupdate <- FAOupdate <-
-    filesize <- NULL
-
-
-  assertthat::assert_that(is.character(DATASETCODE))
-  assertthat::assert_that(is.logical(DOWNLOAD_NONEXIST))
-  # Add check path later [ToDo]
-
-  file.info(dir(DATA_FOLDER, full.names = T)) %>%
-    tibble::rownames_to_column(var = "filelocation") %>%
-    # Filter zip dir to ensure FAO files
-    filter(isdir == F,
-           grepl("zip$", filelocation)) %>%
-    transmute(filelocation = basename(filelocation),
-              ctime = as.Date(ctime), mtime = as.Date(mtime)) %>%
-    # Join the latest metadata
-    # Note that FAO raw data had a typo (missing space) in Trade_CropsLivestock_E_All_Data_(Normalized).zip
-    # Temporary fix here
-    # This was fixed in 2022 updates
-    right_join(FF_metadata() %>% filter(datasetcode %in% DATASETCODE) %>%
-                 mutate(filelocation = basename(filelocation)), #%>%
-               #mutate(filelocation = replace(filelocation,
-               #                              filelocation == "Trade_CropsLivestock_E_All_Data_(Normalized).zip",
-               #                              "Trade_Crops_Livestock_E_All_Data_(Normalized).zip")),
-               by = "filelocation") %>%
-    transmute(datasetcode, datasetname,
-              FAOupdate = dateupdate, Localupdate = mtime,
-              needupdate = if_else(is.na(Localupdate), T, FAOupdate > Localupdate),
-              filelocation, filesize
-    ) ->
-    required_data_summary
-
-  # Pull dataset code for non-exists
-  required_data_summary %>%
-    filter(is.na(Localupdate)) %>%
-    pull(datasetcode) -> datasetcode_nonexist
-
-  # Download nonexist
-  if (DOWNLOAD_NONEXIST == T & length(datasetcode_nonexist) >0) {
-    lapply(datasetcode_nonexist,
-           FF_download_faostat_bulk, DATA_FOLDER)
-    print("Run the function again to check updates.")
-  } else{
-    return(required_data_summary)
-  }
-}
-
-#' FF_download_faostat_bulk: Bulk download raw data from FAOSTAT API by dataset code
-#'
-#' @param DATASETCODE Dataset code in FAO metadata, e.g., QCL is the production dataset.
-#' @param DATA_FOLDER Destination folder for storing raw data
-#'
-#' @export
-
-FF_download_faostat_bulk <- function(DATASETCODE,
-                                     DATA_FOLDER = DIR_RAW_DATA_FAOSTAT){
-
-  FF_metadata <- `download.file` <- NULL
-
-  assertthat::assert_that(is.character(DATASETCODE))
-  assertthat::assert_that(is.character(DATA_FOLDER))
-
-  metadata <- FF_metadata(datasetcode = DATASETCODE)
-  url_bulk = metadata$filelocation
-  file_name <- basename(url_bulk)
-  download.file(url_bulk, file.path(DATA_FOLDER, file_name))
-}
 
 
 

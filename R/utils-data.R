@@ -346,24 +346,6 @@ return_data <- function(...) {
   dots
 }
 
-#' return_modified
-#'
-#' Construct a data structure of objects (\code{...}) and return it.
-#' This version should only be used in user modification chunks where
-#' it is used in place of \link{return_data}.
-#'
-#' @param ... Objects to handle
-#' @return Object ready for insertion into the data system data structure.
-#' @export
-return_modified <- function(...) {
-  data_list <- return_data(...)
-  lapply(names(data_list), function(dname) {
-    attr(data_list[[dname]], ATTR_PRECURSORS) <<- c(dname)
-  })
-  names(data_list) <- paste0(names(data_list), data.USER_MOD_POSTFIX)
-
-  data_list
-}
 
 #' empty_data
 #'

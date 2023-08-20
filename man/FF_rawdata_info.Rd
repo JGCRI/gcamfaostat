@@ -4,7 +4,12 @@
 \alias{FF_rawdata_info}
 \title{FF_rawdata_info: extract meta info of data (e.g., zip files) in a folder}
 \usage{
-FF_rawdata_info(DATA_FOLDER = DIR_RAW_DATA, DATASETCODE, DOWNLOAD_NONEXIST = F)
+FF_rawdata_info(
+  DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+  DATASETCODE,
+  DOWNLOAD_NONEXIST = FALSE,
+  FAOSTAT_or_Archive = "Archive"
+)
 }
 \arguments{
 \item{DATA_FOLDER}{The folder including raw zipped csv data from FAOSTAT.}
@@ -12,6 +17,8 @@ FF_rawdata_info(DATA_FOLDER = DIR_RAW_DATA, DATASETCODE, DOWNLOAD_NONEXIST = F)
 \item{DATASETCODE}{Dataset code in FAO metadata, e.g., QCL is the production dataset.}
 
 \item{DOWNLOAD_NONEXIST}{A logical variable. If TRUE, nonexist dataset will be downloaded.}
+
+\item{FAOSTAT_or_Archive}{If DOWNLOAD_NONEXIST == TRUE, down data from FAOSTAT if FAOSTAT_or_Archive ="FAOSTAT" and from Zenodo if FAOSTAT_or_Archive ="Archive"}
 }
 \value{
 A data frame summarizing the local raw data info (e.g., size, downloaded date, etc.) if DOWNLOAD_NONEXIST == FALSE.
