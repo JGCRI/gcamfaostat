@@ -412,18 +412,18 @@ is_data_list <- function(data_list) {
 #' @param object_name The name of the desired object, character
 #' @param pb \code{PREBUILT_DATA} object; overridden only for testing
 #' @return The data object (a tibble).
-extract_prebuilt_data <- function(object_name, pb = NULL) {
-
-  PREBUILT_DATA <- NULL
+extract_prebuilt_data <- function(object_name,
+                                  pb = NULL) {
 
   if(is.null(pb)) {
     pb <- PREBUILT_DATA
   }
   if(object_name %in% names(pb)) {
     pb[[object_name]] %>%
-      add_comments("** PRE-BUILT; RAW IEA DATA NOT AVAILABLE **")
+      add_comments("** PRE-BUILT **")
   } else {
     NULL
+    warning("Prebuilt data not available; NULL returned")
   }
 }
 
