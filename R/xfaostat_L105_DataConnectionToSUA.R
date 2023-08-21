@@ -559,6 +559,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
     ## 3.6 Bal_new_tier6 ----
     # Tier6 includes 29 items that included in QCL for production but not in Tier1 to Tier5
+    # 29 -1 = 28 items.  "Rice, paddy (rice milled equivalent)" removed as not needed and excluded by FAOSTAT in 2023
 
     Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 6) %>% pull(item_code)) %>%
       SUA_TEMPLATE_LEFT_JOIN("QCL") %>%

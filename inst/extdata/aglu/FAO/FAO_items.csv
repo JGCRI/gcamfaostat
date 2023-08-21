@@ -13,7 +13,7 @@
 # Tier4 includes 84 items included in SCL but not in Tier1-3
 # Tier5 includes 10 oilseed cake items that were omitted in FAOSTAT
 #  Note  key oilseed cake data are not currently provided by FAOSTAT after 2013. We extrapolate the data based on oil-cake rates in 2010 to 2013
-# Tier6 includes 29 items that included in QCL for production but not in Tier1 to Tier5
+# Tier6 includes 28 items that included in QCL for production but not in Tier1 to Tier5. Note that item_code (30 paddy rice milled equivalent) is not included as it is not used and discontinued by FAOSTAT 
 # Tier7 includes 12 fish items from FBS and FBSH. Item code came from FBS as well
 # Tier8 include 11 cake or fiber items that coproduced in oil crop crushing. Item code used 0
 #  Note the FAOSTAT does not provide data for Tier8 item so they are generated based extraction rate and assumed no trade and single use.
@@ -487,7 +487,6 @@ tier,item,item_code,DS_trade,DS_production,DS_demand,DS_key_coproduct_item,CPC_c
 5,"Cake, mustard",294,TM,CB_FBSH_cake_rate,Feed only,"Oil, mustard",,,,
 5,"Cake, cottonseed",332,TM,CB_FBSH_cake_rate,Feed only,"Oil, cottonseed",,,,
 5,"Cake, others",341,None,CB_FBSH_cake_rate,Feed only,"Oil, vegetable origin nes",,,,
-6,"Rice, paddy (rice milled equivalent)",30,TM,QCL,Other use only,,,,,
 6,Seed cotton,328,TCL,QCL,Processed only,,,,,
 6,Hops,677,TM,QCL,Food only,,,,,
 6,Peppermint,748,TM,QCL,Food only,,,,,

@@ -250,7 +250,7 @@ FF_rawdata_info <- function(
       rlang::inform(paste0("Download nonexist dataset now from ", FAOSTAT_or_Archive, " ..."))
 
       lapply(datasetcode_nonexist,
-             FF_download_faostat_bulk, DATA_FOLDER, OverWrite = FALSE)
+             FF_download_FAOSTAT, DATA_FOLDER, OverWrite = FALSE)
     } else
       if(FAOSTAT_or_Archive == "Archive"){
 
@@ -315,11 +315,11 @@ FAOSTAT_metadata <- function (code = NULL){
 FAOSTAT_load_raw_data <- function(DATASETCODE,
                                   DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
                                   GET_MAPPINGCODE = NULL,
-                                  .Envir = .GlobalEnv){
+                                  .Envir = NULL ){
   assertthat::assert_that(is.character(DATASETCODE))
   assertthat::assert_that(is.character(DATA_FOLDER))
 
-  my_env <- new.env()
+  if (is.null(.Envir)) {.Envir = .GlobalEnv}
 
   metadata <- FAOSTAT_metadata()
 
