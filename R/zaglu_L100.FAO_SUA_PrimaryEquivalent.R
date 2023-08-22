@@ -74,6 +74,15 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     All_Bal_element <- levels(GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019$element)
     All_Bal_element <- factor(All_Bal_element, levels = All_Bal_element)
 
+    # Bilateral trade item indicator is added to SUA_item_code_map
+    # filter GCAMDATA_FAOSTAT_BiTrade_194Regs_400Items_2010to2020 to only include bilateral trade item to be
+    # consistent with GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019
+    BilaterialTrade_ItemCode <- SUA_item_code_map %>% filter(TM == TRUE) %>% distinct(item_code) %>% pull
+    GCAMDATA_FAOSTAT_BiTrade_194Regs_400Items_2010to2020 %>%
+      filter(item_code %in% BilaterialTrade_ItemCode) ->
+      GCAMDATA_FAOSTAT_BiTrade_194Regs_400Items_2010to2020
+    SUA_item_code_map %>% select(item, item_code) -> SUA_item_code_map
+
     # Section1: [2010-2019] Region aggregation of supply-utilization-accounting data ----
 
     # Note: the volume of data in this processing is quite large.  Therefore we took
@@ -114,7 +123,8 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
         group_by(GCAM_region_ID, item_code, year) %>%
         summarize(value = sum(value), .groups = "drop") %>%
         ungroup() %>%
-        mutate(value = -value / 1000.0) ->
+        #mutate(value = -value / 1000.0) ->
+        mutate(value = -value) ->
         DF_INTRA_REG_TRADE
 
       # SUA has fewer items and years than the bilateral data set and in addition
@@ -577,7 +587,7 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
       filter(!is.na(value)) ->
       FBSH_CB
 
-    # asssert mapping is good
+    # assert mapping is good
     assertthat::assert_that(
       Mapping_item_FBS_GCAM %>% filter(!is.na(GCAM_commodity)) %>%
         distinct(item_code) %>% pull() %in%
@@ -606,7 +616,9 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
       filter(!is.na(value), element == "Production") %>%
       inner_join(
         Mapping_SUA_PrimaryEquivalent %>% filter(source_primary == T) %>%
-          distinct(GCAM_commodity, item = source_item), by = "item") %>%
+          distinct(GCAM_commodity, item = source_item) %>%
+          left_join_error_no_match(SUA_item_code_map, by = "item") %>% select(-item),
+        by = "item_code") %>%
       left_join_error_no_match(AGLU_ctry %>% select(area = FAO_country, iso), by = "area") %>%
       left_join_error_no_match(iso_GCAM_regID %>% select(iso, GCAM_region_ID), by = "iso") %>%
       left_join_error_no_match(GCAM_region_names, by = "GCAM_region_ID") %>%
@@ -757,16 +769,19 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
 
     Primary_Item_CROP <-
       FAO_ag_items_PRODSTAT %>%
-        select(item, GCAM_commodity, GCAM_subsector) %>%
+        select(item, item_code, GCAM_commodity, GCAM_subsector) %>%
         filter(!is.na(item), !is.na(GCAM_commodity)) %>%
         # Fodder grass has a duplicate as it mapped to different GTAP crops
         distinct %>%
         mutate(CropMeat = if_else(GCAM_commodity %in% c("FodderGrass", "FodderHerb"),
                                   "Crop_Fodder", "Crop_NonFodder"))
     assertthat::assert_that(
-      all(Primary_Item_CROP %>% filter(CropMeat == "Crop_NonFodder") %>%  pull(item) %in%
-        c(Mapping_SUA_PrimaryEquivalent %>% filter(source_primary == T) %>%
-          distinct(item = source_item) %>% pull)),
+      all(Primary_Item_CROP %>% filter(CropMeat == "Crop_NonFodder") %>%  pull(item_code) %in%
+        c(Mapping_SUA_PrimaryEquivalent %>%
+            filter(source_primary == T) %>%
+            distinct(item = source_item) %>%
+            left_join_error_no_match(SUA_item_code_map, by = "item") %>% pull(item_code) )
+        ),
       msg = "Inconsistent mapping of primary crops between FAO_ag_items_PRODSTAT and Mapping_SUA_PrimaryEquivalent" )
 
     Primary_Item_MEAT <-
@@ -778,6 +793,7 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
                c(FAO_an_items_PRODSTAT %>%
                    filter(!is.na(GCAM_commodity)) %>%
                    distinct(GCAM_commodity) %>% pull))%>%
+      left_join_error_no_match(SUA_item_code_map, by = "item") %>%
       mutate(CropMeat = "Meat")
 
     # 5.2. Get primary production for all ----
@@ -849,8 +865,9 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
       # Keep subsector info for crops
       inner_join(Primary_Item_CROP %>%
                    bind_rows(Primary_Item_MEAT %>%
-                               mutate(GCAM_subsector = GCAM_commodity)),
-                 by = "item") %>%
+                               mutate(GCAM_subsector = GCAM_commodity)) %>%
+                   select(-item),
+                 by = "item_code") %>%
       # add in iso and gcam regions ID
       left_join_error_no_match(Area_Region_Map, by = "area_code") ->
       FAO_AgProd_Kt_All
@@ -881,18 +898,18 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     ## b. All area harvested ----
 
     assertthat::assert_that(
-      all(Primary_Item_CROP %>% pull(item) %in%
+      all(Primary_Item_CROP %>% pull(item_code) %in%
             c(FAO_AgProd_Kt_Area_Kha %>%
                 filter(item_set %in% c("QCL_COMM_CROP_PRIMARY",
                                        "QCL_COMM_CROP_PRIMARY_FODDER")) %>%
-                pull(item)) ),
+                pull(item_code)) ),
       msg =  "Not all required primary crop items included in FAO_AgProd_Kt_Area_Kha" )
 
     FAO_AgProd_Kt_Area_Kha %>%
       filter(element == "Area harvested") %>%
       select(c(names(FAO_SUA_Kt_2010to2019), "item")) %>%
       # Keep subsector info for crops
-      inner_join(Primary_Item_CROP, by = "item") %>%
+      inner_join(Primary_Item_CROP %>% select(-item), by = "item_code") %>%
       # add in iso and gcam regions ID
       left_join_error_no_match(Area_Region_Map %>% select(-region), by = "area_code") ->
       FAO_AgArea_Kha_All
@@ -911,11 +928,12 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
       select(GCAM_commodity, item = source_item) %>%
       bind_rows(Mapping_SUA_PrimaryEquivalent %>%
                   select(GCAM_commodity, item = sink_item)) %>%
-      distinct() ->
+      distinct() %>%
+      left_join_error_no_match(SUA_item_code_map, by = "item") ->
       SUA_Items_GCAM
 
     assertthat::assert_that(
-      SUA_Items_GCAM %>% distinct(item) %>% nrow() == SUA_Items_GCAM %>% nrow(),
+      SUA_Items_GCAM %>% distinct(item_code) %>% nrow() == SUA_Items_GCAM %>% nrow(),
       msg = "Check duplicates in Mapping_SUA_PrimaryEquivalent SUA items"
     )
 
@@ -923,13 +941,13 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     # (e.g., wine, infant food, or other nonfood items etc.)
 
     SUA_item_code_map %>%
-      filter(!item %in% unique(SUA_Items_GCAM$item)) -> SUA_Items_NonGCAM
+      filter(!item_code %in% unique(SUA_Items_GCAM$item_code)) -> SUA_Items_NonGCAM
 
     # b. There are 426 FAO food items, all included in FAO_SUA_Kt_2010to2019 (530 items)
     # SUA_Items_Food includes both GCAM and NonGCAM(NEC)
     SUA_item_code_map %>%
       filter(item_code %in% unique(GCAMDATA_FAOSTAT_MacroNutrientRate_179Regs_426Items_2010to2019Mean$item_code)) %>%
-      left_join(SUA_Items_GCAM, by = "item") %>%
+      left_join(SUA_Items_GCAM %>% select(-item), by = "item_code") %>%
       # For NA GCAM_commodity: not elsewhere classified (NEC)
       # So we would know % of food calories not included in GCAM commodities
       mutate(GCAM_commodity = if_else(is.na(GCAM_commodity), "NEC", GCAM_commodity)) ->
@@ -963,11 +981,12 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
         tibble(macronutrient = c("calperg", "fatperc", "proteinperc"))) %>%
       left_join(
         GCAMDATA_FAOSTAT_MacroNutrientRate_179Regs_426Items_2010to2019Mean %>%
+          select(-item) %>%
           tidyr::gather(macronutrient, macronutrient_value, calperg:proteinperc),
-        by = c("area_code", "item_code", "item", "macronutrient")
+        by = c("area_code", "item_code", "macronutrient")
       ) %>%
-      left_join_error_no_match(SUA_food_macronutrient_rate_World,
-                               by = c("item_code", "item", "macronutrient")) %>%
+      left_join_error_no_match(SUA_food_macronutrient_rate_World %>% select(-item),
+                               by = c("item_code", "macronutrient")) %>%
       mutate(macronutrient_value = if_else(is.na(macronutrient_value),
                                            macronutrient_value_World,
                                            macronutrient_value),
@@ -989,8 +1008,8 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     # This will be used later as an upper bound to improve the data
     GCAMDATA_FAOSTAT_MacroNutrientRate_179Regs_426Items_2010to2019Mean %>%
       tidyr::gather(macronutrient, macronutrient_value, calperg:proteinperc) %>%
-      left_join_error_no_match(SUA_Items_Food,
-                               by = c("item_code", "item")) %>%
+      left_join_error_no_match(SUA_Items_Food %>% select(-item),
+                               by = c("item_code")) %>%
       group_by(GCAM_commodity, macronutrient) %>%
       summarise(max_macronutrient_value = max(macronutrient_value), .groups = "drop") ->
       FAO_Food_MacronutrientRate_2010_2019_MaxValue
