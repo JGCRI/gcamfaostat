@@ -8,7 +8,7 @@
 
 <img src="figure/Fig_gcamfaostat_and_gcamdata.jpg"
      alt="Relationship between gcamfaostat and gcamdata"
-     width="200"/>
+     width="1000"/>
 
 
 
