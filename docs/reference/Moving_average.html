@@ -76,7 +76,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">Moving_average</span><span class="op">(</span><span class="va">x</span>, periods <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">Moving_average</span><span class="op">(</span><span class="va">x</span>, periods <span class="op">=</span> <span class="fl">5</span>, NA_RM <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -87,6 +87,10 @@
 
 <dt>periods</dt>
 <dd><p>An odd number of the periods in MA. The default is 5, i.e., 2 lags and 2 leads</p></dd>
+
+
+<dt>NA_RM</dt>
+<dd><p>If TRUE, remove NA in calculating mean, otherwise returning NA</p></dd>
 
 </dl></div>
     <div id="value">

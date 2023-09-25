@@ -1,22 +1,19 @@
 
 
-# gcamfaostat
-**gcamfaostat** is an R package to prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling. The Food and Agriculture Organization Statistical Database ([FAOSTAT](https://www.fao.org/faostat/en/#data)) provdes open access data on country-level agricultural production, trade, food, nutrients, prices, land use, etc, serving as the most important data source for global agroeconomic and multisector dynamic models. **gcamfaostat** aims to shorten the distance between the FAOSTAT raw data to economic modeling.
+# gcamfaostat summary
+The **gcamfaostat** R package to prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling. The Food and Agriculture Organization Statistical Database ([FAOSTAT](https://www.fao.org/faostat/en/#data)) provdes open access data on country-level agricultural production, trade, food, nutrients, prices, land use, etc, serving as the most important data source for global agroeconomic and multisector dynamic models. **gcamfaostat** aims to shorten the distance between the FAOSTAT raw data to economic modeling.
 
 # gcamfaostat and gcamdata
 **gcamfaostat** is built based on an existing R package, **[gcamdata](https://jgcri.github.io/gcamdata/index.html)**, which has similar functions to **gcamfaostat** though **gcamdata** includes broader aspects of data inputs and is designed for the global multisector dynamic model **GCAM**. **gcamfaostat** utilizes the robust, reproducible and transparent data processing systems built in **[gcamdata](https://github.com/JGCRI/gcam-core)**. In particular, **gcamfaostat** maintain the **[drake](https://books.ropensci.org/drake/)** framework **gcamdata** incorporated to ensure traceability of the data processing.  The two packages are consistent, while **gcamfaostat** focuses on agroeconomic data processing and can provide input data for **gcamdata** (and thus GCAM) and other models that rely on FAOSTAT data.
 
-<img src="figure/Fig_gcamfaostat_and_gcamdata.jpg"
+<img src="vignettes/Fig_gcamfaostat_and_gcamdata.jpg"
      alt="Relationship between gcamfaostat and gcamdata"
-     width="1000"/>
+     width="1000"/> 
+
+Relationship between *gcamfaostat** and **gcamdata**
 
 
-
-The goals of this version are:
-(1) Check FAOSTAT data updates and download necessary datasets
-(2) Develop a new method of primary equivalent aggregation to aggregate supply-utilization-accounting (SUA) data for items along the supply chain (e.g., wheat flour, bran, and germ to wheat-primary-equivalent). The method preserves balance across space (trade balance), time (storage carryover), supply-utilization, and the combination of these dimensions with minimal adjustments. 
-(3) Apply the new method of primary equivalent aggregation to aggregating FAO ~500 SUA (SCL) items to ~100 primary equivalent items in FAO Food Balance Sheet (FBS).
-(4) Compare the balanced data compiled using different methods and visualize the difference.      
+  
     
 # User Guide
 The package is documented in the [online manual](https://realxinzhao.github.io/gcamfaostat/index.html)
@@ -37,7 +34,7 @@ To load the `gcamdata` package, enter:
 `devtools::load_all()`
 
 ## Run the driver
-There are two ways to run the driver:
+There are two ways to run the driver: 
 1. `driver_drake()`  
 
 `driver_drake()` runs the driver and stores the outputs in a hidden cache. When you run `driver_drake()` again it will skip steps that are up-to-date. This is useful if you will be adjusting the data inputs and code and running the data system multiple times. For this reason, we almost always recommend using `driver_drake()`. More details can be found in the [vignette](https://jgcri.github.io/gcamdata/articles/driverdrake_vignette.html).

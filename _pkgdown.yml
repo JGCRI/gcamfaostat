@@ -63,7 +63,7 @@ reference:
       - module_xfaostat_L301_LandCover
       - module_xfaostat_L401_Fertilizer
   - title: gcamdata AgLU modules
-  - contents:     
+    contents:     
       - module_aglu_L100.FAO_SUA_PrimaryEquivalent
       - module_aglu_L100.FAO_SUA_connection
   - title: gcamfaostat Chunk Helper Functions

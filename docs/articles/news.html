@@ -92,7 +92,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>news</h1>
             
-            <h4 data-toc-skip class="date">2023-08-20</h4>
+            <h4 data-toc-skip class="date">2023-09-25</h4>
       
       
       <div class="hidden name"><code>news.Rmd</code></div>
@@ -103,6 +103,30 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">gcamfaostat</span><span class="op">)</span></code></pre></div>
+<div class="section level2">
+<h2 id="goals-for-the-next-version-include">Goals for the next version include:<a class="anchor" aria-label="anchor" href="#goals-for-the-next-version-include"></a>
+</h2>
+<p>2023-09-25</p>
+<ul>
+<li>Improve the documentation and the visualization of the
+<em>module_aglu_L100.FAO_SUA_PrimaryEquivalent</em> module
+<ul>
+<li>The module developed a new method of primary commodity equivalent
+aggregation to aggregate supply-utilization-accounting (SUA) data for
+items along the supply chain (e.g., wheat flour, bran, and germ to
+wheat-primary-equivalent).</li>
+<li>The method preserves balance across space (trade balance), time
+(storage carryover), supply-utilization, and the combination of these
+dimensions with minimal adjustments.</li>
+<li>We have applies the new method of primary equivalent aggregation to
+aggregating FAO ~500 SUA (SCL) items to ~100 primary equivalent items in
+FAO Food Balance Sheet (FBS).</li>
+</ul>
+</li>
+<li>Compare the results from the new primary commodity equivalent method
+with the FBS data compiled using FAOSTAT method (never disclosed).</li>
+</ul>
+</div>
 <div class="section level2">
 <h2 id="gcamfaostat-1-0-0">gcamfaostat 1.0.0<a class="anchor" aria-label="anchor" href="#gcamfaostat-1-0-0"></a>
 </h2>

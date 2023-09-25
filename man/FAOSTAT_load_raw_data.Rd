@@ -8,7 +8,7 @@ FAOSTAT_load_raw_data(
   DATASETCODE,
   DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
   GET_MAPPINGCODE = NULL,
-  .Envir = .GlobalEnv
+  .Envir = NULL
 )
 }
 \arguments{

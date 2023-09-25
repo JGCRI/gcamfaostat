@@ -19,6 +19,16 @@ knitr::opts_chunk$set(
 library(gcamfaostat)
 ```
 
+# Goals for the next version include:
+2023-09-25  
+
+* Improve the documentation and the visualization of the *module_aglu_L100.FAO_SUA_PrimaryEquivalent* module
+  + The module developed a new method of primary commodity equivalent aggregation to aggregate supply-utilization-accounting (SUA) data for items along the supply chain (e.g., wheat flour, bran, and germ to wheat-primary-equivalent). 
+  + The method preserves balance across space (trade balance), time (storage carryover), supply-utilization, and the combination of these dimensions with minimal adjustments. 
+  + We have applies the new method of primary equivalent aggregation to aggregating FAO ~500 SUA (SCL) items to ~100 primary equivalent items in FAO Food Balance Sheet (FBS).
+* Compare the results from the new primary commodity equivalent method with the FBS data compiled using FAOSTAT method (never disclosed).
+
+
 # gcamfaostat 1.0.0
 
 **First release**

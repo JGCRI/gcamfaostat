@@ -7,7 +7,8 @@ Authors@R: c(person("Xin", "Zhao", email = "xin.zhao@pnnl.gov", role = c("cre", 
             person("Maksym", "Chepeliev", role = "aut"),
             person("Pralit", "Patel", role = "aut"),
             person("Kanishka", "Narayan", role = "aut"),
-            person("Marshall", "Wise", role = "aut"),
+            person("Chris", "Narayan", role = "aut"),
+            person("Marshall", "Vernon", role = "aut"),
             person("Pacific Northwest National Laboratory", role = "cph"))
 Description: Clean and balance agricultural input, trade, and supply-utilization data for GCAM and other global agroeconomic modeling.
 License: MIT + file LICENSE
