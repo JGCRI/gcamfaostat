@@ -547,8 +547,10 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     ## Loop through all GCAM_commodity with available data ----
 
     FAO_SUA_Kt_2010to2019_R %>%
-      left_join(Mapping_SUA_PrimaryEquivalent_ID %>% select(APE_comm, item_code = sink_item_code, nest_level) %>% distinct(), by = c("item_code")) %>%
-      left_join(Mapping_SUA_PrimaryEquivalent_ID %>% select(APE_comm_source = APE_comm, item_code = source_item_code) %>% distinct(), by=c("item_code")) %>%
+      left_join(Mapping_SUA_PrimaryEquivalent_ID %>%
+                  select(APE_comm, item_code = sink_item_code, nest_level) %>% distinct(), by = c("item_code")) %>%
+      left_join(Mapping_SUA_PrimaryEquivalent_ID %>%
+                  select(APE_comm_source = APE_comm, item_code = source_item_code) %>% distinct(), by=c("item_code")) %>%
       # find SUA items which are truly not mapped to anything and filter them out
       mutate(APE_comm = if_else(is.na(APE_comm), APE_comm_source, APE_comm)) %>%
       select(-APE_comm_source) %>%
@@ -560,7 +562,7 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
       # we will literally nest by nest level to avoid constant subseting
       # although we end up needed to unnest at times as well so ultimately,
       # it likely makes little difference in performance
-      tidyr::nest(data = -nest_level)  %>%
+      tidyr::nest(data = -nest_level) %>%
       # we are now ready to recursively primarize APE commodities then aggregate
       # to GCAM commodities
       Proc_primarize() ->

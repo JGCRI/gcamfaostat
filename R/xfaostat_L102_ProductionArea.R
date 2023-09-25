@@ -19,7 +19,6 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
 
   MODULE_INPUTS <-
     c(FILE = "aglu/FAO/FAO_an_items_PRODSTAT",
-      FILE = "aglu/FAO/FAO_ag_items_PRODSTAT",
         "QCL_wide", "FBS_wide", "FBSH_CB_wide")
 
   MODULE_OUTPUTS <-
@@ -61,7 +60,6 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
 
 
     FAO_an_items_PRODSTAT <- FAO_an_items_PRODSTAT %>% filter(!is.na(GCAM_commodity))
-    FAO_ag_items_PRODSTAT <- FAO_ag_items_PRODSTAT %>% filter(!is.na(GCAM_commodity))
 
 
     # All Ag and An production data, including livestock animal, and area harvested, are included in QCL.
@@ -413,7 +411,6 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       add_units("various") %>%
       add_comments("Detailed FAO QCL data processing for live animal and production") %>%
       add_precursors("aglu/FAO/FAO_an_items_PRODSTAT",
-                     "aglu/FAO/FAO_ag_items_PRODSTAT",
                      "QCL_wide", "FBS_wide", "FBSH_CB_wide") ->
       QCL_AN_LIVEANIMAL
 
@@ -473,7 +470,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
 
 
     # P.S.  Check primary product mapping ----
-
+    # FAO_ag_items_PRODSTAT is not read in anymore
     # checkitem <-
     #  FF_join_checkmap(c("QCL_COMM_CROP_PRIMARY", "FAO_ag_items_PRODSTAT"), "item_code", "item",.ENVIR = Curr_Envir) %>%
     #   mutate(match = if_else(QCL_COMM_CROP_PRIMARY_item == FAO_ag_items_PRODSTAT_item , T, F))

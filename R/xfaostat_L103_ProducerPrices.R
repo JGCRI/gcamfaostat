@@ -18,9 +18,7 @@
 module_xfaostat_L103_ProducerPrices <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(FILE = "aglu/FAO/FAO_an_items_PRODSTAT",
-      FILE = "aglu/FAO/FAO_ag_items_PRODSTAT",
-      "QCL_PROD",
+    c("QCL_PROD",
       "PP_wide")
 
   MODULE_OUTPUTS <-
@@ -50,9 +48,6 @@ module_xfaostat_L103_ProducerPrices <- function(command, ...) {
       FAOSTAT_AREA_RM_NONEXIST() ->
       PP
 
-
-    FAO_an_items_PRODSTAT <- FAO_an_items_PRODSTAT %>% filter(!is.na(GCAM_commodity))
-    FAO_ag_items_PRODSTAT <- FAO_ag_items_PRODSTAT %>% filter(!is.na(GCAM_commodity))
 
     # Primary crops
     QCL_PROD %>% filter(item_set == "QCL_COMM_CROP_PRIMARY") %>%
@@ -143,9 +138,7 @@ module_xfaostat_L103_ProducerPrices <- function(command, ...) {
       add_title("FAO crop and livestock production and crop area") %>%
       add_units("USD and tonne") %>%
       add_comments("Detailed FAO QCL data processing. FBS fish data is used") %>%
-      add_precursors("aglu/FAO/FAO_an_items_PRODSTAT",
-                     "aglu/FAO/FAO_ag_items_PRODSTAT",
-                     "QCL_PROD",
+      add_precursors("QCL_PROD",
                      "PP_wide") ->
       QCL_PRIMARY_PROD_PV
 

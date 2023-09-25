@@ -1,10 +1,14 @@
 
 
 # gcamfaostat
-**gcamfaostat** is an R package to prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling. The Food and Agriculture Organization Statistical Database ([FAOSTAT](https://www.fao.org/faostat/en/#data)) provdes open access data on country-level agricultural production, trade, food, nutrients, prices, land use, etc, servering as the most important data source for global agroeconomic and multisector dynamic models. **gcamfaostat** aims to shorten the distance between the FAOSTAT raw data to economic modeling.
+**gcamfaostat** is an R package to prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling. The Food and Agriculture Organization Statistical Database ([FAOSTAT](https://www.fao.org/faostat/en/#data)) provdes open access data on country-level agricultural production, trade, food, nutrients, prices, land use, etc, serving as the most important data source for global agroeconomic and multisector dynamic models. **gcamfaostat** aims to shorten the distance between the FAOSTAT raw data to economic modeling.
 
 # gcamfaostat and gcamdata
-**gcamfaostat** is built based on an existing R package, **[gcamdata](https://jgcri.github.io/gcamdata/index.html)**, which has similar functions to**gcamfaostat** though **gcamdata** includes broader aspects of data inputs and is designed for the global multisector dynamic model **GCAM**. **gcamfaostat** utilizes the robust, reproducible and transparent data processing systems built in **[gcamdata](https://github.com/JGCRI/gcam-core)**. The two packages are consistent, while **gcamfaostat** focuses on agroeconomic data processing and can provide input data for **gcamdata** (and thus GCAM) and other models that rely on FAOSTAT data.
+**gcamfaostat** is built based on an existing R package, **[gcamdata](https://jgcri.github.io/gcamdata/index.html)**, which has similar functions to **gcamfaostat** though **gcamdata** includes broader aspects of data inputs and is designed for the global multisector dynamic model **GCAM**. **gcamfaostat** utilizes the robust, reproducible and transparent data processing systems built in **[gcamdata](https://github.com/JGCRI/gcam-core)**. In particular, **gcamfaostat** maintain the **[drake](https://books.ropensci.org/drake/)** framework **gcamdata** incorporated to ensure traceability of the data processing.  The two packages are consistent, while **gcamfaostat** focuses on agroeconomic data processing and can provide input data for **gcamdata** (and thus GCAM) and other models that rely on FAOSTAT data.
+
+<img src="figure/Fig_gcamfaostat_and_gcamdata.jpg"
+     alt="Relationship between gcamfaostat and gcamdata"
+     width="200"/>
 
 
 

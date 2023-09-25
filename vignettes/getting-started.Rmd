@@ -17,9 +17,7 @@ knitr::opts_chunk$set(
 
 ## R
 
-R must be version 3.2 or higher (however current testing is done with version 3.6.3 and above).
-
-We suggest using RStudio.
+R must be version 4.0 or higher. And we suggest using RStudio.
 
 ## Clone this repository
 

@@ -19,7 +19,6 @@ module_xfaostat_L104_ProductionAreaAddFodder <- function(command, ...) {
 
   MODULE_INPUTS <-
     c(FILE = "aglu/FAO/FAOSTAT/Other_supplementary/FAO_fodder_Prod_t_HA_ha_PRODSTAT_2011",
-      FILE = "aglu/FAO/FAO_ag_items_PRODSTAT",
       "QCL_area_code_map")
 
   MODULE_OUTPUTS <-
@@ -33,8 +32,7 @@ module_xfaostat_L104_ProductionAreaAddFodder <- function(command, ...) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
     QCL_area_code_map <- element_code <- element <- area_code <- item_code <- area <-
-      item <- unit <- QCL_FODDERCROP_item <- FAO_ag_items_PRODSTAT_item <-
-      FAO_ag_items_PRODSTAT <- NULL
+      item <- unit <- QCL_FODDERCROP_item <- NULL
 
     all_data <- list(...)[[1]]
 
@@ -106,19 +104,21 @@ module_xfaostat_L104_ProductionAreaAddFodder <- function(command, ...) {
       add_units("tonne and ha") %>%
       add_comments("Data is from old GCAM data v5.4") %>%
       add_precursors("aglu/FAO/FAOSTAT/Other_supplementary/FAO_fodder_Prod_t_HA_ha_PRODSTAT_2011",
-                     "aglu/FAO/FAO_ag_items_PRODSTAT",
                      "QCL_area_code_map")->
       QCL_FODDERCROP
 
-    Curr_Envir <- environment()
-    # 160 primary items +16 fodder crops
-    FF_join_checkmap(DFs = c("QCL_FODDERCROP", "FAO_ag_items_PRODSTAT"),
-                     COL_by = "item_code",
-                     COL_rename = "item", .ENVIR = Curr_Envir) %>%
-      mutate(M = if_else(QCL_FODDERCROP_item == FAO_ag_items_PRODSTAT_item , T, F))-> checkitem
-    checkitem %>% filter(M == T)
-    # 15 fodder crops + 1 pumpkin removed in mapping
-    rm(FAO_ag_items_PRODSTAT, checkitem)
+
+    # FAO_ag_items_PRODSTAT is not read in anymore
+    # comment out these GCAM checks
+    # Curr_Envir <- environment()
+    # # 160 primary items +16 fodder crops
+    # FF_join_checkmap(DFs = c("QCL_FODDERCROP", "FAO_ag_items_PRODSTAT"),
+    #                  COL_by = "item_code",
+    #                  COL_rename = "item", .ENVIR = Curr_Envir) %>%
+    #   mutate(M = if_else(QCL_FODDERCROP_item == FAO_ag_items_PRODSTAT_item , T, F))-> checkitem
+    # checkitem %>% filter(M == T)
+    # # 15 fodder crops + 1 pumpkin removed in mapping
+    # rm(FAO_ag_items_PRODSTAT, checkitem)
 
 
     return_data(MODULE_OUTPUTS)

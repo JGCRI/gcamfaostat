@@ -16,3 +16,6 @@ R/README.html
 ^data-raw$
 coverage.R
 ^appveyor\.yml$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

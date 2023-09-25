@@ -65,6 +65,7 @@ reference:
   - title: gcamdata AgLU modules
   - contents:     
       - module_aglu_L100.FAO_SUA_PrimaryEquivalent
+      - module_aglu_L100.FAO_SUA_connection
   - title: gcamfaostat Chunk Helper Functions
     contents: 
       - FAOSTAT_metadata

@@ -57,11 +57,12 @@ downscale_FAO_country <- function(data, country_name, dissolution_year, years = 
 #'
 #' @param x A data frame contain the variable for calculation
 #' @param periods An odd number of the periods in MA. The default is 5, i.e., 2 lags and 2 leads
+#' @param NA_RM If TRUE, remove NA in calculating mean, otherwise returning NA
 #'
 #' @return A data frame
 #' @export
 
-Moving_average <- function(x, periods = 5){
+Moving_average <- function(x, periods = 5, NA_RM = TRUE){
   if (periods == 1) {
     return(x)
   }
@@ -69,12 +70,17 @@ Moving_average <- function(x, periods = 5){
   if ((periods %% 2) == 0) {
     stop("Periods should be an odd value")
   } else{
-    (x +
-       Reduce(`+`, lapply(seq(1, (periods -1 )/2), function(a){lag(x, n = a)})) +
-       Reduce(`+`,lapply(seq(1, (periods -1 )/2), function(a){lead(x, n = a)}))
-    )/periods
+
+    #new method to allow na.rm in mean calculation
+    c(lapply(seq((periods -1 )/2, 1), function(a){lag(x, n = a)}),
+      list(x),
+      lapply(seq(1, (periods -1 )/2), function(a){lead(x, n = a)})) %>% unlist %>%
+      matrix(ncol = periods) %>%
+      rowMeans(na.rm = NA_RM)
+
   }
 }
+
 
 # Function to dissaggregate dissolved regions in historical years ----
 # copyed in gcamdata
