@@ -15,20 +15,28 @@ navbar:
   left:
     - icon: fa-home
       href: index.html
-    - text: "Vignettes"
-      icon: fas fa-book
+    - icon: fas fa-book
+      text: "Vignettes"      
       menu:
         - text: "Getting Started"
-          href: articles/getting-started.html
-        - text: "User Modification Functions"
-          href: articles/usermod_vignette.html
+          href: articles/vignette_getting_started.html
+        - text: "Preparing Data"
+          href: articles/vignette_preparing_data.html
+        - text: "Processing Flow"
+          href: articles/vignette_processing_flow.html
+        - text: "Update Sources"
+          href: articles/vignette_updating_sources.html
+        - text: "User Modifications"
+          href: articles/vignette_user_modifications.html
+    - icon: fa-file-image-o
+      text: "Visualization"
+      href: articles/vignette_visualization.html
     - icon: fa-file-code-o
       text: "Reference"
       href: reference/index.html
     - icon: fa-newspaper-o
       text: "News"
-      href: articles/news.html
-
+      href: articles/vignette_news.html
 
       
 reference:

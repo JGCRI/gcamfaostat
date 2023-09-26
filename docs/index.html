@@ -55,12 +55,28 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/getting-started.html">Getting Started</a>
+      <a href="articles/vignette_getting_started.html">Getting Started</a>
     </li>
     <li>
-      <a href="articles/usermod_vignette.html">User Modification Functions</a>
+      <a href="articles/vignette_preparing_data.html">Preparing Data</a>
+    </li>
+    <li>
+      <a href="articles/vignette_processing_flow.html">Processing Flow</a>
+    </li>
+    <li>
+      <a href="articles/vignette_updating_sources.html">Update Sources</a>
+    </li>
+    <li>
+      <a href="articles/vignette_user_modifications.html">User Modifications</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="articles/vignette_visualization.html">
+    <span class="fa fa-file-image-o"></span>
+     
+    Visualization
+  </a>
 </li>
 <li>
   <a href="reference/index.html">
@@ -70,14 +86,21 @@
   </a>
 </li>
 <li>
-  <a href="articles/news.html">
+  <a href="articles/vignette_news.html">
     <span class="fa fa-newspaper-o"></span>
      
     News
   </a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/realxinzhao/gcamfaostat/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -93,14 +116,12 @@
 <div class="section level1">
 <div class="page-header"><h1 id="gcamfaostat-summary">gcamfaostat summary<a class="anchor" aria-label="anchor" href="#gcamfaostat-summary"></a>
 </h1></div>
-<p>The <strong>gcamfaostat</strong> R package to prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling. The Food and Agriculture Organization Statistical Database (<a href="https://www.fao.org/faostat/en/#data" class="external-link">FAOSTAT</a>) provdes open access data on country-level agricultural production, trade, food, nutrients, prices, land use, etc, serving as the most important data source for global agroeconomic and multisector dynamic models. <strong>gcamfaostat</strong> aims to shorten the distance between the FAOSTAT raw data to economic modeling.</p>
+<p>The <code>gcamfaostat</code> R package to prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling. The Food and Agriculture Organization Statistical Database (<a href="https://www.fao.org/faostat/en/#data" class="external-link">FAOSTAT</a>) provdes open access data on country-level agricultural production, trade, food, nutrients, prices, land use, etc, serving as the most important data source for global agroeconomic and multisector dynamic models. <code>gcamfaostat</code> aims to shorten the distance between the FAOSTAT raw data to economic modeling.</p>
 </div>
 <div class="section level1">
-<h1 id="gcamfaostat-and-gcamdata">gcamfaostat and gcamdata<a class="anchor" aria-label="anchor" href="#gcamfaostat-and-gcamdata"></a>
+<h1 id="statement-of-need">Statement of Need<a class="anchor" aria-label="anchor" href="#statement-of-need"></a>
 </h1>
-<p><strong>gcamfaostat</strong> is built based on an existing R package, <strong><a href="https://jgcri.github.io/gcamdata/index.html" class="external-link">gcamdata</a></strong>, which has similar functions to <strong>gcamfaostat</strong> though <strong>gcamdata</strong> includes broader aspects of data inputs and is designed for the global multisector dynamic model <strong>GCAM</strong>. <strong>gcamfaostat</strong> utilizes the robust, reproducible and transparent data processing systems built in <strong><a href="https://github.com/JGCRI/gcam-core" class="external-link">gcamdata</a></strong>. In particular, <strong>gcamfaostat</strong> maintain the <strong><a href="https://books.ropensci.org/drake/" class="external-link">drake</a></strong> framework <strong>gcamdata</strong> incorporated to ensure traceability of the data processing. The two packages are consistent, while <strong>gcamfaostat</strong> focuses on agroeconomic data processing and can provide input data for <strong>gcamdata</strong> (and thus GCAM) and other models that rely on FAOSTAT data.</p>
-<p><img src="articles/Fig_gcamfaostat_and_gcamdata.jpg" alt="Relationship between gcamfaostat and gcamdata" width="1000"></p>
-<p>Relationship between *gcamfaostat<strong> and </strong>gcamdata**</p>
+<p><img src="reference/figures/Fig_data_processing_flow.jpg" alt="Figure 2. Structure of gcamfaostat"><strong>Figure 2. Structure of gcamfaostat</strong></p>
 </div>
 <div class="section level1">
 <h1 id="user-guide">User Guide<a class="anchor" aria-label="anchor" href="#user-guide"></a>
@@ -159,7 +180,15 @@ Users can also make use of the functions to trace the processing by step, when<c
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
+    <div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/realxinzhao/gcamfaostat/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/realxinzhao/gcamfaostat/issues" class="external-link">Report a bug</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>
@@ -176,7 +205,8 @@ Users can also make use of the functions to trace the processing by step, when<c
 <li>Maksym Chepeliev <br><small class="roles"> Author </small>  </li>
 <li>Pralit Patel <br><small class="roles"> Author </small>  </li>
 <li>Kanishka Narayan <br><small class="roles"> Author </small>  </li>
-<li>Marshall Wise <br><small class="roles"> Author </small>  </li>
+<li>Chris Narayan <br><small class="roles"> Author </small>  </li>
+<li>Marshall Vernon <br><small class="roles"> Author </small>  </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
@@ -189,7 +219,7 @@ Users can also make use of the functions to trace the processing by step, when<c
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Kanishka Narayan, Marshall Wise.</p>
+<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Kanishka Narayan, Chris Narayan, Marshall Vernon.</p>
 </div>
 
 <div class="pkgdown">

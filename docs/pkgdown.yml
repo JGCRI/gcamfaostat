@@ -2,10 +2,15 @@ pandoc: 3.1.1
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
-  getting-started: getting-started.html
-  news: news.html
-  usermod_vignette: usermod_vignette.html
-last_built: 2023-09-25T05:26Z
+  vignette_getting_started: vignette_getting_started.html
+  vignette_key_modules: vignette_key_modules.html
+  vignette_news: vignette_news.html
+  vignette_preparing_data: vignette_preparing_data.html
+  vignette_processing_flow: vignette_processing_flow.html
+  vignette_updating_sources: vignette_updating_sources.html
+  vignette_user_modifications: vignette_user_modifications.html
+  vignette_visualization: vignette_visualization.html
+last_built: 2023-09-26T13:09Z
 urls:
   reference: https://realxinzhao.github.io/gcamfaostat/reference
   article: https://realxinzhao.github.io/gcamfaostat/articles

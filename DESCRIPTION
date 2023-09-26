@@ -12,6 +12,8 @@ Authors@R: c(person("Xin", "Zhao", email = "xin.zhao@pnnl.gov", role = c("cre", 
             person("Pacific Northwest National Laboratory", role = "cph"))
 Description: Clean and balance agricultural input, trade, and supply-utilization data for GCAM and other global agroeconomic modeling.
 License: MIT + file LICENSE
+URL: https://realxinzhao.github.io/gcamfaostat
+BugReports: https://github.com/realxinzhao/gcamfaostat/issues
 Depends: R (>= 3.1.2)
 Imports:
     assertthat (>= 0.2),

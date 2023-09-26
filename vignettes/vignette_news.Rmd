@@ -1,9 +1,9 @@
 ---
-title: "news"
+title: "News"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{news}
+  %\VignetteIndexEntry{News}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,9 +15,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(gcamfaostat)
-```
+
+# FAOSTAT Commodity Balance (CB) updates
+2023-09-25 
+* Good news: It seems FAOSTAT just made the updated Commodity Balance (CB) dataset available. Previously, it only inlcudes data up to 2013, i.e., consistent with FBSH. It is now adding a new dataset that include data from 2010-2020, consistent with FBH.
+* However: 
+  + The `update history` on FAOSTAT might not be the history of data availability. It says last update was 2022-12-23. But per 2023-08-20 archive, the data was still not available.
+  + Bulk download seems not enabled yet.
+  + Dataset code will likely change. CB seems reserved for the new data and the old one might be CBH. 
+* Stay tuned.
 
 # Goals for the next version include:
 2023-09-25  

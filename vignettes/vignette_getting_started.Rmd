@@ -2,6 +2,7 @@
 title: "Getting Started with gcamfaostat"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: references.bib  
 vignette: >
   %\VignetteIndexEntry{Getting Started with gcamfaostat}
   %\VignetteEngine{knitr::rmarkdown}
@@ -14,6 +15,25 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+
+
+# 
+
+
+# gcamdata and gcamfaostat
+`gcamdata` [@bond_lamberty_2023]
+
+
+
+
+Figure 1  shows the relationship between `gcamfaostat` and `gcamdata` with example modules of each packages presented.
+
+![Figure 1. Relationship between gcamfaostat and gcamdata](../man/figures/Fig_gcamfaostat_and_gcamdata.jpg) 
+**Figure 1. Relationship between `gcamfaostat` and `gcamdata`.** Modules with identifier `_xfaostat_` only exists in `gcamfaostat`. Agriculture and land use (AgLU) related modules (`_aglu_`) that rely on outputs from `gcamfaostat` can run in both packages. Other `gcamdata` modules processing data in areas such as energy, emissions, water, and socioeconomics only exist in `gcamdata`.  
+
+
+
+
 
 ## R
 
@@ -50,8 +70,6 @@ devtools::install_deps()
 For this reason, we suggest using `renv`, described below. 
 
 ## Optional `renv` -- currently included in GCAM 6.0 and gcamdata release
-**NOTE THAT SETTING UP/RESTORING RENV WHILE ON VPN CAN CAUSE ERRORS**
-**HIGHLY RECOMMENDED TO AVOID VPN DURING SET-UP**
 
 `renv` is an R package for dependency management. Using it will save a private R library with the correct versions of any package dependencies.
 
@@ -99,3 +117,7 @@ driver()
 See [the documentation](https://jgcri.github.io/gcamdata/reference/driver.html) for more options when running the driver, such as what outputs to generate or when to stop.
 
 
+
+
+
+# References 

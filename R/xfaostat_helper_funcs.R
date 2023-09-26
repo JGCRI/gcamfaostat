@@ -6,13 +6,16 @@
 
 #' gcamfaostat_metadata: generate metadata information of the input data
 #'
-#' @param OnlyReturnDatasetCostRequired If TRUE only return dataset codes set in the function
+#' @param DIR_RAW_DATA_FAOSTAT  Path to raw faostat data; default set to DIR_RAW_DATA_FAOSTAT in constants.R
+#' @param OnlyReturnDatasetCodeRequired If true only required dataset codes are returned
 #'
 #' @return Information of FAOSTAT input dataset
+#' @export
 
-gcamfaostat_metadata <- function(OnlyReturnDatasetCostRequired = FALSE){
+gcamfaostat_metadata <- function(DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
+                                 OnlyReturnDatasetCodeRequired = FALSE){
 
-  assertthat::assert_that(OnlyReturnDatasetCostRequired == TRUE|OnlyReturnDatasetCostRequired == FALSE)
+  assertthat::assert_that(OnlyReturnDatasetCodeRequired == TRUE|OnlyReturnDatasetCodeRequired == FALSE)
 
   # Data code needed ----
   FAO_dataset_code_required <-
@@ -28,7 +31,7 @@ gcamfaostat_metadata <- function(OnlyReturnDatasetCostRequired = FALSE){
       "OA"            # Population
     )
 
-  if (OnlyReturnDatasetCostRequired == T) {
+  if (OnlyReturnDatasetCodeRequired == T) {
     return(FAO_dataset_code_required)
   }
 
@@ -53,11 +56,14 @@ gcamfaostat_metadata <- function(OnlyReturnDatasetCostRequired = FALSE){
                   DOWNLOAD_NONEXIST = F) %>% arrange(Localupdate) %>%
     mutate(Exist_Prebuilt = if_else(datasetcode %in% DataCodePrebuilt, TRUE, FALSE),
            Exist_Local = if_else(is.na(localfilesize), FALSE, TRUE)) %>%
-    transmute(`Dataset Code` = datasetcode, Exist_Local, Exist_Prebuilt,
+    transmute(`Dataset Code` = datasetcode,
               `Dataset Name` = datasetname,
+              Exist_Local, Exist_Prebuilt,
               `FAO update date` = gsub("T00:00:00", "", FAOupdate),
-              #`Local file size` = localfilesize,
-              `FAO size` = remotefilezize) -> metainfo
+              `Local file size` = localfilesize,
+              `FAO size` = remotefilezize) %>%
+    mutate(`FAO size` = round(as.numeric(gsub("KB", "", `FAO size`)) / 1024, digits = 0),
+           `FAO size` = paste0(`FAO size`, "MB")) -> metainfo
 
   print(metainfo)
 
@@ -66,7 +72,10 @@ gcamfaostat_metadata <- function(OnlyReturnDatasetCostRequired = FALSE){
   rlang::inform("If Exist_Prebuilt == TRUE for all, package is ready to be built based on the Prebuilt data. Note that prebuilt data were generated using FAOSTAT data archived in Zenodo.")
 
   rlang::inform("---------------------------------------------------------")
-  rlang::inform("To build the package from raw data, users need to download the data to local either from the Zenodo archive (using function `FF_download_RemoteArchive`) or from the FAOSTAT (using function `FF_download_FAOSTAT`), and set `Process_Raw_FAO_Data` in constants.R to TRUE. Note that `FF_rawdata_info` has options to download all nonexist data together.")
+  rlang::inform("To build the package from raw data, users need to download the data to local either from the Zenodo archive (using function `FF_download_RemoteArchive`) or from the FAOSTAT (using function `FF_download_FAOSTAT`), and set `Process_Raw_FAO_Data` in constants.R to TRUE. Note that `FF_rawdata_info` has options to download all nonexist data together."
+  )
+  return(metainfo)
+
 
 }
 
@@ -218,7 +227,7 @@ FF_rawdata_info <- function(
            grepl("zip$", filelocation)) %>%
     transmute(filelocation = basename(filelocation),
               ctime = as.Date(ctime), mtime = as.Date(mtime),
-              localfilesize = utils:::format.object_size(size, "KB", digits = 0)) %>%
+              localfilesize = utils:::format.object_size(size, "MB", digits = 0)) %>%
     # Join the latest metadata
     # Note that FAO raw data had a typo (missing space) in Trade_CropsLivestock_E_All_Data_(Normalized).zip
     # Temporary fix here

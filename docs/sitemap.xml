@@ -4,19 +4,31 @@
     <loc>https://realxinzhao.github.io/gcamfaostat/404.html</loc>
   </url>
   <url>
-    <loc>https://realxinzhao.github.io/gcamfaostat/articles/getting-started.html</loc>
-  </url>
-  <url>
     <loc>https://realxinzhao.github.io/gcamfaostat/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://realxinzhao.github.io/gcamfaostat/articles/news/NEWS.html</loc>
+    <loc>https://realxinzhao.github.io/gcamfaostat/articles/vignette_getting_started.html</loc>
   </url>
   <url>
-    <loc>https://realxinzhao.github.io/gcamfaostat/articles/news.html</loc>
+    <loc>https://realxinzhao.github.io/gcamfaostat/articles/vignette_key_modules.html</loc>
   </url>
   <url>
-    <loc>https://realxinzhao.github.io/gcamfaostat/articles/usermod_vignette.html</loc>
+    <loc>https://realxinzhao.github.io/gcamfaostat/articles/vignette_news.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamfaostat/articles/vignette_preparing_data.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamfaostat/articles/vignette_processing_flow.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamfaostat/articles/vignette_updating_sources.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamfaostat/articles/vignette_user_modifications.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamfaostat/articles/vignette_visualization.html</loc>
   </url>
   <url>
     <loc>https://realxinzhao.github.io/gcamfaostat/authors.html</loc>

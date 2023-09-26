@@ -1,0 +1,31 @@
+---
+title: "Preparing data for gcamfaostat"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Preparing data for gcamfaostat}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+
+
+
+
+# Metadata
+
+``` {r, echo=FALSE}
+devtools::load_all()
+library(dplyr)
+gcamfaostat::gcamfaostat_metadata(DIR_RAW_DATA_FAOSTAT = file.path("..", "inst/extdata/aglu/FAO/FAOSTAT")) %>% 
+  select(-`Local file size`)
+
+```

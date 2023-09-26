@@ -1,0 +1,23 @@
+---
+title: "gcamfaostat data processing flow"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{gcamfaostat data processing flow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+
+
+
+![Figure. Structure of gcamfaostat](../man/figures/Fig_data_processing_flow.jpg) 
+**Figure. Structure of gcamfaostat v1.0.0**

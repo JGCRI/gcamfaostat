@@ -1,0 +1,24 @@
+---
+title: "Key moduels in gcamfaostat"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Key moduels in gcamfaostat}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+
+`module_xfaostat_L105_DataConnectionToSUA`
+
+
+![Figure. Structure of gcamfaostat](../man/figures/Fig_KeyModule_xfaostat_L105.jpg) 
+**Figure. Structure of gcamfaostat v1.0.0**

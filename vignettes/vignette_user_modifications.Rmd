@@ -1,9 +1,9 @@
 ---
-title: "How to Write a User Modification Chunk"
+title: "User Modifications"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{usermod_chunks}
+  %\VignetteIndexEntry{User Modifications}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -80,16 +80,4 @@ driver_drake(user_modifications = c("usermod_fert"),
 ### Run usermod_fert multiple times
 We can also generate multiple modified xmls using `driver_drake()`. To do this, we simply need to change the value of `NEW.SHWT` and ensure that each different value is associated with a different `xml_suffix`. As well, we need to clear the usermod_fert object from drake's cache using `drake::clean()` as drake is not aware of the change to `NEW.SHWT`. If you do not include this call, drake may assume that all downstream objects/xmls do not need to be updated.
 
-``` {r eval=FALSE}
-# Multiple shareweights to use
-shareweights <- seq(0.2, 1, 0.1)
 
-for (i in 1:length(shareweights)){
-  drake::clean(list="usermod_fert") # Ensures that drakes knows to run usermod_fert
-  
-  NEW.SHWT <- shareweights[i]
-  
-  driver_drake(user_modifications = c("usermod_fert"),
-               xml_suffix = paste0("__", i))
-}
-```
