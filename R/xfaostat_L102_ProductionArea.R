@@ -406,6 +406,14 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       QCL_ALL
 
 
+    QCL_ALL %>%
+      filter(item_set %in% c("QCL_COMM_AN_PRIMARY_MEAT1",
+                             "QCL_COMM_AN_PRIMARY_MEAT2",
+                             "QCL_COMM_AN_PRIMARY_EGG",
+                             "QCL_COMM_AN_PRIMARY_MILK")) ->
+      QCL_AN_YIELD
+
+
     QCL_AN_LIVEANIMAL %>%
       add_title("FAO live animal stock and production") %>%
       add_units("various") %>%

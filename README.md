@@ -10,7 +10,7 @@ The `gcamfaostat` R package to prepare, process, and synthesize FAOSTAT data for
 
 
 
-![Figure 2. Structure of gcamfaostat](man/figures/Fig_data_processing_flow.jpg) 
+![Figure 2. Structure of gcamfaostat](man/figures/Fig_data_processing_flow.jpg)  
 **Figure 2. Structure of gcamfaostat**
   
     

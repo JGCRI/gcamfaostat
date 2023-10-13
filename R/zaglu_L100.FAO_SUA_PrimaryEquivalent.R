@@ -102,72 +102,64 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
       left_join(GCAM_region_names, by = "GCAM_region_ID") ->
       Area_Region_Map
 
-    # 1.1 Helper functions for regional aggregation ----
+    # 1.1 Regional aggregation for SUA ----
 
     # Aggregate SUA to GCAM regions
     # Intra regional trade is removed when bilateral trade data is available
-    SUA_Reg_Agg <- function() {
 
-      GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019 %>%
-        left_join_error_no_match(Area_Region_Map %>% select(area_code, GCAM_region_ID), by="area_code") %>%
-        group_by(GCAM_region_ID, item_code, element, year) %>%
-        summarize(value = sum(value), .groups = "drop") %>%
-        ungroup() ->
-        DF_SUA_Agg
+    GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019 %>%
+      left_join_error_no_match(Area_Region_Map %>% select(area_code, GCAM_region_ID), by="area_code") %>%
+      group_by(GCAM_region_ID, item_code, element, year) %>%
+      summarize(value = sum(value), .groups = "drop") %>%
+      ungroup() ->
+      DF_SUA_Agg
 
-      # Calculate intra regional trade
-      GCAMDATA_FAOSTAT_BiTrade_194Regs_400Items_2010to2020 %>%
-        left_join_error_no_match(Area_Region_Map %>% select(area_code, GCAM_region_ID), by="area_code") %>%
-        left_join_error_no_match(Area_Region_Map %>% select(source_code = area_code, source_GCAM_region_ID = GCAM_region_ID), by="source_code") %>%
-        filter(GCAM_region_ID == source_GCAM_region_ID) %>%
-        group_by(GCAM_region_ID, item_code, year) %>%
-        summarize(value = sum(value), .groups = "drop") %>%
-        ungroup() %>%
-        #mutate(value = -value / 1000.0) ->
-        mutate(value = -value) ->
-        DF_INTRA_REG_TRADE
+    # Calculate intra regional trade
+    GCAMDATA_FAOSTAT_BiTrade_194Regs_400Items_2010to2020 %>%
+      left_join_error_no_match(Area_Region_Map %>% select(area_code, GCAM_region_ID), by="area_code") %>%
+      left_join_error_no_match(Area_Region_Map %>% select(source_code = area_code, source_GCAM_region_ID = GCAM_region_ID), by="source_code") %>%
+      filter(GCAM_region_ID == source_GCAM_region_ID) %>%
+      group_by(GCAM_region_ID, item_code, year) %>%
+      summarize(value = sum(value), .groups = "drop") %>%
+      ungroup() %>%
+      mutate(value = -value) ->
+      DF_INTRA_REG_TRADE
 
-      # SUA has fewer items and years than the bilateral data set and in addition
-      # there are some small discrepancies zero import/export in SUA vs tiny amounts of trade
-      # in the bilateral.  Doing a left_join here will drop these dependencies which is
-      # what we want.
-      bind_rows(DF_INTRA_REG_TRADE %>% mutate(element = All_Bal_element[All_Bal_element == "Export"]),
-                DF_INTRA_REG_TRADE %>% mutate(element = All_Bal_element[All_Bal_element == "Import"])) %>%
-        rename(TCL = value) %>%
-        right_join(DF_SUA_Agg, by = c("GCAM_region_ID", "item_code", "year", "element")) %>%
-        # equivalent to
-        #left_join(DF_SUA_Agg, ., by=c("GCAM_region_ID", "item_code", "year", "element")) %>%
-        mutate(value = if_else(is.na(TCL), value, value + TCL)) %>%
-        select(-TCL) %>%
-        filter(value != 0.0) ->
-        DF_SUA_Agg_TradeAdj
+    # SUA has fewer items and years than the bilateral data set and in addition
+    # there are some small discrepancies zero import/export in SUA vs tiny amounts of trade
+    # in the bilateral.  Doing a left_join here will drop these dependencies which is
+    # what we want.
+    bind_rows(DF_INTRA_REG_TRADE %>% mutate(element = All_Bal_element[All_Bal_element == "Export"]),
+              DF_INTRA_REG_TRADE %>% mutate(element = All_Bal_element[All_Bal_element == "Import"])) %>%
+      rename(TCL = value) %>%
+      right_join(DF_SUA_Agg, by = c("GCAM_region_ID", "item_code", "year", "element")) %>%
+      # equivalent to
+      #left_join(DF_SUA_Agg, ., by=c("GCAM_region_ID", "item_code", "year", "element")) %>%
+      mutate(value = if_else(is.na(TCL), value, value + TCL)) %>%
+      select(-TCL) %>%
+      filter(value != 0.0) ->
+      DF_SUA_Agg_TradeAdj
 
 
-      # need to remove gross trade when export > production
-      # to maintain triangle the inequality rule
-      # Note that Prod < export is still possivle due to "residuals"
-      DF_SUA_Agg_TradeAdj %>%
-        filter(element %in% c("Production", "Import", "Export")) %>%
-        spread(element, value, fill=0.0) %>%
-        mutate(value = pmax(Production - Export, -Import)) %>%
-        filter(value < 0) %>%
-        select(-Production, -Import, -Export) ->
-        GrossTradeRM
+    # need to remove gross trade when export > production
+    # to maintain triangle the inequality rule
+    # Note that Prod < export is still possivle due to "residuals"
+    DF_SUA_Agg_TradeAdj %>%
+      filter(element %in% c("Production", "Import", "Export")) %>%
+      spread(element, value, fill=0.0) %>%
+      mutate(value = pmax(Production - Export, -Import)) %>%
+      filter(value < 0) %>%
+      select(-Production, -Import, -Export) ->
+      GrossTradeRM
 
-      bind_rows(GrossTradeRM %>% mutate(element = All_Bal_element[All_Bal_element == "Export"]),
-                GrossTradeRM %>% mutate(element = All_Bal_element[All_Bal_element == "Import"]),
-                DF_SUA_Agg_TradeAdj) %>%
-        group_by(GCAM_region_ID, item_code, element, year) %>%
-        summarize(value = sum(value), .groups = "drop") %>%
-        ungroup() ->
-        DF_SUA_Agg_TradeAdj_TriagAdj
+    bind_rows(GrossTradeRM %>% mutate(element = All_Bal_element[All_Bal_element == "Export"]),
+              GrossTradeRM %>% mutate(element = All_Bal_element[All_Bal_element == "Import"]),
+              DF_SUA_Agg_TradeAdj) %>%
+      group_by(GCAM_region_ID, item_code, element, year) %>%
+      summarize(value = sum(value), .groups = "drop") %>%
+      ungroup() ->
+      FAO_SUA_Kt_2010to2019_R
 
-    return(DF_SUA_Agg_TradeAdj_TriagAdj)
-    }
-
-    # 1.2. Execution: regional aggregation ----
-    # Get SUA data ready
-    FAO_SUA_Kt_2010to2019_R <- SUA_Reg_Agg()
 
     Min_SUA_Year <- min(FAO_SUA_Kt_2010to2019_R$year)
     FAO_SUA_Kt_2010to2019 <- GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019
