@@ -45,7 +45,7 @@ gcamfaostat_metadata <- function(DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
                        file.path(DIR_RAW_DATA_FAOSTAT, "metadata_log", "`")))
   rlang::inform("---------------------------------------------------------")
 
-  rlang::inform(paste0("Here is the infomation of FAOSTAT dataset processed in this R package"))
+  rlang::inform(paste0("See returned table for the infomation of FAOSTAT dataset processed in this R package"))
 
   DataCodePrebuilt <-
     PREBUILT_DATA %>% names() %>% strsplit(split = "_") %>% unlist %>%
@@ -65,7 +65,7 @@ gcamfaostat_metadata <- function(DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
     mutate(`FAO size` = round(as.numeric(gsub("KB", "", `FAO size`)) / 1024, digits = 0),
            `FAO size` = paste0(`FAO size`, "MB")) -> metainfo
 
-  print(metainfo)
+  #print(metainfo)
 
   rlang::inform("---------------------------------------------------------")
 

@@ -6,7 +6,7 @@ Date: 2023-05-06
 Authors@R: c(person("Xin", "Zhao", email = "xin.zhao@pnnl.gov", role = c("cre", "aut"), comment = c(ORCID = "0000-0002-1801-4393")),
             person("Maksym", "Chepeliev", role = "aut"),
             person("Pralit", "Patel", role = "aut"),
-            person("Marshall", "wise", role = "aut", comment = c(ORCID = "0000-0002-2718-0051")),
+            person("Marshall", "Wise", role = "aut", comment = c(ORCID = "0000-0002-2718-0051")),
             person("Kanishka", "Narayan", role = "aut", comment = c(ORCID = "0000-0001-8483-6216")),
             person("Chris", "Vernon", role = "aut", comment = c(ORCID = "0000-0002-3406-6214")),
             person("Pacific Northwest National Laboratory", role = "cph"))

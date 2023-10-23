@@ -117,21 +117,19 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">FAOSTAT_metadata</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> function (code = NULL){</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   FAOxml &lt;- XML::xmlParse(xml2::read_xml("http://fenixservices.fao.org/faostat/static/bulkdownloads/datasets_E.xml"))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   metadata &lt;- XML::xmlToDataFrame(FAOxml, stringsAsFactors = FALSE)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   names(metadata) &lt;- tolower(gsub("\\.", "_", names(metadata)))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   # Bug fix for CB; can remove later if FAOSTAT update the link later</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   metadata["CB" == metadata[, "datasetcode"],"filelocation"] &lt;-</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     "https://fenixservices.fao.org/faostat/static/bulkdownloads/CommodityBalances_(non-food)_E_All_Data_(Normalized).zip"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   if (!is.null(code)) {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     metadata &lt;- metadata[code == metadata[, "datasetcode"],]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   return(metadata)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> function (code = NULL) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     FAOxml &lt;- XML::xmlParse(xml2::read_xml("http://fenixservices.fao.org/faostat/static/bulkdownloads/datasets_E.xml"))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     metadata &lt;- XML::xmlToDataFrame(FAOxml, stringsAsFactors = FALSE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     names(metadata) &lt;- tolower(gsub("\\.", "_", names(metadata)))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     metadata["CB" == metadata[, "datasetcode"], "filelocation"] &lt;- "https://fenixservices.fao.org/faostat/static/bulkdownloads/CommodityBalances_(non-food)_E_All_Data_(Normalized).zip"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (!is.null(code)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         metadata &lt;- metadata[code == metadata[, "datasetcode"], </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     return(metadata)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x000000004306e360&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: namespace:gcamfaostat&gt;</span>
 </code></pre></div>
     </div>
@@ -143,7 +141,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall wise, Kanishka Narayan, Chris Vernon.</p>
+  <p></p><p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kanishka Narayan, Chris Vernon.</p>
 </div>
 
 <div class="pkgdown">

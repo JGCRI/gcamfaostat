@@ -22,10 +22,23 @@ knitr::opts_chunk$set(
 
 # Metadata
 
-``` {r, echo=FALSE}
+
+```{r, eval =FALSE}
+gcamfaostat_metadata()
+```
+
+``` {r, echo=FALSE, warning=FALSE, message=FALSE}
 devtools::load_all()
 library(dplyr)
+library(kableExtra)
 gcamfaostat::gcamfaostat_metadata(DIR_RAW_DATA_FAOSTAT = file.path("..", "inst/extdata/aglu/FAO/FAOSTAT")) %>% 
-  select(-`Local file size`)
+  select(-`Local file size`) -> p
+
+p %>%
+  kbl(caption = "FAOSTAT dataset processed in gcamfaostat") %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+
 
 ```
+
+Note that if Exist_Prebuilt is `TRUE` for a dataset, it suggests the raw data was saved in the Prebuilt data. And if Exist_Prebuilt is `TRUE` for all dataset, the package is ready to be built based on the Prebuilt data.The prebuilt data were generated using FAOSTAT data archived in Zenodo address specified in the `FF_download_RemoteArchive` function.

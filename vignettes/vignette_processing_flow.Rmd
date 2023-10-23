@@ -21,3 +21,10 @@ knitr::opts_chunk$set(
 
 ![Figure. Structure of gcamfaostat](../man/figures/Fig_data_processing_flow.jpg) 
 **Figure. Structure of gcamfaostat v1.0.0**
+
+
+`module_xfaostat_L105_DataConnectionToSUA`
+
+
+![Figure. Structure of gcamfaostat](../man/figures/Fig_KeyModule_xfaostat_L105.jpg) 
+**Figure. Structure of gcamfaostat v1.0.0**
