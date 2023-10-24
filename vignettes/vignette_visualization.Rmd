@@ -15,21 +15,31 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Population
+***
+## Population
 
-![Figure. Structure of gcamfaostat](../man/figures/Fig_WorldPopulation.png){width=100%}
+![Wrold population was around 7.4 billion in 2013 - 2017. It has increased to 7.8 billion in 2020 and reached 8 billion in mid-Nov 2022. In 2020, the most populous regions are China (14.4 B), India (13.8 B), USA (3.3 B), Indonesia (2.7 B), Pakistan (2.2 B), Brazil (2.13 B), Nigeria (2.06 B), Bangladesh (1.65 B), Russian Federation (1.46 B) and Mexico (1.3 B).](../man/figures/Fig_WorldPopulation.png){width=100%}
 
 ***  
 
-# Harvested area  
+## Harvested area  
 
-![Figure. Structure of gcamfaostat](../man/figures/Fig_WorldAreaHarvestedRegSector.png){width=100%}
-![Figure. Structure of gcamfaostat](../man/figures/Fig_WorldAreaHarvestedRegSector.png){width=100%}
+![](../man/figures/Fig_WorldAreaHarvested.png){width=100%}
+  
+  
+![](../man/figures/Fig_WorldAreaHarvestedReg.png){width=100%}
 
 ***
-# Code for generating figures
+## Yield growth
 
-## 1. Load package data
+![](../man/figures/Fig_WorldYield.png){width=100%}
+
+
+***
+
+## Code for generating figures
+
+### 1. Load package data
 
 * Load gcamfaostat locally, assuming driver_drake() was run so that data can be loaded from cache.
 ``` {r, , eval =FALSE}
@@ -69,55 +79,12 @@ get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
 ```
 
-* Define a base year period for visualizing cross-sectional data. The mean value will be used (2015 is *GCAM v7* base year)
+* Define a base year period for visualizing cross-sectional data. The mean value will be used. Note that 2013-2017 is used here since 2015 is the *GCAM v7* base year. However, this can be changed to other year(s)
 ``` {r, eval =FALSE}
 BaseYear <- c(2013:2017)
 ```
 
-## 2. Helper functions
-``` {r, eval =FALSE}
-# Wrapper of treemap
-treemap_wrapper <- function(.DF,            # .DF need to have the value col
-                           .Depth = 2,     # Grouping depth of the tree; the columns will be used
-                           .Palette = "Set2", # color
-                           .FigTitle,      # figure title
-                           .SaveName, 
-                           .SaveScaler = 1){
-  
-  assertthat::assert_that(is.data.frame(.DF))
-  assertthat::assert_that(is.character(.SaveName))
-  assertthat::assert_that(is.character(.FigTitle))
-  assertthat::assert_that(.Depth%%1==0)
-  assertthat::assert_that(is.numeric(.SaveScaler))
-  
-  
-  # treemap save to a path
-  png(filename= file.path("man", "figures", paste0(.SaveName,".png")),res = 300, width= 2500 * .SaveScaler, height= 1800 * .SaveScaler )
-  # treemap
-  treemap(.DF,
-          index= names(.DF)[1:.Depth],
-          vSize="value",
-          type="index",
-          fontsize.labels=c(15,12, 9)[1:.Depth],                # size of labels. Give the size per level of aggregation: size for group, size for subgroup, sub-subgroups...
-          fontcolor.labels=c("blue", "black", "grey")[1:.Depth],    # Color of labels
-          fontface.labels=c(2,1),                  # Font of labels: 1,2,3,4 for normal, bold, italic, bold-italic...
-          bg.labels=c("transparent"),              # Background color of labels
-          align.labels=list(
-            c("right", "bottom"),
-            c("center", "center"),
-            c("right", "bottom")
-          )[1:.Depth],                                   # Where to place labels in the rectangle?
-          overlap.labels=0.1,                      # number between 0 and 1 that determines the tolerance of the overlap between labels. 
-          inflate.labels= F,                        # If true, labels are bigger when rectangle is bigger.
-          palette = .Palette,                        # Select your color palette from the RColorBrewer presets or make your own.
-          title = .FigTitle
-  )
-  
-  dev.off()
-}
-
-```
-## 3. Population
+### 2. Population
 * Get data ready
 ``` {r, eval =FALSE}
 # simplify population data
@@ -133,23 +100,22 @@ OA %>% filter(element_code == 511, item_code == 3010) %>%
 ``` {r, eval =FALSE}
 # Figure title
 paste0("World population grouped by GCAM 32 regions, ", min(BaseYear), "-", max(BaseYear), " mean (",
-       round(POP %>% summarize(value = sum(value) / 1000000),1), " Billion)") -> 
-  Title
+       round(POP %>% summarize(value = sum(value) / 1000000),1), " Billion)") -> title
 
-# Apply wrapper 
 treemap_wrapper(
   .DF = POP %>% select(region, area, value), 
   .Depth = 2,
-  .Palette = "YlOrRd",
-  .FigTitle = Title , 
+  .Palette = "YlOrRd", .LastLabelCol = "blue",
+  .FigTitle = title, .FigTitleSize = 16, 
   .SaveName = "Fig_WorldPopulation", 
-  .SaveScaler = 1.2)
+  .SaveScaler = 1.2
+)
 
 ``` 
 * Preview   
 ![Population](../man/figures/Fig_WorldPopulation.png){width=20%}
 
-## 4. Harvested area
+### 3. Harvested area
 * Get data ready
 ```{r, eval =FALSE}
 QCL_CROP_PRIMARY %>% 
@@ -174,15 +140,133 @@ QCL_CROP_PRIMARY %>%
 ```
 
 * Plot and save
+```{r, eval =FALSE}
+paste0("World area harvested grouped by GCAM crops, ", min(BaseYear), "-", max(BaseYear), " mean (",
+       round(Tree_Area_Reg_Sector %>% summarize(value = sum(value) ),0), " Mha)") -> title
+
+treemap_wrapper(
+  .DF = Tree_Area_Reg_Sector %>% select(GCAM_subsector, item, value), 
+  .Depth = 2,
+  .Palette = "Set2",
+  .FigTitle = title, .FigTitleSize = 16, 
+  .SaveName = "Fig_WorldAreaHarvested", 
+  .SaveScaler = 1.1
+)
+
+paste0("World area harvested grouped by GCAM crops and regions, ", min(BaseYear), "-", max(BaseYear), " mean (",
+       round(Tree_Area_Reg_Sector %>% summarize(value = sum(value) ),0), " Mha)") -> title
+
+treemap_wrapper(
+  .DF = Tree_Area_Reg_Sector %>% select(region, GCAM_subsector, item, value), 
+  .Depth = 3,
+  .Palette = "Set2",
+  .FigTitle = title, .FigTitleSize = 20,
+  .SaveName = "Fig_WorldAreaHarvestedReg", 
+  .SaveScaler = 1.6
+)
+```
 
 * Preview   
-![HA](../man/figures/Fig_WorldAreaHarvestedRegSector.png){width=20%}
-![HA](../man/figures/Fig_WorldAreaHarvestedRegSector.png){width=20%}
+![](../man/figures/Fig_WorldAreaHarvested.png){width=20%}
+![](../man/figures/Fig_WorldAreaHarvestedReg.png){width=20%}
 
-## 5. Supply-utilization
+### 4. Yield
+* Get data ready
+```{r, eval =FALSE}
 
-## 6. Trade
+YieldBaseYear = 1990
+QCL_CROP_PRIMARY %>% 
+  # disaggregate dissolved regions in history
+  FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL(SUDAN2012_MERGE = T) %>% 
+  # the iso mapping in AGLU_ctry works good now
+  left_join_error_no_match(AGLU_ctry %>% select(area = FAO_country, iso), by = "area") %>%
+  left_join_error_no_match(iso_GCAM_regID %>% select(iso, GCAM_region_ID), by = "iso") %>%
+  left_join(GCAM_region_names, by = "GCAM_region_ID") %>% 
+  group_by(GCAM_region_ID, region, element, unit, year, item_code) %>% 
+  # aggregate to 32 GCAM regions
+  summarize(value = sum(value), .groups = "drop") %>% 
+  inner_join(
+    FAO_ag_items_PRODSTAT %>%
+      filter(!is.na(item), !is.na(GCAM_commodity)) %>%
+      select(item_code, GCAM_subsector), by = "item_code") %>% 
+  group_by_at(vars(GCAM_region_ID, region, GCAM_subsector, year, element)) %>% 
+  # Aggregate to GCAM sectors
+  summarize(value = sum(value), .groups = "drop") %>% 
+  filter(year %in% c(YieldBaseYear, 2020)) %>% 
+  spread(element, value) %>%
+  filter(`Area harvested` > 0) %>%
+  # Calculate regio-sector yield
+  mutate(Yield = Production / `Area harvested`) %>%
+  gather(element, value, `Area harvested`, Production,  Yield) ->
+  Yield_1990_2020_GCAMRegSector
 
-## 7. Food calories
+Yield_1990_2020_GCAMRegSector %>% 
+  filter(element == "Yield") %>% 
+  group_by_at(vars(-year, -value)) %>%
+  # Calculate growth rate
+  mutate(value = value / first(value)) %>% 
+  filter(!is.na(value)) %>%  filter(year != YieldBaseYear) ->
+  Yield_1990_2020_GCAMRegSector_Growth
+
+Yield_1990_2020_GCAMRegSector_Growth %>% 
+  # Join area to get weight
+  left_join_error_no_match(Yield_1990_2020_GCAMRegSector %>% 
+                             filter(element == "Area harvested") %>% spread(element, value), 
+                           by = c("GCAM_region_ID", "region", "GCAM_subsector", "year")) %>% 
+  group_by_at(vars(GCAM_subsector, year)) %>% 
+  summarize(value = weighted.mean(value, w = `Area harvested`), .groups = "drop")-> 
+  Yield_1990_2020_WorldGCAMSector_Growth_FixdArea
+
+Yield_1990_2020_GCAMRegSector %>% 
+  spread(element, value) %>%
+  group_by_at(vars(GCAM_subsector, year)) %>% 
+  summarize(Production = sum(Production),
+         `Area harvested` = sum(`Area harvested`), .groups = "drop") %>% 
+  mutate(Yield = Production / `Area harvested`) %>%
+  gather(element, value, `Area harvested`, Production,  Yield) %>% 
+  filter(element == "Yield") %>% 
+  group_by_at(vars(-year, -value)) %>% 
+  mutate(value = value / first(value)) %>% 
+  filter(!is.na(value)) %>%  filter(year != YieldBaseYear) ->
+  Yield_1990_2020_WorldGCAMSector_Growth_ChangingArea
+
+# Order sectors
+Yield_1990_2020_WorldGCAMSector_Growth_ChangingArea%>% 
+  arrange(-value)  %>% pull(GCAM_subsector) -> SectorRank
+```
+* Plot and save
+```{r, eval =FALSE}
+Yield_1990_2020_GCAMRegSector_Growth %>% 
+  mutate(GCAM_subsector = factor(GCAM_subsector, levels = SectorRank)) %>%  
+  ggplot() + 
+  geom_boxplot(aes(x = GCAM_subsector, y = value, fill = GCAM_subsector), outlier.size = -1) +
+  geom_line(data = Yield_1990_2020_WorldGCAMSector_Growth_ChangingArea %>% 
+              mutate(GCAM_subsector = factor(GCAM_subsector, levels = SectorRank)),
+             aes(x = GCAM_subsector, y = value, group = year), color = "blue", size = 1.6, alpha = 0.9 ) +
+  geom_point(data = Yield_1990_2020_WorldGCAMSector_Growth_FixdArea,
+             aes(x = GCAM_subsector, y = value), fill = "red", size = 2.5, shape = 21, color = "black" ) +
+  scale_y_continuous(limits = c(0, 3.3)) +
+  labs(y = "1990 = 1", x = "GCAM Crop Sector",
+       title = "Yield change in 1990 - 2020, distribution (Tukey style) across GCAM regions.", 
+       subtitle = "World mean growth (blue line) vs. weighted mean of regional growth (red dots)") +
+  theme_bw() + 
+  theme(text = element_text(size = 16),
+        axis.text = element_text(colour = "black", size = 16),
+        axis.text.x = element_text(angle = 40, hjust = 1, vjust = 1),
+        strip.background = element_rect(fill = "grey90"),
+        legend.position = "none") -> p
+
+ggsave(file.path("man/figures", "WorldYield.png"), p, width = 15, height = 10)
+
+```
+
+* Preview  
+![](../man/figures/Fig_WorldYield.png){width=20%}
+
+### 5. Supply-utilization
+
+### 5. Trade
+
+### 6. Food calories
 
 

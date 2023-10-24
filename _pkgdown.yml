@@ -27,7 +27,7 @@ navbar:
         - text: "Update Sources"
           href: articles/vignette_updating_sources.html
         - text: "User Modifications"
-          href: articles/vignette_user_modifications.html
+          href: articles/vignette_use_cases.html
     - icon: fa-file-image-o
       text: "Visualization"
       href: articles/vignette_visualization.html
@@ -53,27 +53,10 @@ reference:
       - create_datamap_from_cache
   - title: gcamfaostat modules
     contents:
-      - module_xfaostat_L101_RawDataPreProc1_QCL
-      - module_xfaostat_L101_RawDataPreProc2_PP_PD_OA
-      - module_xfaostat_L101_RawDataPreProc3_SCL_FBS
-      - module_xfaostat_L101_RawDataPreProc4_FBSH_CB
-      - module_xfaostat_L101_RawDataPreProc5_TCL
-      - module_xfaostat_L101_RawDataPreProc6_TM
-      - module_xfaostat_L101_RawDataPreProc7_FO
-      - module_xfaostat_L101_RawDataPreProc8_RL_RFN
-      - module_xfaostat_L102_ProductionArea
-      - module_xfaostat_L103_ProducerPrices
-      - module_xfaostat_L104_ProductionAreaAddFodder
-      - module_xfaostat_L105_DataConnectionToSUA
-      - module_xfaostat_L106_FoodMacroNutrient
-      - module_xfaostat_L199_ExportCSV
-      - module_xfaostat_L201_Forestry
-      - module_xfaostat_L301_LandCover
-      - module_xfaostat_L401_Fertilizer
+      - starts_with("module_xfaostat_")
   - title: gcamdata AgLU modules
-    contents:     
-      - module_aglu_L100.FAO_SUA_PrimaryEquivalent
-      - module_aglu_L100.FAO_SUA_connection
+    contents:    
+      - starts_with("module_aglu_")
   - title: gcamfaostat Chunk Helper Functions
     contents: 
       - FAOSTAT_metadata
@@ -95,6 +78,7 @@ reference:
       - output_csv_data 
       - Moving_average      
       - downscale_FAO_country
+      - treemap_wrapper
   - title: Prebuilt data
     contents:
       - GCAM_DATA_MAP

@@ -7,7 +7,7 @@
 # If FALSE, use prebuilt data to load FAO data
 Process_Raw_FAO_Data <- FALSE
 # If TRUE, CSV will be generated and saved to DIR_OUTPUT_CSV
-OUTPUT_Export_CSV <- TRUE
+OUTPUT_Export_CSV <- FALSE
 
 
 # Directories ----

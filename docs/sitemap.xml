@@ -28,6 +28,12 @@
     <loc>https://realxinzhao.github.io/gcamfaostat/articles/vignette_user_modifications.html</loc>
   </url>
   <url>
+    <loc>https://realxinzhao.github.io/gcamfaostat/articles/vignette_use_case.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamfaostat/articles/vignette_use_cases.html</loc>
+  </url>
+  <url>
     <loc>https://realxinzhao.github.io/gcamfaostat/articles/vignette_visualization.html</loc>
   </url>
   <url>
@@ -410,6 +416,9 @@
   </url>
   <url>
     <loc>https://realxinzhao.github.io/gcamfaostat/reference/tibbelize_outputs.html</loc>
+  </url>
+  <url>
+    <loc>https://realxinzhao.github.io/gcamfaostat/reference/treemap_wrapper.html</loc>
   </url>
   <url>
     <loc>https://realxinzhao.github.io/gcamfaostat/reference/verify_identical_prebuilt.html</loc>

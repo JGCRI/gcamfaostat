@@ -8,8 +8,9 @@ articles:
   vignette_processing_flow: vignette_processing_flow.html
   vignette_updating_sources: vignette_updating_sources.html
   vignette_user_modifications: vignette_user_modifications.html
+  vignette_use_cases: vignette_use_cases.html
   vignette_visualization: vignette_visualization.html
-last_built: 2023-10-23T19:19Z
+last_built: 2023-10-24T12:49Z
 urls:
   reference: https://realxinzhao.github.io/gcamfaostat/reference
   article: https://realxinzhao.github.io/gcamfaostat/articles
