@@ -8,7 +8,10 @@
 #' @param .FigTitle Figure title
 #' @param .SaveDir The directory for saving the plot; the default is man/figures.
 #' @param .SaveName Name of the saved png file in .SaveDir
+#' @param .FigTitleSize Size of title font
+#' @param .LastLabelCol Color of the last label
 #' @param .SaveScaler A scaler controling the size (dpi = 300)
+#' @importFrom grDevices dev.off png
 #' @description
 #' See https://cran.r-project.org/web/packages/treemap/index.html for the details of the treemap function
 #'

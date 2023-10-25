@@ -35,6 +35,12 @@ test_that("handles DECLARE_OUTPUTS", {
 test_that("errors if required data not available", {
   chunkdeps <- chunk_inputs()
 
+  # Remove proprocessing or exporting chunks for this test
+  chunkdeps %>%
+    filter(!grepl("CSVExport|RawDataPreProc", name)) ->
+    chunkdeps
+
+
   for(ch in unique(chunkdeps$name)) {
     cl <- call(ch, driver.MAKE, empty_data())
     expect_error(eval(cl), info = ch)

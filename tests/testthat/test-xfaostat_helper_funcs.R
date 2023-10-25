@@ -3,7 +3,7 @@ test_that("helper function work", {
   Curr_Envir <- environment()
 
 
-  expect_type(gcamfaostat_metadata(OnlyReturnDatasetCostRequired = T), "character")
+  expect_type(gcamfaostat_metadata(OnlyReturnDatasetCodeRequired = T), "character")
   expect_type(DIR_RAW_DATA_FAOSTAT, "character")
 
 

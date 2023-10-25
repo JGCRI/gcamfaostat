@@ -25,6 +25,10 @@ treemap_wrapper(
 
 \item{.FigTitle}{Figure title}
 
+\item{.FigTitleSize}{Size of title font}
+
+\item{.LastLabelCol}{Color of the last label}
+
 \item{.SaveDir}{The directory for saving the plot; the default is man/figures.}
 
 \item{.SaveName}{Name of the saved png file in .SaveDir}

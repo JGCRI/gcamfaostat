@@ -422,8 +422,8 @@ extract_prebuilt_data <- function(object_name,
     pb[[object_name]] %>%
       add_comments("** PRE-BUILT **")
   } else {
-    NULL
     warning("Prebuilt data not available; NULL returned")
+    return(NULL)
   }
 }
 

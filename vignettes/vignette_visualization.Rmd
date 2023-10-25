@@ -32,14 +32,24 @@ knitr::opts_chunk$set(
 ***
 ## Yield growth
 
-![](../man/figures/Fig_WorldYield.png){width=100%}
+![Surprisingly, oil palm fruit yield did grow at regional levels (boxplot) in the past 30 years. But world yield increased by ~50% due to the production shift to high-yielding regions. The opposite is true for root and tuber crops](../man/figures/Fig_WorldYield.png){width=100%}
 
+***
+## Supply-utilization
+![Residuals (mostly small) indicate the imbalance in the data, mainly implying the quality of the source data](../man/figures/Fig_WorldSUA.png){width=100%}
+***  
+
+## Food Calories
+
+![](../man/figures/Fig_WorldFoodCalories.png){width=100%}
+![](../man/figures/Fig_WorldFoodCaloriesReg.png){width=100%}
+![Per capita food availability is highly heterogeneous across regions and commodities](../man/figures/Fig_WorldFoodCaloriesRegPcPerDay.png){width=100%}
 
 ***
 
 ## Code for generating figures
 
-### 1. Load package data
+### 0. Load package data
 
 * Load gcamfaostat locally, assuming driver_drake() was run so that data can be loaded from cache.
 ``` {r, , eval =FALSE}
@@ -57,8 +67,10 @@ MODULE_INPUTS <-
     FILE = "common/GCAM_region_names",
     FILE = "common/iso_GCAM_regID",
     FILE = "aglu/AGLU_ctry",
+    "FAO_Food_Macronutrient_All_2010_2019",
     "QCL_CROP_PRIMARY",
     "QCL_FODDERCROP",
+    "Bal_new_all",
     "OA")
 
 ```
@@ -84,7 +96,7 @@ get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 BaseYear <- c(2013:2017)
 ```
 
-### 2. Population
+### 1. Population
 * Get data ready
 ``` {r, eval =FALSE}
 # simplify population data
@@ -115,7 +127,7 @@ treemap_wrapper(
 * Preview   
 ![Population](../man/figures/Fig_WorldPopulation.png){width=20%}
 
-### 3. Harvested area
+### 2. Harvested area
 * Get data ready
 ```{r, eval =FALSE}
 QCL_CROP_PRIMARY %>% 
@@ -170,7 +182,7 @@ treemap_wrapper(
 ![](../man/figures/Fig_WorldAreaHarvested.png){width=20%}
 ![](../man/figures/Fig_WorldAreaHarvestedReg.png){width=20%}
 
-### 4. Yield
+### 3. Yield
 * Get data ready
 ```{r, eval =FALSE}
 
@@ -248,7 +260,8 @@ Yield_1990_2020_GCAMRegSector_Growth %>%
   scale_y_continuous(limits = c(0, 3.3)) +
   labs(y = "1990 = 1", x = "GCAM Crop Sector",
        title = "Yield change in 1990 - 2020, distribution (Tukey style) across GCAM regions.", 
-       subtitle = "World mean growth (blue line) vs. weighted mean of regional growth (red dots)") +
+       subtitle = "World mean growth (blue line) vs. weighted mean of regional growth (red dots)",
+       caption = "Data: FAOSTAT \n Package: JGCRI/gcamfaostat") +
   theme_bw() + 
   theme(text = element_text(size = 16),
         axis.text = element_text(colour = "black", size = 16),
@@ -263,10 +276,168 @@ ggsave(file.path("man/figures", "WorldYield.png"), p, width = 15, height = 10)
 * Preview  
 ![](../man/figures/Fig_WorldYield.png){width=20%}
 
-### 5. Supply-utilization
+### 4. Supply-utilization
 
-### 5. Trade
+* Get data ready
+```{r, eval =FALSE}
+# Define elements and items
+c("Opening stocks", "Import", "Production") -> ElEMSupply
+c("Food", "Feed",  "Processed", "Other uses", "Export", "Closing stocks", "Residuals") -> ELEMDemand
+c(ElEMSupply, ELEMDemand) -> ELEMAll
 
-### 6. Food calories
+c(ElEMSupply, ELEMDemand %>% rev) -> ELEMLevel
+c(paste0("Supply: ", ElEMSupply), paste0("Demand: ", ELEMDemand) %>% rev ) -> ELEMLabel
+c("Maize", "Wheat", "Rice, paddy", "Soybeans", "Potatoes", "Oil palm fruit", "Bananas", "Avocados") -> KeySectorCrops
+
+# These are items from FAO 
+c("Meat, pig", "Meat, chicken", "Eggs, hen, in shell", "Meat, cattle", 
+  "Pelagic Fish", "Freshwater Fish" , "Meat, sheep", "Meat, goat") -> KeySectorMeat
+c(KeySectorCrops, KeySectorMeat) -> SECLevel
+
+# Define color pal.
+c(brewer.pal(n = length(ELEMAll), name = "Spectral")[1:length(ElEMSupply)],
+  brewer.pal(n = length(ELEMAll), name = "Spectral")[length(ElEMSupply)+1:length(ELEMDemand)]
+) -> ColUpdate
+
+
+Bal_new_all %>% 
+  filter(year %in% BaseYear) %>%
+  # Aggregate seed and loss into others
+  mutate(element = replace(element, element %in% c("Seed", "Loss"), "Other uses")) %>% 
+  group_by_at(vars(-value, -area_code, -area)) %>% 
+  summarize(value = sum(value) / 1000, .groups = "drop") %>% 
+  filter(element %in% ELEMAll, item %in% SECLevel) %>% 
+  # year-average
+  group_by_at(vars(-value, -year)) %>% 
+  summarize(value = mean(value), .groups = "drop") %>% 
+  mutate(value = if_else(!element %in% ElEMSupply, -value, value)) %>% 
+  mutate(element = factor(element, levels = ELEMLevel, labels = ELEMLabel),
+         item = factor(item, levels = SECLevel, labels = SECLevel)) %>% 
+  mutate(CropMeat = if_else(item %in% KeySectorCrops, "Crops", "Meat")) ->
+  DF_SUA
+```
+* Plot and save
+```{r, eval =FALSE}
+DF_SUA %>% 
+  ggplot() + facet_wrap(~CropMeat, scales = "free") +
+    geom_bar(aes(x = item, y = value, fill = element),
+             stat = "identity", color = "black", position="stack") +
+  geom_hline(yintercept = 0)+
+  scale_fill_manual(values = c("Supply: Opening stocks" = ColUpdate[1], 
+                               "Supply: Import" = ColUpdate[2], 
+                               "Supply: Production" = ColUpdate[3],
+                               "Demand: Food" = ColUpdate[4],
+                               "Demand: Feed" = ColUpdate[5], 
+                               "Demand: Processed" = ColUpdate[6],
+                               "Demand: Other uses" = ColUpdate[7],
+                               "Demand: Residuals" = ColUpdate[8],
+                               "Demand: Export" = ColUpdate[9],
+                               "Demand: Closing stocks" = ColUpdate[10] ) ) +
+  labs(x = "Key agriculture Commodities",
+       y = "Million tonnes", fill = "Element",
+       title = "World supply utilization for key commodities, 2015 - 2017 mean",
+       subtitle = "Other uses include seed use, losses, and industrial use",
+       caption = "Data: FAOSTAT \n Package: JGCRI/gcamfaostat") +
+  theme_bw() + 
+  theme(text = element_text(size = 16),
+        axis.text = element_text(colour = "black", size = 16),
+        axis.text.x = element_text(angle = 35, hjust = 1, vjust = 1),
+        strip.background = element_rect(fill = "grey100"),
+        strip.text = element_text(size = 16)) -> p;p
+
+ggsave(file.path("man/figures", "Fig_WorldSUA.png"), p, width = 16, height = 10)
+```
+* Preview  
+![](../man/figures/Fig_WorldSUA.png){width=20%}
+
+### 5. Food calories
+* Get data ready
+```{r, eval =FALSE}
+FAO_Food_Macronutrient_All_2010_2019 %>%
+  filter(year %in% BaseYear) %>%
+  # Aggregate to region and GCAM commodity
+  dplyr::group_by_at(vars(GCAM_region_ID, GCAM_commodity, year, macronutrient)) %>%
+  summarise(value = sum(value), .groups = "drop") %>%
+  # Mean over aglu.MODEL_MACRONUTRIENT_YEARS
+  dplyr::group_by_at(vars(-year, -value)) %>%
+  summarise(value = mean(value), .groups = "drop") %>%
+  spread(macronutrient, value) %>%
+  left_join_error_no_match(
+    POP %>% group_by(GCAM_region_ID, region) %>%
+      summarize(POP = sum(value)/1000, .groups = "drop"), # Million
+    by = "GCAM_region_ID"
+  ) %>%
+  # Grouping
+  mutate(MeatCrop = if_else(GCAM_commodity %in%
+                              c("Beef", "SheepGoat", "Dairy", "OtherMeat_Fish", "Pork", "Poultry"), "Meat", "Crop")) %>%
+  mutate(Food = if_else(GCAM_commodity %in%
+                          c("Beef", "SheepGoat"), "Ruminant", "Crops"),
+         Food = if_else(GCAM_commodity %in%  c("OtherMeat_Fish", "Pork", "Poultry"),
+                        "Non-ruminant", Food),
+         Food = if_else(GCAM_commodity %in%  c("Dairy"),
+                        "Dairy", Food),
+         Food = if_else(GCAM_commodity %in% "NEC", "Other processed", Food),
+         Food = if_else(GCAM_commodity %in% c("OilCrop", "Soybean", "OilPalm",  "FiberCrop"), "Oilseed", Food),
+         Food = if_else(GCAM_commodity %in% c("Corn", "Wheat", "Rice", "OtherGrain"), "Cereal grains", Food)) %>%
+  mutate(PcPdKcal = MKcal / POP / 365) ->
+  DF_Macronutrient_FoodItem
+
+```
+
+* Plot and save
+```{r, eval =FALSE}
+DF_Macronutrient_FoodItem %>%
+  summarize(PKcal = sum(MKcal)/10^9) %>%
+  left_join(POP %>% summarize(BPOP = sum(value) / 1000000), by = character()) %>%
+  mutate(PcPdKcal = PKcal / BPOP / 365 * 1000000) -> WorldSTAT
+
+# World level by commodity
+paste0("World food calories availability, ", min(BaseYear), "-", max(BaseYear), " mean (",
+       round(WorldSTAT$PKcal,2), " Peta-Kcal or ", round(WorldSTAT$PcPdKcal, 0)," Kcal/ca/d)") ->
+  title
+treemap_wrapper(
+  .DF = DF_Macronutrient_FoodItem %>% select(Food, GCAM_commodity, value = MKcal),
+  .Depth = 2,
+  .FigTitle = title, .FigTitleSize = 14,
+  .SaveName = "Fig_WorldFoodCalories",
+  .SaveScaler = 1
+)
+
+# By commodity and region
+paste0("World food calories availability by region and commodity, ", min(BaseYear), "-", max(BaseYear), " mean (",
+       round(WorldSTAT$PKcal,2), " Peta-Kcal)") ->
+  title
+treemap_wrapper(
+  .DF = DF_Macronutrient_FoodItem %>% select(region, Food, GCAM_commodity, value = MKcal),
+  .Depth = 3,
+  .FigTitle = title, .FigTitleSize = 18,
+  .SaveName = "Fig_WorldFoodCaloriesReg",
+  .SaveScaler = 1.6
+)
+
+# By commodity and region per ca per day
+paste0("Per ca. per day food calories availability by region and commodity, ",
+       min(BaseYear), "-", max(BaseYear), " mean (world: ", round(WorldSTAT$PcPdKcal, 0)," Kcal/ca/d)") ->
+  title
+treemap_wrapper(
+  .DF = DF_Macronutrient_FoodItem %>% select(region, Food, GCAM_commodity, value = PcPdKcal),
+  .Depth = 3,
+  .FigTitle = title, .FigTitleSize = 20,
+  .SaveName = "Fig_WorldFoodCaloriesRegPcPerDay",
+  .SaveScaler = 1.8
+)
+```
+
+* Preview  
+![](../man/figures/Fig_WorldFoodCalories.png){width=20%}
+![](../man/figures/Fig_WorldFoodCaloriesReg.png){width=20%}
+![](../man/figures/Fig_WorldFoodCaloriesRegPcPerDay.png){width=20%}
+
+### 6. Trade [in process]
+
+### 7. Primary equivalent [in process]
+
+
+
 
 

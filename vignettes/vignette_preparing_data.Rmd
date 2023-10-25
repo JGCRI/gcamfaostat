@@ -24,6 +24,7 @@ knitr::opts_chunk$set(
 
 
 ```{r, eval =FALSE}
+devtools::load_all()
 gcamfaostat_metadata()
 ```
 
@@ -31,8 +32,10 @@ gcamfaostat_metadata()
 devtools::load_all()
 library(dplyr)
 library(kableExtra)
-gcamfaostat::gcamfaostat_metadata(DIR_RAW_DATA_FAOSTAT = file.path("..", "inst/extdata/aglu/FAO/FAOSTAT")) %>% 
+getwd()
+gcamfaostat_metadata(.DIR_RAW_DATA_FAOSTAT = file.path("..", DIR_RAW_DATA_FAOSTAT)) %>% 
   select(-`Local file size`) -> p
+
 
 p %>%
   kbl(caption = "FAOSTAT dataset processed in gcamfaostat") %>% 

@@ -25,7 +25,17 @@ utils::globalVariables(c(
   "is_tibble", "item_code", "item_set", "minimium_extraction_rate", "nest_level",
   "output_specific_extraction_rate", "residual", "set_traded_names", "set_years",
   "share", "sink_item", "sink_item_code", "source_GCAM_region_ID", "source_code",
-  "source_item_code", "value", "value1", "year"))
+  "source_item_code", "value", "value1", "year",
+  "dev.off", "treemap", "png", "run_xml_conversion", "M", "Mt", "Kcalperg",
+  "max_macronutrient_value", "FAO_Food_MacronutrientRate_2010_2019_MaxValue",
+  "proteinperc", "calperg", "MtProtein", "MtFat", "MKcal", "macronutrient",
+  "FAO_Food_Macronutrient_All_2010_2019", "area", "FAO_AgArea_Kha_All", "item",
+  "CropMeat", "FAO_AgProd_Kt_All", "GCAM_region_ID", "region",
+  "Area harvested", "Exist_Local", "Exist_Prebuilt", "FAO size",
+  "FAO_an_items_PRODSTAT", "FAOupdate", "GCAM_AgLU_SUA_APE_1973_2019",
+  "GCAM_DATA_MAP", "GCAM_commodity", "GCAM_region_names", "GCAM_subsector",
+  "Localupdate", "TM", "Tourist", "consumption", "datasetname", "localfilesize",
+  "moving_avg", "remotefilezize", "unit"))
 
 #' find_header
 #'

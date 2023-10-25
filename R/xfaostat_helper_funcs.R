@@ -6,13 +6,13 @@
 
 #' gcamfaostat_metadata: generate metadata information of the input data
 #'
-#' @param DIR_RAW_DATA_FAOSTAT  Path to raw faostat data; default set to DIR_RAW_DATA_FAOSTAT in constants.R
+#' @param .DIR_RAW_DATA_FAOSTAT  Path to raw faostat data; default set to DIR_RAW_DATA_FAOSTAT in constants.R
 #' @param OnlyReturnDatasetCodeRequired If true only required dataset codes are returned
 #'
 #' @return Information of FAOSTAT input dataset
 #' @export
 
-gcamfaostat_metadata <- function(DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
+gcamfaostat_metadata <- function(.DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
                                  OnlyReturnDatasetCodeRequired = FALSE){
 
   assertthat::assert_that(OnlyReturnDatasetCodeRequired == TRUE|OnlyReturnDatasetCodeRequired == FALSE)
@@ -35,14 +35,14 @@ gcamfaostat_metadata <- function(DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
     return(FAO_dataset_code_required)
   }
 
-  DIR_FAOSTAT_METADATA <- file.path(DIR_RAW_DATA_FAOSTAT, "metadata_log")
+  DIR_FAOSTAT_METADATA <- file.path(.DIR_RAW_DATA_FAOSTAT, "metadata_log")
   dir.create(DIR_FAOSTAT_METADATA, showWarnings = F)
 
   # Save a table includes all FAOSTAT data info and links
   fao_metadata <- FAOSTAT_metadata() %>% filter(datasetcode %in% FAO_dataset_code_required)
   readr::write_csv(fao_metadata, file.path(DIR_FAOSTAT_METADATA, paste0("FAOSTAT_METADATA_", Sys.Date(),".csv")))
   rlang::inform(paste0("A Full FAOSTAT metadata downloaded and updated in `",
-                       file.path(DIR_RAW_DATA_FAOSTAT, "metadata_log", "`")))
+                       file.path(.DIR_RAW_DATA_FAOSTAT, "metadata_log", "`")))
   rlang::inform("---------------------------------------------------------")
 
   rlang::inform(paste0("See returned table for the infomation of FAOSTAT dataset processed in this R package"))
@@ -51,7 +51,7 @@ gcamfaostat_metadata <- function(DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
     PREBUILT_DATA %>% names() %>% strsplit(split = "_") %>% unlist %>%
     setdiff(c("wide", "Roundwood", "code", "area", "bilateral", "map"))
 
-  FF_rawdata_info(DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+  FF_rawdata_info(DATA_FOLDER = .DIR_RAW_DATA_FAOSTAT,
                   DATASETCODE = FAO_dataset_code_required,
                   DOWNLOAD_NONEXIST = F) %>% arrange(Localupdate) %>%
     mutate(Exist_Prebuilt = if_else(datasetcode %in% DataCodePrebuilt, TRUE, FALSE),
@@ -212,7 +212,7 @@ FF_rawdata_info <- function(
 
   DIR_RAW_DATA <- isdir <- filelocation <- ctime <- mtime <- FF_metadata <-
     datasetcode <- datasetname <- dateupdate <- Localupdate <- FAOupdate <-
-    filesize <- NULL
+    filesize <- size <- localfilesize <- NULL
 
 
   assertthat::assert_that(is.character(DATASETCODE))
@@ -480,7 +480,9 @@ FAOSTAT_AREA_RM_NONEXIST <- function(.DF,
 #'
 #' @param DF A data frame
 #' @param COL_CNTY Country column name
+#' @param .ENVIR Environment of the DF
 #' @param COL_ITEM Item column name
+#'
 #' @importFrom dplyr summarize
 #' @importFrom  magrittr %>%
 #'

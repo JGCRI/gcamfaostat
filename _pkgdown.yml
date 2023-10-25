@@ -1,4 +1,4 @@
-url: https://realxinzhao.github.io/gcamfaostat/
+url: https://jgcri.github.io/gcamfaostat/
 
 home:
   title: Prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling
@@ -18,7 +18,7 @@ navbar:
     - icon: fas fa-book
       text: "Vignettes"      
       menu:
-        - text: "Getting Started"
+        - text: "Quick Start"
           href: articles/vignette_getting_started.html
         - text: "Preparing Data"
           href: articles/vignette_preparing_data.html
@@ -26,7 +26,7 @@ navbar:
           href: articles/vignette_processing_flow.html
         - text: "Update Sources"
           href: articles/vignette_updating_sources.html
-        - text: "User Modifications"
+        - text: "Use Cases"
           href: articles/vignette_use_cases.html
     - icon: fa-file-image-o
       text: "Visualization"

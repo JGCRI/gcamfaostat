@@ -12,6 +12,8 @@ FF_summary(DF, COL_CNTY = "area", COL_ITEM = "item", .ENVIR = .GlobalEnv)
 \item{COL_CNTY}{Country column name}
 
 \item{COL_ITEM}{Item column name}
+
+\item{.ENVIR}{Environment of the DF}
 }
 \value{
 A data frame with summary information,

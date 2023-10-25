@@ -55,7 +55,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/vignette_getting_started.html">Getting Started</a>
+      <a href="articles/vignette_getting_started.html">Quick Start</a>
     </li>
     <li>
       <a href="articles/vignette_preparing_data.html">Preparing Data</a>
@@ -67,7 +67,7 @@
       <a href="articles/vignette_updating_sources.html">Update Sources</a>
     </li>
     <li>
-      <a href="articles/vignette_use_cases.html">User Modifications</a>
+      <a href="articles/vignette_use_cases.html">Use Cases</a>
     </li>
   </ul>
 </li>
@@ -95,7 +95,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/realxinzhao/gcamfaostat/" class="external-link">
+  <a href="https://github.com/jgcri/gcamfaostat/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -114,26 +114,43 @@
   <div class="contents col-md-9">
 
 <div class="section level1">
-<div class="page-header"><h1 id="gcamfaostat-summary">gcamfaostat summary<a class="anchor" aria-label="anchor" href="#gcamfaostat-summary"></a>
+<div class="page-header"><h1 id="gcamfaostat-an-r-package-to-prepare-process-and-synthesize-faostat-data-for-global-agroeconomic-and-multisector-dynamic-modeling">
+<code>gcamfaostat</code>: An R package to prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling<a class="anchor" aria-label="anchor" href="#gcamfaostat-an-r-package-to-prepare-process-and-synthesize-faostat-data-for-global-agroeconomic-and-multisector-dynamic-modeling"></a>
 </h1></div>
-<p>The <code>gcamfaostat</code> R package to prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling. The Food and Agriculture Organization Statistical Database (<a href="https://www.fao.org/faostat/en/#data" class="external-link">FAOSTAT</a>) provdes open access data on country-level agricultural production, trade, food, nutrients, prices, land use, etc, serving as the most important data source for global agroeconomic and multisector dynamic models. <code>gcamfaostat</code> aims to shorten the distance between the FAOSTAT raw data to economic modeling.</p>
+<div class="section level2">
+<h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
+</h2>
+<p>The <code>gcamfaostat</code> R package is developed to prepare, process, and synthesize <a href="https://www.fao.org/faostat/en/#data" class="external-link">FAOSTAT</a> agroeconomic dataset for global economic and multisector dynamic modeling, in a traceable, transparent, and reproducible manner. Here, we demonstrate the use of the <code>gcamfaostat</code> framework for generating and updating agroeconomic data needed for the Global Change Analysis Model (<a href="https://jgcri.github.io/gcam-doc/toc.html" class="external-link">GCAM</a>). However, our initiative seeks to enhance the quality and accessibility of data for the global agroeconomic modeling community, with the aim of fostering more robust and harmonized outcomes in a collaborative, efficient, open-source manner. The processed data and visualizations in <code>gcamfaostat</code> can be valuable to a broader range of users interested in understanding global agriculture.</p>
+<p>This tool bridges a crucial gap in the literature by offering several key features and capabilities.</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Transparency and Reproducibility</strong>: <code>gcamfaostat</code> incorporates functions for downloading, cleaning, synthesizing, and balancing agroeconomic datasets in a traceable, transparent, and reproducible manner. This enhances the credibility of the processing and allows for better scrutiny of the methods. We have documented and demonstrated the use of the package in generating and updating agroeconomic data needed for the GCAM.<br>
+</li>
+<li>
+<strong>Expandability and Consistency</strong>: gcamfaostat can be used to flexibly process and update agroeconomic data for any agroeconomic model. The package framework is also easy to be expanded to include new modules to consistently process new data.<br>
+</li>
+<li>
+<strong>Community Collaboration and Efficiency</strong>: The package provides an open-source platform for researchers to continually enhance the processing methods. This collaborative approach, which establishes a standardized and streamlined process for data preparation and processing, carries benefits that extend to all modeling groups. By reducing the efforts required for data processing and fostering harmonized base calibration data, it contributes to a reduction in modeling uncertainty and enhances the overall research efficiency.<br>
+</li>
+<li>
+<strong>User Accessibility</strong>: Where applicable, the processed data can be mapped and aggregated to user-specified regions and sectors for agroeconomic modeling. However, beyond the modeling community, <code>gcamfaostat</code> can be valuable to a broader range of users interested in understanding global agriculture trends and dynamics, as it provides accessible and processed data and visualization functions.</li>
+</ol>
 </div>
-<div class="section level1">
-<h1 id="statement-of-need">Statement of Need<a class="anchor" aria-label="anchor" href="#statement-of-need"></a>
-</h1>
+<div class="section level2">
+<h2 id="user-guide">User Guide<a class="anchor" aria-label="anchor" href="#user-guide"></a>
+</h2>
+<p>The package is documented in the <a href="https://jgcri.github.io/gcamfaostat/index.html">online manual</a></p>
+<p>To contribute, see <a href="https://jgcri.github.io/gcamfaostat/CONTRIBUTE.html">contribution guidance</a> ## Contributing</p>
+<p>Please read our <a href="CONTRIBUTING.html">Contributing Guidelines</a> for information on how to contribute to this project.</p>
 <p><img src="reference/figures/Fig_data_processing_flow.jpg" alt="Figure 2. Structure of gcamfaostat"><br><strong>Figure 2. Structure of gcamfaostat</strong></p>
 </div>
-<div class="section level1">
-<h1 id="user-guide">User Guide<a class="anchor" aria-label="anchor" href="#user-guide"></a>
-</h1>
-<p>The package is documented in the <a href="https://realxinzhao.github.io/gcamfaostat/index.html">online manual</a></p>
-</div>
-<div class="section level1">
-<h1 id="download-and-install">Download and install:<a class="anchor" aria-label="anchor" href="#download-and-install"></a>
-</h1>
+<div class="section level2">
+<h2 id="download-and-install">Download and install:<a class="anchor" aria-label="anchor" href="#download-and-install"></a>
+</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"realxinzhao/gcamfaostat"</span><span class="op">)</span></code></pre></div>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"jgcri/gcamfaostat"</span><span class="op">)</span></code></pre></div>
+</div>
 </div>
 <div class="section level1">
 <h1 id="loading-and-run-the-gcamdata-package">Loading and run the gcamdata package<a class="anchor" aria-label="anchor" href="#loading-and-run-the-gcamdata-package"></a>
@@ -157,6 +174,11 @@
 <p>Users can specify the output directory (<code>DIR_OUTPUT_CSV</code>) that stores the output csv files in <code>constants.R</code>. The default directory is <code>outputs/CSV</code>. The the file will be exported when <code>OUTPUT_Export_CSV == TRUE</code> (an option in <code>constants.R</code>).<br>
 Users can also make use of the functions to trace the processing by step, when<code><a href="reference/driver_drake.html">driver_drake()</a></code> is employed.</p>
 </div>
+</div>
+<div class="section level1">
+<h1 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
+</h1>
+<p>Please read the <a href="CONTRIBUTING.html">Contribution Guidelines</a> for details on how to contribute to this project.</p>
 </div>
 <div class="section level1">
 <h1 id="related-publications">Related publications<a class="anchor" aria-label="anchor" href="#related-publications"></a>
@@ -183,8 +205,8 @@ Users can also make use of the functions to trace the processing by step, when<c
     <div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/realxinzhao/gcamfaostat/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/realxinzhao/gcamfaostat/issues" class="external-link">Report a bug</a></li>
+<li><a href="https://github.com/jgcri/gcamfaostat/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/jgcri/gcamfaostat/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -197,13 +219,19 @@ Users can also make use of the functions to trace the processing by step, when<c
 </ul>
 </div>
 
+<div class="community">
+<h2 data-toc-skip>Community</h2>
+<ul class="list-unstyled">
+<li><a href="CONTRIBUTING.html">Contributing guide</a></li>
+</ul>
+</div>
 
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Xin Zhao <br><small class="roles"> Maintainer, author </small> <a href="https://orcid.org/0000-0002-1801-4393" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Maksym Chepeliev <br><small class="roles"> Author </small>  </li>
-<li>Pralit Patel <br><small class="roles"> Author </small>  </li>
+<li>Pralit Patel <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-3992-1061" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Marshall Wise <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-2718-0051" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Kanishka Narayan <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-8483-6216" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Chris Vernon <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-3406-6214" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>

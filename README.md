@@ -1,9 +1,26 @@
 
+# `gcamfaostat`: An R package to prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling
 
-# gcamfaostat summary
-The `gcamfaostat` R package to prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling. The Food and Agriculture Organization Statistical Database ([FAOSTAT](https://www.fao.org/faostat/en/#data)) provdes open access data on country-level agricultural production, trade, food, nutrients, prices, land use, etc, serving as the most important data source for global agroeconomic and multisector dynamic models. `gcamfaostat` aims to shorten the distance between the FAOSTAT raw data to economic modeling.
+## Summary
 
-# Statement of Need
+The `gcamfaostat` R package is developed to prepare, process, and synthesize [FAOSTAT](https://www.fao.org/faostat/en/#data) agroeconomic dataset for global economic and multisector dynamic modeling, in a traceable, transparent, and reproducible manner. Here, we demonstrate the use of the `gcamfaostat` framework for generating and updating agroeconomic data needed for the Global Change Analysis Model ([GCAM](https://jgcri.github.io/gcam-doc/toc.html)). However, our initiative seeks to enhance the quality and accessibility of data for the global agroeconomic modeling community, with the aim of fostering more robust and harmonized outcomes in a collaborative, efficient, open-source manner. The processed data and visualizations in `gcamfaostat` can be valuable to a broader range of users interested in understanding global agriculture.  
+
+This tool bridges a crucial gap in the literature by offering several key features and capabilities.  
+
+1.	**Transparency and Reproducibility**: `gcamfaostat` incorporates functions for downloading, cleaning, synthesizing, and balancing agroeconomic datasets in a traceable, transparent, and reproducible manner. This enhances the credibility of the processing and allows for better scrutiny of the methods. We have documented and demonstrated the use of the package in generating and updating agroeconomic data needed for the GCAM.  
+2.	**Expandability and Consistency**: gcamfaostat can be used to flexibly process and update agroeconomic data for any agroeconomic model. The package framework is also easy to be expanded to include new modules to consistently process new data.     
+3.	**Community Collaboration and Efficiency**: The package provides an open-source platform for researchers to continually enhance the processing methods. This collaborative approach, which establishes a standardized and streamlined process for data preparation and processing, carries benefits that extend to all modeling groups. By reducing the efforts required for data processing and fostering harmonized base calibration data, it contributes to a reduction in modeling uncertainty and enhances the overall research efficiency.  
+4.	**User Accessibility**: Where applicable, the processed data can be mapped and aggregated to user-specified regions and sectors for agroeconomic modeling. However, beyond the modeling community, `gcamfaostat` can be valuable to a broader range of users interested in understanding global agriculture trends and dynamics, as it provides accessible and processed data and visualization functions.
+
+## User Guide
+The package is documented in the [online manual](https://jgcri.github.io/gcamfaostat/index.html)
+
+To contribute, see [contribution guidance](https://jgcri.github.io/gcamfaostat/CONTRIBUTE.html)
+## Contributing
+
+Please read our [Contributing Guidelines](CONTRIBUTING.md) for information on how to contribute to this project.
+
+
 
 
 
@@ -14,15 +31,14 @@ The `gcamfaostat` R package to prepare, process, and synthesize FAOSTAT data for
 **Figure 2. Structure of gcamfaostat**
   
     
-# User Guide
-The package is documented in the [online manual](https://realxinzhao.github.io/gcamfaostat/index.html)
 
 
-# Download and install:
+
+## Download and install:
 
 ```r
 install.packages("devtools")
-devtools::install_github("realxinzhao/gcamfaostat")
+devtools::install_github("jgcri/gcamfaostat")
 ```
 # Loading and run the gcamdata package
 
@@ -46,6 +62,9 @@ See [the documentation](https://jgcri.github.io/gcamdata/reference/driver.html) 
 Users can specify the output directory (`DIR_OUTPUT_CSV`) that stores the output csv files in `constants.R`. The default directory is `outputs/CSV`. The the file will be exported when `OUTPUT_Export_CSV == TRUE` (an option in `constants.R`).  
 Users can also make use of the functions to trace the processing by step, when`driver_drake()` is employed.  
 
+# Contributing
+
+Please read the [Contribution Guidelines](CONTRIBUTING.md) for details on how to contribute to this project.
 
 # Related publications  
 - Bond-Lamberty, Ben, Kalyn Dorheim, Ryna Cui, Russell Horowitz, Abigail Snyder, Katherine Calvin, Leyang Feng et al. "gcamdata: An R package for preparation, synthesis, and tracking of input data for the GCAM integrated human-earth systems model." Journal of Open Research Software 7, no. 1 (2019). DOI: 10.5334/jors.232

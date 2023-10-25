@@ -5,12 +5,12 @@
 \title{gcamfaostat_metadata: generate metadata information of the input data}
 \usage{
 gcamfaostat_metadata(
-  DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
+  .DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
   OnlyReturnDatasetCodeRequired = FALSE
 )
 }
 \arguments{
-\item{DIR_RAW_DATA_FAOSTAT}{Path to raw faostat data; default set to DIR_RAW_DATA_FAOSTAT in constants.R}
+\item{.DIR_RAW_DATA_FAOSTAT}{Path to raw faostat data; default set to DIR_RAW_DATA_FAOSTAT in constants.R}
 
 \item{OnlyReturnDatasetCodeRequired}{If true only required dataset codes are returned}
 }
