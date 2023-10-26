@@ -1,0 +1,36 @@
+on: [push, pull_request]
+
+name: linux
+
+jobs:
+  build:
+
+    runs-on: ubuntu-16.04
+
+    strategy:
+      matrix:
+        r: ['3.6', 'release']
+
+
+    env:
+      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+      RSPM: 'https://packagemanager.rstudio.com/cran/__linux__/xenial/latest'
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: r-lib/actions/setup-r@master
+        with:
+          r-version: ${{ matrix.r }}
+
+      - uses: r-lib/actions/setup-pandoc@master
+
+      - uses: r-lib/actions/setup-tinytex@master
+
+      - name: Install dependencies
+        env:
+          R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+        run: Rscript -e "install.packages(c('remotes', 'rcmdcheck', 'covr'))" -e "remotes::install_deps(dependencies = TRUE)"
+
+      - name: Check
+        run: Rscript -e "rcmdcheck::rcmdcheck(error_on = 'error')"
