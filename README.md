@@ -1,7 +1,6 @@
 <!-- badges: start -->
 [![pages-build-deployment](https://github.com/JGCRI/gcamfaostat/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/JGCRI/gcamfaostat/actions/workflows/pages/pages-build-deployment)
-[![test_coverage](https://github.com/JGCRI/gcamfaostat/actions/workflows/test_coverage.yml/badge.svg?branch=main)](https://github.com/JGCRI/gcamfaostat/actions/workflows/test_coverage.yml)
-[![docs](https://github.com/JGCRI/gcamfaostat/actions/workflows/docs.yaml/badge.svg?branch=main)](https://github.com/JGCRI/gcamfaostat/actions/workflows/docs.yaml)
+[![docs](https://github.com/JGCRI/gcamfaostat/actions/workflows/docs.yaml/badge.svg)](https://github.com/JGCRI/gcamfaostat/actions/workflows/docs.yaml)
 <!-- badges: end -->
 
 ### `gcamfaostat`: An R package to prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling
