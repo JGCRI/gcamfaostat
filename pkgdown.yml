@@ -1,0 +1,16 @@
+pandoc: 2.19.2
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  vignette_getting_started: vignette_getting_started.html
+  vignette_news: vignette_news.html
+  vignette_preparing_data: vignette_preparing_data.html
+  vignette_processing_flow: vignette_processing_flow.html
+  vignette_updating_sources: vignette_updating_sources.html
+  vignette_use_cases: vignette_use_cases.html
+  vignette_visualization: vignette_visualization.html
+last_built: 2023-10-26T19:49Z
+urls:
+  reference: https://jgcri.github.io/gcamfaostat/reference
+  article: https://jgcri.github.io/gcamfaostat/articles
+
