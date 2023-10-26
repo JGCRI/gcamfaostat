@@ -29,11 +29,11 @@ gcamfaostat_metadata()
 ```
 
 ``` {r, echo=FALSE, warning=FALSE, message=FALSE}
-devtools::load_all()
+
+library(gcamfaostat)
 library(dplyr)
 library(kableExtra)
-getwd()
-gcamfaostat_metadata(.DIR_RAW_DATA_FAOSTAT = file.path("..", DIR_RAW_DATA_FAOSTAT)) %>% 
+gcamfaostat_metadata(.DIR_RAW_DATA_FAOSTAT = file.path("..", "inst/extdata/aglu/FAO/FAOSTAT")) %>% 
   select(-`Local file size`) -> p
 
 

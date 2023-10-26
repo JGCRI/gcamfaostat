@@ -16,7 +16,7 @@ jobs:
       - name: Set up R
         uses: r-lib/actions/setup-r@v1
         with:
-          r-version: 4.1
+          r-version: 4.0
 
       - name: Install dependencies
         run: R -e 'install.packages(c("devtools", "roxygen2"))'
