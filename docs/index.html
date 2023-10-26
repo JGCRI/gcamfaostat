@@ -55,7 +55,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/vignette_getting_started.html">Quick Start</a>
+      <a href="articles/vignette_getting_started.html">Getting Started</a>
     </li>
     <li>
       <a href="articles/vignette_preparing_data.html">Preparing Data</a>
@@ -113,13 +113,15 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<div class="section level1">
-<div class="page-header"><h1 id="gcamfaostat-an-r-package-to-prepare-process-and-synthesize-faostat-data-for-global-agroeconomic-and-multisector-dynamic-modeling">
+
+<div class="section level3">
+<h3 id="gcamfaostat-an-r-package-to-prepare-process-and-synthesize-faostat-data-for-global-agroeconomic-and-multisector-dynamic-modeling">
 <code>gcamfaostat</code>: An R package to prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling<a class="anchor" aria-label="anchor" href="#gcamfaostat-an-r-package-to-prepare-process-and-synthesize-faostat-data-for-global-agroeconomic-and-multisector-dynamic-modeling"></a>
-</h1></div>
-<div class="section level2">
-<h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
-</h2>
+</h3>
+</div>
+<div class="section level3">
+<h3 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
+</h3>
 <p>The <code>gcamfaostat</code> R package is developed to prepare, process, and synthesize <a href="https://www.fao.org/faostat/en/#data" class="external-link">FAOSTAT</a> agroeconomic dataset for global economic and multisector dynamic modeling, in a traceable, transparent, and reproducible manner. Here, we demonstrate the use of the <code>gcamfaostat</code> framework for generating and updating agroeconomic data needed for the Global Change Analysis Model (<a href="https://jgcri.github.io/gcam-doc/toc.html" class="external-link">GCAM</a>). However, our initiative seeks to enhance the quality and accessibility of data for the global agroeconomic modeling community, with the aim of fostering more robust and harmonized outcomes in a collaborative, efficient, open-source manner. The processed data and visualizations in <code>gcamfaostat</code> can be valuable to a broader range of users interested in understanding global agriculture.</p>
 <p>This tool bridges a crucial gap in the literature by offering several key features and capabilities.</p>
 <ol style="list-style-type: decimal">
@@ -135,54 +137,94 @@
 <li>
 <strong>User Accessibility</strong>: Where applicable, the processed data can be mapped and aggregated to user-specified regions and sectors for agroeconomic modeling. However, beyond the modeling community, <code>gcamfaostat</code> can be valuable to a broader range of users interested in understanding global agriculture trends and dynamics, as it provides accessible and processed data and visualization functions.</li>
 </ol>
+<hr>
 </div>
-<div class="section level2">
-<h2 id="user-guide">User Guide<a class="anchor" aria-label="anchor" href="#user-guide"></a>
-</h2>
+<div class="section level3">
+<h3 id="user-guide">User Guide<a class="anchor" aria-label="anchor" href="#user-guide"></a>
+</h3>
 <p>The package is documented in the <a href="https://jgcri.github.io/gcamfaostat/index.html">online manual</a></p>
-<p>To contribute, see <a href="https://jgcri.github.io/gcamfaostat/CONTRIBUTE.html">contribution guidance</a> ## Contributing</p>
+<ul>
+<li><a href="https://jgcri.github.io/gcamfaostat/articles/vignette_getting_started.html">Getting Started</a></li>
+<li><a href="https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html">Preparing Data</a></li>
+<li><a href="https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html">Processing Flow</a></li>
+<li><a href="https://jgcri.github.io/gcamfaostat/articles/vignette_updating_sources.html">Update Sources</a></li>
+<li><a href="https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html">Other Use Cases</a></li>
+<li><a href="https://jgcri.github.io/gcamfaostat/reference/index.html">Functions</a></li>
+<li><a href="https://jgcri.github.io/gcamfaostat/articles/vignette_visualization.html">Visualization</a></li>
+<li><a href="https://jgcri.github.io/gcamfaostat/articles/vignette_news.html">News</a></li>
+</ul>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="quick-start-in-r--40--rstudio">Quick Start in R (&gt; 4.0) &amp; Rstudio<a class="anchor" aria-label="anchor" href="#quick-start-in-r--40--rstudio"></a>
+</h3>
+<div class="section level4">
+<h4 id="id_1-download-and-install">1. Download and install:<a class="anchor" aria-label="anchor" href="#id_1-download-and-install"></a>
+</h4>
+<ul>
+<li>Using <code>devtools</code> to download and install (The size &lt; 1 GB):</li>
+<li><code>devtools::install_github("jgcri/gcamfaostat")</code></li>
+</ul>
+</div>
+<div class="section level4">
+<h4 id="id_2-load-and-run-the-gcamdata-package">2. Load and run the gcamdata package<a class="anchor" aria-label="anchor" href="#id_2-load-and-run-the-gcamdata-package"></a>
+</h4>
+<ul>
+<li>Open the <code>gcamfaostat.Rproj</code> file in the <code>gcamfaostat</code> folder using RStudio.</li>
+<li>Load the <code>gcamdata</code> package:</li>
+<li><code><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">devtools::load_all()</a></code></li>
+</ul>
+</div>
+<div class="section level4">
+<h4 id="id_3-modify-configurations">3. Modify configurations<a class="anchor" aria-label="anchor" href="#id_3-modify-configurations"></a>
+</h4>
+<ul>
+<li>To export csv output files, in <code>constants.R</code>,
+<ul>
+<li>set <code>OUTPUT_Export_CSV</code> to <code>TRUE</code>
+</li>
+<li>specify the directory path (<code>DIR_OUTPUT_CSV</code>) for output files.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section level4">
+<h4 id="id_4-run-the-driver">4. Run the driver<a class="anchor" aria-label="anchor" href="#id_4-run-the-driver"></a>
+</h4>
+<ul>
+<li><code><a href="reference/driver_drake.html">driver_drake()</a></code></li>
+</ul>
+</div>
+<div class="section level4">
+<h4 id="id_5-use-data-and-package-functions">5. Use data and package functions<a class="anchor" aria-label="anchor" href="#id_5-use-data-and-package-functions"></a>
+</h4>
+<ul>
+<li>Data saved in <code>DIR_OUTPUT_CSV</code> can be used in downstream models.</li>
+<li>Once <code>drive_drake</code> has been run, all the intermediate data are saved and can be explored (see examples in <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html">Use Cases</a> and <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_visualization.html">Visualization</a>.</li>
+</ul>
+<hr>
+</div>
+</div>
+<div class="section level3">
+<h3 id="package-structure">Package structure<a class="anchor" aria-label="anchor" href="#package-structure"></a>
+</h3>
+<ul>
+<li>
+<code>gcamfaostat</code> processes <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html#metadata">input data</a> to output data in a format that is needed for downstream processing and modeling, e.g., <a href="https://github.com/JGCRI/gcam-core/tree/master/input/gcamdata/inst/extdata/aglu/FAO" class="external-link">data used in gcamdata-aglu-FAO</a> (see the schematic below).</li>
+<li>Input data was stored in the <a href="https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda" class="external-link">Prebuilt Data</a> of the package. The raw data is archived on Zenodo (see URL in the <a href="https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#L144" class="external-link"><code>FF_download_RemoteArchive</code></a> function) to ensure the processing is 100% replicable. Users can also download the latest data using <a href="https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#90" class="external-link"><code>FF_download_FAOSTAT</code></a>.</li>
+<li>All intermediate processing and data flows are transparent and traceable. See <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html">Processing Flow</a> for data-tracing examples.</li>
+</ul>
+<p><img src="reference/figures/Fig_data_processing_flow.jpg" style="width:90.0%"><br>
+Schmatic: module (data processing chunk) structure of gcamfaostat</p>
+</div>
+<div class="section level3">
+<h3 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
+</h3>
 <p>Please read our <a href="CONTRIBUTING.html">Contributing Guidelines</a> for information on how to contribute to this project.</p>
-<p><img src="reference/figures/Fig_data_processing_flow.jpg" alt="Figure 2. Structure of gcamfaostat"><br><strong>Figure 2. Structure of gcamfaostat</strong></p>
 </div>
-<div class="section level2">
-<h2 id="download-and-install">Download and install:<a class="anchor" aria-label="anchor" href="#download-and-install"></a>
-</h2>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"jgcri/gcamfaostat"</span><span class="op">)</span></code></pre></div>
-</div>
-</div>
-<div class="section level1">
-<h1 id="loading-and-run-the-gcamdata-package">Loading and run the gcamdata package<a class="anchor" aria-label="anchor" href="#loading-and-run-the-gcamdata-package"></a>
-</h1>
-<p>Open the <code>gcamfaostat.Rproj</code> file in the <code>gcamfaostat</code> folder. RStudio should open the project.</p>
-<p>To load the <code>gcamdata</code> package, enter:</p>
-<p><code><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">devtools::load_all()</a></code></p>
-<div class="section level2">
-<h2 id="run-the-driver">Run the driver<a class="anchor" aria-label="anchor" href="#run-the-driver"></a>
-</h2>
-<p>There are two ways to run the driver: 1. <code><a href="reference/driver_drake.html">driver_drake()</a></code></p>
-<p><code><a href="reference/driver_drake.html">driver_drake()</a></code> runs the driver and stores the outputs in a hidden cache. When you run <code><a href="reference/driver_drake.html">driver_drake()</a></code> again it will skip steps that are up-to-date. This is useful if you will be adjusting the data inputs and code and running the data system multiple times. For this reason, we almost always recommend using <code><a href="reference/driver_drake.html">driver_drake()</a></code>. More details can be found in the <a href="https://jgcri.github.io/gcamdata/articles/driverdrake_vignette.html" class="external-link">vignette</a>.</p>
-<ol start="2" style="list-style-type: decimal">
-<li><code><a href="reference/driver.html">driver()</a></code></li>
-</ol>
-<p>See <a href="https://jgcri.github.io/gcamdata/reference/driver.html" class="external-link">the documentation</a> for more options when running the driver, such as what outputs to generate or when to stop.</p>
-</div>
-<div class="section level2">
-<h2 id="output-files">Output files<a class="anchor" aria-label="anchor" href="#output-files"></a>
-</h2>
-<p>Users can specify the output directory (<code>DIR_OUTPUT_CSV</code>) that stores the output csv files in <code>constants.R</code>. The default directory is <code>outputs/CSV</code>. The the file will be exported when <code>OUTPUT_Export_CSV == TRUE</code> (an option in <code>constants.R</code>).<br>
-Users can also make use of the functions to trace the processing by step, when<code><a href="reference/driver_drake.html">driver_drake()</a></code> is employed.</p>
-</div>
-</div>
-<div class="section level1">
-<h1 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
-</h1>
-<p>Please read the <a href="CONTRIBUTING.html">Contribution Guidelines</a> for details on how to contribute to this project.</p>
-</div>
-<div class="section level1">
-<h1 id="related-publications">Related publications<a class="anchor" aria-label="anchor" href="#related-publications"></a>
-</h1>
+<div class="section level3">
+<h3 id="related-publications">Related publications<a class="anchor" aria-label="anchor" href="#related-publications"></a>
+</h3>
 <ul>
 <li>Bond-Lamberty, Ben, Kalyn Dorheim, Ryna Cui, Russell Horowitz, Abigail Snyder, Katherine Calvin, Leyang Feng et al. “gcamdata: An R package for preparation, synthesis, and tracking of input data for the GCAM integrated human-earth systems model.” Journal of Open Research Software 7, no. 1 (2019). DOI: 10.5334/jors.232</li>
 <li>Calvin, Katherine V., Abigail Snyder, Xin Zhao, and Marshall Wise. “Modeling land use and land cover change: using a hindcast to estimate economic parameters in gcamland v2. 0.” Geoscientific Model Development 15, no. 2 (2022): 429-447. <a href="https://doi.org/10.5194/gmd-15-429-2022" class="external-link uri">https://doi.org/10.5194/gmd-15-429-2022</a>

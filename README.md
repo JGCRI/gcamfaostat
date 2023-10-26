@@ -1,6 +1,5 @@
 <!-- badges: start -->
 [![pages-build-deployment](https://github.com/JGCRI/gcamfaostat/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/JGCRI/gcamfaostat/actions/workflows/pages/pages-build-deployment)
-[![build](https://github.com/JGCRI/gcamfaostat/workflows/build/badge.svg)](https://github.com/JGCRI/gcamfaostat/workflows/build/badge.svg?branch=main)
 [![test_coverage](https://github.com/JGCRI/gcamfaostat/actions/workflows/test_coverage.yml/badge.svg?branch=main)](https://github.com/JGCRI/gcamfaostat/actions/workflows/test_coverage.yml)
 [![docs](https://github.com/JGCRI/gcamfaostat/actions/workflows/docs.yaml/badge.svg?branch=main)](https://github.com/JGCRI/gcamfaostat/actions/workflows/docs.yaml)
 <!-- badges: end -->
@@ -23,6 +22,16 @@ This tool bridges a crucial gap in the literature by offering several key featur
 ### User Guide
 The package is documented in the [online manual](https://jgcri.github.io/gcamfaostat/index.html)
 
+* [Getting Started](https://jgcri.github.io/gcamfaostat/articles/vignette_getting_started.html)
+* [Preparing Data](https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html)
+* [Processing Flow](https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html)
+* [Update Sources](https://jgcri.github.io/gcamfaostat/articles/vignette_updating_sources.html)
+* [Other Use Cases](https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html) 
+* [Functions](https://jgcri.github.io/gcamfaostat/reference/index.html)
+* [Visualization](https://jgcri.github.io/gcamfaostat/articles/vignette_visualization.html)
+* [News](https://jgcri.github.io/gcamfaostat/articles/vignette_news.html)
+
+
 ***
 
 ### Quick Start in R (> 4.0) & Rstudio
@@ -41,7 +50,7 @@ The package is documented in the [online manual](https://jgcri.github.io/gcamfao
 #### 3. Modify configurations
 * To export csv output files, in `constants.R`, 
   * set `OUTPUT_Export_CSV` to `TRUE`
-  * specify the directory path (`DIR_OUTPUT_CSV`) for output files; the default is  `output/gcamfaostat_csv_output`.
+  * specify the directory path (`DIR_OUTPUT_CSV`) for output files.
 
 #### 4. Run the driver
 * `driver_drake()` 
