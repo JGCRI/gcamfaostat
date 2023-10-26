@@ -17,6 +17,14 @@ knitr::opts_chunk$set(
 
 
 # October updates
+2023-10-25 
+ToDo before JOSS submission
+* Check package license (PNNL)
+* Check Zenodo license for FAOSTAT data [*Done*: `CC BY-NC-SA`]
+* Adding contribution.MD and Community side-bar [*Done*]
+
+* Test & Check; Adding GitHub tests/logos 
+
 2023-10-24 
 * Visualization Page is live now
 * `gcamfaostat` moved to the JGCRI GitHub account

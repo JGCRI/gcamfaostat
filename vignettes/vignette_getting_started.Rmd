@@ -120,4 +120,22 @@ See [the documentation](https://jgcri.github.io/gcamdata/reference/driver.html) 
 
 
 
+## Output files  
+Users can specify the output directory (`DIR_OUTPUT_CSV`) that stores the output csv files in `constants.R`. The default directory is `outputs/CSV`. The the file will be exported when `OUTPUT_Export_CSV == TRUE` (an option in `constants.R`).  
+Users can also make use of the functions to trace the processing by step, when`driver_drake()` is employed.  
+
+
+
+There are two ways to run the driver: 
+1. `driver_drake()`  
+
+`driver_drake()` runs the driver and stores the outputs in a hidden cache. When you run `driver_drake()` again it will skip steps that are up-to-date. This is useful if you will be adjusting the data inputs and code and running the data system multiple times. For this reason, we almost always recommend using `driver_drake()`. More details can be found in the [vignette](https://jgcri.github.io/gcamdata/articles/driverdrake_vignette.html).
+
+2. `driver()`  
+
+See [the documentation](https://jgcri.github.io/gcamdata/reference/driver.html) for more options when running the driver, such as what outputs to generate or when to stop.
+
+
+
+
 # References 
