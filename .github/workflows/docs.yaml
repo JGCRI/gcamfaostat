@@ -33,7 +33,7 @@ jobs:
       
       - name: Install dependencies
         run: |
-          install.packages(c("remotes","rcmdcheck"), repos = "https://cloud.r-project.org")
+          install.packages(c("remotes","rcmdcheck", "kableExtra"), repos = "https://cloud.r-project.org")
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
 
