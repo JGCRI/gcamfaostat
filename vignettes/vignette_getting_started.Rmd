@@ -17,18 +17,26 @@ knitr::opts_chunk$set(
 ```
 
 
-# 
+## Introduction
+
+Global economic and multisector dynamic models have become pivotal tools for investigating complex interactions between human activities and the environment, as evident in recent research [@Doelman2022Quantifying;@Fujimori2022Land-based;@IPCC2022Annex;@Ven2023multimodel]. Agriculture and land use (AgLU) plays a critical role in these models, particularly when used to address key agroeconomics questions [@Graham2023Agricultural;@Yarlagadda2023Trade;@Zhang2023Agriculture;@Zhao2021Global;@Zhao2020critical]. Sound economic modeling hinges significantly upon the accessibility and quality of data [@Bruckner2019FABIO;@Calvin2022GMD;@Chepeliev2022JGEA]. The Food and Agriculture Organization Statistical Database (FAOSTAT) [@FAOSTAT2023FAOSTAT] serves as the most important data source, offering open-access data on country-level agricultural production, land use, trade, food consumption, nutrient content, prices, and more. However, the raw data from FAOSTAT requires cleaning, balancing, and synthesis, involving assumptions such as interpolation and mapping, which can introduce uncertainties. It is noteworthy that each agroeconomic modeling team typically develops its own assumptions and methods to prepare and process FAOSTAT data [@bond2019gcamdata]. While largely overlooked, the uncertainty in the base calibration data likely contributed to the disparities in model outcomes [@Lampe2014AgMIP;@zhao2021role]. Hence, our motivation is to create an open-source tool (`gcamfaostat`) for the preparation, processing, and synthesis of FAOSTAT data for global agroeconomic modeling.  The tool can also be valuable to a broader range of users interested in understanding global agriculture trends and dynamics, as it provides accessible and processed data and [visualization](https://jgcri.github.io/gcamfaostat/articles/vignette_visualization.html) functions.
 
 
-# gcamdata and gcamfaostat
-`gcamdata` [@bond_lamberty_2023]
+## gcamfaostat, gcamdata, GCAM, and the broader modeling community
+
+`gcamdata` [@bond_lamberty_2023] 
+
+Figure 1  shows the relationship between `gcamfaostat` and `gcamdata` with example modules of each packages presented.
+
+![Figure 1. Original framework of using FAOSTAT data in large-scale modeling](../man/figures/Fig_FAOSTAT_gcamdata.jpg){width=85%} 
 
 
 
 
 Figure 1  shows the relationship between `gcamfaostat` and `gcamdata` with example modules of each packages presented.
 
-![Figure 1. Relationship between gcamfaostat and gcamdata](../man/figures/Fig_gcamfaostat_and_gcamdata.jpg) 
+![Figure 2. New framework using `gcamfaostat` to process FAOSTAT data](../man/figures/Fig_gcamfaostat_and_gcamdata.jpg){width=95%} 
+
 **Figure 1. Relationship between `gcamfaostat` and `gcamdata`.** Modules with identifier `_xfaostat_` only exists in `gcamfaostat`. Agriculture and land use (AgLU) related modules (`_aglu_`) that rely on outputs from `gcamfaostat` can run in both packages. Other `gcamdata` modules processing data in areas such as energy, emissions, water, and socioeconomics only exist in `gcamdata`.  
 
 

@@ -1,4 +1,5 @@
 <!-- badges: start -->
+[![pages-build-deployment](https://github.com/JGCRI/gcamfaostat/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/JGCRI/gcamfaostat/actions/workflows/pages/pages-build-deployment)
 [![build](https://github.com/JGCRI/gcamfaostat/workflows/build/badge.svg)](https://github.com/JGCRI/gcamfaostat/workflows/build/badge.svg?branch=main)
 [![test_coverage](https://github.com/JGCRI/gcamfaostat/actions/workflows/test_coverage.yml/badge.svg?branch=main)](https://github.com/JGCRI/gcamfaostat/actions/workflows/test_coverage.yml)
 [![docs](https://github.com/JGCRI/gcamfaostat/actions/workflows/docs.yaml/badge.svg?branch=main)](https://github.com/JGCRI/gcamfaostat/actions/workflows/docs.yaml)
@@ -24,7 +25,7 @@ The package is documented in the [online manual](https://jgcri.github.io/gcamfao
 
 ***
 
-### Quick Start
+### Quick Start in R (> 4.0) & Rstudio
 
 #### 1. Download and install:
 
@@ -54,7 +55,7 @@ The package is documented in the [online manual](https://jgcri.github.io/gcamfao
 ### Package structure
 
 
-* `gcamfaostat` processes [input data](https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html#metadata) to output data in a format that is needed for downstream processing and modeling, e.g., [data used in gcamdata-aglu-FAO](https://github.com/JGCRI/gcam-core/tree/master/input/gcamdata/inst/extdata/aglu/FAO) (see the schmatic below).
+* `gcamfaostat` processes [input data](https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html#metadata) to output data in a format that is needed for downstream processing and modeling, e.g., [data used in gcamdata-aglu-FAO](https://github.com/JGCRI/gcam-core/tree/master/input/gcamdata/inst/extdata/aglu/FAO) (see the schematic below).
 * Input data was stored in the [Prebuilt Data](https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda) of the package. The raw data is archived on Zenodo (see URL in the [`FF_download_RemoteArchive`](https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#L144) function) to ensure the processing is 100% replicable. Users can also download the latest data using [`FF_download_FAOSTAT`](https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#90). 
 * All intermediate processing and data flows are transparent and traceable. See [Processing Flow](https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html) for data-tracing examples. 
 
