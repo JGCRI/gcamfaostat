@@ -115,7 +115,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Updating source data using gcamfaostat</h1>
             
-            <h4 data-toc-skip class="date">2023-10-26</h4>
+            <h4 data-toc-skip class="date">2023-10-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_updating_sources.Rmd" class="external-link"><code>vignettes/vignette_updating_sources.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_updating_sources.Rmd</code></div>
@@ -124,12 +124,43 @@
 
     
     
-
+<div class="section level2">
+<h2 id="raw-faostat-update">Raw FAOSTAT update<a class="anchor" aria-label="anchor" href="#raw-faostat-update"></a>
+</h2>
+<div class="section level3">
+<h3 id="base-year-update">Base year update<a class="anchor" aria-label="anchor" href="#base-year-update"></a>
+</h3>
+</div>
+</div>
+<div class="section level2">
+<h2 id="adding-model-specfic-data-export-modules">Adding model-specfic data export modules<a class="anchor" aria-label="anchor" href="#adding-model-specfic-data-export-modules"></a>
+</h2>
+</div>
+<div class="section level2">
+<h2 id="adding-new-faostat-data-processing-modules">Adding new FAOSTAT data processing modules<a class="anchor" aria-label="anchor" href="#adding-new-faostat-data-processing-modules"></a>
+</h2>
+<p>Currently, gcam</p>
+<p><a href="https://jgcri.github.io/gcamdata/articles/changing-the-data-system/index.html" class="external-link">data
+system changes</a> <a href="https://jgcri.github.io/gcamdata/articles/usermod_vignette.html" class="external-link">User
+modification</a></p>
+</div>
+<div class="section level2">
+<h2 id="user-modification">User modification<a class="anchor" aria-label="anchor" href="#user-modification"></a>
+</h2>
+<p>Users may want to change the default gcamdata behavior by either
+modifying input assumptions or changing intermediate chunks. They can
+now write a “user modification” chunk that can be “plugged in” to the
+data system. This new chunk can modify any objects that are used or
+created in gcamdata and pass the modified object to all dependent
+chunks.</p>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 

@@ -115,7 +115,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Use Cases</h1>
             
-            <h4 data-toc-skip class="date">2023-10-26</h4>
+            <h4 data-toc-skip class="date">2023-10-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_use_cases.Rmd" class="external-link"><code>vignettes/vignette_use_cases.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_use_cases.Rmd</code></div>
@@ -125,101 +125,11 @@
     
     
 <div class="section level2">
-<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+<h2 id="running-gcamfaostat-with-drake">Running gcamfaostat with drake<a class="anchor" aria-label="anchor" href="#running-gcamfaostat-with-drake"></a>
 </h2>
-<p>Users may want to change the default gcamdata behavior by either
-modifying input assumptions or changing intermediate chunks. They can
-now write a “user modification” chunk that can be “plugged in” to the
-data system. This new chunk can modify any objects that are used or
-created in gcamdata and pass the modified object to all dependent
-chunks.</p>
-<p>User-modification chunks have a format similar to other data chunks
-in gcamdata, except that instead of producing a new output, it returns a
-modified data object that replaces the original data object in the data
-system. These new chunks can be added to <code><a href="../reference/driver_drake.html">driver_drake()</a></code> or
-<code><a href="../reference/driver.html">driver()</a></code> using the new arguments
-<code>user_modifications</code> and <code>xml_suffix</code>, which tell
-gcamdata which modification function to use and what suffix to add to
-all impacted downstream xmls.</p>
-</div>
-<div class="section level2">
-<h2 id="example-modify-shareweight">Example: Modify Shareweight<a class="anchor" aria-label="anchor" href="#example-modify-shareweight"></a>
-</h2>
-<p>Below we show an example user-modification chunk to change a
-shareweight in an input csv file.</p>
-<div class="section level3">
-<h3 id="user-modification-chunk">User Modification Chunk<a class="anchor" aria-label="anchor" href="#user-modification-chunk"></a>
-</h3>
-<p>Here we load in two csv files, “energy/A322.subsector_shrwt.csv” and
-“common/GCAM_region_names.csv”. We modify A322.subsector_shrwt, so we
-list it under <code>driver.DECLARE_MODIFY</code>, but do not modify
-GCAM_region_names, so it is listed under
-<code>driver.DECLARE_INPUTS</code>. Then, we set the shareweight column
-of the first row of A322.subsector_shrwt to <code>NEW.SHWT</code>.
-Finally, we use a new <code>return_modified()</code> function to return
-the modified A322.subsector_shrwt (note that we have to include the path
-for input files).</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">usermod_fert</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">command</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span>
-  <span class="kw">if</span><span class="op">(</span><span class="va">command</span> <span class="op">==</span> <span class="va">driver.DECLARE_MODIFY</span><span class="op">)</span> <span class="op">{</span>
-    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>FILE <span class="op">=</span> <span class="st">"energy/A322.subsector_shrwt"</span><span class="op">)</span><span class="op">)</span>
-  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span><span class="op">(</span><span class="va">command</span> <span class="op">==</span> <span class="va">driver.DECLARE_INPUTS</span><span class="op">)</span> <span class="op">{</span>
-    <span class="co"># In addition to the objects users want to modify we can also ask for any other</span>
-    <span class="co"># inputs we need to do our operations but won't be modified</span>
-    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>FILE <span class="op">=</span> <span class="st">"common/GCAM_region_names"</span><span class="op">)</span><span class="op">)</span>
-  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span><span class="op">(</span><span class="va">command</span> <span class="op">==</span> <span class="va">driver.MAKE</span><span class="op">)</span> <span class="op">{</span>
-    <span class="va">all_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
-    <span class="va">GCAM_region_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_data.html">get_data</a></span><span class="op">(</span><span class="va">all_data</span>, <span class="st">"common/GCAM_region_names"</span><span class="op">)</span>
-    <span class="va">A322.subsector_shrwt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_data.html">get_data</a></span><span class="op">(</span><span class="va">all_data</span>, <span class="st">"energy/A322.subsector_shrwt"</span><span class="op">)</span>
-
-    <span class="co"># Users could also read in additional files that exist outside of the data system</span>
-    <span class="co"># They should do that manually instead of through the driver.DECLARE_INPUTS so as to</span>
-    <span class="co"># avoid mixing user's custom files with Core files</span>
-    <span class="co"># A23.globaltech_eff.mine &lt;- read_csv("/path/to/my/custom/A23.globaltech_eff_with_random_changes.csv")</span>
-    
-    <span class="co"># Make some changes...</span>
-    <span class="va">A322.subsector_shrwt</span> <span class="op">&lt;-</span> <span class="va">A322.subsector_shrwt</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-      <span class="fu">mutate</span><span class="op">(</span>share.weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">as.double</a></span><span class="op">(</span><span class="va">share.weight</span><span class="op">)</span>,
-             year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span><span class="op">)</span>
-    <span class="va">A322.subsector_shrwt</span><span class="op">[</span><span class="fl">1</span>,<span class="st">"share.weight"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">NEW.SHWT</span>
-    
-    <span class="co"># NOTE: we have to match the original object name we asked for in driver.DECLARE_MODIFY, </span>
-    <span class="co"># which means including the file path for input files</span>
-    <span class="co"># i.e. "energy/A322.subsector_shrwt" not "A322.subsector_shrwt"  </span>
-    <span class="co"># Other objects can be listed out just like for `return_data`</span>
-    <span class="fu">return_modified</span><span class="op">(</span><span class="st">"energy/A322.subsector_shrwt"</span> <span class="op">=</span> <span class="va">A322.subsector_shrwt</span><span class="op">)</span>
-
-  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
-    <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"Unknown command"</span><span class="op">)</span>
-  <span class="op">}</span>
-<span class="op">}</span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="run-usermod_fert-once">Run usermod_fert once<a class="anchor" aria-label="anchor" href="#run-usermod_fert-once"></a>
-</h3>
-<p>To include our modification, we include this new chunk in our call to
-<code><a href="../reference/driver_drake.html">driver_drake()</a></code> and also include a suffix to append to any
-affected objects (currently mandatory to include suffix).</p>
-<p>Because we used the constant <code>NEW.SHWT</code> to assign the new
-value in our function, we first need to set it here.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">NEW.SHWT</span> <span class="op">&lt;-</span> <span class="fl">0.5</span>
-
-<span class="fu"><a href="../reference/driver_drake.html">driver_drake</a></span><span class="op">(</span>user_modifications <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"usermod_fert"</span><span class="op">)</span>,
-        xml_suffix <span class="op">=</span> <span class="st">"__1"</span><span class="op">)</span> <span class="co"># output xml will be saved as ORIGINALNAME_001.xml</span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="run-usermod_fert-multiple-times">Run usermod_fert multiple times<a class="anchor" aria-label="anchor" href="#run-usermod_fert-multiple-times"></a>
-</h3>
-<p>We can also generate multiple modified xmls using
-<code><a href="../reference/driver_drake.html">driver_drake()</a></code>. To do this, we simply need to change the
-value of <code>NEW.SHWT</code> and ensure that each different value is
-associated with a different <code>xml_suffix</code>. As well, we need to
-clear the usermod_fert object from drake’s cache using
-<code><a href="https://docs.ropensci.org/drake/reference/clean.html" class="external-link">drake::clean()</a></code> as drake is not aware of the change to
-<code>NEW.SHWT</code>. If you do not include this call, drake may assume
-that all downstream objects/xmls do not need to be updated.</p>
-</div>
+<p>More details can be found in the <a href="https://jgcri.github.io/gcamdata/articles/driverdrake_vignette.html" class="external-link">here</a>.</p>
+<p>Here, we provide several <code>gcamfaostat</code> relevant examples
+of using functions in <code>drake</code> to trace processing data.</p>
 </div>
   </div>
 

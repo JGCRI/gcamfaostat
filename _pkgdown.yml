@@ -3,7 +3,7 @@ url: https://jgcri.github.io/gcamfaostat/
 home:
   title: Prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling
   sidebar:
-    structure: [links, license, community, authors, dev]
+    structure: [links, community, license, authors, citation, dev]
 
 
 development:

@@ -2,6 +2,7 @@
 title: "Preparing data for gcamfaostat"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: references.bib  
 vignette: >
   %\VignetteIndexEntry{Preparing data for gcamfaostat}
   %\VignetteEngine{knitr::rmarkdown}
@@ -22,7 +23,7 @@ The `gcamfaostat` tool is designed to streamline the processing and synthesis of
 
 When `gcamfaostat` is downloaded, preprocessed FAOSTAT data, i.e., output of the `xfaostat_L101_RawDataPreProc*` modules, are stored in the [Prebuilt Data](https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda) of the package. 
 * The package can be run with using those data, but make sure `Process_Raw_FAO_Data <- FALSE` in `constants.R`. 
-* The prebuilt data were generated using FAOSTAT data archived in Zenodo address specified in the `FF_download_RemoteArchive` function.
+* The prebuilt data were generated using FAOSTAT data archived in Zenodo address specified in the `FF_download_RemoteArchive` function [@xin_zhao_2023_8260225].
 
 
 #### 1. Get the latest FAOSTAT Metadata  
@@ -86,3 +87,4 @@ Two functions above are created for downloading the raw data from a remote archi
 
 If users updated the FAOSTAT raw data, and run `driver_drake` is run with `Process_Raw_FAO_Data <- TRUE` in `constants.R`, the updated preprecessed data are stored in drake cache. And they can be used to update `Prebulit data` by sourcing `data-raw/generate_package_data.R`.
 
+## References

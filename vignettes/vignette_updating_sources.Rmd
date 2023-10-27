@@ -15,7 +15,22 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Raw FAOSTAT update
+
+### Base year update
 
 
+## Adding model-specfic data export modules
+
+## Adding new FAOSTAT data processing modules
+
+Currently, gcam
+
+
+[data system changes](https://jgcri.github.io/gcamdata/articles/changing-the-data-system/index.html)
+[User modification](https://jgcri.github.io/gcamdata/articles/usermod_vignette.html)
+
+## User modification
+Users may want to change the default gcamdata behavior by either modifying input assumptions or changing intermediate chunks. They can now write a "user modification" chunk that can be "plugged in" to the data system. This new chunk can modify any objects that are used or created in gcamdata and pass the modified object to all dependent chunks.
 
 

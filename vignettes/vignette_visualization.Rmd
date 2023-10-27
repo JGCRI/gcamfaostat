@@ -15,6 +15,15 @@ knitr::opts_chunk$set(
 )
 ```
 
+**Here we visualize the processed data to illustrate the connection of harvested area and food calories via supply utilization accounts.**  
+* We focus on the 2013 - 2017 mean as they are the base calibration years of GCAM. 
+* Year variables can be changes easily.  
+* All the data used are from `gcamfaostat`.  
+* Code for generating the figures are provided in the bottom.  
+* The visualization here will be continuously updates (suggestions and pull requests welcome).   
+* Chord diagram for trade and food processing nests will be added later.   
+* We will also try using shiny apps to make them interactive.  
+
 ***
 ## Population
 

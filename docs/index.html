@@ -142,13 +142,17 @@
 <div class="section level3">
 <h3 id="user-guide">User Guide<a class="anchor" aria-label="anchor" href="#user-guide"></a>
 </h3>
-<p>The package is documented in the <a href="https://jgcri.github.io/gcamfaostat/index.html">online manual</a></p>
+<p>The package is documented in the <a href="https://jgcri.github.io/gcamfaostat/index.html">online manual</a>.</p>
 <ul>
-<li><a href="https://jgcri.github.io/gcamfaostat/articles/vignette_getting_started.html">Getting Started</a></li>
+<li>
+<a href="https://jgcri.github.io/gcamfaostat/articles/vignette_getting_started.html">Getting Started</a>
+<ul>
 <li><a href="https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html">Preparing Data</a></li>
 <li><a href="https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html">Processing Flow</a></li>
 <li><a href="https://jgcri.github.io/gcamfaostat/articles/vignette_updating_sources.html">Update Sources</a></li>
 <li><a href="https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html">Other Use Cases</a></li>
+</ul>
+</li>
 <li><a href="https://jgcri.github.io/gcamfaostat/reference/index.html">Functions</a></li>
 <li><a href="https://jgcri.github.io/gcamfaostat/articles/vignette_visualization.html">Visualization</a></li>
 <li><a href="https://jgcri.github.io/gcamfaostat/articles/vignette_news.html">News</a></li>
@@ -211,7 +215,7 @@
 <ul>
 <li>
 <code>gcamfaostat</code> processes <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html#metadata">input data</a> to output data in a format that is needed for downstream processing and modeling, e.g., <a href="https://github.com/JGCRI/gcam-core/tree/master/input/gcamdata/inst/extdata/aglu/FAO" class="external-link">data used in gcamdata-aglu-FAO</a> (see the schematic below).</li>
-<li>Input data was stored in the <a href="https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda" class="external-link">Prebuilt Data</a> of the package. The raw data is archived on Zenodo (see URL in the <a href="https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#L144" class="external-link"><code>FF_download_RemoteArchive</code></a> function) to ensure the processing is 100% replicable. Users can also download the latest data using <a href="https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#90" class="external-link"><code>FF_download_FAOSTAT</code></a>.</li>
+<li>Input data was stored in the <a href="https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda" class="external-link">Prebuilt Data</a> of the package. The raw data is archived on Zenodo (see Zhao (2022) and URL in the <a href="https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#L144" class="external-link"><code>FF_download_RemoteArchive</code></a> function) to ensure the processing is 100% replicable. Users can also download the latest data using <a href="https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#90" class="external-link"><code>FF_download_FAOSTAT</code></a>.</li>
 <li>All intermediate processing and data flows are transparent and traceable. See <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html">Processing Flow</a> for data-tracing examples.</li>
 </ul>
 <p><img src="reference/figures/Fig_data_processing_flow.jpg" style="width:90.0%"><br>
@@ -237,6 +241,8 @@ Schmatic: module (data processing chunk) structure of gcamfaostat</p>
 </li>
 <li>Zhao, Xin, and Marshall Wise. “Core Model Proposal# 360: GCAM agriculture and land use (AgLU) data and method updates: connecting land hectares to food calories.” PNNL <a href="https://jgcri.github.io/gcam-doc/cmp/CMP_360-AgLU_data_method_updates.pdf" class="external-link uri">https://jgcri.github.io/gcam-doc/cmp/CMP_360-AgLU_data_method_updates.pdf</a>
 </li>
+<li>Zhao, Xin (2022). FAOSTAT AgLU data Archive GCAMv7 (1.0) [Data set]. Zenodo. <a href="https://doi.org/10.5281/zenodo.8260225" class="external-link uri">https://doi.org/10.5281/zenodo.8260225</a>
+</li>
 </ul>
 <p>Copyright 2019 Battelle Memorial Institute; see the LICENSE file.</p>
 </div>
@@ -252,15 +258,6 @@ Schmatic: module (data processing chunk) structure of gcamfaostat</p>
 </ul>
 </div>
 
-<div class="license">
-<h2 data-toc-skip>License</h2>
-<ul class="list-unstyled">
-<li>
-<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
-</ul>
-</div>
-
 <div class="community">
 <h2 data-toc-skip>Community</h2>
 <ul class="list-unstyled">
@@ -272,12 +269,28 @@ Schmatic: module (data processing chunk) structure of gcamfaostat</p>
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Xin Zhao <br><small class="roles"> Maintainer, author </small> <a href="https://orcid.org/0000-0002-1801-4393" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Maksym Chepeliev <br><small class="roles"> Author </small>  </li>
+<li>Maksym Chepeliev <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-8585-2314" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Pralit Patel <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-3992-1061" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Marshall Wise <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-2718-0051" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Kanishka Narayan <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-8483-6216" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Chris Vernon <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-3406-6214" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li><a href="authors.html">More about authors...</a></li>
+</ul>
+</div>
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing gcamfaostat</a></li>
+</ul>
+</div>
+
+<div class="license">
+<h2 data-toc-skip>License</h2>
+<ul class="list-unstyled">
+<li>
+<a href="https://opensource.org/licenses/BSD-2-Clause" class="external-link">BSD_2_clause</a> + file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
 

@@ -19,13 +19,13 @@ This tool bridges a crucial gap in the literature by offering several key featur
 ***
 
 ### User Guide
-The package is documented in the [online manual](https://jgcri.github.io/gcamfaostat/index.html)
+The package is documented in the [online manual](https://jgcri.github.io/gcamfaostat/index.html).
 
 * [Getting Started](https://jgcri.github.io/gcamfaostat/articles/vignette_getting_started.html)
-* [Preparing Data](https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html)
-* [Processing Flow](https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html)
-* [Update Sources](https://jgcri.github.io/gcamfaostat/articles/vignette_updating_sources.html)
-* [Other Use Cases](https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html) 
+  * [Preparing Data](https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html)
+  * [Processing Flow](https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html)
+  * [Update Sources](https://jgcri.github.io/gcamfaostat/articles/vignette_updating_sources.html)
+  * [Other Use Cases](https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html) 
 * [Functions](https://jgcri.github.io/gcamfaostat/reference/index.html)
 * [Visualization](https://jgcri.github.io/gcamfaostat/articles/vignette_visualization.html)
 * [News](https://jgcri.github.io/gcamfaostat/articles/vignette_news.html)
@@ -64,7 +64,7 @@ The package is documented in the [online manual](https://jgcri.github.io/gcamfao
 
 
 * `gcamfaostat` processes [input data](https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html#metadata) to output data in a format that is needed for downstream processing and modeling, e.g., [data used in gcamdata-aglu-FAO](https://github.com/JGCRI/gcam-core/tree/master/input/gcamdata/inst/extdata/aglu/FAO) (see the schematic below).
-* Input data was stored in the [Prebuilt Data](https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda) of the package. The raw data is archived on Zenodo (see URL in the [`FF_download_RemoteArchive`](https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#L144) function) to ensure the processing is 100% replicable. Users can also download the latest data using [`FF_download_FAOSTAT`](https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#90). 
+* Input data was stored in the [Prebuilt Data](https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda) of the package. The raw data is archived on Zenodo (see Zhao (2022) and URL in the [`FF_download_RemoteArchive`](https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#L144) function) to ensure the processing is 100% replicable. Users can also download the latest data using [`FF_download_FAOSTAT`](https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#90). 
 * All intermediate processing and data flows are transparent and traceable. See [Processing Flow](https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html) for data-tracing examples. 
 
 ![](man/figures/Fig_data_processing_flow.jpg){width=90%}  
@@ -81,6 +81,7 @@ Please read our [Contributing Guidelines](CONTRIBUTING.md) for information on ho
 - Narayan et al., (2021). ambrosia: An R package for calculating and analyzing food demand that is responsive to changing incomes and prices. Journal of Open Source Software, 6(59), 2890. https://doi.org/10.21105/joss.02890
 - Zhao, Xin, Katherine V. Calvin, Marshall A. Wise, and Gokul Iyer. "The role of global agricultural market integration in multiregional economic modeling: Using hindcast experiments to validate an Armington model." Economic Analysis and Policy 72 (2021): 1-17. https://doi.org/10.1016/j.eap.2021.07.007
 - Zhao, Xin, and Marshall Wise. "Core Model Proposal# 360: GCAM agriculture and land use (AgLU) data and method updates: connecting land hectares to food calories." PNNL https://jgcri.github.io/gcam-doc/cmp/CMP_360-AgLU_data_method_updates.pdf 
+- Zhao, Xin (2022). FAOSTAT AgLU data Archive GCAMv7 (1.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.8260225
 
 
 

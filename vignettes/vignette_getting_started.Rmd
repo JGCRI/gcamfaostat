@@ -32,9 +32,9 @@ Global economic and multisector dynamic models have become pivotal tools for inv
 
 *** 
 
-## The gap `gcamfaostat` fills
+## The gap `gcamfaostat` fills <a name="Gap"></a> 
 
-gcamfaostat, gcamdata, GCAM, and the broader modeling community <a name="Gap"></a>  
+gcamfaostat, gcamdata, GCAM, and the broader modeling community  
 
 `gcamdata` [@bond_lamberty_2023] 
 
@@ -46,7 +46,8 @@ Modules with identifier `_xfaostat_` only exists in `gcamfaostat`. Agriculture a
   
   
 
-![Figure 1. Original framework of using FAOSTAT data in large-scale modeling](../man/figures/Fig_FAOSTAT_gcamdata.jpg){width=70%} 
+![Figure 1. Original framework of using FAOSTAT data in large-scale modeling](../man/figures/Fig_FAOSTAT_gcamdata.jpg){width=70%}  
+
   
   
 
