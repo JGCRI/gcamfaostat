@@ -26,12 +26,12 @@ When `gcamfaostat` is downloaded, preprocessed FAOSTAT data, i.e., output of the
 * The prebuilt data were generated using FAOSTAT data archived in Zenodo address specified in the `FF_download_RemoteArchive` function [@xin_zhao_2023_8260225].
 
 
-#### 1. Get the latest FAOSTAT Metadata  
+### 1. Get the latest FAOSTAT Metadata  
 [`FAOSTAT_metadata()`](https://jgcri.github.io/gcamfaostat/reference/FAOSTAT_metadata.html)  
 
 * Accessing API and returning a data frame of metadata
 
-#### 2. Generate the metadata for the `gcamfaostat` input data  
+### 2. Generate the metadata for the `gcamfaostat` input data  
 
 [`gcamfaostat_metadata()`](https://jgcri.github.io/gcamfaostat/reference/gcamfaostat_metadata.html)  
 
@@ -40,7 +40,8 @@ When `gcamfaostat` is downloaded, preprocessed FAOSTAT data, i.e., output of the
 * Checking if local FAOSTAT raw data exist  
 * Checking if raw data was stored in the [Prebuilt Data](https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda)  
 * Returning a summary table (see below) 
-
+  
+  
 
 ``` {r, echo=FALSE, warning=FALSE, message=FALSE}
 devtools::load_all()
@@ -48,42 +49,45 @@ library(dplyr)
 library(kableExtra)
 gcamfaostat_metadata(.DIR_RAW_DATA_FAOSTAT = file.path("..", "inst/extdata/aglu/FAO/FAOSTAT")) %>% 
   select(-`Local file size`) -> p
+
 p %>%
-  kbl(caption = "FAOSTAT dataset processed in gcamfaostat") %>% 
+  kbl(caption = '<b>FAOSTAT dataset processed in gcamfaostat</b>', format = 'html') %>% 
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
 Note that if Exist_Prebuilt is `TRUE` for a dataset, it suggests the raw data was saved in the Prebuilt data. And if Exist_Prebuilt is `TRUE` for all dataset, the package is ready to be built based on the Prebuilt data.
 
 
-#### 3. Download FAOSTAT raw data  
+### 3. Download FAOSTAT raw data  
 
 [`FF_download_RemoteArchive()`](https://jgcri.github.io/gcamfaostat/reference/FF_download_RemoteArchive.html)  
 
+* Downloading data from a remote archive.
 * A Zenodo URL was included archiving a snapshot of FAOSTAT data to ensure replicability.
 
 [`FF_download_FAOSTAT()`](https://jgcri.github.io/gcamfaostat/reference/FF_download_FAOSTAT.html)
+* Downloading data from FAOSTAT.
  
 Two functions above are created for downloading the raw data from a remote archive or the FAOSTAT API (latest data). The dataset code variable in the two functions, if including all, can be generated using `gcamfaostat_metadata(OnlyReturnDatasetCodeRequired = T)`. 
 
 
-#### 4. Check local raw data info
+### 4. Check local raw data info
 
 [`FF_rawdata_info()`](https://jgcri.github.io/gcamfaostat/reference/FF_rawdata_info.html)  
 
-* Providing more detailed metadata information, similar to `gcamfaostat_metadata`(which calls `FF_rawdata_info`).
-# Indicate whether an update from FAOSTAT is potentially needed.
+* Providing more detailed metadata information, similar to `gcamfaostat_metadata`(which calls `FF_rawdata_info`).  
+* Indicate whether an update from FAOSTAT is potentially needed.
 * Can be used to download data if not exist.
 
 
-#### 5. Load raw data into package  
+### 5. Load raw data into package  
 
 [`FAOSTAT_load_raw_data`](https://jgcri.github.io/gcamfaostat/reference/FAOSTAT_load_raw_data.html)  
 
 * Loading FAOSTAT raw data, e.g., used in `xfaostat_L191_RawDataPreProc*` modules. 
 * Note that `.` in column name is substituted with `_`.
 
-#### 6. Update the Prebulit data
+### 6. Update the Prebulit data
 
 If users updated the FAOSTAT raw data, and run `driver_drake` is run with `Process_Raw_FAO_Data <- TRUE` in `constants.R`, the updated preprecessed data are stored in drake cache. And they can be used to update `Prebulit data` by sourcing `data-raw/generate_package_data.R`.
 

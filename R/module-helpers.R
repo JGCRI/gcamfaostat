@@ -83,7 +83,6 @@ Moving_average <- function(x, periods = 5, NA_RM = TRUE){
 
 
 # Function to dissaggregate dissolved regions in historical years ----
-# copyed in gcamdata
 
 #' FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION
 #'

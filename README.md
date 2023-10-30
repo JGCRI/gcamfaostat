@@ -24,8 +24,7 @@ The package is documented in the [online manual](https://jgcri.github.io/gcamfao
 * [Getting Started](https://jgcri.github.io/gcamfaostat/articles/vignette_getting_started.html)
   * [Preparing Data](https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html)
   * [Processing Flow](https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html)
-  * [Update Sources](https://jgcri.github.io/gcamfaostat/articles/vignette_updating_sources.html)
-  * [Other Use Cases](https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html) 
+  * [Use Cases](https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html) 
 * [Functions](https://jgcri.github.io/gcamfaostat/reference/index.html)
 * [Visualization](https://jgcri.github.io/gcamfaostat/articles/vignette_visualization.html)
 * [News](https://jgcri.github.io/gcamfaostat/articles/vignette_news.html)
@@ -67,12 +66,25 @@ The package is documented in the [online manual](https://jgcri.github.io/gcamfao
 * Input data was stored in the [Prebuilt Data](https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda) of the package. The raw data is archived on Zenodo (see Zhao (2022) and URL in the [`FF_download_RemoteArchive`](https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#L144) function) to ensure the processing is 100% replicable. Users can also download the latest data using [`FF_download_FAOSTAT`](https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#90). 
 * All intermediate processing and data flows are transparent and traceable. See [Processing Flow](https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html) for data-tracing examples. 
 
-![](man/figures/Fig_data_processing_flow.jpg){width=90%}  
-Schmatic: module (data processing chunk) structure of gcamfaostat
+![](man/figures/Fig_data_processing_flow.jpg)
+Schematic: module (data processing chunk) structure of gcamfaostat
 
+***
     
-### Contributing
-Please read our [Contributing Guidelines](CONTRIBUTING.md) for information on how to contribute to this project.
+### Future work and contribution
+
+Data development is never a once and for all task, and continued efforts are needed to sustain and improve the processing procedures. Further works are needed:  
+
+1.	**Sustain processing functions for updated raw data**: ensuring that our processing functions remain up-to-date when raw data undergoes revisions is imperative.  
+2.	**Evaluate and enhance assumptions**: a critical examination of the assumptions utilized in processes like interpolation, extrapolation, aggregation, disaggregation, and mapping is essential and should be an ongoing endeavor.  
+3.	**Revise assumptions in low-quality data zones**: regions and sectors with little or low-quality data require careful consideration. We will need to adjust our assumptions when improved data becomes available.  
+4.	**Promoting broader applications**: Leveraging data processed by gcamfaostat can significantly contribute to harmonizing input data in global agroeconomic modeling. Encouraging the utilization of this data and fostering collaboration to enhance data processing is of significant importance.  
+5.	**Assess sensitivity in downstream applications**: understanding the sensitivity of downstream data applications, e.g., global agroeconomic projections, to upstream data processing assumptions is crucial. This awareness empowers us to make informed decisions and refinements.
+  
+We welcome and value community contributions to gcamfaostat. Please read our [Contributing Guidelines](CONTRIBUTING.md) for information on how to contribute to this package. Through collective and collaborative efforts, we will shorten the distance between raw data and impacts.  
+
+
+***
 
 ### Related publications  
 - Bond-Lamberty, Ben, Kalyn Dorheim, Ryna Cui, Russell Horowitz, Abigail Snyder, Katherine Calvin, Leyang Feng et al. "gcamdata: An R package for preparation, synthesis, and tracking of input data for the GCAM integrated human-earth systems model." Journal of Open Research Software 7, no. 1 (2019). DOI: 10.5334/jors.232

@@ -44,8 +44,10 @@ knitr::opts_chunk$set(
 ![Surprisingly, oil palm fruit yield did grow at regional levels (boxplot) in the past 30 years. But world yield increased by ~50% due to the production shift to high-yielding regions. The opposite is true for root and tuber crops](../man/figures/Fig_WorldYield.png){width=100%}
 
 ***
+
 ## Supply-utilization
-![Residuals (mostly small) indicate the imbalance in the data, mainly implying the quality of the source data](../man/figures/Fig_WorldSUA.png){width=100%}
+![Negative values are used for demand elements and positive values are used for supply elements. The total supply is equal to the total demand. Residuals (mostly small) indicate the imbalance in the data, mainly implying the quality of the source data](../man/figures/Fig_WorldSUA.png){width=100%}
+
 ***  
 
 ## Food Calories
@@ -278,7 +280,7 @@ Yield_1990_2020_GCAMRegSector_Growth %>%
         strip.background = element_rect(fill = "grey90"),
         legend.position = "none") -> p
 
-ggsave(file.path("man/figures", "WorldYield.png"), p, width = 15, height = 10)
+ggsave(file.path("../man/figures", "WorldYield.png"), p, width = 15, height = 10)
 
 ```
 
@@ -322,7 +324,7 @@ Bal_new_all %>%
   mutate(value = if_else(!element %in% ElEMSupply, -value, value)) %>% 
   mutate(element = factor(element, levels = ELEMLevel, labels = ELEMLabel),
          item = factor(item, levels = SECLevel, labels = SECLevel)) %>% 
-  mutate(CropMeat = if_else(item %in% KeySectorCrops, "Crops", "Meat")) ->
+  mutate(CropMeat = if_else(item %in% KeySectorCrops, "Crop", "Meat")) ->
   DF_SUA
 ```
 * Plot and save
@@ -344,7 +346,7 @@ DF_SUA %>%
                                "Demand: Closing stocks" = ColUpdate[10] ) ) +
   labs(x = "Key agriculture Commodities",
        y = "Million tonnes", fill = "Element",
-       title = "World supply utilization for key commodities, 2015 - 2017 mean",
+       title = "World supply utilization for key commodities, 2013 - 2017 mean",
        subtitle = "Other uses include seed use, losses, and industrial use",
        caption = "Data: FAOSTAT \n Package: JGCRI/gcamfaostat") +
   theme_bw() + 
@@ -354,7 +356,7 @@ DF_SUA %>%
         strip.background = element_rect(fill = "grey100"),
         strip.text = element_text(size = 16)) -> p;p
 
-ggsave(file.path("man/figures", "Fig_WorldSUA.png"), p, width = 16, height = 10)
+ggsave(file.path("../man/figures", "Fig_WorldSUA.png"), p, width = 16, height = 10)
 ```
 * Preview  
 ![](../man/figures/Fig_WorldSUA.png){width=20%}

@@ -24,8 +24,6 @@ navbar:
           href: articles/vignette_preparing_data.html
         - text: "Processing Flow"
           href: articles/vignette_processing_flow.html
-        - text: "Update Sources"
-          href: articles/vignette_updating_sources.html
         - text: "Use Cases"
           href: articles/vignette_use_cases.html
     - icon: fa-file-image-o

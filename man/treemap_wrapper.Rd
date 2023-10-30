@@ -11,7 +11,7 @@ treemap_wrapper(
   .FigTitle,
   .FigTitleSize = 12,
   .LastLabelCol = "orange",
-  .SaveDir = "man/figures",
+  .SaveDir = "../man/figures",
   .SaveName,
   .SaveScaler = 1
 )

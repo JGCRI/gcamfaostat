@@ -64,9 +64,6 @@
       <a href="../articles/vignette_processing_flow.html">Processing Flow</a>
     </li>
     <li>
-      <a href="../articles/vignette_updating_sources.html">Update Sources</a>
-    </li>
-    <li>
       <a href="../articles/vignette_use_cases.html">Use Cases</a>
     </li>
   </ul>
@@ -115,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Use Cases</h1>
             
-            <h4 data-toc-skip class="date">2023-10-27</h4>
+            <h4 data-toc-skip class="date">2023-10-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_use_cases.Rmd" class="external-link"><code>vignettes/vignette_use_cases.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_use_cases.Rmd</code></div>
@@ -124,12 +121,126 @@
 
     
     
+<p><strong>This page describes additional functions and capabilities of
+<code>gcamfaostat</code></strong>. Users are also encouraged to check
+out <code>gcamdata</code> online manual, e.g., <a href="https://jgcri.github.io/gcamdata/articles/changing-the-data-system/index.html" class="external-link">data
+system changes</a> and <a href="https://jgcri.github.io/gcamdata/articles/usermod_vignette.html" class="external-link">user
+modification</a> for additional examples for modifying modules.</p>
 <div class="section level2">
-<h2 id="running-gcamfaostat-with-drake">Running gcamfaostat with drake<a class="anchor" aria-label="anchor" href="#running-gcamfaostat-with-drake"></a>
+<h2 id="faostat-raw-data-and-processing-output-updates">FAOSTAT raw data and processing output updates<a class="anchor" aria-label="anchor" href="#faostat-raw-data-and-processing-output-updates"></a>
 </h2>
-<p>More details can be found in the <a href="https://jgcri.github.io/gcamdata/articles/driverdrake_vignette.html" class="external-link">here</a>.</p>
-<p>Here, we provide several <code>gcamfaostat</code> relevant examples
-of using functions in <code>drake</code> to trace processing data.</p>
+<p>To update the output data to include new years made available, e.g.,
+for model base year updates, user need to</p>
+<ol style="list-style-type: decimal">
+<li>Download the latest FAOSTAT data using the
+<code>FF_download_FAOSTAT</code> function.<br>
+</li>
+<li>In the configuration file (<code>constants.R</code>), adjust the
+year variables and set <code>Process_Raw_FAO_Data</code> to
+<code>TRUE</code>.</li>
+<li>Verify and update the output formats and names in the data exporting
+modules.</li>
+<li>Execute the <code>driver_drake</code> function to initiate the data
+processing.</li>
+</ol>
+</div>
+<div class="section level2">
+<h2 id="adding-new-data-processing-modules">Adding new data processing modules<a class="anchor" aria-label="anchor" href="#adding-new-data-processing-modules"></a>
+</h2>
+<p>Any R files located in the <code>R</code> folder, as long as they
+adhere to the module format with clearly defined module inputs and
+outputs, will be automatically detected by the driver and
+<code>driver_drake</code> functions. These functions establish a data
+map that dictates the sequence of data processing, ensuring that modules
+are executed in the correct order. Consequently, the process of adding a
+new module to the system is straightforward:</p>
+<ol style="list-style-type: decimal">
+<li>Create a new module script, following the examples of existing
+modules.<br>
+</li>
+<li>Define the inputs and outputs, and incorporate your data processing
+code.</li>
+<li>If the module requires new datasets from FAOSTAT, include the
+dataset code in <code>gcamfaostat_metadata</code> and use functions like
+<code>FF_download_FAOSTAT</code> or <code>FF_rawdata_info</code> to
+download the necessary data.</li>
+<li>Execute the <code>driver_drake</code> function.<br>
+</li>
+<li>Modified <code>generate_package_data.R</code> when Prebuilt data
+changes are needed.</li>
+</ol>
+</div>
+<div class="section level2">
+<h2 id="generating-output-for-new-agroeconomic-models">Generating output for new agroeconomic models<a class="anchor" aria-label="anchor" href="#generating-output-for-new-agroeconomic-models"></a>
+</h2>
+<p>If all the necessary FAOSTAT raw data is already incorporated into
+gcamfaostat, users can directly produce output for a new agroeconomic
+model. This can be achieved by either adding an output exporting module
+(e.g., <code>module_xfaostat_L199_CSVExportAgSUA</code>) or adapting an
+existing module (e.g., <code>module_xfaostat_L201_Forestry</code>) to
+export data in the required format. Notably, gcamfaostat presently
+includes a function, <code>output_csv_data</code>, for exporting data to
+CSV files. Additionally, users have the flexibility to expand the
+functionality by incorporating new functions to export data in
+alternative formats as needed. In cases where the required data is not
+readily available, users should begin by introducing new processing
+modules.</p>
+<hr>
+</div>
+<div class="section level2">
+<h2 id="country-aggregation-and-disaggregation">Country aggregation and disaggregation<a class="anchor" aria-label="anchor" href="#country-aggregation-and-disaggregation"></a>
+</h2>
+<p>Since the 1970s, the number of countries in the world has increased
+due to the dissolution of regions. In other words, when a region
+dissolves, the country associated with it ceases to exist, and new
+countries emerge in its place, see <a href="FigCountryChange"><strong>Figure 1</strong></a>. We created
+functions to deal with country changes.</p>
+<p><a href="https://jgcri.github.io/gcamfaostat/reference/FAOSTAT_AREA_RM_NONEXIST.html"><code>FAOSTAT_AREA_RM_NONEXIST</code></a></p>
+<ul>
+<li>The function removes nonexistent FAO region using area_code, e.g.,
+USSR after 1991.<br>
+</li>
+<li>All nonexistent countries due to dissolution are removed by
+default.<br>
+</li>
+<li>Small regions/areas with low data quality can also be removed using
+the function.</li>
+</ul>
+<p><a href="https://jgcri.github.io/gcamfaostat/reference/FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL.html"><code>FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL</code></a></p>
+<ul>
+<li>The function disaggregate region to smaller countries.<br>
+</li>
+<li>All dissolved regions (since 1970s) are disaggregated in historical
+periods (before dissolution) based on the data after dissolution.</li>
+</ul>
+<a name="FigCountryChange"></a><br><center>
+<img src="../reference/figures/Fig_CountryChanges.png" style="width:70.0%">
+</center>
+</div>
+<div class="section level2">
+<h2 id="other-helper-functions">Other helper functions<a class="anchor" aria-label="anchor" href="#other-helper-functions"></a>
+</h2>
+<p><a href="https://jgcri.github.io/gcamfaostat/reference/FF_FILL_NUMERATOR_DENOMINATOR.html"><code>FF_FILL_NUMERATOR_DENOMINATOR</code></a></p>
+<ul>
+<li>A function to fill in missing values with the consideration of the
+relationship between two variables.</li>
+</ul>
+<p><a href="https://jgcri.github.io/gcamfaostat/reference/Moving_average.html"><code>Moving_average</code></a></p>
+<ul>
+<li>A function to calculate moving average given an odd number of the
+periods.</li>
+</ul>
+<p><a href="https://jgcri.github.io/gcamfaostat/reference/rm_accent.html"><code>rm_accent</code></a></p>
+<ul>
+<li>A function to remove accent and apostrophe for columns in a data
+frame.</li>
+</ul>
+<p><a href="https://jgcri.github.io/gcamfaostat/reference/rm_accent.html"><code>output_csv_data</code></a></p>
+<ul>
+<li>A function to save data frames to csv files with desired header
+information.</li>
+<li>The output can be read into gcamdata directly.</li>
+</ul>
 </div>
   </div>
 

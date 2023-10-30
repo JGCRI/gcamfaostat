@@ -64,9 +64,6 @@
       <a href="../articles/vignette_processing_flow.html">Processing Flow</a>
     </li>
     <li>
-      <a href="../articles/vignette_updating_sources.html">Update Sources</a>
-    </li>
-    <li>
       <a href="../articles/vignette_use_cases.html">Use Cases</a>
     </li>
   </ul>
@@ -115,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Getting Started with gcamfaostat</h1>
             
-            <h4 data-toc-skip class="date">2023-10-27</h4>
+            <h4 data-toc-skip class="date">2023-10-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_getting_started.Rmd" class="external-link"><code>vignettes/vignette_getting_started.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_getting_started.Rmd</code></div>
@@ -183,14 +180,18 @@ modules (<code>_aglu_</code>) that rely on outputs from
 <code>gcamdata</code> modules processing data in areas such as energy,
 emissions, water, and socioeconomics only exist in
 <code>gcamdata</code>.</p>
+<br><center>
 <div class="float">
 <img src="../reference/figures/Fig_FAOSTAT_gcamdata.jpg" style="width:70.0%" alt="Figure 1. Original framework of using FAOSTAT data in large-scale modeling"><div class="figcaption">Figure 1. Original framework of using FAOSTAT
 data in large-scale modeling</div>
 </div>
+</center>
+<br><center>
 <div class="float">
 <img src="../reference/figures/Fig_gcamfaostat_and_gcamdata.jpg" style="width:70.0%" alt="Figure 2. New framework using gcamfaostat to process FAOSTAT data"><div class="figcaption">Figure 2. New framework using
 <code>gcamfaostat</code> to process FAOSTAT data</div>
 </div>
+</center>
 <hr>
 </div>
 <div class="section level2">
@@ -266,8 +267,9 @@ in <code>gcamdata</code> manual.</li>
 </h4>
 <p>Users should now be ready to run the driver, which is the main
 processing function that generates intermediate data outputs and final
-output (csv or other files) for gcamdata or GCAM. Driver functions will
-run data processing modules/functions sequentially, see <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html">Processing
+output (csv or other files) for <code>GCAM</code>
+(<code>gcamdata</code>) or other models. Driver functions will run data
+processing modules/functions sequentially, see <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html">Processing
 Flow</a>. There are two ways to run the driver, both inherited from
 <code>gcamdata</code>.</p>
 <ol style="list-style-type: decimal">

@@ -6,10 +6,9 @@ articles:
   vignette_news: vignette_news.html
   vignette_preparing_data: vignette_preparing_data.html
   vignette_processing_flow: vignette_processing_flow.html
-  vignette_updating_sources: vignette_updating_sources.html
   vignette_use_cases: vignette_use_cases.html
   vignette_visualization: vignette_visualization.html
-last_built: 2023-10-27T04:50Z
+last_built: 2023-10-30T15:41Z
 urls:
   reference: https://jgcri.github.io/gcamfaostat/reference
   article: https://jgcri.github.io/gcamfaostat/articles

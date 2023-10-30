@@ -41,18 +41,15 @@ gcamfaostat, gcamdata, GCAM, and the broader modeling community
 Figure 1  shows the relationship between `gcamfaostat` and `gcamdata` with example modules of each packages presented.
 
 Modules with identifier `_xfaostat_` only exists in `gcamfaostat`. Agriculture and land use (AgLU) related modules (`_aglu_`) that rely on outputs from `gcamfaostat` can run in both packages. Other `gcamdata` modules processing data in areas such as energy, emissions, water, and socioeconomics only exist in `gcamdata`.  
-
-
   
-  
-
+<br />
+<center>
 ![Figure 1. Original framework of using FAOSTAT data in large-scale modeling](../man/figures/Fig_FAOSTAT_gcamdata.jpg){width=70%}  
-
-  
-  
-
-
+</center>
+<br />
+<center>
 ![Figure 2. New framework using `gcamfaostat` to process FAOSTAT data](../man/figures/Fig_gcamfaostat_and_gcamdata.jpg){width=70%} 
+</center>
 
 ***
 
@@ -98,7 +95,7 @@ devtools::install_deps()
 
 ## Run the driver <a name="driver"></a>  
 #### `driver_drake` and `driver`
-Users should now be ready to run the driver, which is the main processing function that generates intermediate data outputs and final output (csv or other files) for gcamdata or GCAM. Driver functions will run data processing modules/functions sequentially, see [Processing Flow](https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html). There are two ways to run the driver, both inherited  from `gcamdata`.
+Users should now be ready to run the driver, which is the main processing function that generates intermediate data outputs and final output (csv or other files) for `GCAM` (`gcamdata`) or other models. Driver functions will run data processing modules/functions sequentially, see [Processing Flow](https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html). There are two ways to run the driver, both inherited  from `gcamdata`.
 
 1. `driver_drake()`
 
