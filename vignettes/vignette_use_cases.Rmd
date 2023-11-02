@@ -13,8 +13,6 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-library(devtools)
-devtools::load_all()
 ```
 
 
@@ -89,4 +87,159 @@ Since the 1970s, the number of countries in the world has increased due to the d
   
 * A function to save data frames to csv files with desired header information.
 * The output can be read into gcamdata directly.
+
+***
+
+## Case study: wheat bilateral trade pattern changes
+
+* The world wheat trade was affected by the Russian-Ukraine war in 2021 (see Figures below).
+* In the same time, Canada, another major wheat supplier was hit by droughts and production plummeted.  
+* However, the total trade did not change in 2021 (197 Mt) compared to 2020 (198 Mt).
+* Mainly because Australia, USA, and other regions supplied more to the world market.  
+
+![](../man/figures/Fig_WheatTrade2020.png){width=100%}
+![](../man/figures/Fig_WheatTrade2021.png){width=100%}
+
+```{r, eval = FALSE}
+devtools::load_all()
+
+# Download the latest TM (bilateral trade) from FAOSTAT
+# To the path specified in DIR_RAW_DATA_FAOSTAT (see constants.R)
+
+FF_download_FAOSTAT(DATASETCODE = "TM",
+                    DATA_FOLDER = file.path("..",DIR_RAW_DATA_FAOSTAT),
+                    OverWrite = TRUE)
+
+# We could use module_xfaostat_L101_RawDataPreProc6_TM to clean and process the data
+# But here we visualize the raw data directly for continence (TM data is huge)
+# and also because the updates will be included later  
+
+# Load raw data 
+# Date 10-31-2023
+FAOSTAT_load_raw_data(DATASETCODE = "TM", 
+                      DATA_FOLDER = file.path("..",DIR_RAW_DATA_FAOSTAT))
+
+
+TM %>%
+  filter(year %in% c(2020:2021),
+         item_code == 15, # Wheat
+         element %in% c("Export Quantity")) %>% 
+    select(source = reporter_countries,
+           area = partner_countries, item, 
+           element, year, value, unit) ->
+  TM_Wheat
+
+TM_Wheat %>% 
+  rm_accent("area", "source") %>% 
+  mutate(value = value / 1000000) %>%  #Mt
+  mutate(area = replace(area, area == "United States of America", "USA")) %>% 
+  mutate(area = replace(area, area == "United Arab Emirates", "UAE")) %>% 
+  mutate(area = replace(area, area == "Democratic Republic of the Congo", "DR Congo")) %>% 
+  mutate(area = gsub(" Federation| of Great Britain and Northern Ireland| Province of| \\(Bolivarian Republic of\\)|United Republic of | \\(Islamic Republic of\\)|\\(Kingdom of the\\)", "", area)) %>% 
+  mutate(source = replace(source, source == "United States of America", "USA")) %>% 
+  mutate(source = replace(source, source == "United Arab Emirates", "UAE")) %>% 
+  mutate(source = replace(source, source == "Democratic Republic of the Congo", "DR Congo")) %>% 
+  mutate(source = gsub(" Federation| of Great Britain and Northern Ireland| Province of| \\(Bolivarian Republic of\\)|United Republic of | \\(Islamic Republic of\\)|\\(Kingdom of the\\)", "", source)) %>% 
+  select(REG_ex = source, REG_im = area, flow = value, year) ->
+  TM_Wheat_1
+
+# focus on key players
+TM_Wheat_1 %>% filter(year == 2020) %>% top_n(35, flow) %>% 
+  select(REG_ex, REG_im) %>% unlist %>% 
+  unique() -> KeyPlayers
+
+TM_Wheat_1 %>% 
+  mutate(REG_ex = replace(REG_ex, !REG_ex %in% KeyPlayers, "ROW")) %>% 
+  mutate(REG_im = replace(REG_im, !REG_im %in% KeyPlayers, "ROW")) %>%
+  # aggregate small players 
+  group_by(REG_ex, REG_im, year) %>% 
+  summarise(flow = sum(flow), .groups = "drop") ->
+  dat_circular
+
+dat_circular %>% group_by(year) %>% summarise(flow = sum(flow))
+
+library(circlize)
+
+# A wrapper function
+chord_wrapper <- function(.DF,
+                          .FigTitle = NULL,
+                          .SaveDir = "../man/figures",
+                          .GRIDCOLOR = NULL,
+                          .ORDER = NULL,
+                          .SaveName,
+                          .SaveScaler = 1){
+  
+  # treemap save to a path
+  png(filename= file.path(.SaveDir, paste0(.SaveName,".png")), res = 600,
+      width= 7000 * .SaveScaler, height= 7000 * .SaveScaler )
+  
+  
+  chordDiagram(as.data.frame(.DF), 
+               transparency = 0.5, 
+               directional = 1,
+               direction.type = c("diffHeight", "arrows"), 
+               diffHeight = -uh(2, "mm")
+               ,link.arr.type = "big.arrow"
+               ,annotationTrack = c("grid")
+               ,grid.col = .GRIDCOLOR
+               ,order = .ORDER
+               ,preAllocateTracks = list(list(track.height = c(0.3))
+                                         ,list(track.height = c(0.035))
+               ))
+  
+  title(main = .FigTitle)
+  
+  circos.track(track.index = 3, panel.fun = function(x, y) {
+    circos.axis(h = 1, labels.cex = 0.8)   
+  }, bg.border = NA)
+  
+  circos.track(track.index = 1, panel.fun = function(x, y) {
+    xlim = get.cell.meta.data("xlim")
+    xplot = get.cell.meta.data("xplot")
+    ylim = get.cell.meta.data("ylim")
+    sector.name = get.cell.meta.data("sector.index")
+    
+    #make text label vertical when space is too small; cex to adjust font size
+    
+    if(abs(xplot[2] - xplot[1]) < 20 | abs(xplot[2] - xplot[1]) > 340) {
+      circos.text(mean(xlim), ylim[1], sector.name, facing = "clockwise",
+                  niceFacing = TRUE, adj = c(0, 0.5), col = "black", 
+                  cex = 1)
+    } else {
+      circos.text(mean(xlim), ylim[1], sector.name, facing = "inside", 
+                  niceFacing = TRUE, adj = c(0.5, 0), col= "black", 
+                  cex = 1)
+    }  }, bg.border = NA)
+  
+  dev.off() #dump
+  
+  circos.clear()
+}
+
+  
+# Get color
+GridColor <- rand_color(length(KeyPlayers) + 1) 
+
+# Plot 
+
+chord_wrapper(.DF = dat_circular %>% filter(year == 2021) %>% select(-year)%>% arrange(REG_ex, REG_im),
+              .GRIDCOLOR = GridColor,
+              .FigTitle = "Wheat trade, 2021",
+              .ORDER = c(KeyPlayers, "ROW"),
+              .SaveDir = "../man/figures",
+              .SaveName = "Fig_WheatTrade2021")
+
+chord_wrapper(.DF = dat_circular %>% filter(year == 2020) %>% select(-year) %>% arrange(REG_ex, REG_im),
+              .GRIDCOLOR = GridColor,
+              .FigTitle = "Wheat trade, 2020",
+              .ORDER = c(KeyPlayers, "ROW"),
+              .SaveDir = "../man/figures",
+              .SaveName = "Fig_WheatTrade2020")
+    
+
+```
+
+* Preview  
+![](../man/figures/Fig_WheatTrade2020.png){width=20%}
+![](../man/figures/Fig_WheatTrade2021.png){width=20%}
 

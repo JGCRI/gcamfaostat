@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Use Cases</h1>
             
-            <h4 data-toc-skip class="date">2023-10-30</h4>
+            <h4 data-toc-skip class="date">2023-10-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_use_cases.Rmd" class="external-link"><code>vignettes/vignette_use_cases.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_use_cases.Rmd</code></div>
@@ -240,6 +240,163 @@ frame.</li>
 <li>A function to save data frames to csv files with desired header
 information.</li>
 <li>The output can be read into gcamdata directly.</li>
+</ul>
+<hr>
+</div>
+<div class="section level2">
+<h2 id="case-study-wheat-bilateral-trade-pattern-changes">Case study: wheat bilateral trade pattern changes<a class="anchor" aria-label="anchor" href="#case-study-wheat-bilateral-trade-pattern-changes"></a>
+</h2>
+<ul>
+<li>The world wheat trade was affected by the Russian-Ukraine war in
+2021 (see Figures below).</li>
+<li>In the same time, Canada, another major wheat supplier was hit by
+droughts and production plummeted.<br>
+</li>
+<li>However, the total trade did not change in 2021 (197 Mt) compared to
+2020 (198 Mt).</li>
+<li>Mainly because Australia, USA, and other regions supplied more to
+the world market.</li>
+</ul>
+<p><img src="../reference/figures/Fig_WheatTrade2020.png" style="width:100.0%"><img src="../reference/figures/Fig_WheatTrade2021.png" style="width:100.0%"></p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># Download the latest TM (bilateral trade) from FAOSTAT</span>
+<span class="co"># To the path specified in DIR_RAW_DATA_FAOSTAT (see constants.R)</span>
+
+<span class="fu"><a href="../reference/FF_download_FAOSTAT.html">FF_download_FAOSTAT</a></span><span class="op">(</span>DATASETCODE <span class="op">=</span> <span class="st">"TM"</span>,
+                    DATA_FOLDER <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">".."</span>,<span class="va">DIR_RAW_DATA_FAOSTAT</span><span class="op">)</span>,
+                    OverWrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+
+<span class="co"># We could use module_xfaostat_L101_RawDataPreProc6_TM to clean and process the data</span>
+<span class="co"># But here we visualize the raw data directly for continence (TM data is huge)</span>
+<span class="co"># and also because the updates will be included later  </span>
+
+<span class="co"># Load raw data </span>
+<span class="co"># Date 10-31-2023</span>
+<span class="fu"><a href="../reference/FAOSTAT_load_raw_data.html">FAOSTAT_load_raw_data</a></span><span class="op">(</span>DATASETCODE <span class="op">=</span> <span class="st">"TM"</span>, 
+                      DATA_FOLDER <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">".."</span>,<span class="va">DIR_RAW_DATA_FAOSTAT</span><span class="op">)</span><span class="op">)</span>
+
+
+<span class="va">TM</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2020</span><span class="op">:</span><span class="fl">2021</span><span class="op">)</span>,
+         <span class="va">item_code</span> <span class="op">==</span> <span class="fl">15</span>, <span class="co"># Wheat</span>
+         <span class="va">element</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Export Quantity"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu">select</span><span class="op">(</span>source <span class="op">=</span> <span class="va">reporter_countries</span>,
+           area <span class="op">=</span> <span class="va">partner_countries</span>, <span class="va">item</span>, 
+           <span class="va">element</span>, <span class="va">year</span>, <span class="va">value</span>, <span class="va">unit</span><span class="op">)</span> <span class="op">-&gt;</span>
+  <span class="va">TM_Wheat</span>
+
+<span class="va">TM_Wheat</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/rm_accent.html">rm_accent</a></span><span class="op">(</span><span class="st">"area"</span>, <span class="st">"source"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu">mutate</span><span class="op">(</span>value <span class="op">=</span> <span class="va">value</span> <span class="op">/</span> <span class="fl">1000000</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  <span class="co">#Mt</span>
+  <span class="fu">mutate</span><span class="op">(</span>area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html" class="external-link">replace</a></span><span class="op">(</span><span class="va">area</span>, <span class="va">area</span> <span class="op">==</span> <span class="st">"United States of America"</span>, <span class="st">"USA"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu">mutate</span><span class="op">(</span>area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html" class="external-link">replace</a></span><span class="op">(</span><span class="va">area</span>, <span class="va">area</span> <span class="op">==</span> <span class="st">"United Arab Emirates"</span>, <span class="st">"UAE"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu">mutate</span><span class="op">(</span>area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html" class="external-link">replace</a></span><span class="op">(</span><span class="va">area</span>, <span class="va">area</span> <span class="op">==</span> <span class="st">"Democratic Republic of the Congo"</span>, <span class="st">"DR Congo"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu">mutate</span><span class="op">(</span>area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">" Federation| of Great Britain and Northern Ireland| Province of| \\(Bolivarian Republic of\\)|United Republic of | \\(Islamic Republic of\\)|\\(Kingdom of the\\)"</span>, <span class="st">""</span>, <span class="va">area</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu">mutate</span><span class="op">(</span>source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html" class="external-link">replace</a></span><span class="op">(</span><span class="va">source</span>, <span class="va">source</span> <span class="op">==</span> <span class="st">"United States of America"</span>, <span class="st">"USA"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu">mutate</span><span class="op">(</span>source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html" class="external-link">replace</a></span><span class="op">(</span><span class="va">source</span>, <span class="va">source</span> <span class="op">==</span> <span class="st">"United Arab Emirates"</span>, <span class="st">"UAE"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu">mutate</span><span class="op">(</span>source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html" class="external-link">replace</a></span><span class="op">(</span><span class="va">source</span>, <span class="va">source</span> <span class="op">==</span> <span class="st">"Democratic Republic of the Congo"</span>, <span class="st">"DR Congo"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu">mutate</span><span class="op">(</span>source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">" Federation| of Great Britain and Northern Ireland| Province of| \\(Bolivarian Republic of\\)|United Republic of | \\(Islamic Republic of\\)|\\(Kingdom of the\\)"</span>, <span class="st">""</span>, <span class="va">source</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu">select</span><span class="op">(</span>REG_ex <span class="op">=</span> <span class="va">source</span>, REG_im <span class="op">=</span> <span class="va">area</span>, flow <span class="op">=</span> <span class="va">value</span>, <span class="va">year</span><span class="op">)</span> <span class="op">-&gt;</span>
+  <span class="va">TM_Wheat_1</span>
+
+<span class="co"># focus on key players</span>
+<span class="va">TM_Wheat_1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2020</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">top_n</span><span class="op">(</span><span class="fl">35</span>, <span class="va">flow</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu">select</span><span class="op">(</span><span class="va">REG_ex</span>, <span class="va">REG_im</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">unlist</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">KeyPlayers</span>
+
+<span class="va">TM_Wheat_1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu">mutate</span><span class="op">(</span>REG_ex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html" class="external-link">replace</a></span><span class="op">(</span><span class="va">REG_ex</span>, <span class="op">!</span><span class="va">REG_ex</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">KeyPlayers</span>, <span class="st">"ROW"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu">mutate</span><span class="op">(</span>REG_im <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/replace.html" class="external-link">replace</a></span><span class="op">(</span><span class="va">REG_im</span>, <span class="op">!</span><span class="va">REG_im</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">KeyPlayers</span>, <span class="st">"ROW"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="co"># aggregate small players </span>
+  <span class="fu">group_by</span><span class="op">(</span><span class="va">REG_ex</span>, <span class="va">REG_im</span>, <span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu">summarise</span><span class="op">(</span>flow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">flow</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span> <span class="op">-&gt;</span>
+  <span class="va">dat_circular</span>
+
+<span class="va">dat_circular</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">group_by</span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">summarise</span><span class="op">(</span>flow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">flow</span><span class="op">)</span><span class="op">)</span>
+
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jokergoo/circlize" class="external-link">circlize</a></span><span class="op">)</span>
+
+<span class="co"># A wrapper function</span>
+<span class="va">chord_wrapper</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">.DF</span>,
+                          <span class="va">.FigTitle</span> <span class="op">=</span> <span class="cn">NULL</span>,
+                          <span class="va">.SaveDir</span> <span class="op">=</span> <span class="st">"../man/figures"</span>,
+                          <span class="va">.GRIDCOLOR</span> <span class="op">=</span> <span class="cn">NULL</span>,
+                          <span class="va">.ORDER</span> <span class="op">=</span> <span class="cn">NULL</span>,
+                          <span class="va">.SaveName</span>,
+                          <span class="va">.SaveScaler</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">{</span>
+  
+  <span class="co"># treemap save to a path</span>
+  <span class="fu"><a href="https://rdrr.io/r/grDevices/png.html" class="external-link">png</a></span><span class="op">(</span>filename<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">.SaveDir</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">.SaveName</span>,<span class="st">".png"</span><span class="op">)</span><span class="op">)</span>, res <span class="op">=</span> <span class="fl">600</span>,
+      width<span class="op">=</span> <span class="fl">7000</span> <span class="op">*</span> <span class="va">.SaveScaler</span>, height<span class="op">=</span> <span class="fl">7000</span> <span class="op">*</span> <span class="va">.SaveScaler</span> <span class="op">)</span>
+  
+  
+  <span class="fu"><a href="https://rdrr.io/pkg/circlize/man/chordDiagram.html" class="external-link">chordDiagram</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">.DF</span><span class="op">)</span>, 
+               transparency <span class="op">=</span> <span class="fl">0.5</span>, 
+               directional <span class="op">=</span> <span class="fl">1</span>,
+               direction.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"diffHeight"</span>, <span class="st">"arrows"</span><span class="op">)</span>, 
+               diffHeight <span class="op">=</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/pkg/circlize/man/uh.html" class="external-link">uh</a></span><span class="op">(</span><span class="fl">2</span>, <span class="st">"mm"</span><span class="op">)</span>
+               ,link.arr.type <span class="op">=</span> <span class="st">"big.arrow"</span>
+               ,annotationTrack <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grid"</span><span class="op">)</span>
+               ,grid.col <span class="op">=</span> <span class="va">.GRIDCOLOR</span>
+               ,order <span class="op">=</span> <span class="va">.ORDER</span>
+               ,preAllocateTracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>track.height <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span><span class="op">)</span><span class="op">)</span>
+                                         ,<span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>track.height <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.035</span><span class="op">)</span><span class="op">)</span>
+               <span class="op">)</span><span class="op">)</span>
+  
+  <span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main <span class="op">=</span> <span class="va">.FigTitle</span><span class="op">)</span>
+  
+  <span class="fu"><a href="https://rdrr.io/pkg/circlize/man/circos.track.html" class="external-link">circos.track</a></span><span class="op">(</span>track.index <span class="op">=</span> <span class="fl">3</span>, panel.fun <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/circlize/man/circos.axis.html" class="external-link">circos.axis</a></span><span class="op">(</span>h <span class="op">=</span> <span class="fl">1</span>, labels.cex <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span>   
+  <span class="op">}</span>, bg.border <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>
+  
+  <span class="fu"><a href="https://rdrr.io/pkg/circlize/man/circos.track.html" class="external-link">circos.track</a></span><span class="op">(</span>track.index <span class="op">=</span> <span class="fl">1</span>, panel.fun <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">xlim</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/circlize/man/get.cell.meta.data.html" class="external-link">get.cell.meta.data</a></span><span class="op">(</span><span class="st">"xlim"</span><span class="op">)</span>
+    <span class="va">xplot</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/circlize/man/get.cell.meta.data.html" class="external-link">get.cell.meta.data</a></span><span class="op">(</span><span class="st">"xplot"</span><span class="op">)</span>
+    <span class="va">ylim</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/circlize/man/get.cell.meta.data.html" class="external-link">get.cell.meta.data</a></span><span class="op">(</span><span class="st">"ylim"</span><span class="op">)</span>
+    <span class="va">sector.name</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/circlize/man/get.cell.meta.data.html" class="external-link">get.cell.meta.data</a></span><span class="op">(</span><span class="st">"sector.index"</span><span class="op">)</span>
+    
+    <span class="co">#make text label vertical when space is too small; cex to adjust font size</span>
+    
+    <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">xplot</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">xplot</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">20</span> <span class="op">|</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">xplot</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">xplot</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">340</span><span class="op">)</span> <span class="op">{</span>
+      <span class="fu"><a href="https://rdrr.io/pkg/circlize/man/circos.text.html" class="external-link">circos.text</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">xlim</span><span class="op">)</span>, <span class="va">ylim</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">sector.name</span>, facing <span class="op">=</span> <span class="st">"clockwise"</span>,
+                  niceFacing <span class="op">=</span> <span class="cn">TRUE</span>, adj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"black"</span>, 
+                  cex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
+      <span class="fu"><a href="https://rdrr.io/pkg/circlize/man/circos.text.html" class="external-link">circos.text</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">xlim</span><span class="op">)</span>, <span class="va">ylim</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">sector.name</span>, facing <span class="op">=</span> <span class="st">"inside"</span>, 
+                  niceFacing <span class="op">=</span> <span class="cn">TRUE</span>, adj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0</span><span class="op">)</span>, col<span class="op">=</span> <span class="st">"black"</span>, 
+                  cex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+    <span class="op">}</span>  <span class="op">}</span>, bg.border <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>
+  
+  <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span> <span class="co">#dump</span>
+  
+  <span class="fu"><a href="https://rdrr.io/pkg/circlize/man/circos.clear.html" class="external-link">circos.clear</a></span><span class="op">(</span><span class="op">)</span>
+<span class="op">}</span>
+
+  
+<span class="co"># Get color</span>
+<span class="va">GridColor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/circlize/man/rand_color.html" class="external-link">rand_color</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">KeyPlayers</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span> 
+
+<span class="co"># Plot </span>
+
+<span class="fu">chord_wrapper</span><span class="op">(</span>.DF <span class="op">=</span> <span class="va">dat_circular</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2021</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">select</span><span class="op">(</span><span class="op">-</span><span class="va">year</span><span class="op">)</span><span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">arrange</span><span class="op">(</span><span class="va">REG_ex</span>, <span class="va">REG_im</span><span class="op">)</span>,
+              .GRIDCOLOR <span class="op">=</span> <span class="va">GridColor</span>,
+              .FigTitle <span class="op">=</span> <span class="st">"Wheat trade, 2021"</span>,
+              .ORDER <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">KeyPlayers</span>, <span class="st">"ROW"</span><span class="op">)</span>,
+              .SaveDir <span class="op">=</span> <span class="st">"../man/figures"</span>,
+              .SaveName <span class="op">=</span> <span class="st">"Fig_WheatTrade2021"</span><span class="op">)</span>
+
+<span class="fu">chord_wrapper</span><span class="op">(</span>.DF <span class="op">=</span> <span class="va">dat_circular</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2020</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">select</span><span class="op">(</span><span class="op">-</span><span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">arrange</span><span class="op">(</span><span class="va">REG_ex</span>, <span class="va">REG_im</span><span class="op">)</span>,
+              .GRIDCOLOR <span class="op">=</span> <span class="va">GridColor</span>,
+              .FigTitle <span class="op">=</span> <span class="st">"Wheat trade, 2020"</span>,
+              .ORDER <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">KeyPlayers</span>, <span class="st">"ROW"</span><span class="op">)</span>,
+              .SaveDir <span class="op">=</span> <span class="st">"../man/figures"</span>,
+              .SaveName <span class="op">=</span> <span class="st">"Fig_WheatTrade2020"</span><span class="op">)</span>
+    </code></pre></div>
+<ul>
+<li>Preview <img src="../reference/figures/Fig_WheatTrade2020.png" style="width:20.0%"><img src="../reference/figures/Fig_WheatTrade2021.png" style="width:20.0%">
+</li>
 </ul>
 </div>
   </div>

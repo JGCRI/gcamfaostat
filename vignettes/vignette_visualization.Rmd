@@ -55,6 +55,11 @@ knitr::opts_chunk$set(
 ![](../man/figures/Fig_WorldFoodCalories.png){width=100%}
 ![](../man/figures/Fig_WorldFoodCaloriesReg.png){width=100%}
 ![Per capita food availability is highly heterogeneous across regions and commodities](../man/figures/Fig_WorldFoodCaloriesRegPcPerDay.png){width=100%}
+***
+
+## Trade flows
+
+![World bilateral trade flow in 2020. The world total trade was 198 million tonnes.](../man/figures/Fig_WheatTrade2020.png){width=100%}
 
 ***
 
@@ -444,7 +449,9 @@ treemap_wrapper(
 ![](../man/figures/Fig_WorldFoodCaloriesReg.png){width=20%}
 ![](../man/figures/Fig_WorldFoodCaloriesRegPcPerDay.png){width=20%}
 
-### 6. Trade [in process]
+### 6. Trade
+
+See [Cast Study](https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html#faostat-raw-data-and-processing-output-updates) for details.
 
 ### 7. Primary equivalent [in process]
 
