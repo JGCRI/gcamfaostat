@@ -64,9 +64,6 @@
       <a href="../articles/vignette_processing_flow.html">Processing Flow</a>
     </li>
     <li>
-      <a href="../articles/vignette_updating_sources.html">Update Sources</a>
-    </li>
-    <li>
       <a href="../articles/vignette_use_cases.html">Use Cases</a>
     </li>
   </ul>
@@ -116,7 +113,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Preparing data for gcamfaostat</h1>
             
-            <h4 data-toc-skip class="date">2023-10-27</h4>
+            <h4 data-toc-skip class="date">2023-11-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_preparing_data.Rmd" class="external-link"><code>vignettes/vignette_preparing_data.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_preparing_data.Rmd</code></div>
@@ -147,36 +144,44 @@ but make sure <code>Process_Raw_FAO_Data &lt;- FALSE</code> in
 <code>constants.R</code>. * The prebuilt data were generated using
 FAOSTAT data archived in Zenodo address specified in the
 <code>FF_download_RemoteArchive</code> function <span class="citation">(Zhao 2023)</span>.</p>
-<div class="section level4">
-<h4 id="get-the-latest-faostat-metadata">1. Get the latest FAOSTAT Metadata<a class="anchor" aria-label="anchor" href="#get-the-latest-faostat-metadata"></a>
-</h4>
+<div class="section level3">
+<h3 id="get-the-latest-faostat-metadata">1. Get the latest FAOSTAT Metadata<a class="anchor" aria-label="anchor" href="#get-the-latest-faostat-metadata"></a>
+</h3>
 <p><a href="https://jgcri.github.io/gcamfaostat/reference/FAOSTAT_metadata.html"><code>FAOSTAT_metadata()</code></a></p>
 <ul>
 <li>Accessing API and returning a data frame of metadata</li>
 </ul>
 </div>
-<div class="section level4">
-<h4 id="generate-the-metadata-for-the-gcamfaostat-input-data">2. Generate the metadata for the <code>gcamfaostat</code> input
+<div class="section level3">
+<h3 id="generate-the-metadata-for-the-gcamfaostat-input-data">2. Generate the metadata for the <code>gcamfaostat</code> input
 data<a class="anchor" aria-label="anchor" href="#generate-the-metadata-for-the-gcamfaostat-input-data"></a>
-</h4>
+</h3>
 <p><a href="https://jgcri.github.io/gcamfaostat/reference/gcamfaostat_metadata.html"><code>gcamfaostat_metadata()</code></a></p>
 <ul>
-<li>Saving the latest FAOSTAT metadata to the <a href="https://github.com/JGCRI/gcamfaostat/tree/main/inst/extdata/aglu/FAO/FAOSTAT/metadata_log" class="external-link">metadata_log</a><br>
+<li>The function will save the latest FAOSTAT metadata to the <a href="https://github.com/JGCRI/gcamfaostat/tree/main/inst/extdata/aglu/FAO/FAOSTAT/metadata_log" class="external-link">metadata_log</a><br>
+</li>
+<li>The function will access both the latest FAOSTAT metadata and local
+data information and returns a summary table including the dataset
+information needed for gcamfaostat (see <strong>Table 1</strong>
+below).<br>
 </li>
 <li>The dataset code needed were specified in the function to get a
-subset of the FAOSTAT metadata.<br>
+subset of the FAOSTAT metadata. The function will return only dataset
+code required when setting
+<code>OnlyReturnDatasetCodeRequired = FALSE</code>.<br>
 </li>
-<li>Checking if local FAOSTAT raw data exist<br>
+<li>The function will check whether FAOSTAT raw data exists locally
+(<code>Exist_Local</code>) and in <a href="https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda" class="external-link">Prebuilt
+Data</a> (<code>Exist_Prebuilt</code>). If <code>Exist_Prebuilt</code>
+is <code>TRUE</code> for all dataset, the package is ready to be built
+based on the Prebuilt package data.<br>
 </li>
-<li>Checking if raw data was stored in the <a href="https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda" class="external-link">Prebuilt
-Data</a><br>
-</li>
-<li>Returning a summary table (see below)</li>
+<li>
+<code>FAO update data</code> and <code>FAO size</code> indicate the
+information based on the latest FAOSTAT metadata.</li>
 </ul>
+<strong>Table 1. FAOSTAT dataset processed in gcamfaostat</strong>
 <table class="table table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
-<caption>
-FAOSTAT dataset processed in gcamfaostat
-</caption>
 <thead><tr>
 <th style="text-align:left;">
 Dataset Code
@@ -212,7 +217,7 @@ FALSE
 TRUE
 </td>
 <td style="text-align:left;">
-2022-08-25
+2023-08-08
 </td>
 <td style="text-align:left;">
 1MB
@@ -232,10 +237,10 @@ FALSE
 TRUE
 </td>
 <td style="text-align:left;">
-2023-05-04
+2023-09-04
 </td>
 <td style="text-align:left;">
-50MB
+55MB
 </td>
 </tr>
 <tr>
@@ -412,10 +417,10 @@ FALSE
 TRUE
 </td>
 <td style="text-align:left;">
-2023-04-26
+2023-09-04
 </td>
 <td style="text-align:left;">
-59MB
+72MB
 </td>
 </tr>
 <tr>
@@ -465,35 +470,42 @@ suggests the raw data was saved in the Prebuilt data. And if
 Exist_Prebuilt is <code>TRUE</code> for all dataset, the package is
 ready to be built based on the Prebuilt data.</p>
 </div>
-<div class="section level4">
-<h4 id="download-faostat-raw-data">3. Download FAOSTAT raw data<a class="anchor" aria-label="anchor" href="#download-faostat-raw-data"></a>
-</h4>
+<div class="section level3">
+<h3 id="download-faostat-raw-data">3. Download FAOSTAT raw data<a class="anchor" aria-label="anchor" href="#download-faostat-raw-data"></a>
+</h3>
 <p><a href="https://jgcri.github.io/gcamfaostat/reference/FF_download_RemoteArchive.html"><code>FF_download_RemoteArchive()</code></a></p>
 <ul>
-<li>A Zenodo URL was included archiving a snapshot of FAOSTAT data to
-ensure replicability.</li>
+<li>The function downloads the FAOSTAT raw data needed for the package
+from a remote archive.<br>
+</li>
+<li>The default Zenodo archive currently included in the function
+includes a snapshot of FAOSTAT data to ensure replicability.<br>
+</li>
+<li>The archived data is consistent with the Prebuilt package data.</li>
 </ul>
-<p><a href="https://jgcri.github.io/gcamfaostat/reference/FF_download_FAOSTAT.html"><code>FF_download_FAOSTAT()</code></a></p>
+<p><a href="https://jgcri.github.io/gcamfaostat/reference/FF_download_FAOSTAT.html"><code>FF_download_FAOSTAT()</code></a>
+* The function downloads the latest raw data from FAOSTAT.</p>
 <p>Two functions above are created for downloading the raw data from a
 remote archive or the FAOSTAT API (latest data). The dataset code
 variable in the two functions, if including all, can be generated using
 <code>gcamfaostat_metadata(OnlyReturnDatasetCodeRequired = T)</code>.</p>
 </div>
-<div class="section level4">
-<h4 id="check-local-raw-data-info">4. Check local raw data info<a class="anchor" aria-label="anchor" href="#check-local-raw-data-info"></a>
-</h4>
+<div class="section level3">
+<h3 id="check-local-raw-data-info">4. Check local raw data info<a class="anchor" aria-label="anchor" href="#check-local-raw-data-info"></a>
+</h3>
 <p><a href="https://jgcri.github.io/gcamfaostat/reference/FF_rawdata_info.html"><code>FF_rawdata_info()</code></a></p>
 <ul>
 <li>Providing more detailed metadata information, similar to
 <code>gcamfaostat_metadata</code>(which calls
-<code>FF_rawdata_info</code>). # Indicate whether an update from FAOSTAT
-is potentially needed.</li>
+<code>FF_rawdata_info</code>).<br>
+</li>
+<li>Indicate whether an update from FAOSTAT is potentially needed.</li>
 <li>Can be used to download data if not exist.</li>
 </ul>
 </div>
-<div class="section level4">
-<h4 id="load-raw-data-into-package">5. Load raw data into package<a class="anchor" aria-label="anchor" href="#load-raw-data-into-package"></a>
-</h4>
+<div class="section level3">
+<h3 id="load-raw-data-into-package">5. Load raw data into package<a class="anchor" aria-label="anchor" href="#load-raw-data-into-package"></a>
+</h3>
 <p><a href="https://jgcri.github.io/gcamfaostat/reference/FAOSTAT_load_raw_data.html"><code>FAOSTAT_load_raw_data</code></a></p>
 <ul>
 <li>Loading FAOSTAT raw data, e.g., used in
@@ -502,9 +514,9 @@ is potentially needed.</li>
 <code>_</code>.</li>
 </ul>
 </div>
-<div class="section level4">
-<h4 id="update-the-prebulit-data">6. Update the Prebulit data<a class="anchor" aria-label="anchor" href="#update-the-prebulit-data"></a>
-</h4>
+<div class="section level3">
+<h3 id="update-the-prebulit-data">6. Update the Prebulit data<a class="anchor" aria-label="anchor" href="#update-the-prebulit-data"></a>
+</h3>
 <p>If users updated the FAOSTAT raw data, and run
 <code>driver_drake</code> is run with
 <code>Process_Raw_FAO_Data &lt;- TRUE</code> in
@@ -537,7 +549,7 @@ Zenodo. <a href="https://doi.org/10.5281/zenodo.8260225" class="external-link">h
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kanishka Narayan, Chris Vernon.</p>
+<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kate Calvin, Kanishka Narayan, Chris Vernon.</p>
 </div>
 
 <div class="pkgdown">

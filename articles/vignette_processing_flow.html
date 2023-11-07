@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>gcamfaostat data processing flow • gcamfaostat</title>
+<title>gcamfaostat data processing • gcamfaostat</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="gcamfaostat data processing flow">
+<script src="../pkgdown.js"></script><meta property="og:title" content="gcamfaostat data processing">
 <meta property="og:description" content="gcamfaostat">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -64,9 +64,6 @@
       <a href="../articles/vignette_processing_flow.html">Processing Flow</a>
     </li>
     <li>
-      <a href="../articles/vignette_updating_sources.html">Update Sources</a>
-    </li>
-    <li>
       <a href="../articles/vignette_use_cases.html">Use Cases</a>
     </li>
   </ul>
@@ -113,9 +110,9 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>gcamfaostat data processing flow</h1>
+      <h1 data-toc-skip>gcamfaostat data processing</h1>
             
-            <h4 data-toc-skip class="date">2023-10-27</h4>
+            <h4 data-toc-skip class="date">2023-11-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_processing_flow.Rmd" class="external-link"><code>vignettes/vignette_processing_flow.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_processing_flow.Rmd</code></div>
@@ -124,16 +121,197 @@
 
     
     
-<p><img src="../reference/figures/Fig_data_processing_flow.jpg" alt="Figure. Structure of gcamfaostat"><strong>Figure. Structure of
-gcamfaostat v1.0.0</strong></p>
-<p><code>module_xfaostat_L105_DataConnectionToSUA</code></p>
-<p><img src="../reference/figures/Fig_KeyModule_xfaostat_L105.jpg" alt="Figure. Structure of gcamfaostat"><strong>Figure. Structure of
-gcamfaostat v1.0.0</strong></p>
+<div class="section level2">
+<h2 id="data-processing">Data processing<a class="anchor" aria-label="anchor" href="#data-processing"></a>
+</h2>
+<div class="section level3">
+<h3 id="module-structure">Module structure<a class="anchor" aria-label="anchor" href="#module-structure"></a>
+</h3>
+<p>The architecture of gcamfaostat processing modules is depicted in the
+<a href="#Fig1"><strong>Figure 1</strong></a> below. This framework
+currently comprises eight preprocessing modules and nine processing and
+synthesizing modules, generating twelve output files tailored for <a href="https://github.com/JGCRI/gcam-core/releases/tag/gcam-v7.0" class="external-link">GCAM
+v7</a>. Each module is essentially an <code>R</code> function with
+well-defined inputs and outputs. To showcase the flexibility and
+expandability of our package, we also incorporated two AgLU modules
+(from <code>gcamdata</code>) that exemplify the data aggregation
+processes, e.g., across regions, sectors, and time. Moreover, the
+<code>driver_drake</code> function plays a pivotal role by executing all
+available data processing modules, thereby generating both intermediate
+and final outputs, which are vital components of our comprehensive data
+processing pipeline.<br><br></p>
+<p><a name="Fig1"></a> <img src="../reference/figures/Fig_data_processing_flow.jpg" style="width:98.0%"><strong>Figure 1. The architecture of data processing modules in
+gcamfaostat</strong></p>
+</div>
+<div class="section level3">
+<h3 id="data-synthesizing-in-a-key-module">Data synthesizing in a key module<a class="anchor" aria-label="anchor" href="#data-synthesizing-in-a-key-module"></a>
+</h3>
+<p>Of particular significance is the
+<code>module_xfaostat_L105_DataConnectionToSUA</code>, which plays a
+pivotal role in harmonizing various FAOSTAT datasets to generate a
+cohesive set of agricultural supply and utilization accounts (SUA) data.
+This complex process is elucidated in the following <a href="#Fig2"><strong>Figure 2</strong></a>. This endeavor entails
+working through nine tiers of data, each sourced differently, with the
+aim of producing and harmonizing agricultural SUA dataset for a diverse
+range of over 500 agricultural commodities. Compared to the FAO’s FBS,
+which report food and nutritional information for about 100 composite
+categories, in many cases combining primary and processed commodities
+(e.g., wheat and flour) within a single category (e.g., wheat and
+products), the constructed SUA explicitly trace the transformations
+between primary and processed commodities, while reporting nutritional
+details at the highly disaggregated level (over 500 commodities). In
+doing so, the constructed dataset substantially simplifies the FAOSTAT
+data processing steps by explicitly distinguishing food and nutritional
+supply at the individual commodity level and facilitating a
+straightforward mapping of the corresponding data to the global
+agroeconomic models.</p>
+<p>As an illustrative example, the first tier comprises 168 commodities,
+generated by combining production data from QCL, trade data from TM, and
+other essential balancing elements (such as opening and closing stocks,
+food and feed uses, and other industrial uses) from SCL. For a more
+comprehensive understanding of these procedures, we encourage an
+interested user to explore the mapping file, FAO_items. It is crucial to
+underscore the importance of these processing procedures, as raw FAOSTAT
+data often contains duplicated elements and inconsistencies among
+different datasets. For instance, trade data can be found in TCL, TM,
+SCL, and FBS, while production data exists in QCL and SCL. <br><a name="Fig2"></a><br><img src="../reference/figures/Fig_KeyModule_xfaostat_L105.jpg" style="width:98.0%"><br><strong>Figure 2. FAOSTAT agricultural supply utilization data synthesis
+in module_xfaostat_L105_DataConnectionToSUA.</strong> Note that the nine
+tiers of data, distinguished by commodities (or items in FAOSTAT terms)
+included, have different sources for generating agricultural supply
+utilization accounts.</p>
+</div>
+<div class="section level3">
+<h3 id="driver_drake">driver_drake<a class="anchor" aria-label="anchor" href="#driver_drake"></a>
+</h3>
+<p><a href="https://jgcri.github.io/gcamfaostat/reference/driver_drake.html"><code>driver_drake</code></a></p>
+<ul>
+<li>The function runs data processing modules sequentially to generate
+intermediate data outputs and final output (e.g., csv or other files)
+for GCAM (gcamdata) or other models.</li>
+<li>The function is inherited from gcamdata and it uses the drake <span class="citation">(Landau 2018)</span> pipeline framework, which
+simplifies module updates, data tracing, and results visualization
+process.</li>
+<li>It stores the outputs in a drake cache so that when the function is
+run again, it skips the steps that are up-to-date.</li>
+<li>In constants.R, users can set OUTPUT_Export_CSV = TRUE and specify
+the output directory (<code>DIR_OUTPUT_CSV</code>) to export and store
+the output csv files (currently the default option for GCAM v7).</li>
+</ul>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="data-tracing">Data tracing<a class="anchor" aria-label="anchor" href="#data-tracing"></a>
+</h2>
+<div class="section level3">
+<h3 id="key-functions">Key functions<a class="anchor" aria-label="anchor" href="#key-functions"></a>
+</h3>
+<p>As gcamfaostat is built upon the foundation of <code>gcamdata</code>
+and leverages the powerful drake framework, inheriting functions
+designed for tracking data flows. In the following, we will delve into
+several key features that exemplify the strengths of this
+integration.</p>
+<p><a href="https://jgcri.github.io/gcamfaostat/reference/info.html"><code>info</code></a>
+* The function returns information of an object, including name,
+metadata information, precursors and dependents.</p>
+<p><a href="https://jgcri.github.io/gcamfaostat/reference/dstrace.html"><code>dstrace</code></a>
+* The function is able to trace data flows by providing precursors and
+dependents of an object recursively.</p>
+<p><a href="https://jgcri.github.io/gcamfaostat/reference/load_from_cache.html"><code>load_from_cache</code></a>
+* If a drake cache is available, e.g., when <code><a href="../reference/driver_drake.html">driver_drake()</a></code>
+had been run, this function, if given a list of object names, loads the
+objects from the cache into a list of data frames.<br>
+* The function <a href="https://jgcri.github.io/gcamfaostat/reference/get_data_list.html"><code>get_data_list</code></a>
+can be used to assign each object in the list to a data frame.</p>
+</div>
+<div class="section level3">
+<h3 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+</h3>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Load gcamfaostat</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span><span class="co"># package data, GCAM_DATA_MAP, will be loaded</span></span>
+<span></span>
+<span><span class="co"># Get information for an intermediate data frame QCL_CROP_PRIMARY</span></span>
+<span><span class="fu"><a href="../reference/info.html">info</a></span><span class="op">(</span><span class="st">"QCL_CROP_PRIMARY"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; QCL_CROP_PRIMARY - produced by module_xfaostat_L102_ProductionArea </span></span>
+<span><span class="co">#&gt;  FAO primary crop area and production (various)</span></span>
+<span><span class="co">#&gt;  Detailed FAO QCL data processing for crop area and production</span></span>
+<span><span class="co">#&gt;  Dependent: xfaostat_L199_GCAMDATA_FAOSTAT_CSV</span></span>
+<span><span class="co">#&gt;  Precursor: aglu/FAO/FAO_an_items_PRODSTAT</span></span>
+<span><span class="co">#&gt;  Precursor: QCL_wide</span></span>
+<span><span class="co">#&gt;  Precursor: FBS_wide</span></span>
+<span><span class="co">#&gt;  Precursor: FBSH_CB_wide</span></span>
+<span></span>
+<span><span class="co"># Trace all downstream data flows for SCL_wide</span></span>
+<span><span class="fu"><a href="../reference/dstrace.html">dstrace</a></span><span class="op">(</span><span class="st">"SCL_wide"</span>, direction <span class="op">=</span> <span class="st">"downstream"</span>, recurse <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> </span>
+<span><span class="co">#&gt; 1 - SCL_wide - produced by module_xfaostat_L101_RawDataPreProc3_SCL_FBS </span></span>
+<span><span class="co">#&gt;  FAO supply utilization account dataset, 2010+, wide (tonne)</span></span>
+<span><span class="co">#&gt;  Preprocessed FAOSTAT SCL; ** PRE-BUILT **</span></span>
+<span><span class="co">#&gt;  Dependent: Bal_new_all (#2 below)</span></span>
+<span><span class="co">#&gt;  Dependent: SUA_food_macronutrient_rate (#3 below)</span></span>
+<span><span class="co">#&gt; 2 - Bal_new_all - produced by module_xfaostat_L105_DataConnectionToSUA </span></span>
+<span><span class="co">#&gt;  Bal_new_all (Ktonne)</span></span>
+<span><span class="co">#&gt;  Preprocessed FAO SUA 2010 - 2019</span></span>
+<span><span class="co">#&gt;  Dependent: xfaostat_L199_GCAMDATA_FAOSTAT_CSV (#4 below)</span></span>
+<span><span class="co">#&gt; 4 - xfaostat_L199_GCAMDATA_FAOSTAT_CSV - produced by module_xfaostat_L199_CSVExportAgSUA </span></span>
+<span><span class="co">#&gt;  Export CSV to DIR_OUTPUT_CSV (NA)</span></span>
+<span><span class="co">#&gt;  Export CSV</span></span>
+<span><span class="co">#&gt;  No dependents</span></span>
+<span><span class="co">#&gt; 3 - SUA_food_macronutrient_rate - produced by module_xfaostat_L106_FoodMacroNutrient </span></span>
+<span><span class="co">#&gt;  FAO food calories and macronutrient rate (rates)</span></span>
+<span><span class="co">#&gt;  Detailed FAO food calories and macrotunitent info for 414 SUA items +</span></span>
+<span><span class="co">#&gt;  12 fish items</span></span>
+<span><span class="co">#&gt;  Dependent: xfaostat_L199_GCAMDATA_FAOSTAT_CSV (#4 above)</span></span>
+<span></span>
+<span><span class="co"># Get input of a module</span></span>
+<span><span class="fu"><a href="../reference/inputs_of.html">inputs_of</a></span><span class="op">(</span><span class="st">"module_xfaostat_L105_DataConnectionToSUA"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "aglu/FAO/FAO_items"                "aglu/FAO/Mapping_FBSH_SCL_OilCake"</span></span>
+<span><span class="co">#&gt; [3] "QCL_PROD"                          "QCL_AN_LIVEANIMAL_MEATEQ"         </span></span>
+<span><span class="co">#&gt; [5] "TCL_wide"                          "TM_bilateral_wide"                </span></span>
+<span><span class="co">#&gt; [7] "FBSH_CB_wide"                      "FBS_wide"                         </span></span>
+<span><span class="co">#&gt; [9] "SCL_wide"</span></span>
+<span></span>
+<span><span class="co"># Get output of a module</span></span>
+<span><span class="fu"><a href="../reference/outputs_of.html">outputs_of</a></span><span class="op">(</span><span class="st">"module_xfaostat_L106_FoodMacroNutrient"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "SUA_food_macronutrient_rate"</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Not evaluated for convenience </span></span>
+<span><span class="co"># Load gcamfaostat</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span></span>
+<span><span class="co"># Load FAO_items from cache</span></span>
+<span><span class="fu"><a href="../reference/load_from_cache.html">load_from_cache</a></span><span class="op">(</span><span class="st">"aglu/FAO/FAO_items"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">first</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">FAO_items</span></span>
+<span><span class="co"># Print</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">FAO_items</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Define a list of input data</span></span>
+<span><span class="va">MODULE_INPUTS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Bal_new_all"</span><span class="op">)</span></span>
+<span><span class="co"># Load a list of MODULE_INPUTS from cache and assign to their name</span></span>
+<span><span class="fu"><a href="../reference/get_data_list.html">get_data_list</a></span><span class="op">(</span>all_data <span class="op">=</span> <span class="fu"><a href="../reference/load_from_cache.html">load_from_cache</a></span><span class="op">(</span><span class="va">MODULE_INPUTS</span><span class="op">)</span>, data_list <span class="op">=</span> <span class="va">MODULE_INPUTS</span><span class="op">)</span></span>
+<span><span class="co"># Print</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">Bal_new_all</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Landau2018" class="csl-entry">
+Landau, William Michael. 2018. <span>“The Drake r Package: A Pipeline
+Toolkit for Reproducibility and High-Performance Computing.”</span>
+<em>Journal of Open Source Software</em> 3 (21): 550. <a href="https://doi.org/10.21105/joss.00550" class="external-link">https://doi.org/10.21105/joss.00550</a>.
+</div>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 
@@ -141,7 +319,7 @@ gcamfaostat v1.0.0</strong></p>
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kanishka Narayan, Chris Vernon.</p>
+<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kate Calvin, Kanishka Narayan, Chris Vernon.</p>
 </div>
 
 <div class="pkgdown">

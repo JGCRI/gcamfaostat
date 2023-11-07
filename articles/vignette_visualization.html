@@ -64,9 +64,6 @@
       <a href="../articles/vignette_processing_flow.html">Processing Flow</a>
     </li>
     <li>
-      <a href="../articles/vignette_updating_sources.html">Update Sources</a>
-    </li>
-    <li>
       <a href="../articles/vignette_use_cases.html">Use Cases</a>
     </li>
   </ul>
@@ -115,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Visualization</h1>
             
-            <h4 data-toc-skip class="date">2023-10-27</h4>
+            <h4 data-toc-skip class="date">2023-11-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_visualization.Rmd" class="external-link"><code>vignettes/vignette_visualization.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_visualization.Rmd</code></div>
@@ -128,8 +125,8 @@
 connection of harvested area and food calories via supply utilization
 accounts.</strong><br>
 * We focus on the 2013 - 2017 mean as they are the base calibration
-years of GCAM. * Year variables can be changes easily.<br>
-* All the data used are from <code>gcamfaostat</code>.<br>
+years of GCAM. * A user can change the years and mappings as desired. *
+All the data used are from <code>gcamfaostat</code>.<br>
 * Code for generating the figures are provided in the bottom.<br>
 * The visualization here will be continuously updates (suggestions and
 pull requests welcome).<br>
@@ -153,8 +150,13 @@ India (13.8 B), USA (3.3 B), Indonesia (2.7 B), Pakistan (2.2 B), Brazil
 <div class="section level2">
 <h2 id="harvested-area">Harvested area<a class="anchor" aria-label="anchor" href="#harvested-area"></a>
 </h2>
-<p><img src="../reference/figures/Fig_WorldAreaHarvested.png" style="width:100.0%"></p>
-<p><img src="../reference/figures/Fig_WorldAreaHarvestedReg.png" style="width:100.0%"></p>
+<p><img src="../reference/figures/Fig_WorldAreaHarvested.png" style="width:100.0%"> World area harvested (shares) grouped by GCAM
+crops based on the 2013 – 2017 mean values. The total harvested area is
+1509 million hectares (Mha).</p>
+<p><img src="../reference/figures/Fig_WorldAreaHarvestedReg.png" style="width:100.0%"> Food calories availability per capita per day
+grouped by GCAM regions and commodities based on the 2013 – 2017 mean
+values. The world average value is 2902 Kcal per capita per day
+(Kcal/ca/d).</p>
 <hr>
 </div>
 <div class="section level2">
@@ -171,13 +173,28 @@ The opposite is true for root and tuber crops</p>
 <div class="section level2">
 <h2 id="supply-utilization">Supply-utilization<a class="anchor" aria-label="anchor" href="#supply-utilization"></a>
 </h2>
-<p><img src="../reference/figures/Fig_WorldSUA.png" style="width:100.0%" alt="Residuals (mostly small) indicate the imbalance in the data, mainly implying the quality of the source data">
-***</p>
+<p><img src="../reference/figures/Fig_WorldSUA.png" style="width:100.0%">
+World supply utilization accounts for key commodities based on the 2013
+– 2017 mean values. Note that negative values are used for demand
+categories and positive values are used for supply categories. Other
+uses include seed use, losses, and industrial use; residuals (mostly
+small) indicate the imbalance in the data, mainly implying the quality
+of the source data. The total supply is equal to the total demand.</p>
+<hr>
 </div>
 <div class="section level2">
 <h2 id="food-calories">Food Calories<a class="anchor" aria-label="anchor" href="#food-calories"></a>
 </h2>
 <p><img src="../reference/figures/Fig_WorldFoodCalories.png" style="width:100.0%"><img src="../reference/figures/Fig_WorldFoodCaloriesReg.png" style="width:100.0%"><img src="../reference/figures/Fig_WorldFoodCaloriesRegPcPerDay.png" style="width:100.0%" alt="Per capita food availability is highly heterogeneous across regions and commodities"></p>
+<hr>
+</div>
+<div class="section level2">
+<h2 id="trade-flows">Trade flows<a class="anchor" aria-label="anchor" href="#trade-flows"></a>
+</h2>
+<div class="figure">
+<img src="../reference/figures/Fig_WheatTrade2020.png" style="width:100.0%" alt=""><p class="caption">World bilateral trade flow in 2020. The world total
+trade was 198 million tonnes.</p>
+</div>
 <hr>
 </div>
 <div class="section level2">
@@ -424,7 +441,7 @@ year(s)</li>
 <span>        strip.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"grey90"</span><span class="op">)</span>,</span>
 <span>        legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p</span></span>
 <span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"man/figures"</span>, <span class="st">"WorldYield.png"</span><span class="op">)</span>, <span class="va">p</span>, width <span class="op">=</span> <span class="fl">15</span>, height <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"../man/figures"</span>, <span class="st">"WorldYield.png"</span><span class="op">)</span>, <span class="va">p</span>, width <span class="op">=</span> <span class="fl">15</span>, height <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <ul>
 <li>Preview<br><img src="../reference/figures/Fig_WorldYield.png" style="width:20.0%">
 </li>
@@ -470,7 +487,7 @@ year(s)</li>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>value <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="op">!</span><span class="va">element</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">ElEMSupply</span>, <span class="op">-</span><span class="va">value</span>, <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>element <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">element</span>, levels <span class="op">=</span> <span class="va">ELEMLevel</span>, labels <span class="op">=</span> <span class="va">ELEMLabel</span><span class="op">)</span>,</span>
 <span>         item <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">item</span>, levels <span class="op">=</span> <span class="va">SECLevel</span>, labels <span class="op">=</span> <span class="va">SECLevel</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>CropMeat <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="va">item</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">KeySectorCrops</span>, <span class="st">"Crops"</span>, <span class="st">"Meat"</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>CropMeat <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="va">item</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">KeySectorCrops</span>, <span class="st">"Crop"</span>, <span class="st">"Meat"</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span></span>
 <span>  <span class="va">DF_SUA</span></span></code></pre></div>
 <ul>
 <li>Plot and save</li>
@@ -493,7 +510,7 @@ year(s)</li>
 <span>                               <span class="st">"Demand: Closing stocks"</span> <span class="op">=</span> <span class="va">ColUpdate</span><span class="op">[</span><span class="fl">10</span><span class="op">]</span> <span class="op">)</span> <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Key agriculture Commodities"</span>,</span>
 <span>       y <span class="op">=</span> <span class="st">"Million tonnes"</span>, fill <span class="op">=</span> <span class="st">"Element"</span>,</span>
-<span>       title <span class="op">=</span> <span class="st">"World supply utilization for key commodities, 2015 - 2017 mean"</span>,</span>
+<span>       title <span class="op">=</span> <span class="st">"World supply utilization for key commodities, 2013 - 2017 mean"</span>,</span>
 <span>       subtitle <span class="op">=</span> <span class="st">"Other uses include seed use, losses, and industrial use"</span>,</span>
 <span>       caption <span class="op">=</span> <span class="st">"Data: FAOSTAT \n Package: JGCRI/gcamfaostat"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
@@ -503,7 +520,7 @@ year(s)</li>
 <span>        strip.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"grey100"</span><span class="op">)</span>,</span>
 <span>        strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p</span>;<span class="va">p</span></span>
 <span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"man/figures"</span>, <span class="st">"Fig_WorldSUA.png"</span><span class="op">)</span>, <span class="va">p</span>, width <span class="op">=</span> <span class="fl">16</span>, height <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"../man/figures"</span>, <span class="st">"Fig_WorldSUA.png"</span><span class="op">)</span>, <span class="va">p</span>, width <span class="op">=</span> <span class="fl">16</span>, height <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <ul>
 <li>Preview<br><img src="../reference/figures/Fig_WorldSUA.png" style="width:20.0%">
 </li>
@@ -594,8 +611,10 @@ year(s)</li>
 </ul>
 </div>
 <div class="section level3">
-<h3 id="trade-in-process">6. Trade [in process]<a class="anchor" aria-label="anchor" href="#trade-in-process"></a>
+<h3 id="trade">6. Trade<a class="anchor" aria-label="anchor" href="#trade"></a>
 </h3>
+<p>See <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html#faostat-raw-data-and-processing-output-updates">Cast
+Study</a> for details.</p>
 </div>
 <div class="section level3">
 <h3 id="primary-equivalent-in-process">7. Primary equivalent [in process]<a class="anchor" aria-label="anchor" href="#primary-equivalent-in-process"></a>
@@ -616,7 +635,7 @@ year(s)</li>
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kanishka Narayan, Chris Vernon.</p>
+<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kate Calvin, Kanishka Narayan, Chris Vernon.</p>
 </div>
 
 <div class="pkgdown">

@@ -25,9 +25,6 @@
     <loc>https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html</loc>
   </url>
   <url>
-    <loc>https://jgcri.github.io/gcamfaostat/articles/vignette_updating_sources.html</loc>
-  </url>
-  <url>
     <loc>https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html</loc>
   </url>
   <url>
@@ -38,6 +35,9 @@
   </url>
   <url>
     <loc>https://jgcri.github.io/gcamfaostat/index.html</loc>
+  </url>
+  <url>
+    <loc>https://jgcri.github.io/gcamfaostat/paper.html</loc>
   </url>
   <url>
     <loc>https://jgcri.github.io/gcamfaostat/reference/FAOSTAT_AREA_RM_NONEXIST.html</loc>
