@@ -44,7 +44,8 @@ When `gcamfaostat` is downloaded, preprocessed FAOSTAT data, i.e., output of the
   
 **Table 1. FAOSTAT dataset processed in gcamfaostat**
 ``` {r, echo=FALSE, warning=FALSE, message=FALSE}
-devtools::load_all()
+# devtools::load_all()
+library(gcamfaostat)
 library(dplyr)
 library(kableExtra)
 gcamfaostat_metadata(.DIR_RAW_DATA_FAOSTAT = file.path("..", "inst/extdata/aglu/FAO/FAOSTAT")) %>% 
