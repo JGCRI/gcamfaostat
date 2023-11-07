@@ -26,16 +26,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up R ${{ matrix.r-version }}
-        uses: r-lib/actions/setup-r@f57f1301a053485946083d7a45022b278929a78a
+      - name: Set up R and Pandoc ${{ matrix.r-version }}
+        uses: rocker-org/rocker-action@v1
         with:
           r-version: ${{ matrix.r-version }}
-
-      - name: Install Pandoc
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y pandoc
-        shell: bash
+          pandoc: true
         
       - name: Install dependencies
         run: |
