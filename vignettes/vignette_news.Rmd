@@ -15,17 +15,21 @@ knitr::opts_chunk$set(
 )
 ```
 
+2023-11-07
+
+* All documentations down, including paper.md
+* Coauthor comments resolved.
+* Creating a release version and submitting to JOSS. 
 
 # October updates
 2023-10-30  
 * Vignettes completed
 
 2023-10-25   
-ToDo before JOSS submission
+ToDo before JOSS submission  
+
 * Check package license (PNNL)
 * Check Zenodo license for FAOSTAT data [*Done*: `CC BY-NC-SA`]
-* Adding contribution.MD and Community side-bar [*Done*]
-
 * Test & Check; Adding GitHub tests/badges 
 
 2023-10-24   

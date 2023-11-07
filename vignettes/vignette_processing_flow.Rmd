@@ -64,7 +64,7 @@ As gcamfaostat is built upon the foundation of `gcamdata` and leverages the powe
 * The function is able to trace data flows by providing precursors and dependents of an object recursively.
 
 [`load_from_cache`](https://jgcri.github.io/gcamfaostat/reference/load_from_cache.html)
-*	If a drake cache is available, e.g., when `driver_drake()` had been run, this function, if given a list of object names, loads the objects from the cache into a list of data frames.
+*	If a drake cache is available, e.g., when `driver_drake()` had been run, this function, if given a list of object names, loads the objects from the cache into a list of data frames.  
 *	The function [`get_data_list`](https://jgcri.github.io/gcamfaostat/reference/get_data_list.html) can be used to assign each object in the list to a data frame.  
 
 
@@ -73,7 +73,7 @@ As gcamfaostat is built upon the foundation of `gcamdata` and leverages the powe
 ``` {r, eval =TRUE, message = FALSE, warnings = FALSE, error = FALSE}
 # Load gcamfaostat
 devtools::load_all() 
-driver_drake()
+# package data, GCAM_DATA_MAP, will be loaded
 
 # Get information for an intermediate data frame QCL_CROP_PRIMARY
 info("QCL_CROP_PRIMARY")
@@ -86,6 +86,13 @@ inputs_of("module_xfaostat_L105_DataConnectionToSUA")
 
 # Get output of a module
 outputs_of("module_xfaostat_L106_FoodMacroNutrient")
+```
+
+``` {r, eval =FALSE}
+# Not evaluated for convenience 
+# Load gcamfaostat
+devtools::load_all() 
+devtools::load_all() 
 
 # Load FAO_items from cache
 load_from_cache("aglu/FAO/FAO_items") %>% first() -> FAO_items

@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>gcamfaostat data processing</h1>
             
-            <h4 data-toc-skip class="date">2023-11-06</h4>
+            <h4 data-toc-skip class="date">2023-11-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_processing_flow.Rmd" class="external-link"><code>vignettes/vignette_processing_flow.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_processing_flow.Rmd</code></div>
@@ -220,7 +220,8 @@ dependents of an object recursively.</p>
 <p><a href="https://jgcri.github.io/gcamfaostat/reference/load_from_cache.html"><code>load_from_cache</code></a>
 * If a drake cache is available, e.g., when <code><a href="../reference/driver_drake.html">driver_drake()</a></code>
 had been run, this function, if given a list of object names, loads the
-objects from the cache into a list of data frames. * The function <a href="https://jgcri.github.io/gcamfaostat/reference/get_data_list.html"><code>get_data_list</code></a>
+objects from the cache into a list of data frames.<br>
+* The function <a href="https://jgcri.github.io/gcamfaostat/reference/get_data_list.html"><code>get_data_list</code></a>
 can be used to assign each object in the list to a data frame.</p>
 </div>
 <div class="section level3">
@@ -229,15 +230,7 @@ can be used to assign each object in the list to a data frame.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Load gcamfaostat</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span> 
-<span class="fu"><a href="../reference/driver_drake.html">driver_drake</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; Warning: missing file_in() files:</span>
-<span class="co">#&gt;   R/constants.R</span>
-<span class="co">#&gt; Warning: Do not run make() from a subdirectory of your project.</span>
-<span class="co">#&gt;   running make() from: C:\Users\zhao752\Dropbox\gcamdata-faostat\vignettes</span>
-<span class="co">#&gt;   drake project root:  C:\Users\zhao752\Dropbox\gcamdata-faostat</span>
-<span class="co">#&gt;   cache directory:     C:\Users\zhao752\Dropbox\gcamdata-faostat\.drake</span>
-<span class="co">#&gt; Warning: package 'drake' was built under R version 4.1.3</span>
-<span class="co">#&gt; All done.</span>
+<span class="co"># package data, GCAM_DATA_MAP, will be loaded</span>
 
 <span class="co"># Get information for an intermediate data frame QCL_CROP_PRIMARY</span>
 <span class="fu"><a href="../reference/info.html">info</a></span><span class="op">(</span><span class="st">"QCL_CROP_PRIMARY"</span><span class="op">)</span>
@@ -281,39 +274,24 @@ can be used to assign each object in the list to a data frame.</p>
 
 <span class="co"># Get output of a module</span>
 <span class="fu"><a href="../reference/outputs_of.html">outputs_of</a></span><span class="op">(</span><span class="st">"module_xfaostat_L106_FoodMacroNutrient"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "SUA_food_macronutrient_rate"</span>
+<span class="co">#&gt; [1] "SUA_food_macronutrient_rate"</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Not evaluated for convenience </span>
+<span class="co"># Load gcamfaostat</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span> 
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span> 
 
 <span class="co"># Load FAO_items from cache</span>
 <span class="fu"><a href="../reference/load_from_cache.html">load_from_cache</a></span><span class="op">(</span><span class="st">"aglu/FAO/FAO_items"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">first</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">FAO_items</span>
 <span class="co"># Print</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">FAO_items</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 x 11</span></span>
-<span class="co">#&gt;    tier item         item_code DS_trade DS_production DS_demand DS_key_coproduc~</span>
-<span class="co">#&gt;   <span style="color: #949494;font-style: italic;">&lt;int&gt;</span><span> </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>            </span><span style="color: #949494;font-style: italic;">&lt;int&gt;</span><span> </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>    </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>         </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>     </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>           </span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span><span>     1 Wheat               15 TM       QCL           SCL       </span><span style="color: #BB0000;">NA</span><span>              </span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span><span>     1 Rice, paddy         27 TM       QCL           SCL       </span><span style="color: #BB0000;">NA</span><span>              </span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span><span>     1 Barley              44 TM       QCL           SCL       </span><span style="color: #BB0000;">NA</span><span>              </span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span><span>     1 Beer of bar~        51 TM       QCL           SCL       </span><span style="color: #BB0000;">NA</span><span>              </span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span><span>     1 Maize               56 TM       QCL           SCL       </span><span style="color: #BB0000;">NA</span><span>              </span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">6</span><span>     1 Oil, maize          60 TM       QCL           SCL       </span><span style="color: #BB0000;">NA</span><span>              </span></span>
-<span class="co">#&gt; <span style="color: #949494;"># ... with 4 more variables: CPC_code &lt;chr&gt;, CPC_item &lt;chr&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   FBS_item_code &lt;int&gt;, FBS_item &lt;chr&gt;</span></span>
 
 <span class="co"># Define a list of input data</span>
 <span class="va">MODULE_INPUTS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Bal_new_all"</span><span class="op">)</span>
 <span class="co"># Load a list of MODULE_INPUTS from cache and assign to their name</span>
 <span class="fu"><a href="../reference/get_data_list.html">get_data_list</a></span><span class="op">(</span>all_data <span class="op">=</span> <span class="fu"><a href="../reference/load_from_cache.html">load_from_cache</a></span><span class="op">(</span><span class="va">MODULE_INPUTS</span><span class="op">)</span>, data_list <span class="op">=</span> <span class="va">MODULE_INPUTS</span><span class="op">)</span>
 <span class="co"># Print</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">Bal_new_all</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 x 7</span></span>
-<span class="co">#&gt;   area_code  year item_code element      value item  area               </span>
-<span class="co">#&gt;       <span style="color: #949494;font-style: italic;">&lt;dbl&gt;</span><span> </span><span style="color: #949494;font-style: italic;">&lt;int&gt;</span><span>     </span><span style="color: #949494;font-style: italic;">&lt;dbl&gt;</span><span> </span><span style="color: #949494;font-style: italic;">&lt;fct&gt;</span><span>        </span><span style="color: #949494;font-style: italic;">&lt;dbl&gt;</span><span> </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span> </span><span style="color: #949494;font-style: italic;">&lt;chr&gt;</span><span>              </span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span><span>         1  </span><span style="text-decoration: underline;">2</span><span>019        15 Production  113.   Wheat Armenia            </span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span><span>         2  </span><span style="text-decoration: underline;">2</span><span>019        15 Production </span><span style="text-decoration: underline;">4</span><span>890    Wheat Afghanistan        </span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span><span>         3  </span><span style="text-decoration: underline;">2</span><span>019        15 Production  233.   Wheat Albania            </span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span><span>         4  </span><span style="text-decoration: underline;">2</span><span>019        15 Production </span><span style="text-decoration: underline;">3</span><span>877.   Wheat Algeria            </span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span><span>         7  </span><span style="text-decoration: underline;">2</span><span>019        15 Production    2.96 Wheat Angola             </span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">6</span><span>         8  </span><span style="text-decoration: underline;">2</span><span>019        15 Production    0    Wheat Antigua and Barbuda</span></span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">Bal_new_all</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 <div class="section level2 unnumbered">
