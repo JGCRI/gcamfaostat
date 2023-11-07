@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Use Cases</h1>
             
-            <h4 data-toc-skip class="date">2023-10-31</h4>
+            <h4 data-toc-skip class="date">2023-11-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_use_cases.Rmd" class="external-link"><code>vignettes/vignette_use_cases.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_use_cases.Rmd</code></div>
@@ -129,8 +129,9 @@ modification</a> for additional examples for modifying modules.</p>
 <div class="section level2">
 <h2 id="faostat-raw-data-and-processing-output-updates">FAOSTAT raw data and processing output updates<a class="anchor" aria-label="anchor" href="#faostat-raw-data-and-processing-output-updates"></a>
 </h2>
-<p>To update the output data to include new years made available, e.g.,
-for model base year updates, user need to</p>
+<p>To update the output data by including new data years, e.g., for
+model base year updates, the user needs to implement the following
+steps:</p>
 <ol style="list-style-type: decimal">
 <li>Download the latest FAOSTAT data using the
 <code>FF_download_FAOSTAT</code> function.<br>
@@ -182,8 +183,8 @@ export data in the required format. Notably, gcamfaostat presently
 includes a function, <code>output_csv_data</code>, for exporting data to
 CSV files. Additionally, users have the flexibility to expand the
 functionality by incorporating new functions to export data in
-alternative formats as needed. In cases where the required data is not
-readily available, users should begin by introducing new processing
+alternative formats as needed. In cases when the required data is not
+readily available, users should proceed by introducing new processing
 modules.</p>
 <hr>
 </div>
@@ -193,8 +194,8 @@ modules.</p>
 <p>Since the 1970s, the number of countries in the world has increased
 due to the dissolution of regions. In other words, when a region
 dissolves, the country associated with it ceases to exist, and new
-countries emerge in its place, see <a href="FigCountryChange"><strong>Figure 1</strong></a>. We created
-functions to deal with country changes.</p>
+countries emerge in its place, see <a href="FigCountryChange"><strong>Figure 1</strong></a>. We included
+functions to deal with changes in the country classifications.</p>
 <p><a href="https://jgcri.github.io/gcamfaostat/reference/FAOSTAT_AREA_RM_NONEXIST.html"><code>FAOSTAT_AREA_RM_NONEXIST</code></a></p>
 <ul>
 <li>The function removes nonexistent FAO region using area_code, e.g.,
@@ -204,11 +205,11 @@ USSR after 1991.<br>
 default.<br>
 </li>
 <li>Small regions/areas with low data quality can also be removed using
-the function.</li>
+this function.</li>
 </ul>
 <p><a href="https://jgcri.github.io/gcamfaostat/reference/FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL.html"><code>FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL</code></a></p>
 <ul>
-<li>The function disaggregate region to smaller countries.<br>
+<li>The function disaggregates regions into smaller countries.<br>
 </li>
 <li>All dissolved regions (since 1970s) are disaggregated in historical
 periods (before dissolution) based on the data after dissolution.</li>
@@ -395,7 +396,7 @@ the world market.</li>
               .SaveName <span class="op">=</span> <span class="st">"Fig_WheatTrade2020"</span><span class="op">)</span>
     </code></pre></div>
 <ul>
-<li>Preview <img src="../reference/figures/Fig_WheatTrade2020.png" style="width:20.0%"><img src="../reference/figures/Fig_WheatTrade2021.png" style="width:20.0%">
+<li>Preview<br><img src="../reference/figures/Fig_WheatTrade2020.png" style="width:20.0%"><img src="../reference/figures/Fig_WheatTrade2021.png" style="width:20.0%">
 </li>
 </ul>
 </div>
@@ -413,7 +414,7 @@ the world market.</li>
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kanishka Narayan, Chris Vernon.</p>
+<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kate Calvin, Kanishka Narayan, Chris Vernon.</p>
 </div>
 
 <div class="pkgdown">

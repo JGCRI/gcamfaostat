@@ -113,7 +113,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Preparing data for gcamfaostat</h1>
             
-            <h4 data-toc-skip class="date">2023-10-31</h4>
+            <h4 data-toc-skip class="date">2023-11-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_preparing_data.Rmd" class="external-link"><code>vignettes/vignette_preparing_data.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_preparing_data.Rmd</code></div>
@@ -158,22 +158,30 @@ data<a class="anchor" aria-label="anchor" href="#generate-the-metadata-for-the-g
 </h3>
 <p><a href="https://jgcri.github.io/gcamfaostat/reference/gcamfaostat_metadata.html"><code>gcamfaostat_metadata()</code></a></p>
 <ul>
-<li>Saving the latest FAOSTAT metadata to the <a href="https://github.com/JGCRI/gcamfaostat/tree/main/inst/extdata/aglu/FAO/FAOSTAT/metadata_log" class="external-link">metadata_log</a><br>
+<li>The function will save the latest FAOSTAT metadata to the <a href="https://github.com/JGCRI/gcamfaostat/tree/main/inst/extdata/aglu/FAO/FAOSTAT/metadata_log" class="external-link">metadata_log</a><br>
+</li>
+<li>The function will access both the latest FAOSTAT metadata and local
+data information and returns a summary table including the dataset
+information needed for gcamfaostat (see <strong>Table 1</strong>
+below).<br>
 </li>
 <li>The dataset code needed were specified in the function to get a
-subset of the FAOSTAT metadata.<br>
+subset of the FAOSTAT metadata. The function will return only dataset
+code required when setting
+<code>OnlyReturnDatasetCodeRequired = FALSE</code>.<br>
 </li>
-<li>Checking if local FAOSTAT raw data exist<br>
+<li>The function will check whether FAOSTAT raw data exists locally
+(<code>Exist_Local</code>) and in <a href="https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda" class="external-link">Prebuilt
+Data</a> (<code>Exist_Prebuilt</code>). If <code>Exist_Prebuilt</code>
+is <code>TRUE</code> for all dataset, the package is ready to be built
+based on the Prebuilt package data.<br>
 </li>
-<li>Checking if raw data was stored in the <a href="https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda" class="external-link">Prebuilt
-Data</a><br>
-</li>
-<li>Returning a summary table (see below)</li>
+<li>
+<code>FAO update data</code> and <code>FAO size</code> indicate the
+information based on the latest FAOSTAT metadata.</li>
 </ul>
+<strong>Table 1. FAOSTAT dataset processed in gcamfaostat</strong>
 <table class="table table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
-<caption>
-<b>FAOSTAT dataset processed in gcamfaostat</b>
-</caption>
 <thead><tr>
 <th style="text-align:left;">
 Dataset Code
@@ -467,12 +475,16 @@ ready to be built based on the Prebuilt data.</p>
 </h3>
 <p><a href="https://jgcri.github.io/gcamfaostat/reference/FF_download_RemoteArchive.html"><code>FF_download_RemoteArchive()</code></a></p>
 <ul>
-<li>Downloading data from a remote archive.</li>
-<li>A Zenodo URL was included archiving a snapshot of FAOSTAT data to
-ensure replicability.</li>
+<li>The function downloads the FAOSTAT raw data needed for the package
+from a remote archive.<br>
+</li>
+<li>The default Zenodo archive currently included in the function
+includes a snapshot of FAOSTAT data to ensure replicability.<br>
+</li>
+<li>The archived data is consistent with the Prebuilt package data.</li>
 </ul>
 <p><a href="https://jgcri.github.io/gcamfaostat/reference/FF_download_FAOSTAT.html"><code>FF_download_FAOSTAT()</code></a>
-* Downloading data from FAOSTAT.</p>
+* The function downloads the latest raw data from FAOSTAT.</p>
 <p>Two functions above are created for downloading the raw data from a
 remote archive or the FAOSTAT API (latest data). The dataset code
 variable in the two functions, if including all, can be generated using
@@ -537,7 +549,7 @@ Zenodo. <a href="https://doi.org/10.5281/zenodo.8260225" class="external-link">h
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kanishka Narayan, Chris Vernon.</p>
+<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kate Calvin, Kanishka Narayan, Chris Vernon.</p>
 </div>
 
 <div class="pkgdown">

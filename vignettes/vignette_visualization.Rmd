@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 **Here we visualize the processed data to illustrate the connection of harvested area and food calories via supply utilization accounts.**  
 * We focus on the 2013 - 2017 mean as they are the base calibration years of GCAM. 
-* Year variables can be changes easily.  
+* A user can change the years and mappings as desired.
 * All the data used are from `gcamfaostat`.  
 * Code for generating the figures are provided in the bottom.  
 * The visualization here will be continuously updates (suggestions and pull requests welcome).   
@@ -34,9 +34,11 @@ knitr::opts_chunk$set(
 ## Harvested area  
 
 ![](../man/figures/Fig_WorldAreaHarvested.png){width=100%}
+World area harvested (shares) grouped by GCAM crops based on the 2013 – 2017 mean values. The total harvested area is 1509 million hectares (Mha).    
   
   
 ![](../man/figures/Fig_WorldAreaHarvestedReg.png){width=100%}
+Food calories availability per capita per day grouped by GCAM regions and commodities based on the 2013 – 2017 mean values. The world average value is 2902 Kcal per capita per day (Kcal/ca/d).    
 
 ***
 ## Yield growth
@@ -46,7 +48,9 @@ knitr::opts_chunk$set(
 ***
 
 ## Supply-utilization
-![Negative values are used for demand elements and positive values are used for supply elements. The total supply is equal to the total demand. Residuals (mostly small) indicate the imbalance in the data, mainly implying the quality of the source data](../man/figures/Fig_WorldSUA.png){width=100%}
+![](../man/figures/Fig_WorldSUA.png){width=100%}
+World supply utilization accounts for key commodities based on the 2013 – 2017 mean values. Note that negative values are used for demand categories and positive values are used for supply categories. Other uses include seed use, losses, and industrial use; residuals (mostly small) indicate the imbalance in the data, mainly implying the quality of the source data. The total supply is equal to the total demand.
+
 
 ***  
 
@@ -55,6 +59,7 @@ knitr::opts_chunk$set(
 ![](../man/figures/Fig_WorldFoodCalories.png){width=100%}
 ![](../man/figures/Fig_WorldFoodCaloriesReg.png){width=100%}
 ![Per capita food availability is highly heterogeneous across regions and commodities](../man/figures/Fig_WorldFoodCaloriesRegPcPerDay.png){width=100%}
+
 ***
 
 ## Trade flows

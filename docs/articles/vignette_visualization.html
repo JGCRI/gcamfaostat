@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Visualization</h1>
             
-            <h4 data-toc-skip class="date">2023-10-31</h4>
+            <h4 data-toc-skip class="date">2023-11-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_visualization.Rmd" class="external-link"><code>vignettes/vignette_visualization.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_visualization.Rmd</code></div>
@@ -125,8 +125,8 @@
 connection of harvested area and food calories via supply utilization
 accounts.</strong><br>
 * We focus on the 2013 - 2017 mean as they are the base calibration
-years of GCAM. * Year variables can be changes easily.<br>
-* All the data used are from <code>gcamfaostat</code>.<br>
+years of GCAM. * A user can change the years and mappings as desired. *
+All the data used are from <code>gcamfaostat</code>.<br>
 * Code for generating the figures are provided in the bottom.<br>
 * The visualization here will be continuously updates (suggestions and
 pull requests welcome).<br>
@@ -150,8 +150,13 @@ India (13.8 B), USA (3.3 B), Indonesia (2.7 B), Pakistan (2.2 B), Brazil
 <div class="section level2">
 <h2 id="harvested-area">Harvested area<a class="anchor" aria-label="anchor" href="#harvested-area"></a>
 </h2>
-<p><img src="../reference/figures/Fig_WorldAreaHarvested.png" style="width:100.0%"></p>
-<p><img src="../reference/figures/Fig_WorldAreaHarvestedReg.png" style="width:100.0%"></p>
+<p><img src="../reference/figures/Fig_WorldAreaHarvested.png" style="width:100.0%"> World area harvested (shares) grouped by GCAM
+crops based on the 2013 – 2017 mean values. The total harvested area is
+1509 million hectares (Mha).</p>
+<p><img src="../reference/figures/Fig_WorldAreaHarvestedReg.png" style="width:100.0%"> Food calories availability per capita per day
+grouped by GCAM regions and commodities based on the 2013 – 2017 mean
+values. The world average value is 2902 Kcal per capita per day
+(Kcal/ca/d).</p>
 <hr>
 </div>
 <div class="section level2">
@@ -168,19 +173,20 @@ The opposite is true for root and tuber crops</div>
 <div class="section level2">
 <h2 id="supply-utilization">Supply-utilization<a class="anchor" aria-label="anchor" href="#supply-utilization"></a>
 </h2>
-<div class="float">
-<img src="../reference/figures/Fig_WorldSUA.png" style="width:100.0%" alt="Negative values are used for demand elements and positive values are used for supply elements. The total supply is equal to the total demand. Residuals (mostly small) indicate the imbalance in the data, mainly implying the quality of the source data"><div class="figcaption">Negative values are used for demand elements and
-positive values are used for supply elements. The total supply is equal
-to the total demand. Residuals (mostly small) indicate the imbalance in
-the data, mainly implying the quality of the source data</div>
-</div>
+<p><img src="../reference/figures/Fig_WorldSUA.png" style="width:100.0%">
+World supply utilization accounts for key commodities based on the 2013
+– 2017 mean values. Note that negative values are used for demand
+categories and positive values are used for supply categories. Other
+uses include seed use, losses, and industrial use; residuals (mostly
+small) indicate the imbalance in the data, mainly implying the quality
+of the source data. The total supply is equal to the total demand.</p>
 <hr>
 </div>
 <div class="section level2">
 <h2 id="food-calories">Food Calories<a class="anchor" aria-label="anchor" href="#food-calories"></a>
 </h2>
-<p><img src="../reference/figures/Fig_WorldFoodCalories.png" style="width:100.0%"><img src="../reference/figures/Fig_WorldFoodCaloriesReg.png" style="width:100.0%"><img src="../reference/figures/Fig_WorldFoodCaloriesRegPcPerDay.png" style="width:100.0%" alt="Per capita food availability is highly heterogeneous across regions and commodities">
-***</p>
+<p><img src="../reference/figures/Fig_WorldFoodCalories.png" style="width:100.0%"><img src="../reference/figures/Fig_WorldFoodCaloriesReg.png" style="width:100.0%"><img src="../reference/figures/Fig_WorldFoodCaloriesRegPcPerDay.png" style="width:100.0%" alt="Per capita food availability is highly heterogeneous across regions and commodities"></p>
+<hr>
 </div>
 <div class="section level2">
 <h2 id="trade-flows">Trade flows<a class="anchor" aria-label="anchor" href="#trade-flows"></a>
@@ -629,7 +635,7 @@ Study</a> for details.</p>
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kanishka Narayan, Chris Vernon.</p>
+<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kate Calvin, Kanishka Narayan, Chris Vernon.</p>
 </div>
 
 <div class="pkgdown">

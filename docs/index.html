@@ -113,26 +113,26 @@
 
 <div class="section level3">
 <h3 id="gcamfaostat-an-r-package-to-prepare-process-and-synthesize-faostat-data-for-global-agroeconomic-and-multisector-dynamic-modeling">
-<code>gcamfaostat</code>: An R package to prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling<a class="anchor" aria-label="anchor" href="#gcamfaostat-an-r-package-to-prepare-process-and-synthesize-faostat-data-for-global-agroeconomic-and-multisector-dynamic-modeling"></a>
+<strong><code>gcamfaostat</code></strong>: An R package to prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling<a class="anchor" aria-label="anchor" href="#gcamfaostat-an-r-package-to-prepare-process-and-synthesize-faostat-data-for-global-agroeconomic-and-multisector-dynamic-modeling"></a>
 </h3>
 </div>
 <div class="section level3">
 <h3 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h3>
-<p>The <code>gcamfaostat</code> R package is developed to prepare, process, and synthesize <a href="https://www.fao.org/faostat/en/#data" class="external-link">FAOSTAT</a> agroeconomic dataset for global economic and multisector dynamic modeling, in a traceable, transparent, and reproducible manner. Here, we demonstrate the use of the <code>gcamfaostat</code> framework for generating and updating agroeconomic data needed for the Global Change Analysis Model (<a href="https://jgcri.github.io/gcam-doc/toc.html" class="external-link">GCAM</a>). However, our initiative seeks to enhance the quality and accessibility of data for the global agroeconomic modeling community, with the aim of fostering more robust and harmonized outcomes in a collaborative, efficient, open-source manner. The processed data and visualizations in <code>gcamfaostat</code> can be valuable to a broader range of users interested in understanding global agriculture.</p>
+<p>The <strong><code>gcamfaostat</code></strong> R package is designed for the preparation, processing, and synthesis of the Food and Agriculture Organization (FAO) Statistics (<a href="https://www.fao.org/faostat/en/#data" class="external-link">FAOSTAT</a>) agroeconomic data. The primary purpose is to facilitate FAOSTAT data use in global economic and multisector dynamic models while ensuring transparency, traceability, and reproducibility. Here, we provide an overview of the development of <strong><code>gcamfaostat</code></strong> (v1.0) and demonstrate its capabilities in generating and maintaining agroeconomic data required for the Global Change Analysis Model (<a href="https://jgcri.github.io/gcam-doc/toc.html" class="external-link">GCAM</a>). Our initiative seeks to enhance the quality and accessibility of data for the global agroeconomic modeling community, with the aim of fostering more robust and harmonized outcomes in a collaborative, efficient, and open-source framework. One of the important features of the package is the possibility to construct the FAO Food Balance Sheets at the disaggregated commodity level (with over 500 commodities), which provides a comprehensive and detailed data input for a variety of analytical and modeling applications. The processed data and visualizations offered by <strong><code>gcamfaostat</code></strong> can also be valuable to a broader audience interested in gaining insights into the intricacies of global agriculture.</p>
 <p>This tool bridges a crucial gap in the literature by offering several key features and capabilities.</p>
 <ol style="list-style-type: decimal">
 <li>
-<strong>Transparency and Reproducibility</strong>: <code>gcamfaostat</code> incorporates functions for downloading, cleaning, synthesizing, and balancing agroeconomic datasets in a traceable, transparent, and reproducible manner. This enhances the credibility of the processing and allows for better scrutiny of the methods. We have documented and demonstrated the use of the package in generating and updating agroeconomic data needed for the GCAM.<br>
+<strong>Transparency and Reproducibility</strong>: <strong><code>gcamfaostat</code></strong> incorporates functions for downloading, cleaning, synthesizing, and balancing agroeconomic datasets in a traceable, transparent, and reproducible manner. This enhances the credibility of the processing and allows for better scrutiny of the methods. We have documented and demonstrated the use of the package in generating and updating agroeconomic data needed for the GCAM.<br>
 </li>
 <li>
-<strong>Expandability and Consistency</strong>: gcamfaostat can be used to flexibly process and update agroeconomic data for any agroeconomic model. The package framework is also easy to be expanded to include new modules to consistently process new data.<br>
+<strong>Expandability and Consistency</strong>: <strong><code>gcamfaostat</code></strong> can be used to flexibly process and update agroeconomic data for any agroeconomic model. The package framework can be also easily expanded to include new modules for consistently processing new data.<br>
 </li>
 <li>
-<strong>Community Collaboration and Efficiency</strong>: The package provides an open-source platform for researchers to continually enhance the processing methods. This collaborative approach, which establishes a standardized and streamlined process for data preparation and processing, carries benefits that extend to all modeling groups. By reducing the efforts required for data processing and fostering harmonized base calibration data, it contributes to a reduction in modeling uncertainty and enhances the overall research efficiency.<br>
+<strong>Community Collaboration and Efficiency</strong>: The package provides an open-source platform for researchers to continually enhance the processing methods. This collaborative approach, which establishes a standardized and streamlined process for data preparation and processing, carries benefits that extend to all modeling groups. By reducing the efforts required for data processing and fostering harmonized base data calibration, it contributes to a reduction in modeling uncertainty and enhances the overall research efficiency.<br>
 </li>
 <li>
-<strong>User Accessibility</strong>: Where applicable, the processed data can be mapped and aggregated to user-specified regions and sectors for agroeconomic modeling. However, beyond the modeling community, <code>gcamfaostat</code> can be valuable to a broader range of users interested in understanding global agriculture trends and dynamics, as it provides accessible and processed data and visualization functions.</li>
+<strong>User Accessibility</strong>: Where applicable, the processed data can be mapped and aggregated to user-specified regions and sectors for agroeconomic modeling. However, beyond the modeling community, <strong><code>gcamfaostat</code></strong> can be valuable to a broader range of users interested in understanding global agriculture trends and dynamics, as it provides user-friendly data processing and visualization tools.</li>
 </ol>
 <hr>
 </div>
@@ -210,7 +210,7 @@
 </h3>
 <ul>
 <li>
-<code>gcamfaostat</code> processes <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html#metadata">input data</a> to output data in a format that is needed for downstream processing and modeling, e.g., <a href="https://github.com/JGCRI/gcam-core/tree/master/input/gcamdata/inst/extdata/aglu/FAO" class="external-link">data used in gcamdata-aglu-FAO</a> (see the schematic below).</li>
+<strong><code>gcamfaostat</code></strong> processes <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html#metadata">input data</a> to output data in a format that is needed for downstream processing and modeling, e.g., <a href="https://github.com/JGCRI/gcam-core/tree/master/input/gcamdata/inst/extdata/aglu/FAO" class="external-link">data used in gcamdata-aglu-FAO</a> (see the schematic below).</li>
 <li>Input data was stored in the <a href="https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda" class="external-link">Prebuilt Data</a> of the package. The raw data is archived on Zenodo (see Zhao (2022) and URL in the <a href="https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#L144" class="external-link"><code>FF_download_RemoteArchive</code></a> function) to ensure the processing is 100% replicable. Users can also download the latest data using <a href="https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#90" class="external-link"><code>FF_download_FAOSTAT</code></a>.</li>
 <li>All intermediate processing and data flows are transparent and traceable. See <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html">Processing Flow</a> for data-tracing examples.</li>
 </ul>
@@ -220,7 +220,7 @@
 <div class="section level3">
 <h3 id="future-work-and-contribution">Future work and contribution<a class="anchor" aria-label="anchor" href="#future-work-and-contribution"></a>
 </h3>
-<p>Data development is never a once and for all task, and continued efforts are needed to sustain and improve the processing procedures. Further works are needed:</p>
+<p>Data development is never a once and for all task, and continued efforts are needed to sustain and improve the processing procedures. Further improvements might include:</p>
 <ol style="list-style-type: decimal">
 <li>
 <strong>Sustain processing functions for updated raw data</strong>: ensuring that our processing functions remain up-to-date when raw data undergoes revisions is imperative.<br>
@@ -232,12 +232,12 @@
 <strong>Revise assumptions in low-quality data zones</strong>: regions and sectors with little or low-quality data require careful consideration. We will need to adjust our assumptions when improved data becomes available.<br>
 </li>
 <li>
-<strong>Promoting broader applications</strong>: Leveraging data processed by gcamfaostat can significantly contribute to harmonizing input data in global agroeconomic modeling. Encouraging the utilization of this data and fostering collaboration to enhance data processing is of significant importance.<br>
+<strong>Promoting broader applications</strong>: leveraging data processed by gcamfaostat can significantly contribute to harmonizing input data in global agroeconomic modeling. Encouraging the utilization of this data and fostering collaboration to enhance data processing is of significant importance.<br>
 </li>
 <li>
 <strong>Assess sensitivity in downstream applications</strong>: understanding the sensitivity of downstream data applications, e.g., global agroeconomic projections, to upstream data processing assumptions is crucial. This awareness empowers us to make informed decisions and refinements.</li>
 </ol>
-<p>We welcome and value community contributions to gcamfaostat. Please read our <a href="CONTRIBUTING.html">Contributing Guidelines</a> for information on how to contribute to this package. Through collective and collaborative efforts, we will shorten the distance between raw data and impacts.</p>
+<p>We welcome and value community contributions to gcamfaostat. Please read our <a href="CONTRIBUTING.html">Contributing Guidelines</a> for information on how to contribute to this package. Through collective and collaborative efforts, we hope to improve the interface between raw data, modeling community, and broader audience. We would be grateful for the feedback and suggestions on potential improvements of the developed data processing framework.</p>
 <hr>
 </div>
 <div class="section level3">
@@ -295,6 +295,7 @@
 <li>Maksym Chepeliev <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-8585-2314" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Pralit Patel <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-3992-1061" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Marshall Wise <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-2718-0051" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Kate Calvin <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-2191-4189" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Kanishka Narayan <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-8483-6216" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Chris Vernon <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-3406-6214" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li><a href="authors.html">More about authors...</a></li>
@@ -316,7 +317,7 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kanishka Narayan, Chris Vernon.</p>
+<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kate Calvin, Kanishka Narayan, Chris Vernon.</p>
 </div>
 
 <div class="pkgdown">

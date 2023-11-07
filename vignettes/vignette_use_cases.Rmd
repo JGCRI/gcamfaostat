@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 ## FAOSTAT raw data and processing output updates
 
-To update the output data to include new years made available, e.g., for model base year updates, user need to 
+To update the output data by including new data years, e.g., for model base year updates, the user needs to implement the following steps:  
   
 1. Download the latest FAOSTAT data using the `FF_download_FAOSTAT` function.  
 2. In the configuration file (`constants.R`), adjust the year variables and set `Process_Raw_FAO_Data` to `TRUE`.
@@ -44,24 +44,24 @@ Any R files located in the `R` folder, as long as they adhere to the module form
 
 ## Generating output for new agroeconomic models
 
-If all the necessary FAOSTAT raw data is already incorporated into gcamfaostat, users can directly produce output for a new agroeconomic model. This can be achieved by either adding an output exporting module (e.g., `module_xfaostat_L199_CSVExportAgSUA`) or adapting an existing module (e.g., `module_xfaostat_L201_Forestry`) to export data in the required format. Notably, gcamfaostat presently includes a function, `output_csv_data`, for exporting data to CSV files. Additionally, users have the flexibility to expand the functionality by incorporating new functions to export data in alternative formats as needed. In cases where the required data is not readily available, users should begin by introducing new processing modules. 
+If all the necessary FAOSTAT raw data is already incorporated into gcamfaostat, users can directly produce output for a new agroeconomic model. This can be achieved by either adding an output exporting module (e.g., `module_xfaostat_L199_CSVExportAgSUA`) or adapting an existing module (e.g., `module_xfaostat_L201_Forestry`) to export data in the required format. Notably, gcamfaostat presently includes a function, `output_csv_data`, for exporting data to CSV files. Additionally, users have the flexibility to expand the functionality by incorporating new functions to export data in alternative formats as needed. In cases when the required data is not readily available, users should proceed by introducing new processing modules.  
 
 
 ***
 
 ## Country aggregation and disaggregation
 
-Since the 1970s, the number of countries in the world has increased due to the dissolution of regions. In other words, when a region dissolves, the country associated with it ceases to exist, and new countries emerge in its place, see [**Figure 1**](FigCountryChange). We created functions to deal with country changes.  
+Since the 1970s, the number of countries in the world has increased due to the dissolution of regions. In other words, when a region dissolves, the country associated with it ceases to exist, and new countries emerge in its place, see [**Figure 1**](FigCountryChange). We included functions to deal with changes in the country classifications.  
 
 [`FAOSTAT_AREA_RM_NONEXIST`](https://jgcri.github.io/gcamfaostat/reference/FAOSTAT_AREA_RM_NONEXIST.html)  
 
 * The function removes nonexistent FAO region using area_code, e.g., USSR after 1991.  
 * All nonexistent countries due to dissolution are removed by default.  
-* Small regions/areas with low data quality can also be removed using the function.  
+* Small regions/areas with low data quality can also be removed using this function.  
 
 [`FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL`](https://jgcri.github.io/gcamfaostat/reference/FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL.html) 
   
-* The function disaggregate region to smaller countries.  
+* The function disaggregates regions into smaller countries.  
 * All dissolved regions (since 1970s) are disaggregated in historical periods (before dissolution) based on the data after dissolution.
 
 <a name="FigCountryChange"></a>  

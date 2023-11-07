@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Getting Started with gcamfaostat</h1>
             
-            <h4 data-toc-skip class="date">2023-10-31</h4>
+            <h4 data-toc-skip class="date">2023-11-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_getting_started.Rmd" class="external-link"><code>vignettes/vignette_getting_started.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_getting_started.Rmd</code></div>
@@ -140,58 +140,90 @@ tools for investigating complex interactions between human activities
 and the environment, as evident in recent research <span class="citation">(Doelman et al. 2022; Fujimori et al. 2022; IPCC 2022;
 Ven et al. 2023)</span>. Agriculture and land use (AgLU) plays a
 critical role in these models, particularly when used to address key
-agroeconomics questions <span class="citation">(Graham et al. 2023;
+agroeconomic questions <span class="citation">(Graham et al. 2023;
 Yarlagadda et al. 2023; Zhang et al. 2023; Zhao, Calvin, Wise, Patel, et
 al. 2021; Zhao, Calvin, and Wise 2020)</span>. Sound economic modeling
 hinges significantly upon the accessibility and quality of data <span class="citation">(Bruckner et al. 2019; Calvin et al. 2022; Chepeliev
-2022)</span>. The Food and Agriculture Organization Statistical Database
-(FAOSTAT) <span class="citation">(FAOSTAT 2023)</span> serves as the
-most important data source, offering open-access data on country-level
-agricultural production, land use, trade, food consumption, nutrient
-content, prices, and more. However, the raw data from FAOSTAT requires
-cleaning, balancing, and synthesis, involving assumptions such as
-interpolation and mapping, which can introduce uncertainties. It is
+2022)</span>. The Food and Agriculture Organization Statistis (FAOSTAT)
+<span class="citation">(FAO 2023)</span> serves as one of the key global
+data sources, offering open-access data on country-level agricultural
+production, land use, trade, food consumption, nutrient content, prices,
+and more. However, the raw data from FAOSTAT requires cleaning,
+balancing, and synthesis, involving assumptions such as interpolation
+and mapping, which can introduce uncertainties. In addition, some of the
+core datasets reported by FAOSTAT, such as FAO’s Food Balance Sheets
+(FBS), are compiled at a specific level of aggregation, combining
+together primary and processed commodities (e.g., wheat and flour),
+which creates additional data processing challenges for the agroeconomic
+modeling community <span class="citation">(Chepeliev 2022)</span>. It is
 noteworthy that each agroeconomic modeling team typically develops its
 own assumptions and methods to prepare and process FAOSTAT data <span class="citation">(Bond-Lamberty et al. 2019)</span>. While largely
-overlooked, the uncertainty in the base calibration data likely
+overlooked, the uncertainty in the base data calibration approach likely
 contributed to the disparities in model outcomes <span class="citation">(Lampe et al. 2014; Zhao, Calvin, Wise, and Iyer
 2021)</span>. Hence, our motivation is to create an open-source tool
-(<code>gcamfaostat</code>) for the preparation, processing, and
-synthesis of FAOSTAT data for global agroeconomic modeling. The tool can
-also be valuable to a broader range of users interested in understanding
-global agriculture trends and dynamics, as it provides accessible and
-processed data and <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_visualization.html">visualization</a>
+(<strong><code>gcamfaostat</code></strong>) for the preparation,
+processing, and synthesis of FAOSTAT data for global agroeconomic
+modeling. The tool can also be valuable to a broader range of users
+interested in understanding global agriculture trends and dynamics, as
+it provides accessible and processed data and <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_visualization.html">visualization</a>
 functions.</p>
 <hr>
 </div>
 <div class="section level2">
-<h2 id="the-gap-gcamfaostat-fills">The gap <code>gcamfaostat</code> fills <a name="Gap"></a><a class="anchor" aria-label="anchor" href="#the-gap-gcamfaostat-fills"></a>
+<h2 id="the-gaps-gcamfaostat-fills">The gaps <strong><code>gcamfaostat</code></strong> fills
+<a name="Gap"></a><a class="anchor" aria-label="anchor" href="#the-gaps-gcamfaostat-fills"></a>
 </h2>
-<p>gcamfaostat, gcamdata, GCAM, and the broader modeling community</p>
-<p><code>gcamdata</code> <span class="citation">(Bond-Lamberty et al.
-2023)</span></p>
-<p>Figure 1 shows the relationship between <code>gcamfaostat</code> and
-<code>gcamdata</code> with example modules of each packages
-presented.</p>
-<p>Modules with identifier <code>_xfaostat_</code> only exists in
-<code>gcamfaostat</code>. Agriculture and land use (AgLU) related
-modules (<code>_aglu_</code>) that rely on outputs from
-<code>gcamfaostat</code> can run in both packages. Other
-<code>gcamdata</code> modules processing data in areas such as energy,
-emissions, water, and socioeconomics only exist in
-<code>gcamdata</code>.</p>
-<br><center>
-<div class="float">
-<img src="../reference/figures/Fig_FAOSTAT_gcamdata.jpg" style="width:70.0%" alt="Figure 1. Original framework of using FAOSTAT data in large-scale modeling"><div class="figcaption">Figure 1. Original framework of using FAOSTAT
-data in large-scale modeling</div>
-</div>
+<p><a href="#Fig1"><strong>Figure 1</strong></a> shows a standard
+framework of using FAOSTAT data in GCAM. GCAM is a widely recognized
+global economic and multisector dynamic model complemented by the
+gcamdata R package, which serves as its data processing system.
+Particularly, gcamdata includes modules (data processing chunks) and
+functions to convert raw data inputs into hundreds of XML files needed
+by GCAM <span class="citation">(Bond-Lamberty et al. 2019)</span>. As an
+illustration, in the latest GCAM version, GCAM v7 <span class="citation">(Bond-Lamberty et al. 2023)</span>, about 280 XML
+files, with a combined size of 4.1 GB, are generated. Although
+AgLU-related XMLs represent only about 10% of the total number of files,
+they contribute over 50% in size (~2.1 GB). The majority of AgLU-related
+data, whether directly or indirectly, rely on raw data sourced from the
+FAOSTAT.</p>
+<p>Nonetheless, the FAOSTAT data employed within gcamdata has
+traditionally involved manual downloads and may have undergone
+preprocessing. In light of the increasing data needs, maintaining the
+FAOSTAT data processing tasks in gcamdata has become increasingly
+challenging. In addition, the processing of FAOSTAT data in the AgLU
+modules of gcamdata is tailored specifically for GCAM. Consequently, the
+integration of FAOSTAT data updates has proven to be a non-trivial task,
+and the data processed by the AgLU module has limited applicability in
+other modeling contexts <span class="citation">(Zhao and Wise
+2023)</span>. The <strong><code>gcamfaostat</code></strong> package is
+aimed to address these limitations (<a href="#Fig2"><strong>Figure
+2</strong></a>). The targeted approach incorporates data preparation,
+processing, and synthesizing capabilities within a dedicated package,
+gcamfaostat, while regional and sectoral aggregation functions in the
+model data system are implemented using standalone routines within the
+gcamdata package. This strategy not only ensures the streamlined
+operation of <strong><code>gcamfaostat</code></strong> but also
+contributes to keeping model data system lightweight and more
+straightforward to maintain.</p>
+<br><a name="Fig1"></a>
+<center>
+<img src="../reference/figures/Fig_FAOSTAT_gcamdata.jpg" style="width:70.0%">
 </center>
-<br><center>
-<div class="float">
-<img src="../reference/figures/Fig_gcamfaostat_and_gcamdata.jpg" style="width:70.0%" alt="Figure 2. New framework using gcamfaostat to process FAOSTAT data"><div class="figcaption">Figure 2. New framework using
-<code>gcamfaostat</code> to process FAOSTAT data</div>
-</div>
+<p><strong>Figure 1</strong>. The original framework of utilizing
+FAOSTAT data in GCAM and similar large-scale models. Note that FAOSTAT
+data is mainly processed in the AgLU modules in gcamdata while there
+could be interdependency across data processing modules.</p>
+<br><a name="Fig2"></a>
+<center>
+<img src="../reference/figures/Fig_gcamfaostat_and_gcamdata.jpg" style="width:70.0%">
 </center>
+<p><strong>Figure 2</strong>. The new framework of utilizing FAOSTAT
+data in GCAM and similar large-scale models through gcamfaostat. Modules
+with identifier <em>xfaostat</em> only exist in gcamfaostat. The
+AgLU-related modules (<em>aglu</em>) that rely on outputs from
+gcamfaostat can run in both packages. Other gcamdata modules that
+process data in such areas as energy, emissions, water, and
+socioeconomics only exist in gcamdata.</p>
 <hr>
 </div>
 <div class="section level2">
@@ -201,7 +233,7 @@ data in large-scale modeling</div>
 <h4 id="r">R<a class="anchor" aria-label="anchor" href="#r"></a>
 </h4>
 <ul>
-<li>R version 4.0 or higher and RStudio are recommonded.</li>
+<li>R version 4.0 or higher and RStudio are recommended.</li>
 </ul>
 </div>
 <div class="section level4">
@@ -351,7 +383,7 @@ Approach.”</span> <em>Environmental Research Letters</em> 17 (4):
 045004. <a href="https://doi.org/10.1088/1748-9326/ac5766" class="external-link">https://doi.org/10.1088/1748-9326/ac5766</a>.
 </div>
 <div id="ref-FAOSTAT2023FAOSTAT" class="csl-entry">
-FAOSTAT. 2023. <span>“FAOSTAT.”</span> <a href="https://www.fao.org/faostat/en/#data" class="external-link">https://www.fao.org/faostat/en/#data</a>.
+FAO. 2023. <span>“FAOSTAT Database.”</span> <a href="https://www.fao.org/faostat/en/#data" class="external-link">https://www.fao.org/faostat/en/#data</a>.
 </div>
 <div id="ref-Fujimori2022Land-based" class="csl-entry">
 Fujimori, Shinichiro, Wenchao Wu, Jonathan Doelman, Stefan Frank, Jordan
@@ -416,6 +448,11 @@ Multiregional Economic Modeling: Using Hindcast Experiments to Validate
 an Armington Model.”</span> <em>Economic Analysis and Policy</em> 72:
 1–17.
 </div>
+<div id="ref-zhao_cmp360" class="csl-entry">
+Zhao, Xin, and Marshall Wise. 2023. <span>“Core Model Proposal# 360:
+GCAM Agriculture and Land Use (AgLU) Data and Method Updates: Connecting
+Land Hectares to Food Calories,”</span> no. PNNL-34313. <a href="https://jgcri.github.io/gcam-doc/cmp/360_AgLU_data_and_methods.pdf" class="external-link">https://jgcri.github.io/gcam-doc/cmp/360_AgLU_data_and_methods.pdf</a>.
+</div>
 </div>
 </div>
   </div>
@@ -432,7 +469,7 @@ an Armington Model.”</span> <em>Economic Analysis and Policy</em> 72:
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kanishka Narayan, Chris Vernon.</p>
+<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kate Calvin, Kanishka Narayan, Chris Vernon.</p>
 </div>
 
 <div class="pkgdown">
