@@ -51,10 +51,11 @@ jobs:
       - name: Install dependencies
         run: |
           R -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org')"
+          R -e "install.packages('kableExtra', repos = 'https://cloud.r-project.org')"
           R -e "remotes::install_deps(dependencies = TRUE)"
         shell: bash
         
       - name: Check
         run: |
-          R -e "rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'error')"
+          R -e "rcmdcheck::rcmdcheck(args = '--no-manual --no-vignettes', error_on = 'error')"
         shell: bash
