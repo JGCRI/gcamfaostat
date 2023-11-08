@@ -21,7 +21,7 @@ test_that("handle empty input", {
 
 test_that("return_data works", {
   d <- return_data(cars, iris)
-  expect_is(d, "list")
+  expect_type(d, "list")
   expect_identical(names(d), c("cars", "iris"))
 
   # test it does not allow grouped data
@@ -72,16 +72,20 @@ test_that("same_attributes_as works", {
 
 test_that("prebuilt_data works", {
   pb <- list(x = 1, y = 2)
-  expect_null(extract_prebuilt_data("not_prebuild_data"))
+  expect_warning(expect_null(extract_prebuilt_data("not_prebuild_data")))
 
   obj <- extract_prebuilt_data(names(pb)[1], pb = pb)
-  expect_equivalent(obj, pb[[1]])
-  expect_is(get_comments(obj), "character")  # should have a comment attached
+  expect_equal(obj, pb[[1]], ignore_attr = TRUE)
+  expect_type(get_comments(obj), "character")  # should have a comment attached
 })
 
 test_that("verify_identical_prebuilt works", {
   pb <- list(x = 1, y = 2)
   x <- 1
   expect_silent(verify_identical_prebuilt(x, pb = pb))
-  expect_warning(verify_identical_prebuilt(zzz = 1, pb = pb))
+
+  expect_warning(
+    expect_warning(verify_identical_prebuilt(zzz = 1, pb = pb))
+  )
+
 })
