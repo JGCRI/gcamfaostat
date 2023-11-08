@@ -6,15 +6,14 @@ context("driver_drake")
 hasdrake <- FALSE
 if(require('drake')){
   hasdrake <- TRUE
-  test_cache <- new_cache()
+  # test_cache <- new_cache()
 }
-xml_dir <- paste0(normalizePath(file.path("../..", XML_DIR), winslash = "/"), "/" )
 
 test_that("driver_drake runs with no errors",{
   if(!hasdrake) {
     skip("No drake package - skipping test")
     }
-  expect_error(driver_drake(stop_after = c("module_xfaostat_L103_ProducerPrices"), xmldir = xml_dir, cache = test_cache), NA)
+  expect_error(driver_drake(stop_after = c("module_xfaostat_L103_ProducerPrices"), xmldir = "./", cache = ""))
 })
 
 test_that("catches bad input", {

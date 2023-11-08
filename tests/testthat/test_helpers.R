@@ -3,8 +3,8 @@
 context("helpers")
 
 test_that("left_join_error_no_match works", {
-  d1 <- tibble(X = LETTERS[1:3], Y = 1:3)
-  d2 <- tibble(X = d1$X, Z = 4:6)
+  d1 <- tibble::tibble(X = LETTERS[1:3], Y = 1:3)
+  d2 <- tibble::tibble(X = d1$X, Z = 4:6)
 
   # Bad data
   expect_error(left_join_error_no_match(1))
@@ -19,7 +19,7 @@ test_that("left_join_error_no_match works", {
   # Incomplete merge data
   d2$Z[2] <- NA
   expect_error(left_join_error_no_match(d1, d2))
-  d2 <- tibble(X = d1$X[1:2], Z = 4:5)
+  d2 <- tibble::tibble(X = d1$X[1:2], Z = 4:5)
   expect_error(left_join_error_no_match(d1, d2))
 })
 
