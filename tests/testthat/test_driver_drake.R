@@ -33,7 +33,7 @@ test_that("plan is a dataframe",{
     skip("No drake package - skipping test")
   }
    plan <- driver_drake(stop_before = c("module_xfaostat_L103_ProducerPrices"), return_plan_only = TRUE)
-   expect_type(plan, "list")
+   expect_is(plan, "data.frame")
 })
 
 test_that("load_from_cache works", {
