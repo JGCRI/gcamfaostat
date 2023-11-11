@@ -15,13 +15,20 @@ knitr::opts_chunk$set(
 )
 ```
 
-# gcamfaostat 1.0.0
-
-**Beta release**
-* The beta release of gcamfaostat 1.0.0 includes the data generated for the Global Change Analysis Model v7.0 [GCAM v7.0](https://github.com/JGCRI/gcam-core/releases/tag/gcam-v7.0). 
-* 
-
 # November 2023 updates
+
+# **JOSS submission**
+2023-11-10
+
+* gcamfaostat is now submitted to JOSS for review and publication
+* gcamfaostat v1.0.0 includes the data generated for the Global Change Analysis Model v7.0 [GCAM v7.0](https://github.com/JGCRI/gcam-core/releases/tag/gcam-v7.0). 
+* We will make an official release after the JOSS review.
+
+2023-11-09
+# FAOSTAT (in the recent Oct release) provide 2021 data
+# We will now update gcamfaostat to include the latest data and for GCAM BYU
+# A new **BYU branch** is created for this task
+
 2023-11-08
 
 * All Github Action test passed. Badges added!
@@ -67,7 +74,7 @@ ToDo before JOSS submission
 * Compare the results from the new primary commodity equivalent method with the FBS data compiled using FAOSTAT method (never disclosed).
 
 
-**Raw data archive**
+# **Raw data archive**
 2023-08-19  
 
 The source data downloaded from FAOSTAT is archived at a [Zenodo repository]( https://zenodo.org/deposit/8260225).
