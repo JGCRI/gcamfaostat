@@ -399,7 +399,7 @@ FAOSTAT_AREA_RM_NONEXIST <- function(.DF,
   assertthat::assert_that("area_code" %in% names(.DF),
                           msg = "Date frame is required and need a col of area_code")
 
-  # Removed area due to missing data in other places and incomplete years mostly
+  # If needed, remove area due to missing data in other places and incomplete years mostly
   # There are 7
   # 69 French Guyana
   # 87 Guadeloupe
@@ -633,7 +633,7 @@ FF_check_count_plot <- function(.DF, .ELEMENT = c()){
     gather(header, count, -year, -element) %>%
     filter(element %in% .ELEMENT) %>%
     ggplot() + facet_wrap(~header, scales = "free") +
-    geom_line(aes(x = year, y = count, color = element)) +
+    geom_line(aes(x = year, y = count, color = element), size = 1) +
     theme_bw()
 }
 
@@ -791,6 +791,7 @@ SUA_bal_adjust <- function(.df){
 #' Function saving dataset to csv file with headers
 #'
 #' @param gcam_dataset dataframe name to be saved
+#' @param out_filename file name of the output csv
 #' @param col_type_nonyear column type that is non-year; numeric for years will be pasted
 #' @param title title in header
 #' @param unit  unit in header
@@ -801,7 +802,9 @@ SUA_bal_adjust <- function(.df){
 #'
 #' @export
 
-output_csv_data <- function(gcam_dataset, col_type_nonyear,
+output_csv_data <- function(gcam_dataset,
+                            out_filename,
+                            col_type_nonyear,
                             title, unit, description = NA,
                             code,
                             out_dir = out_dir,
@@ -809,10 +812,10 @@ output_csv_data <- function(gcam_dataset, col_type_nonyear,
 
   if (!missing(code)) {code = code}
 
-  col_type = paste0(col_type_nonyear, paste0(rep("n", ncol(get(gcam_dataset, envir = parent.frame())) - nchar(col_type_nonyear)), collapse = "") )
+  col_type = paste0(col_type_nonyear, paste0(rep("n", ncol(gcam_dataset) - nchar(col_type_nonyear)), collapse = "") )
 
   cmnts <- c(
-    paste0("File: ", gcam_dataset, ifelse(GZIP, ".csv.gz", ".csv")),
+    paste0("File: ", out_filename, ifelse(GZIP, ".csv.gz", ".csv")),
     paste0("Title: ", title),
     paste0("Units: ", unit),
     paste0("Description:  ", description),
@@ -821,15 +824,15 @@ output_csv_data <- function(gcam_dataset, col_type_nonyear,
     paste0("Column types: ",col_type) ,
     "----------"
   )
-  fqfn <- file.path(out_dir, paste0(gcam_dataset, ".csv"))
+  fqfn <- file.path(out_dir, paste0(out_filename, ".csv"))
   suppressWarnings(file.remove(fqfn))
 
   if (GZIP == F) {
     cat(paste("#", cmnts), file = fqfn, sep = "\n", append = TRUE)
-    readr::write_csv(get(gcam_dataset, envir = parent.frame()), fqfn, append = TRUE, col_names = TRUE, na = "")
+    readr::write_csv(gcam_dataset, fqfn, append = TRUE, col_names = TRUE, na = "")
   } else {
     cat(paste("#", cmnts), file = gzfile(paste0(fqfn, ".gz")), sep = "\n", append = TRUE)
-    readr::write_csv(get(gcam_dataset, envir = parent.frame()), gzfile(paste0(fqfn, ".gz")), append = TRUE, col_names = TRUE, na = "")
+    readr::write_csv(gcam_dataset, gzfile(paste0(fqfn, ".gz")), append = TRUE, col_names = TRUE, na = "")
   }
 }
 

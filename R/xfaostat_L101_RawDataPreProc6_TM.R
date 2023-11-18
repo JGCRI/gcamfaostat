@@ -137,14 +137,4 @@ module_xfaostat_L101_RawDataPreProc6_TM <- function(command, ...) {
   }
 }
 
-# FAOSTAT_RDS <- c("TM_bilateral_wide")
-#
-# DIR_PREBUILT_FAOSTAT <- "data"
-#
-# lapply(FAOSTAT_RDS, function(d){
-#   assertthat::assert_that(file.exists(file.path(DIR_PREBUILT_FAOSTAT, paste0(d, ".rds"))))
-#   assign(d, readRDS(file.path(DIR_PREBUILT_FAOSTAT, paste0(d, ".rds"))),
-#          envir = parent.env(environment()))
-# })
-
 

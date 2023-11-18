@@ -140,7 +140,7 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
     PD %>% distinct(item, item_code)
 
     PD %>% filter(
-      year %in% FAOSTAT_Hist_Year,
+      year >= min(FAOSTAT_Hist_Year),
       area_code < 350,
       area_code %in% QCL_area_code,
       # only keep regions with production

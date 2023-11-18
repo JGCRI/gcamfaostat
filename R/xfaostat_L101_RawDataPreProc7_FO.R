@@ -52,7 +52,7 @@ module_xfaostat_L101_RawDataPreProc7_FO <- function(command, ...) {
       FAOSTAT_load_raw_data(DATASETCODE = "FO", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT, .Envir = Curr_Envir)
 
       # Only keep roundwood
-      FO %>% filter(year %in% FAOSTAT_Hist_Year,
+      FO %>% filter(year >= min(FAOSTAT_Hist_Year),
                     area_code < 350,     # Rm aggregated area
                     item_code == 1861) %>% # Roundwood
         select(area_code,

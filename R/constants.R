@@ -5,9 +5,9 @@
 # Key parameters
 # If TRUE, process raw FAO data
 # If FALSE, use prebuilt data to load FAO data
-Process_Raw_FAO_Data <- FALSE
+Process_Raw_FAO_Data <- TRUE
 # If TRUE, CSV will be generated and saved to DIR_OUTPUT_CSV
-OUTPUT_Export_CSV <- FALSE
+OUTPUT_Export_CSV <- TRUE
 
 
 # Directories ----
@@ -21,13 +21,13 @@ dir.create(DIR_OUTPUT_CSV, recursive = T, showWarnings = FALSE)
 
 # Historical years of focus ----
 #*******************************************
-FAOSTAT_Hist_Year <- seq(1970, 2020)
+FAOSTAT_Hist_Year <- seq(1970, 2021)
 #Bilateral trade year starts from 1986 but higher quality after 1992
 #FAOSTAT_Hist_Year_Bilateral <- seq(1992, 2020)
-FAOSTAT_Hist_Year_TMBilateral <- seq(2010, 2020)
-FAOSTAT_Hist_Year_TCL <- seq(1973, 2019)
+FAOSTAT_Hist_Year_TMBilateral <- seq(2010, 2021)
+FAOSTAT_Hist_Year_TCL <- seq(1973, 2021)
 FAOSTAT_Hist_Year_FBSH <- seq(1973, 2013)
-FAOSTAT_Hist_Year_FBS <- seq(2010, 2019) # New FBS years
+FAOSTAT_Hist_Year_FBS <- seq(2010, 2021) # New FBS years
 MIN_HIST_PP_YEAR = 2010 # first producer price year
 
 

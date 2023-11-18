@@ -54,7 +54,7 @@ module_xfaostat_L101_RawDataPreProc8_RL_RFN <- function(command, ...) {
       FAOSTAT_load_raw_data(DATASETCODE = "RL", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT, .Envir = Curr_Envir)
 
       RL %>%
-        filter(year %in% FAOSTAT_Hist_Year,
+        filter(year >= min(FAOSTAT_Hist_Year),
                area_code < 350,       # Rm aggregated area
                item_code %in% c(6621, 6630, 6640)) ->  # Keep Arable land, Temporary crops, Fallow land
         RL

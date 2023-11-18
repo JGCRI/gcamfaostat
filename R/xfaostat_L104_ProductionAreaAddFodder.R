@@ -61,7 +61,7 @@ module_xfaostat_L104_ProductionAreaAddFodder <- function(command, ...) {
     # Vetches is already in the new data under other categories
 
     FAO_fodder_Prod_t_HA_ha_PRODSTAT_2011 %>%
-      filter(year %in% FAOSTAT_Hist_Year) %>%
+      filter(year >= min(FAOSTAT_Hist_Year)) %>%
       filter(area_code %in% QCL_area_code) %>%
       FAOSTAT_AREA_RM_NONEXIST() ->
       FAO_fodder_Prod_t_HA_ha_PRODSTAT_2011

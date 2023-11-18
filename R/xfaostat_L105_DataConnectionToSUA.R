@@ -79,7 +79,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
 
     # Get area code in QCL that is consistent with FBS e.g., after 2010 only
-    QCL_PROD %>% filter(year %in% FAOSTAT_Hist_Year_FBS) %>%  distinct(area_code) %>% pull ->
+    QCL_PROD %>% filter(year >= min (FAOSTAT_Hist_Year_FBS)) %>%  distinct(area_code) %>% pull ->
       QCL_area_code_FBS
 
     ## 1.2. Get FAO supply-utilization SCL ready ----
