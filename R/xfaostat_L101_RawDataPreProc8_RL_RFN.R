@@ -18,8 +18,8 @@
 module_xfaostat_L101_RawDataPreProc8_RL_RFN <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(OPTIONAL_FILE = "aglu/FAO/FAOSTAT/Inputs_LandUse_E_All_Data_(Normalized)_PalceHolder",
-      OPTIONAL_FILE = "aglu/FAO/FAOSTAT/Inputs_FertilizersNutrient_E_All_Data_(Normalized)_PalceHolder")
+    c(FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Inputs_LandUse_E_All_Data_Normalized",
+      FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Inputs_FertilizersNutrient_E_All_Data_Normalized")
 
   MODULE_OUTPUTS <-
     c("RL",                # Land
@@ -65,7 +65,7 @@ module_xfaostat_L101_RawDataPreProc8_RL_RFN <- function(command, ...) {
         add_title("FAO land data") %>%
         add_units("ha") %>%
         add_comments("FAO raw land data") %>%
-        add_precursors("aglu/FAO/FAOSTAT/Inputs_LandUse_E_All_Data_(Normalized)_PalceHolder") ->
+        add_precursors("aglu/FAO/FAOSTAT/Inputs_LandUse_E_All_Data_Normalized") ->
         RL
 
       verify_identical_prebuilt(RL)
@@ -87,7 +87,7 @@ module_xfaostat_L101_RawDataPreProc8_RL_RFN <- function(command, ...) {
         add_title("FAO fertilizer data") %>%
         add_units("t N") %>%
         add_comments("FAO raw fertilizer data") %>%
-        add_precursors("aglu/FAO/FAOSTAT/Inputs_FertilizersNutrient_E_All_Data_(Normalized)_PalceHolder") ->
+        add_precursors("aglu/FAO/FAOSTAT/Inputs_FertilizersNutrient_E_All_Data_Normalized") ->
         RFN
 
       verify_identical_prebuilt(RFN)

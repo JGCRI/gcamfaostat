@@ -18,7 +18,7 @@
 module_xfaostat_L101_RawDataPreProc5_TCL <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(OPTIONAL_FILE = "aglu/FAO/FAOSTAT/Trade_CropsLivestock_E_All_Data_(Normalized)_PalceHolder",
+    c(FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Trade_CropsLivestock_E_All_Data_Normalized",
       "QCL_area_code_map")
 
   MODULE_OUTPUTS <-
@@ -75,7 +75,7 @@ module_xfaostat_L101_RawDataPreProc5_TCL <- function(command, ...) {
       add_title("FAO TCL") %>%
       add_units("tonne") %>%
       add_comments("Preprocessed FAO TCL") %>%
-      add_precursors("aglu/FAO/FAOSTAT/Trade_CropsLivestock_E_All_Data_(Normalized)_PalceHolder",
+      add_precursors("aglu/FAO/FAOSTAT/Trade_CropsLivestock_E_All_Data_Normalized",
                      "QCL_area_code_map") ->
       TCL_wide
 

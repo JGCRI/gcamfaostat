@@ -18,8 +18,8 @@
 module_xfaostat_L101_RawDataPreProc3_SCL_FBS <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(OPTIONAL_FILE = "aglu/FAO/FAOSTAT/SUA_Crops_Livestock_E_All_Data_(Normalized)_PalceHolder",
-      OPTIONAL_FILE = "aglu/FAO/FAOSTAT/FoodBalanceSheets_E_All_Data_(Normalized)_PalceHolder",
+    c(FAOSTAT_FILE = "aglu/FAO/FAOSTAT/SUA_Crops_Livestock_E_All_Data_Normalized",
+      FAOSTAT_FILE = "aglu/FAO/FAOSTAT/FoodBalanceSheets_E_All_Data_Normalized",
       "QCL_area_code_map")
 
   MODULE_OUTPUTS <-
@@ -108,7 +108,7 @@ module_xfaostat_L101_RawDataPreProc3_SCL_FBS <- function(command, ...) {
       add_title("FAO supply utilization account dataset, 2010+, wide") %>%
       add_units("tonne") %>%
       add_comments("Preprocessed FAOSTAT SCL")  %>%
-      add_precursors("aglu/FAO/FAOSTAT/SUA_Crops_Livestock_E_All_Data_(Normalized)_PalceHolder",
+      add_precursors("aglu/FAO/FAOSTAT/SUA_Crops_Livestock_E_All_Data_Normalized",
                      "QCL_area_code_map") ->
       SCL_wide
 
@@ -147,7 +147,7 @@ module_xfaostat_L101_RawDataPreProc3_SCL_FBS <- function(command, ...) {
       add_title("FAO food balance sheet, 2010-") %>%
       add_units("1000 tonne") %>%
       add_comments("Preprocessed FAOSTAT SCL") %>%
-      add_precursors("aglu/FAO/FAOSTAT/FoodBalanceSheets_E_All_Data_(Normalized)_PalceHolder",
+      add_precursors("aglu/FAO/FAOSTAT/FoodBalanceSheets_E_All_Data_Normalized",
                      "QCL_area_code_map") ->
       FBS_wide
 

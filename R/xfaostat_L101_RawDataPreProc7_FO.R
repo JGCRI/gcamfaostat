@@ -18,7 +18,7 @@
 module_xfaostat_L101_RawDataPreProc7_FO <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(OPTIONAL_FILE = "aglu/FAO/FAOSTAT/Forestry_E_All_Data_(Normalized)_PalceHolder")
+    c(FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Forestry_E_All_Data_Normalized")
 
   MODULE_OUTPUTS <-
     c("FO_Roundwood")       # Forestry data
@@ -74,7 +74,7 @@ module_xfaostat_L101_RawDataPreProc7_FO <- function(command, ...) {
         add_title("FAO forestry data") %>%
         add_units("m3") %>%
         add_comments("FAO raw forestry data") %>%
-        add_precursors("aglu/FAO/FAOSTAT/Forestry_E_All_Data_(Normalized)_PalceHolder") ->
+        add_precursors("aglu/FAO/FAOSTAT/Forestry_E_All_Data_Normalized") ->
         FO_Roundwood
 
 

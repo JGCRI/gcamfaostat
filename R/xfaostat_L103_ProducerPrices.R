@@ -52,10 +52,9 @@ module_xfaostat_L103_ProducerPrices <- function(command, ...) {
     # Primary crops
     QCL_PROD %>% filter(item_set == "QCL_COMM_CROP_PRIMARY") %>%
       distinct(item, item_code) -> QCL_COMM_CROP_PRIMARY
-    # Primary animal products, including fat hides etc. 45
+    # Primary animal products, including fat hides etc. 46
     QCL_PROD %>% filter(grepl("AN_PRIMARY", item_set) ) %>%
       distinct(item, item_code) -> QCL_COMM_AN_PRIMARY
-
 
     QCL_COMM_CROP_PRIMARY %>%
       bind_rows(QCL_COMM_AN_PRIMARY) %>%
@@ -64,13 +63,13 @@ module_xfaostat_L103_ProducerPrices <- function(command, ...) {
 
     QCL_PRIMARY %>% distinct(item, element, item_set, unit)
 
-    #FF_check_count_plot(QCL_PRIMARY) # 205 items
+    #FF_check_count_plot(QCL_PRIMARY) # 206 items
     #FF_check_count_plot(PP) # PP %>% distinct(area)
     Curr_Envir <- environment()
     # check items
     FF_join_checkmap(c("QCL_PRIMARY", "PP"), "item_code", "item", .ENVIR = Curr_Envir) -> A
     A %>% filter(!is.na(QCL_PRIMARY_item)) %>% filter(is.na(PP_item)) -> PP_NO_DATA_ITEM
-    # 20 items out of 205 were missing; mostly animal offals, fats or skins
+    # 21 items out of 206 were missing; mostly animal offals, fats or skins
 
     ## QCL_PRIMARY and PP ----
     #*******************************************

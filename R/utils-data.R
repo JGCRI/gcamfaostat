@@ -276,7 +276,7 @@ get_data_list <- function(all_data, data_list, strip_attributes = FALSE, environ
     curr_var_name <- data_list[i]
     # the variable name to assign for FILE is the "basename" of the file
     # i.e. `FILE = "common/GCAM_region_names"` will result in `GCAM_region_names` being set
-    if(!is.null(data_list_names) && data_list_names[i] %in% c("FILE", "OPTIONAL_FILE")) {
+    if(!is.null(data_list_names) && data_list_names[i] %in% c("FILE", "OPTIONAL_FILE", "FAOSTAT_FILE")) {
       # Note: strsplit returns a list (one per each str to be split) of character vector
       # (one for each token split out).  Given we are split one string at a time
       # we will just grab the first element of the list (`[[1]]`)

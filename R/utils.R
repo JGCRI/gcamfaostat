@@ -255,7 +255,7 @@ find_csv_file <- function(filename, optional, quiet = FALSE) {
   assert_that(is.logical(optional))
   assert_that(is.logical(quiet))
 
-  extensions <- c(".csv", ".csv.gz", "")
+  extensions <- c(".csv", ".csv.gz", ".zip", "")
   for(ex in extensions) {
     fqfn <- system.file("extdata", paste0(filename, ex), package = PACKAGE_NAME)
     if(fqfn != "") {
@@ -438,6 +438,7 @@ chunk_inputs <- function(chunks = find_chunks()$name, call_flag = driver.DECLARE
   inputs <- character()
   from_files <- logical()
   optionals <- logical()
+  faostats <- logical()
   for(ch in chunks) {
     cl <- call(ch, call_flag)
     reqdata <- eval(cl)
@@ -446,18 +447,21 @@ chunk_inputs <- function(chunks = find_chunks()$name, call_flag = driver.DECLARE
     if(is.null(names(reqdata))) {
       file_inputs <- rep(FALSE, times = length(reqdata))
       optional_file_inputs <- rep(FALSE, times = length(reqdata))
+      faostat_file_inputs <- rep(FALSE, times = length(reqdata))
     } else {
-      file_inputs <- names(reqdata) %in% c("FILE", "OPTIONAL_FILE")
-      optional_file_inputs <- names(reqdata) == "OPTIONAL_FILE"
+      file_inputs <- names(reqdata) %in% c("FILE", "OPTIONAL_FILE", "FAOSTAT_FILE")
+      optional_file_inputs <- names(reqdata) %in% c("OPTIONAL_FILE", "FAOSTAT_FILE")
+      faostat_file_inputs <- names(reqdata) == "FAOSTAT_FILE"
     }
     if(!is.null(reqdata)) {
       chunk_names <- c(chunk_names, rep(ch, times = length(reqdata)))
       inputs <- c(inputs, as.vector(unlist(reqdata)))
       from_files <- c(from_files, file_inputs)
       optionals <- c(optionals, optional_file_inputs)
+      faostats <- c(faostats, faostat_file_inputs)
     }
   }
-  tibble(name = chunk_names, input = inputs, from_file = from_files, optional = optionals)
+  tibble(name = chunk_names, input = inputs, from_file = from_files, optional = optionals, faostat = faostats)
 }
 
 
@@ -488,6 +492,7 @@ chunk_outputs <- function(chunks = find_chunks()$name, call_flag = driver.DECLAR
   chunk_names <- character()
   outputs <- character()
   to_xmls <- logical()
+  to_csvs <- logical()
   for(ch in chunks) {
     cl <- call(ch, call_flag)
     reqdata <- eval(cl)
@@ -497,14 +502,16 @@ chunk_outputs <- function(chunks = find_chunks()$name, call_flag = driver.DECLAR
       fileoutputs <- rep(FALSE, times = length(reqdata))
     } else {
       fileoutputs <- names(reqdata) == "XML"
+      fileoutputs <- names(reqdata) == "CSV"
     }
     if(!is.null(reqdata)) {
       chunk_names <- c(chunk_names, rep(ch, times = length(reqdata)))
       outputs <- c(outputs, as.vector(unlist(reqdata)))
       to_xmls <- c(to_xmls, fileoutputs)
+      to_csvs <- c(to_csvs, fileoutputs)
     }
   }
-  tibble(name = chunk_names, output = outputs, to_xml = to_xmls)
+  tibble(name = chunk_names, output = outputs, to_xml = to_xmls, to_csv = to_csvs)
 }
 
 #' outputs_of

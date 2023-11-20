@@ -312,7 +312,7 @@ FAOSTAT_metadata <- function (code = NULL){
 #' @description Read csv data and "." in column name is substituted with "_".
 #'
 #' @param DATASETCODE Dataset code in FAO metadata or the name of a csv file.
-#' @param GET_MAPPINGCODE If NULL return data if char return other mapping files
+#' @param GET_MAPPINGCODE If NULL return data if char and in ItemCodes, AreaCodes, or Flags return other mapping files
 #' @param DATA_FOLDER Path to the folder storing the data.
 #' @param .Envir Qutput environment
 #'
@@ -351,7 +351,7 @@ FAOSTAT_load_raw_data <- function(DATASETCODE,
       # Assigned to .Envir
       assign(CODE, df, envir = .Envir)
     }
-  } else if(is.character(GET_MAPPINGCODE) == T){
+  } else if(is.character(GET_MAPPINGCODE) == T & all(GET_MAPPINGCODE %in% c("ItemCodes", "AreaCodes", "Flags"))){
 
     for (CODE in DATASETCODE) {
 

@@ -18,7 +18,7 @@
 module_xfaostat_L101_RawDataPreProc1_QCL <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(OPTIONAL_FILE = "aglu/FAO/FAOSTAT/Trade_CropsLivestock_E_All_Data_(Normalized)_PalceHolder")
+    c(FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Trade_CropsLivestock_E_All_Data_Normalized")
 
   MODULE_OUTPUTS <-
     c("QCL_wide",          # Ag production quantity and harvested area
@@ -92,14 +92,14 @@ module_xfaostat_L101_RawDataPreProc1_QCL <- function(command, ...) {
       add_title("FAO primary production country and code") %>%
       add_units("NA") %>%
       add_comments("FAO Country and code") %>%
-      add_precursors("aglu/FAO/FAOSTAT/Trade_CropsLivestock_E_All_Data_(Normalized)_PalceHolder") ->
+      add_precursors("aglu/FAO/FAOSTAT/Trade_CropsLivestock_E_All_Data_Normalized") ->
       QCL_area_code_map
 
     QCL_wide %>%
       add_title("FAO primary production (QCL)", overwrite = TRUE) %>%
       add_units("ha/tonne") %>%
       add_comments("Preprocessed FAOSTAT primary production") %>%
-      add_precursors("aglu/FAO/FAOSTAT/Trade_CropsLivestock_E_All_Data_(Normalized)_PalceHolder") ->
+      add_precursors("aglu/FAO/FAOSTAT/Trade_CropsLivestock_E_All_Data_Normalized") ->
       QCL_wide
 
       verify_identical_prebuilt(QCL_area_code_map)
