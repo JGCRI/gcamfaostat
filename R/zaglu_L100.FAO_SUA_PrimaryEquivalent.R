@@ -846,7 +846,8 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
           # ensure we at least have a complete series across time otherwise it may
           # throw off moving avg calculations
           complete(area_code = Area_Region_Map$area_code, year = pull(., year) %>% unique(), nesting(item_code, element), fill=list(value=0)) %>%
-          left_join_error_no_match(SUA_item_code_map, by = c("item_code"))) %>%
+          left_join_error_no_match(SUA_item_code_map, by = c("item_code"))
+        ) %>%
       bind_rows(
         # bind fodder crops for after 2010
         FAO_AgProd_Kt_Area_Kha %>%

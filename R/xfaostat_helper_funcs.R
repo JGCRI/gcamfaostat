@@ -147,6 +147,8 @@ FF_download_RemoteArchive <-
            DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
            OverWrite = FALSE){
 
+    warnings("The current archive is for GCAM v7 release, not the latest!")
+
     assertthat::assert_that(is.character(DATASETCODE))
     assertthat::assert_that(is.character(RemoteArchiveURL))
     assertthat::assert_that(is.character(DATA_FOLDER))

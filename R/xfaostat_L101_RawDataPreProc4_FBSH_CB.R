@@ -86,6 +86,8 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
 
     FAOSTAT_load_raw_data("CB", .Envir = Curr_Envir)    # Old FBS-nonfood -2013
 
+    assertthat::assert_that(CB %>% pull(year) %>% max <= 2013)
+
     CB %>% distinct(element, element_code, unit)
     # Keep population (old)
     CB %>% filter(item_code < 2901,

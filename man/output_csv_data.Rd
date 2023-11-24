@@ -6,6 +6,7 @@
 \usage{
 output_csv_data(
   gcam_dataset,
+  out_filename,
   col_type_nonyear,
   title,
   unit,
@@ -17,6 +18,8 @@ output_csv_data(
 }
 \arguments{
 \item{gcam_dataset}{dataframe name to be saved}
+
+\item{out_filename}{file name of the output csv}
 
 \item{col_type_nonyear}{column type that is non-year; numeric for years will be pasted}
 

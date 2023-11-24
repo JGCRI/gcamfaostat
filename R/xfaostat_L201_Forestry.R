@@ -18,11 +18,11 @@
 module_xfaostat_L201_Forestry <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c("FO_Roundwood")
+    c("FO_RoundwoodProducts")
 
   MODULE_OUTPUTS <-
     c("For_Balance",
-      "FO_Roundwood_Export_Q_V")
+      "FO_RoundwoodProducts_Export_Q_V")
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -37,25 +37,48 @@ module_xfaostat_L201_Forestry <- function(command, ...) {
     all_data <- list(...)[[1]]
 
     # Load required inputs ----
-
     get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
-
 
 
     ## Proprocess and quick clean ----
 
+    c(1865, 1634, 1873, 872, 1875) -> Key_FO_Items
+    # 1865	Industrial roundwood
+    # 1634	Veneer sheets
+    # 1873	Wood-based panels
+    # 1872	Sawnwood
+    # 1875	Wood pulp
 
-    # 215 unique areas with production data
-    FO_area <-
-      FO_Roundwood %>% filter(element_code == 5516) %>% distinct(area, area_code)
-    FO_Roundwood %>% distinct(element, element_code, unit) -> UnitMap
+    FO_RoundwoodProducts %>% filter(item_code %in% c(1865, 1634, 1873, 872, 1875)) ->
+      L201.FO_RoundwoodProducts
 
-    ## FO_Roundwood_Prod: Production ----
-    FO_Roundwood %>%
+
+
+    # 215+ unique areas with production data in roundwood
+    # BUT 185 in industrial round wood
+    # areas are indeed different across items! Check again later
+
+    # FO_RoundwoodProducts %>% filter(item_code %in% c(1865, 1634, 1873, 872, 1875)) %>%
+    #   FF_check_count_plot()
+    FO_area_item <-
+      L201.FO_RoundwoodProducts %>%
+      filter(item_code %in% 1865, element_code == 5516) %>%
+      distinct(area, area_code) %>%
+      full_join(
+        L201.FO_RoundwoodProducts %>% distinct(item, item_code), by = character()
+      )
+
+    L201.FO_RoundwoodProducts %>% distinct(item_code, element, element_code, unit) -> UnitMap
+
+
+    ## FO_RoundwoodProducts_Prod: Production ----
+    L201.FO_RoundwoodProducts %>%
+      filter(element %in% "Production") %>%  # Production
       # Areas with production data
-      right_join(FO_area, by = c("area_code", "area")) %>%
-      filter(element_code %in% c(5516)) %>%  # Production
+      right_join(FO_area_item, by = c("area_code", "area", "item_code", "item")) %>%
+      filter(!is.na(year)) %>%
       # Complete all dimensions
+      group_by(item_code, item) %>%
       tidyr::complete(
         nesting(area_code, area),
         nesting(item_code, item),
@@ -70,20 +93,23 @@ module_xfaostat_L201_Forestry <- function(command, ...) {
       tidyr::replace_na(list(value = 0)) %>%
       # Remove area x year that should not exist
       FAOSTAT_AREA_RM_NONEXIST(RM_AREA_CODE = NULL)  ->
-      FO_Roundwood_Prod
+      L201.FO_RoundwoodProducts_Prod
 
-    ## FO_Roundwood_Export_Q_V: Export  ----
-    FO_Roundwood %>%
+
+    ## FO_RoundwoodProducts_Export_Q_V: Export  ----
+    L201.FO_RoundwoodProducts %>%
+      filter(element %in% c("Export Quantity", "Export Value") )  %>%  # Export quantity and value
       # Areas with production data
-      right_join(FO_area, by = c("area_code", "area")) %>%
-      filter(element_code %in% c(5922 , 5916)) %>%  # Export quantity and value
+      right_join(FO_area_item, by = c("area_code", "area", "item_code", "item")) %>%
+      filter(!is.na(year)) %>%
       # Complete all dimensions
+      group_by(item_code, item) %>%
       complete(
         nesting(area_code, area),
         nesting(item_code, item),
         nesting(element_code, element, unit),
         year
-      ) %>%
+      ) %>% ungroup() %>%
       select(-unit, -element_code) %>%
       spread(element, value) %>%
       # Fill in missing based on price relationship
@@ -92,20 +118,24 @@ module_xfaostat_L201_Forestry <- function(command, ...) {
       # Remove area x year that should not exist
       FAOSTAT_AREA_RM_NONEXIST(RM_AREA_CODE = NULL) %>%
       # Get unit and element_code back
-      left_join(UnitMap, by = "element") ->
-      FO_Roundwood_Export_Q_V
+      left_join(UnitMap, by = c("item_code", "element")) ->
+      L201.FO_RoundwoodProducts_Export_Q_V
 
-    ## FO_Roundwood_Import_Q_V: Export  ----
-    FO_Roundwood %>%
-      right_join(FO_area, by = c("area_code", "area")) %>%
-      filter(element_code %in% c(5622 , 5616)) %>%  # Export quantity and value
+
+    ## FO_RoundwoodProducts_Import_Q_V: Import  ----
+    L201.FO_RoundwoodProducts %>%
+      filter(element %in% c("Import Quantity", "Import Value") )  %>%  # Import quantity and value
+      # Areas with production data
+      right_join(FO_area_item, by = c("area_code", "area", "item_code", "item")) %>%
+      filter(!is.na(year)) %>%
       # Complete all dimensions
+      group_by(item_code, item) %>%
       complete(
         nesting(area_code, area),
         nesting(item_code, item),
         nesting(element_code, element, unit),
         year
-      ) %>%
+      ) %>% ungroup %>%
       select(-unit, -element_code) %>%
       spread(element, value) %>%
       # Fill in missing based on price relationship
@@ -114,8 +144,9 @@ module_xfaostat_L201_Forestry <- function(command, ...) {
       # Remove area x year that should not exist
       FAOSTAT_AREA_RM_NONEXIST(RM_AREA_CODE = NULL) %>%
       # Get unit and element_code back
-      left_join(UnitMap, by = "element")  ->
-      FO_Roundwood_Import_Q_V
+      left_join(UnitMap, by = c("item_code", "element")) ->
+      L201.FO_RoundwoodProducts_Import_Q_V
+
 
     ## Bind and Balance ----
 
@@ -123,14 +154,18 @@ module_xfaostat_L201_Forestry <- function(command, ...) {
     # Adjust Export as Production * Export_Production_ratio
     # initial value in constants.R was For_Export_Production_Ratio_Adj = 0.9
 
-    FO_Roundwood_Prod %>%
-      bind_rows(FO_Roundwood_Export_Q_V %>% filter(element == "Export Quantity")) %>%
-      bind_rows(FO_Roundwood_Import_Q_V %>% filter(element == "Import Quantity")) %>%
+    L201.FO_RoundwoodProducts_Prod %>%
+      bind_rows(L201.FO_RoundwoodProducts_Export_Q_V %>% filter(element == "Export Quantity")) %>%
+      bind_rows(L201.FO_RoundwoodProducts_Import_Q_V %>% filter(element == "Import Quantity")) %>%
       mutate(element = gsub(" Quantity", "", element)) %>%
       select(-unit, -element_code) %>%
       GROSS_TRADE_ADJUST %>%
       spread(element, value) %>%
       replace_na(list(Export = 0, Import = 0)) %>%
+      # also setting production = 0, if NA
+      replace_na(list(Production = 0)) %>%
+      # Remove area x year that should not exist
+      FAOSTAT_AREA_RM_NONEXIST(RM_AREA_CODE = NULL) %>%
       mutate(
         Demand = Production + Import - Export,
         Export = if_else(Demand < 0,
@@ -143,27 +178,27 @@ module_xfaostat_L201_Forestry <- function(command, ...) {
       spread(element, value) %>%
       mutate(Demand = Production + Import - Export) %>%
       gather(element, value, -area_code, -area, -item_code, -item, -year) %>%
-      mutate(unit = "m3") ->
-      For_Balance
+      left_join(UnitMap %>% filter(element == "Production") %>% distinct(item_code, unit), by = "item_code") ->
+      L201.For_Balance
+
 
     # clean up
-    rm(FO_area, UnitMap, FO_Roundwood, FO_Roundwood_Prod, FO_Roundwood_Import_Q_V)
+    rm(FO_area_item, UnitMap,  L201.FO_RoundwoodProducts,  L201.FO_RoundwoodProducts_Prod,  L201.FO_RoundwoodProducts_Import_Q_V)
 
 
-    For_Balance %>%
+    L201.For_Balance %>%
       add_title("FAO forestry consumption, production, export, and import (roundwood total) by country_year") %>%
       add_units("m3 ") %>%
       add_comments("Data is preprocessed and generated by gcamdata-FAOSTAT. Gross trade is balanced") %>%
-      add_precursors("FO_Roundwood") ->
+      add_precursors("FO_RoundwoodProducts") ->
       For_Balance
 
-    FO_Roundwood_Export_Q_V %>%
+    L201.FO_RoundwoodProducts_Export_Q_V %>%
       add_title("FAO forests export qunatity and export value by country_year") %>%
       add_units("m3 and 1000 USD") %>%
       add_comments("Data is generated by gcamdata-FAOSTAT for deriving export prices") %>%
-      add_precursors("FO_Roundwood") ->
-      FO_Roundwood_Export_Q_V
-
+      add_precursors("FO_RoundwoodProducts") ->
+      FO_RoundwoodProducts_Export_Q_V
 
 
     return_data(MODULE_OUTPUTS)

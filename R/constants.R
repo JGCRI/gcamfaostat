@@ -5,9 +5,9 @@
 # Key parameters
 # If TRUE, process raw FAO data
 # If FALSE, use prebuilt data to load FAO data
-Process_Raw_FAO_Data <- TRUE
+Process_Raw_FAO_Data <- FALSE
 # If TRUE, CSV will be generated and saved to DIR_OUTPUT_CSV
-OUTPUT_Export_CSV <- TRUE
+OUTPUT_Export_CSV <- FALSE
 
 
 # Directories ----
@@ -63,10 +63,28 @@ scaleFUN <- function(x) sprintf("%.0f", x)
 
 
 
+#*******************************************
 
+# Detailed forest CMP constants
+
+aglu.FOREST_commodities <- c("sawnwood","woodpulp")
+aglu.FOREST_demand_sectors <- c("NonFoodDemand_sawnwood","NonFoodDemand_woodpulp")
+aglu.FOREST_supply_sector <- "Forest"
+#Below is a default amount of roundwood required to produce sawnwood.The model will calculate the IO using data. This will get used if and only if
+# the IO calculated by the model is an NA. This is taken as an everage across countries from a UNECE report on forest products. Available here- https://unece.org/fileadmin/DAM/timber/publications/DP-49.pdf
+aglu.FOREST_sawtimber_conversion <- 2.17
+
+#90% of pulp processing is chemical which has an IO of 5.44 and 10% is mechanical which is 2.55. Taking weighted average of the two,
+# we get 5.15. These are calculated as averages across countries.
+#Source- https://unece.org/fileadmin/DAM/timber/publications/DP-49.pdf
+aglu.FOREST_pulp_conversion <- 5.15
+
+aglu.FOREST_max_price <- 165
 
 #*******************************************
-#*******************************************
+
+
+
 
 
 # ***Default constants in gcamdata ----
