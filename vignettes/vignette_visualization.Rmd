@@ -43,7 +43,7 @@ Food calories availability per capita per day grouped by GCAM regions and commod
 ***
 ## Yield growth
 
-![Surprisingly, oil palm fruit yield did grow at regional levels (boxplot) in the past 30 years. But world yield increased by ~50% due to the production shift to high-yielding regions. The opposite is true for root and tuber crops](../man/figures/Fig_WorldYield.png){width=100%}
+![Surprisingly, oil palm fruit yield did not grow at regional levels (boxplot) in the past 30 years. But world yield increased by ~50% due to the production shift to high-yielding regions. The opposite is true for root and tuber crops](../man/figures/Fig_WorldYield.png){width=100%}
 
 ***
 
@@ -122,7 +122,7 @@ BaseYear <- c(2013:2017)
 ``` {r, eval =FALSE}
 # simplify population data
 OA %>% filter(element_code == 511, item_code == 3010) %>%
-  transmute(area, area_code, year, pop = value) %>% 
+  transmute(area, area_code, year, value = value / length(BaseYear)) %>% 
   filter(year %in% BaseYear) %>% 
   gcamdata::left_join_error_no_match(AGLU_ctry %>% select(area = FAO_country, iso), by = "area") %>%
   gcamdata::left_join_error_no_match(iso_GCAM_regID %>% select(iso, GCAM_region_ID), by = "iso") %>%

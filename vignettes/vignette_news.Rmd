@@ -15,6 +15,15 @@ knitr::opts_chunk$set(
 )
 ```
 
+2023-1-28
+
+* The first version of gcamfaostat is still being processed/reviewed at JOSS
+* We now create a release version to have a snapshot of this version (replicating the processing for GCAM v7.0 AgLU in data)
+* Next stages of development:
+  (1) BYU: GCAM base year update to 2021 and 
+  (2) PCE: primary commodity equivalent processing and method documentation
+* Possibly adding IFPRI SPAM data in the processing chain  
+
 # November 2023 updates
 
 # **JOSS submission**
@@ -28,6 +37,7 @@ knitr::opts_chunk$set(
 # FAOSTAT (in the recent Oct release) provide 2021 data
 # We will now update gcamfaostat to include the latest data and for GCAM BYU
 # A new **BYU branch** is created for this task
+
 
 2023-11-08
 
