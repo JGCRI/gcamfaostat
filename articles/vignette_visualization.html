@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Visualization</h1>
             
-            <h4 data-toc-skip class="date">2023-11-13</h4>
+            <h4 data-toc-skip class="date">2024-01-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_visualization.Rmd" class="external-link"><code>vignettes/vignette_visualization.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_visualization.Rmd</code></div>
@@ -163,7 +163,7 @@ values. The world average value is 2902 Kcal per capita per day
 <h2 id="yield-growth">Yield growth<a class="anchor" aria-label="anchor" href="#yield-growth"></a>
 </h2>
 <div class="figure">
-<img src="../reference/figures/Fig_WorldYield.png" style="width:100.0%" alt=""><p class="caption">Surprisingly, oil palm fruit yield did grow at
+<img src="../reference/figures/Fig_WorldYield.png" style="width:100.0%" alt=""><p class="caption">Surprisingly, oil palm fruit yield did not grow at
 regional levels (boxplot) in the past 30 years. But world yield
 increased by ~50% due to the production shift to high-yielding regions.
 The opposite is true for root and tuber crops</p>
@@ -209,7 +209,7 @@ data can be loaded from cache.</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">load_all</span><span class="op">(</span><span class="op">)</span> </span>
 <span><span class="co"># Load other libraries</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
@@ -264,7 +264,7 @@ year(s)</li>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># simplify population data</span></span>
 <span><span class="va">OA</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">element_code</span> <span class="op">==</span> <span class="fl">511</span>, <span class="va">item_code</span> <span class="op">==</span> <span class="fl">3010</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/transmute.html" class="external-link">transmute</a></span><span class="op">(</span><span class="va">area</span>, <span class="va">area_code</span>, <span class="va">year</span>, pop <span class="op">=</span> <span class="va">value</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/transmute.html" class="external-link">transmute</a></span><span class="op">(</span><span class="va">area</span>, <span class="va">area_code</span>, <span class="va">year</span>, value <span class="op">=</span> <span class="va">value</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">BaseYear</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">BaseYear</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu">gcamdata</span><span class="fu">::</span><span class="fu">left_join_error_no_match</span><span class="op">(</span><span class="va">AGLU_ctry</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span>area <span class="op">=</span> <span class="va">FAO_country</span>, <span class="va">iso</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"area"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">gcamdata</span><span class="fu">::</span><span class="fu">left_join_error_no_match</span><span class="op">(</span><span class="va">iso_GCAM_regID</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">iso</span>, <span class="va">GCAM_region_ID</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"iso"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
