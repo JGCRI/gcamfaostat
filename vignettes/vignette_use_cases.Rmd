@@ -55,7 +55,7 @@ Since the 1970s, the number of countries in the world has increased due to the d
 
 [`FAOSTAT_AREA_RM_NONEXIST`](https://jgcri.github.io/gcamfaostat/reference/FAOSTAT_AREA_RM_NONEXIST.html)  
 
-* The function removes nonexistent FAO region using area_code, e.g., USSR after 1991.  
+* The function removes nonexistent FAO regions using area_code, e.g., USSR after 1991.  
 * All nonexistent countries due to dissolution are removed by default.  
 * Small regions/areas with low data quality can also be removed using this function.  
 

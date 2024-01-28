@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Getting Started with gcamfaostat</h1>
             
-            <h4 data-toc-skip class="date">2023-11-07</h4>
+            <h4 data-toc-skip class="date">2023-11-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_getting_started.Rmd" class="external-link"><code>vignettes/vignette_getting_started.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_getting_started.Rmd</code></div>
@@ -159,7 +159,7 @@ modeling community <span class="citation">(Chepeliev 2022)</span>. It is
 noteworthy that each agroeconomic modeling team typically develops its
 own assumptions and methods to prepare and process FAOSTAT data <span class="citation">(Bond-Lamberty et al. 2019)</span>. While largely
 overlooked, the uncertainty in the base data calibration approach likely
-contributed to the disparities in model outcomes <span class="citation">(Lampe et al. 2014; Zhao, Calvin, Wise, and Iyer
+contribute to the disparities in model outcomes <span class="citation">(Lampe et al. 2014; Zhao, Calvin, Wise, and Iyer
 2021)</span>. Hence, our motivation is to create an open-source tool
 (<strong><code>gcamfaostat</code></strong>) for the preparation,
 processing, and synthesis of FAOSTAT data for global agroeconomic
@@ -178,9 +178,9 @@ framework of using FAOSTAT data in GCAM. GCAM is a widely recognized
 global economic and multisector dynamic model complemented by the
 gcamdata R package, which serves as its data processing system.
 Particularly, gcamdata includes modules (data processing chunks) and
-functions to convert raw data inputs into hundreds of XML files needed
-by GCAM <span class="citation">(Bond-Lamberty et al. 2019)</span>. As an
-illustration, in the latest GCAM version, GCAM v7 <span class="citation">(Bond-Lamberty et al. 2023)</span>, about 280 XML
+functions to convert raw data inputs into hundreds of XML input files
+used by GCAM <span class="citation">(Bond-Lamberty et al. 2019)</span>.
+As an illustration, in the latest GCAM version, GCAM v7 <span class="citation">(Bond-Lamberty et al. 2023)</span>, about 280 XML
 files, with a combined size of 4.1 GB, are generated. Although
 AgLU-related XMLs represent only about 10% of the total number of files,
 they contribute over 50% in size (~2.1 GB). The majority of AgLU-related
@@ -195,10 +195,10 @@ modules of gcamdata is tailored specifically for GCAM. Consequently, the
 integration of FAOSTAT data updates has proven to be a non-trivial task,
 and the data processed by the AgLU module has limited applicability in
 other modeling contexts <span class="citation">(Zhao and Wise
-2023)</span>. The <strong><code>gcamfaostat</code></strong> package is
-aimed to address these limitations (<a href="#Fig2"><strong>Figure
+2023)</span>. The <strong><code>gcamfaostat</code></strong> package aims
+to address these limitations (<a href="#Fig2"><strong>Figure
 2</strong></a>). The targeted approach incorporates data preparation,
-processing, and synthesizing capabilities within a dedicated package,
+processing, and synthesis capabilities within a dedicated package,
 gcamfaostat, while regional and sectoral aggregation functions in the
 model data system are implemented using standalone routines within the
 gcamdata package. This strategy not only ensures the streamlined
