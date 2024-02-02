@@ -461,6 +461,232 @@ See [Cast Study](https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases
 ### 7. Primary equivalent [in process]
 
 
+### 8. Primary ag to final uses
+* Get data ready
+```{r, eval =FALSE}
+library(ggplot2)
+library(dplyr)
+library(patchwork)
+library(RColorBrewer)
+
+devtools::load_all()
+"L100.FAO_SUA_APE_balance" %>% load_from_cache() %>% first -> L100.FAO_SUA_APE_balance
+"L100.FAO_PRODSTAT_TO_DOWNSCAL" %>% load_from_cache() %>% first -> L100.FAO_PRODSTAT_TO_DOWNSCAL
+"FAO_Food_Macronutrient_All_2010_2019" %>% load_from_cache() %>% first -> FAO_Food_Macronutrient_All_2010_2019
+
+c("Opening stocks", "Import", "Production") -> ElEMSupply
+c("Food", "Feed",  "Processed", "Other uses", "Export", "Closing stocks", "Residuals") -> ELEMDemand
+c(ElEMSupply, ELEMDemand) -> ELEMAll
+
+# Define color pal.
+c(brewer.pal(n = length(ELEMAll), name = "Spectral")[1:length(ElEMSupply)],
+  brewer.pal(n = length(ELEMAll), name = "Spectral")[length(ElEMSupply)+1:length(ELEMDemand)]
+) -> ColUpdate
+
+GCAMCrops <-
+  c( "Corn", "Wheat", "Rice", "OtherGrain", "RootTuber",  "Soybean" ,
+    "OilCrop",        "OilPalm",  "SugarCrop",      "Vegetables",  "Fruits",
+    "NutsSeeds", "Legumes", "FiberCrop", "MiscCrop")        
+GCAMLivestock <-
+  c("Beef", "Dairy", "Pork", "Poultry", "SheepGoat", "OtherMeat_Fish")
+
+L100.FAO_SUA_APE_balance %>% 
+  filter(!GCAM_commodity %in% GCAMLivestock) %>% 
+  filter(year == 2015) %>% 
+  mutate(region = if_else(GCAM_region_ID == 1, "USA", "ROW")) %>% 
+  group_by(GCAM_commodity, region, element) %>% 
+  summarize(value = sum(value)) %>% ungroup() %>% 
+  filter(element != "Net_Export") %>% 
+  mutate(value = if_else(element %in% c("Export", "Other uses", "Food", "Feed"), -value, value)) %>% 
+  mutate(region = factor(region, levels = c("USA", "ROW"))) %>% 
+  mutate(GCAM_commodity = factor(GCAM_commodity, levels = GCAMCrops)) %>% 
+  mutate(element = factor(element, levels = c("Import", "Production", "Export", "Other uses", "Feed", "Food"))) %>% 
+  ggplot() + facet_wrap(~region, scales = "free") +
+  geom_bar(aes(x = GCAM_commodity, y = value, fill = element),
+           stat = "identity", color = "black", position="stack") +
+  geom_hline(yintercept = 0) +
+  scale_fill_brewer(palette = "Spectral") +
+  labs(x = "GCAM Crop Commodities",
+       y = "Million tonnes", fill = "Element",
+       title = "(A) Supply utilization accounts in primary equivalent for GCAM crop commodities",
+       #subtitle = "Note: other uses include seed use, losses, storage variation, and industrial use",
+       #caption = "Data: FAOSTAT \n Package: JGCRI/gcamfaostat"
+       ) +
+  theme_bw() + 
+  theme(text = element_text(size = 16),
+        axis.text = element_text(colour = "black", size = 16),
+        axis.text.x = element_text(angle = 35, hjust = 1, vjust = 1),
+        strip.background = element_rect(fill = "grey100"),
+        strip.text = element_text(size = 16),
+        panel.spacing.x = unit(0.8, "lines")) -> p1;p1
+  
+
+L100.FAO_PRODSTAT_TO_DOWNSCAL %>% 
+  filter(GCAM_commodity %in% GCAMCrops) %>% 
+  mutate(region = if_else(GCAM_region_ID == 1, "USA", "ROW")) %>% 
+  filter(year == 2015) %>% 
+  group_by(GCAM_commodity, region) %>% 
+  summarize(Prod_t = sum(Prod_t), Area_harvested_ha = sum(Area_harvested_ha)) %>% ungroup() %>% 
+  mutate(value = Prod_t / Area_harvested_ha) %>% 
+  mutate(region = factor(region, levels = c("USA", "ROW"))) %>% 
+  mutate(GCAM_commodity = factor(GCAM_commodity, levels = GCAMCrops)) %>% 
+  ggplot() + 
+  geom_point(aes(x = GCAM_commodity, y = value, fill = region), size = 2.5, shape = 21, color = "black" ) +
+  geom_line(aes(x = GCAM_commodity, y = value, color = region, group = region), size = 1 ) +
+  labs(x = "GCAM Crop Commodities",
+       y = "Tonnes per hectare", fill = "Region", color = "Region",
+       title = "(B) Crop yield: production vs. harvested area"
+  ) +
+  scale_fill_brewer(palette = "Set1") +
+  scale_color_brewer(palette = "Set1") +
+  theme_bw() + 
+  theme(text = element_text(size = 16),
+        axis.text = element_text(colour = "black", size = 16),
+        axis.text.x = element_text(angle = 35, hjust = 1, vjust = 1),
+        strip.background = element_rect(fill = "grey100"),
+        strip.text = element_text(size = 16),
+        panel.spacing.x = unit(0.8, "lines")) -> p2;p2
 
 
+
+FAO_Food_Macronutrient_All_2010_2019 %>%
+  filter(year %in% aglu.MODEL_MACRONUTRIENT_YEARS) %>%
+  # Aggregate to region and GCAM commodity
+  dplyr::group_by_at(vars(GCAM_region_ID, GCAM_commodity, year, macronutrient)) %>%
+  summarise(value = sum(value), .groups = "drop") %>%
+  # Mean over aglu.MODEL_MACRONUTRIENT_YEARS
+  dplyr::group_by_at(vars(GCAM_region_ID, GCAM_commodity, macronutrient)) %>%
+  summarise(value = mean(value), .groups = "drop") %>%
+  spread(macronutrient, value) ->
+  DF_Macronutrient_FoodItem1
+
+DF_Macronutrient_FoodItem1 %>%
+  # NEC is removed by joining
+  # though not all food items are consumed in all regions (deal with NA later)
+  right_join(
+    L100.FAO_SUA_APE_balance %>% # Unit is Mt
+      filter(element == "Food",
+             year == dplyr::last(MODEL_BASE_YEARS)),
+    by = c("GCAM_region_ID", "GCAM_commodity")
+  ) %>%
+  filter(GCAM_commodity %in% GCAMCrops) %>% 
+  mutate(region = if_else(GCAM_region_ID == 1, "USA", "ROW")) %>% 
+  filter(year == 2015) %>% 
+  group_by(GCAM_commodity, region) %>% 
+  summarize(value = sum(value), MKcal = sum(MKcal)) %>% 
+  # Both data were average already
+  transmute(region, GCAM_commodity,
+            calperg = MKcal / value / 1000) ->
+  DF_Macronutrient_FoodItem2
+
+DF_Macronutrient_FoodItem2 %>% 
+  mutate(region = factor(region, levels = c("USA", "ROW"))) %>% 
+  mutate(GCAM_commodity = factor(GCAM_commodity, levels = GCAMCrops)) %>% 
+  mutate(calperg = calperg / 1000) %>% 
+  ggplot() + 
+  geom_point(aes(x = GCAM_commodity, y = calperg, fill = region), size = 2.5, shape = 21, color = "black" ) +
+  geom_line(aes(x = GCAM_commodity, y = calperg, color = region, group = region), size = 1 ) +
+  labs(x = "GCAM Crop Commodities",
+       y = "kilocalories per gram", fill = "Region", color = "Region",
+       title = "(C) Calorie intensity: food calories vs. food availability"
+  ) +
+  scale_fill_brewer(palette = "Set1") +
+  scale_color_brewer(palette = "Set1") +
+  theme_bw() + 
+  theme(text = element_text(size = 16),
+        axis.text = element_text(colour = "black", size = 16),
+        axis.text.x = element_text(angle = 35, hjust = 1, vjust = 1),
+        strip.background = element_rect(fill = "grey100"),
+        strip.text = element_text(size = 16),
+        panel.spacing.x = unit(0.8, "lines")) -> p3;p3
+
+(p1 + theme(axis.title.x = element_blank()) )/ (p2 + p3 + patchwork::plot_layout(guides = "collect")) + 
+  plot_layout(heights = c(1, 0.8)) -> pp
+
+ggsave(file.path("../man/figures", "Fig_SUA_land_food_crops.png"), pp, width = 16, height = 15)
+
+
+#----
+L100.FAO_SUA_APE_balance %>% 
+  filter(GCAM_commodity %in% GCAMLivestock) %>% 
+  filter(year == 2015) %>% 
+  mutate(region = if_else(GCAM_region_ID == 1, "USA", "ROW")) %>% 
+  group_by(GCAM_commodity, region, element) %>% 
+  summarize(value = sum(value)) %>% ungroup() %>% 
+  filter(element != "Net_Export") %>% 
+  mutate(value = if_else(element %in% c("Export", "Other uses", "Food", "Feed"), -value, value)) %>% 
+  mutate(region = factor(region, levels = c("USA", "ROW"))) %>% 
+  mutate(GCAM_commodity = factor(GCAM_commodity, levels = GCAMLivestock)) %>% 
+  mutate(element = factor(element, levels = c("Import", "Production", "Export", "Other uses", "Feed", "Food"))) %>% 
+  ggplot() + facet_wrap(~region, scales = "free") +
+  geom_bar(aes(x = GCAM_commodity, y = value, fill = element),
+           stat = "identity", color = "black", position="stack") +
+  geom_hline(yintercept = 0) +
+  scale_fill_brewer(palette = "Spectral") +
+  labs(x = "GCAM Livestock Commodities",
+       y = "Million tonnes", fill = "Element",
+       title = "(A) Supply utilization accounts in primary equivalent for GCAM livestock commodities",
+       #subtitle = "Note: other uses include seed use, losses, storage variation, and industrial use",
+       #caption = "Data: FAOSTAT \n Package: JGCRI/gcamfaostat"
+  ) +
+  theme_bw() + 
+  theme(text = element_text(size = 16),
+        axis.text = element_text(colour = "black", size = 16),
+        axis.text.x = element_text(angle = 35, hjust = 1, vjust = 1),
+        strip.background = element_rect(fill = "grey100"),
+        strip.text = element_text(size = 16),
+        panel.spacing.x = unit(0.8, "lines")) -> p1;p1
+
+
+DF_Macronutrient_FoodItem1 %>%
+  # NEC is removed by joining
+  # though not all food items are consumed in all regions (deal with NA later)
+  right_join(
+    L100.FAO_SUA_APE_balance %>% # Unit is Mt
+      filter(element == "Food",
+             year == dplyr::last(MODEL_BASE_YEARS)),
+    by = c("GCAM_region_ID", "GCAM_commodity")
+  ) %>%
+  #filter(GCAM_commodity %in% GCAMCrops) %>% 
+  filter(GCAM_commodity %in% c("Beef", "Dairy", "OtherMeat_Fish", "Pork", "Poultry", "SheepGoat")) %>% 
+  mutate(region = if_else(GCAM_region_ID == 1, "USA", "ROW")) %>% 
+  filter(year == 2015) %>% 
+  group_by(GCAM_commodity, region) %>% 
+  summarize(value = sum(value), MKcal = sum(MKcal)) %>% 
+  # Both data were average already
+  transmute(region, GCAM_commodity,
+            calperg = MKcal / value / 1000) ->
+  DF_Macronutrient_FoodItem2
+
+DF_Macronutrient_FoodItem2 %>% 
+  mutate(region = factor(region, levels = c("USA", "ROW"))) %>% 
+  mutate(GCAM_commodity = factor(GCAM_commodity, levels = c("Beef", "Dairy", "Pork", "Poultry", "SheepGoat", "OtherMeat_Fish"))) %>% 
+  mutate(calperg = calperg / 1000) %>% 
+  ggplot() + 
+  geom_point(aes(x = GCAM_commodity, y = calperg, fill = region), size = 2.5, shape = 21, color = "black" ) +
+  geom_line(aes(x = GCAM_commodity, y = calperg, color = region, group = region), size = 1 ) +
+  labs(x = "GCAM Livestock Commodities",
+       y = "kilocalories per gram", fill = "Region", color = "Region",
+       title = "(B) Calorie intensity: food calories vs. food availability"
+  ) +
+  scale_fill_brewer(palette = "Set1") +
+  scale_color_brewer(palette = "Set1") +
+  theme_bw() + 
+  theme(text = element_text(size = 16),
+        axis.text = element_text(colour = "black", size = 16),
+        axis.text.x = element_text(angle = 35, hjust = 1, vjust = 1),
+        strip.background = element_rect(fill = "grey100"),
+        strip.text = element_text(size = 16),
+        panel.spacing.x = unit(0.8, "lines")) -> p3;p3
+
+
+p1/ (p3 + patchwork::plot_spacer()) + 
+  plot_layout(heights = c(1, 1)) -> pp
+
+ggsave(file.path("../man/figures", "Fig_SUA_land_food_livestock.png"), pp, width = 15, height = 12)
+
+```
+
+![](../man/figures/Fig_SUA_land_food_crops.png){width=100%}
+![](../man/figures/Fig_SUA_land_food_livestock.png){width=100%}
 
