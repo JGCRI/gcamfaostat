@@ -92,13 +92,20 @@ Since the 1970s, the number of countries in the world has increased due to the d
 
 ## Case study: wheat bilateral trade pattern changes
 
-* The world wheat trade was affected by the Russian-Ukraine war in 2021 (see Figures below).
-* In the same time, Canada, another major wheat supplier was hit by droughts and production plummeted.  
-* However, the total trade did not change in 2021 (197 Mt) compared to 2020 (198 Mt).
-* Mainly because Australia, USA, and other regions supplied more to the world market.  
+* The world wheat trade was affected by the Russian-Ukraine war in 2022 (see Figures below).
+* In 2021 vs. 2020, Russian wheat export already dropped by ~30% (+7% for Ukraine), but plummeted another 35% (-42% for Ukraine) in 2022. 
+* In the same time, USA and Canada, major wheat supplier was hit by weather shocks and production plummeted.  
+* Trade changes are certainly more complicated. The war was not the only driver, as Canada and US also had a drop in export. But Argentina, Australia, and even India supplied more to the world market.
+* Egypt took the largest hit. But the variation was not extreme for most major importers. 
+See that smile curve in China.
+* The world trade took a hit (-6%), but the overall pattern didn't change drastically in just 1 year.
 
-![](../man/figures/Fig_WheatTrade2020.png){width=100%}
-![](../man/figures/Fig_WheatTrade2021.png){width=100%}
+ 
+
+![](../man/figures/Fig_WheatTradeWorldby2022.png){width=100%}
+![](../man/figures/Fig_WheatTrade2022_2021.png){width=100%}
+![](../man/figures/Fig_WheatExportby2022.png){width=100%}
+![](../man/figures/Fig_WheatImportby2022.png){width=100%}
 
 ```{r, eval = FALSE}
 devtools::load_all()
@@ -121,7 +128,7 @@ FAOSTAT_load_raw_data(DATASETCODE = "TM",
 
 
 TM %>%
-  filter(year %in% c(2020:2021),
+  filter(year %in% c(2020:2022),
          item_code == 15, # Wheat
          element %in% c("Export Quantity")) %>% 
     select(source = reporter_countries,
@@ -144,7 +151,7 @@ TM_Wheat %>%
   TM_Wheat_1
 
 # focus on key players
-TM_Wheat_1 %>% filter(year == 2020) %>% top_n(35, flow) %>% 
+TM_Wheat_1 %>% filter(year == 2021) %>% top_n(35, flow) %>% 
   select(REG_ex, REG_im) %>% unlist %>% 
   unique() -> KeyPlayers
 
@@ -159,6 +166,7 @@ TM_Wheat_1 %>%
 dat_circular %>% group_by(year) %>% summarise(flow = sum(flow))
 
 library(circlize)
+library(ggplot2)
 
 # A wrapper function
 chord_wrapper <- function(.DF,
@@ -222,6 +230,13 @@ GridColor <- rand_color(length(KeyPlayers) + 1)
 
 # Plot 
 
+chord_wrapper(.DF = dat_circular %>% filter(year == 2022) %>% select(-year)%>% arrange(REG_ex, REG_im),
+              .GRIDCOLOR = GridColor,
+              .FigTitle = "Wheat trade, 2022",
+              .ORDER = c(KeyPlayers, "ROW"),
+              .SaveDir = "../man/figures",
+              .SaveName = "Fig_WheatTrade2022")
+
 chord_wrapper(.DF = dat_circular %>% filter(year == 2021) %>% select(-year)%>% arrange(REG_ex, REG_im),
               .GRIDCOLOR = GridColor,
               .FigTitle = "Wheat trade, 2021",
@@ -236,6 +251,92 @@ chord_wrapper(.DF = dat_circular %>% filter(year == 2020) %>% select(-year) %>% 
               .SaveDir = "../man/figures",
               .SaveName = "Fig_WheatTrade2020")
     
+
+# Quickly adding time-series
+TM_Wheat_1 %>% 
+  group_by(REG_ex, year) %>% 
+  summarize(value = sum(flow)) %>% ungroup() %>% 
+  filter(year == 2021) %>%arrange(value) %>% top_n(12, value) %>% 
+  pull(REG_ex) -> KeyPlayers_exporter
+
+TM_Wheat_1 %>% 
+  group_by(REG_im, year) %>% 
+  summarize(value = sum(flow)) %>% ungroup() %>% 
+  filter(year == 2021) %>%arrange(value) %>% top_n(12, value) %>% 
+  pull(REG_im) -> KeyPlayers_importer
+
+TM_Wheat_1 %>% 
+  group_by(year) %>% 
+  summarize(value = sum(flow)) %>% ungroup() %>% 
+  ggplot(aes(x = year, y = value)) +
+  #geom_hline(yintercept = 0, size = 0.4, color = "grey") +
+  geom_line(aes(x = year, y = value), color = "red", size = 1.2) +
+  geom_point(size = 1.4, color = "red") +
+  geom_smooth(linetype = 5, #method = "lm", 
+              color = "black", size = 1) +
+  theme_bw() + 
+  labs(y = "Million tonne", x = "Year",
+       title = "World wheat trade, 1990 - 2022", 
+       subtitle = "Observations (red solid) & smooth (loess) line (black dotted) ",
+       caption = "Data: FAOSTAT (2022 data may subject to updates) \n Code: JGCRI/gcamfaostat") +
+  theme(text = element_text(size = 16),
+        panel.grid = element_line(linetype = 5),
+        axis.text = element_text(colour = "black", size = 16),
+        #axis.text.x = element_text(angle = 40, hjust = 1, vjust = 1),
+        strip.background = element_rect(fill = "grey90"),
+        legend.position = "none") -> p;p
+
+ggsave(file.path("../man/figures", "Fig_WheatTradeWorldby2022.png"), p, width = 10, height = 8)
+
+
+TM_Wheat_1 %>% 
+  filter(REG_ex %in% KeyPlayers_exporter ) %>% 
+  group_by(REG_ex, year) %>% 
+  summarize(value = sum(flow)) %>% ungroup() %>% 
+  ggplot(aes(x = year, y = value, group = REG_ex, color = REG_ex)) + facet_wrap(~REG_ex) + 
+  geom_hline(yintercept = 0, size = 0.4, color = "grey") +
+  geom_line(aes(x = year, y = value, group = REG_ex, color = REG_ex), size = 1.2) +
+  geom_point(size = 1.4) +
+  geom_smooth(linetype = 5, #method = "lm", 
+              color = "black", size = 1) +
+  theme_bw() + 
+  labs(y = "Million tonne", x = "Year",
+       title = "Wheat export by region (top 12 exporter), by 2022", 
+       subtitle = "Observations (colored solid) & smooth (loess) line (black dotted) ",
+       caption = "Data: FAOSTAT \n Code: JGCRI/gcamfaostat") +
+  theme(text = element_text(size = 16),
+        panel.grid = element_line(linetype = 5),
+        axis.text = element_text(colour = "black", size = 16),
+        axis.text.x = element_text(angle = 40, hjust = 1, vjust = 1),
+        strip.background = element_rect(fill = "grey90"),
+        legend.position = "none") -> p
+
+ggsave(file.path("../man/figures", "Fig_WheatExportby2022.png"), p, width = 10, height = 8)
+
+TM_Wheat_1 %>% 
+  filter(REG_im %in% KeyPlayers_importer ) %>% 
+  group_by(REG_im, year) %>% 
+  summarize(value = sum(flow)) %>% ungroup() %>% 
+  ggplot(aes(x = year, y = value, group = REG_im, color = REG_im)) + facet_wrap(~REG_im) + 
+  geom_hline(yintercept = 0, size = 0.4, color = "grey") +
+  geom_line(aes(x = year, y = value, group = REG_im, color = REG_im), size = 1.2) +
+  geom_point(size = 1.4) +
+  geom_smooth(linetype = 5, #method = "lm", 
+              color = "black", size = 1) +
+  theme_bw() + 
+  labs(y = "Million tonne", x = "Year",
+       title = "Wheat import by region (top 12 importer), by 2022", 
+       subtitle = "Observations (colored solid) & smooth (loess) line (black dotted) ",
+       caption = "Data: FAOSTAT \n Code: JGCRI/gcamfaostat") +
+  theme(text = element_text(size = 16),
+        panel.grid = element_line(linetype = 5),
+        axis.text = element_text(colour = "black", size = 16),
+        axis.text.x = element_text(angle = 40, hjust = 1, vjust = 1),
+        strip.background = element_rect(fill = "grey90"),
+        legend.position = "none") -> p
+
+ggsave(file.path("../man/figures", "Fig_WheatImportby2022.png"), p, width = 10, height = 8)
+
 
 ```
 
