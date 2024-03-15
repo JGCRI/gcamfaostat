@@ -81,7 +81,7 @@ gcamfaostat_metadata <- function(.DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
 
 #' FF_download_FAOSTAT: Bulk download raw data from FAOSTAT API by dataset code
 #'
-#' @param DATASETCODE Dataset code in FAO metadata, e.g., QCL is the production dataset.
+#' @param DATASETCODE Single dataset code in FAO metadata, e.g., QCL is the production dataset.
 #' @param DATA_FOLDER Destination folder for storing raw data
 #' @param OverWrite If FALSE, check if the dataset exists and stop if exists; overwrite if TRUE
 #'
@@ -96,6 +96,7 @@ FF_download_FAOSTAT <- function(DATASETCODE,
   assertthat::assert_that(is.character(DATASETCODE))
   assertthat::assert_that(is.character(DATA_FOLDER))
   assertthat::assert_that(OverWrite == TRUE|OverWrite == FALSE)
+  assertthat::assert_that(length(DATASETCODE) == 1, msg = "Single dataset allowed; consider using loop or the function FF_rawdata_info() for downloading multiple datasets")
 
   dir.create(DIR_RAW_DATA_FAOSTAT, showWarnings = F)
 
@@ -134,7 +135,7 @@ FF_download_FAOSTAT <- function(DATASETCODE,
 
 #' FF_download_RemoteArchive: Download raw data from remote archive (Zenodo)
 #'
-#' @param DATASETCODE Dataset code in FAO metadata, e.g., QCL is the production dataset.
+#' @param DATASETCODE Single dataset code in FAO metadata, e.g., QCL is the production dataset.
 #' @param RemoteArchiveURL Zenodo URL, default (GCAM v7) = "https://zenodo.org/record/8260225/files/"
 #' @param DATA_FOLDER Folder stores raw data; default sets to DIR_RAW_DATA_FAOSTAT
 #' @param OverWrite If FALSE, check if the dataset exists and stop if exists; overwrite if TRUE
@@ -151,6 +152,7 @@ FF_download_RemoteArchive <-
     assertthat::assert_that(is.character(RemoteArchiveURL))
     assertthat::assert_that(is.character(DATA_FOLDER))
     assertthat::assert_that(OverWrite == TRUE|OverWrite == FALSE)
+    assertthat::assert_that(length(DATASETCODE) == 1, msg = "Single dataset allowed; consider using loop or the function FF_rawdata_info() for downloading multiple datasets")
 
     dir.create(DATA_FOLDER, showWarnings = F)
 
