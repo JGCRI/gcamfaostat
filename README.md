@@ -39,10 +39,10 @@ The package is documented in the [online manual](https://jgcri.github.io/gcamfao
 
 ### Quick Start in R (> 4.0) & Rstudio
 
-#### 1. Download and install:
+#### 1. Download and install (size < 1 GB):
 
-* Using `devtools` to download and install (The size < 1 GB):
-* `devtools::install_github("jgcri/gcamfaostat")`
+* On the command line: navigate to your desired folder location and then enter 
+* `git clone https://github.com/JGCRI/gcamfaostat.git`
 
 #### 2. Load and run the gcamdata package
 

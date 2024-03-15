@@ -26,9 +26,10 @@ knitr::opts_chunk$set(
 To update the output data by including new data years, e.g., for model base year updates, the user needs to implement the following steps:  
   
 1. Download the latest FAOSTAT data using the `FF_download_FAOSTAT` function.  
-2. In the configuration file (`constants.R`), adjust the year variables and set `Process_Raw_FAO_Data` to `TRUE`.
-3. Verify and update the output formats and names in the data exporting modules.
-4. Execute the `driver_drake` function to initiate the data processing.
+2. In the configuration file (`R/constants.R`), adjust the year variables and set `Process_Raw_FAO_Data` to `TRUE`.
+3. If more recent data is available the maximum year in `FAOSTAT_Hist_Year_*` can be updated accordingly.  
+4. Verify and update the output formats and names in the data exporting modules.
+5. Execute the `driver_drake` function to initiate the data processing.
 
 
 ## Adding new data processing modules
@@ -51,7 +52,9 @@ If all the necessary FAOSTAT raw data is already incorporated into gcamfaostat, 
 
 ## Country aggregation and disaggregation
 
-Since the 1970s, the number of countries in the world has increased due to the dissolution of regions. In other words, when a region dissolves, the country associated with it ceases to exist, and new countries emerge in its place, see [**Figure 1**](FigCountryChange). We included functions to deal with changes in the country classifications.  
+Since the 1970s, the number of countries in the world has increased due to the dissolution of regions. In other words, when a region dissolves, the country associated with it ceases to exist, and new countries emerge in its place, see [**Figure 1**](FigCountryChange). We included functions to deal with changes in the country classifications. Note the functions rely on the `area_code` ID included in FAO dataset. They are also consistently defined in the function. 
+
+ 
 
 [`FAOSTAT_AREA_RM_NONEXIST`](https://jgcri.github.io/gcamfaostat/reference/FAOSTAT_AREA_RM_NONEXIST.html)  
 

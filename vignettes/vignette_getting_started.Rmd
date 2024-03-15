@@ -60,21 +60,24 @@ Nonetheless, the FAOSTAT data employed within gcamdata has traditionally involve
 
 * R version 4.0 or higher and RStudio are recommended. 
 
-#### Clone this repository
+#### Clone this repository (size < 1 GB)
 
-* On the command line: navigate to your desired folder location and then enter `git clone https://github.com/JGCRI/gcamfaostat.git` 
+* On the command line: navigate to your desired folder location and then enter 
+```{r eval = FALSE}
+git clone https://github.com/JGCRI/gcamfaostat.git
+```
 
-* If using GitHub Desktop: Go to https://github.com/jgcri/gcamfaostat and click the green "Code" button. Then click "Open with GitHub Desktop".
+* Or using `devtools` to download and install in r environment (into `.libPaths()`)
+```{r eval = FALSE}
+install.packages("devtools") # install devtools package if not already
+devtools::install_github("jgcri/gcamfaostat")
+```
+
+* Note that `gcamfaostat` is not dependent on GCAM, so it can be installed to folders as desired by the user.
 
 #### Loading the `gcamfaostat` package
 
 * Open the `gcamfaostat` folder you just cloned and double-click the `gcamfaostat.Rproj` file. RStudio should open the project.
-
-* If you have not installed `devtools` before, first enter the following into the R console  
-```{r eval = FALSE}
-install.packages("devtools")
-```
-
 * Then to load the `gcamfaostat` package:
 
 ```{r eval = FALSE}
@@ -82,14 +85,10 @@ devtools::load_all()
 ```
 
 #### Package dependencies
-* You may also need to install package dependencies, for example using:
-```R
-devtools::install_deps()
-```
-* Note that could be issues with some recent package dependencies. Users can consider using `renv`. 
+Users can consider using `renv`. 
 
-  * `renv` is an R package for dependency management. 
-  * Using it will save a private R library with the correct versions of any package dependencies. 
+  * `renv` has been initialized and a `renv.lock` file was included.
+  * Using `renv` will save a private R library with the correct versions of any package dependencies. 
   * Please find more details [here](https://jgcri.github.io/gcamdata/articles/getting-started/getting-started.html#optional-renv-currently-included-in-gcam-6-0-and-gcamdata-release) in `gcamdata` manual.
 
 
