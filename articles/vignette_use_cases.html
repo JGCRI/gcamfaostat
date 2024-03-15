@@ -136,9 +136,12 @@ steps:</p>
 <li>Download the latest FAOSTAT data using the
 <code>FF_download_FAOSTAT</code> function.<br>
 </li>
-<li>In the configuration file (<code>constants.R</code>), adjust the
+<li>In the configuration file (<code>R/constants.R</code>), adjust the
 year variables and set <code>Process_Raw_FAO_Data</code> to
 <code>TRUE</code>.</li>
+<li>If more recent data is available the maximum year in
+<code>FAOSTAT_Hist_Year_*</code> can be updated accordingly.<br>
+</li>
 <li>Verify and update the output formats and names in the data exporting
 modules.</li>
 <li>Execute the <code>driver_drake</code> function to initiate the data
@@ -195,7 +198,9 @@ modules.</p>
 due to the dissolution of regions. In other words, when a region
 dissolves, the country associated with it ceases to exist, and new
 countries emerge in its place, see <a href="FigCountryChange"><strong>Figure 1</strong></a>. We included
-functions to deal with changes in the country classifications.</p>
+functions to deal with changes in the country classifications. Note the
+functions rely on the <code>area_code</code> ID included in FAO dataset.
+They are also consistently defined in the function.</p>
 <p><a href="https://jgcri.github.io/gcamfaostat/reference/FAOSTAT_AREA_RM_NONEXIST.html"><code>FAOSTAT_AREA_RM_NONEXIST</code></a></p>
 <ul>
 <li>The function removes nonexistent FAO regions using area_code, e.g.,

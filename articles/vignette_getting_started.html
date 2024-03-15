@@ -237,56 +237,49 @@ socioeconomics only exist in gcamdata.</p>
 </ul>
 </div>
 <div class="section level4">
-<h4 id="clone-this-repository">Clone this repository<a class="anchor" aria-label="anchor" href="#clone-this-repository"></a>
+<h4 id="clone-this-repository-size-1-gb">Clone this repository (size &lt; 1 GB)<a class="anchor" aria-label="anchor" href="#clone-this-repository-size-1-gb"></a>
 </h4>
 <ul>
-<li><p>On the command line: navigate to your desired folder location and
-then enter
-<code>git clone https://github.com/JGCRI/gcamfaostat.git</code></p></li>
-<li><p>If using GitHub Desktop: Go to <a href="https://github.com/jgcri/gcamfaostat" class="external-link uri">https://github.com/jgcri/gcamfaostat</a> and click the green
-“Code” button. Then click “Open with GitHub Desktop”.</p></li>
+<li>On the command line: navigate to your desired folder location and
+then enter</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>git clone https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>JGCRI<span class="sc">/</span>gcamfaostat.git</span></code></pre></div>
+<ul>
+<li>Or using <code>devtools</code> to download and install in r
+environment (into <code><a href="https://rdrr.io/r/base/libPaths.html" class="external-link">.libPaths()</a></code>)</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span> <span class="co"># install devtools package if not already</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"jgcri/gcamfaostat"</span><span class="op">)</span></span></code></pre></div>
+<ul>
+<li>Note that <code>gcamfaostat</code> is not dependent on GCAM, so it
+can be installed to folders as desired by the user.</li>
 </ul>
 </div>
 <div class="section level4">
 <h4 id="loading-the-gcamfaostat-package">Loading the <code>gcamfaostat</code> package<a class="anchor" aria-label="anchor" href="#loading-the-gcamfaostat-package"></a>
 </h4>
 <ul>
-<li><p>Open the <code>gcamfaostat</code> folder you just cloned and
+<li>Open the <code>gcamfaostat</code> folder you just cloned and
 double-click the <code>gcamfaostat.Rproj</code> file. RStudio should
-open the project.</p></li>
-<li><p>If you have not installed <code>devtools</code> before, first
-enter the following into the R console</p></li>
-</ul>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span></code></pre></div>
-<ul>
+open the project.</li>
 <li>Then to load the <code>gcamfaostat</code> package:</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">load_all</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="package-dependencies">Package dependencies<a class="anchor" aria-label="anchor" href="#package-dependencies"></a>
 </h4>
-<ul>
-<li>You may also need to install package dependencies, for example
-using:</li>
-</ul>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_deps</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>Users can consider using <code>renv</code>.</p>
 <ul>
 <li>
-<p>Note that could be issues with some recent package dependencies.
-Users can consider using <code>renv</code>.</p>
-<ul>
-<li>
-<code>renv</code> is an R package for dependency management.</li>
-<li>Using it will save a private R library with the correct versions of
-any package dependencies.</li>
+<code>renv</code> has been initialized and a <code>renv.lock</code>
+file was included.</li>
+<li>Using <code>renv</code> will save a private R library with the
+correct versions of any package dependencies.</li>
 <li>Please find more details <a href="https://jgcri.github.io/gcamdata/articles/getting-started/getting-started.html#optional-renv-currently-included-in-gcam-6-0-and-gcamdata-release" class="external-link">here</a>
 in <code>gcamdata</code> manual.</li>
-</ul>
-</li>
 </ul>
 </div>
 </div>
