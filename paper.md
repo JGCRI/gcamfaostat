@@ -79,28 +79,28 @@ In this section we describe key functions included in **`gcamfaostat (v1.0.0)`**
 * The function accesses both the latest FAOSTAT metadata and local data information and returns a summary table including the dataset information needed for **`gcamfaostat`** (see [Table 1](#Tab1) below).
 * The function will save the latest FAOSTAT metadata to the [metadata_log](https://github.com/JGCRI/gcamfaostat/tree/main/inst/extdata/aglu/FAO/FAOSTAT/metadata_log)
 * The dataset code needed were specified in the function to get a subset of the FAOSTAT metadata. The function will return only dataset code required when setting `OnlyReturnDatasetCodeRequired = FALSE`. 
-* The function will check whether FAOSTAT raw data exists locally (`Exist_Local`) and in [Prebuilt Data](https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda) (`Exist_Prebuilt`). If `Exist_Prebuilt` is `TRUE` for all dataset, the package is ready to be built based on the Prebuilt package data.
+* The function will check whether FAOSTAT raw data exists locally (`Exist_Local`; not show in [Table 1](#Tab1)) and in [Prebuilt Data](https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda) (`Exist_Prebuilt`). If `Exist_Prebuilt` is `TRUE` for all dataset, the package is ready to be built based on the Prebuilt package data.
 * `FAO update data` and `FAO size` indicate the information based on the latest FAOSTAT metadata.  
 * Users can use [`FF_rawdata_info()`](https://jgcri.github.io/gcamfaostat/reference/FF_rawdata_info.html) function to download nonexist raw data from a remote archive or FAOSTAT.
 
 
 Table 1. FAOSTAT dataset processed in **`gcamfaostat v1.0.0`**. 
 
-| Dataset Code | Dataset Name                                                | Exist_Local | Exist_Prebuilt | FAO update date | FAO size |
-|:------------:|:----------------------------------------------------------:|:-----------:|:--------------:|:--------------:|:--------:|
-| CB           | Food Balances: Commodity Balances (non-food) (2010-)      | TRUE        | TRUE           | 8/25/2022      | 1MB      |
-| FBSH         | Food Balances: Food Balances (-2013, old methodology and population) | TRUE | TRUE | 3/10/2023 | 69MB |
-| TM           | Trade: Detailed trade matrix                               | TRUE        | TRUE           | 2/14/2022      | 454MB    |
-| OA           | Population and Employment: Annual population                | TRUE        | TRUE           | 10/24/2022     | 2MB      |
-| FO           | Forestry: Forestry Production and Trade                     | TRUE        | TRUE           | 9/5/2023       | 15MB     |
-| QCL          | Production: Crops and livestock products                   | TRUE        | TRUE           | 3/22/2023      | 29MB     |
-| PD           | Prices: Deflators                                           | TRUE        | TRUE           | 8/16/2023      | 1MB      |
-| TCL          | Trade: Crops and livestock products                        | TRUE        | TRUE           | 8/14/2023      | 229MB    |
-| FBS          | Food Balances: Food Balances (2010-)                         | TRUE        | TRUE           | 5/4/2023       | 50MB     |
-| RFN          | Land, Inputs and Sustainability: Fertilizers by Nutrient    | TRUE        | TRUE           | 7/5/2023       | 2MB      |
-| RL           | Land, Inputs and Sustainability: Land Use                   | TRUE        | TRUE           | 7/10/2023      | 2MB      |
-| PP           | Prices: Producer Prices                                     | TRUE        | TRUE           | 2/23/2023      | 10MB     |
-| SCL          | Food Balances: Supply Utilization Accounts (2010-)         | TRUE        | TRUE           | 4/26/2023      | 59MB     |
+| Dataset Code | Dataset Name                                                | Exist_Prebuilt | FAO update date | FAO size |
+|:------------:|:----------------------------------------------------------:|:--------------:|:--------------:|:--------:|
+| CB           | Food Balances: Commodity Balances (non-food) (2010-)      | TRUE           | 8/25/2022      | 1MB      |
+| FBSH         | Food Balances: Food Balances (-2013, old methodology and population) | TRUE | 3/10/2023 | 69MB |
+| TM           | Trade: Detailed trade matrix                               | TRUE           | 2/14/2022      | 454MB    |
+| OA           | Population and Employment: Annual population                | TRUE           | 10/24/2022     | 2MB      |
+| FO           | Forestry: Forestry Production and Trade                     | TRUE           | 9/5/2023       | 15MB     |
+| QCL          | Production: Crops and livestock products                   | TRUE           | 3/22/2023      | 29MB     |
+| PD           | Prices: Deflators                                           | TRUE           | 8/16/2023      | 1MB      |
+| TCL          | Trade: Crops and livestock products                        | TRUE           | 8/14/2023      | 229MB    |
+| FBS          | Food Balances: Food Balances (2010-)                         | TRUE           | 5/4/2023       | 50MB     |
+| RFN          | Land, Inputs and Sustainability: Fertilizers by Nutrient    | TRUE           | 7/5/2023       | 2MB      |
+| RL           | Land, Inputs and Sustainability: Land Use                   | TRUE           | 7/10/2023      | 2MB      |
+| PP           | Prices: Producer Prices                                     | TRUE           | 2/23/2023      | 10MB     |
+| SCL          | Food Balances: Supply Utilization Accounts (2010-)         | TRUE           | 4/26/2023      | 59MB     |
 
 ###	Data processing
 
@@ -123,7 +123,7 @@ The architecture of **`gcamfaostat`** processing modules is depicted in \autoref
 
 ### Data tracing
 
-As **`gcamfaostat`** is built upon the foundation of `gcamdata` and leverages the powerful drake framework, it inherits functions designed for tracking data flows. Here we describe several key functions. 
+As **`gcamfaostat`** is built upon the foundation of `gcamdata` and leverages the powerful drake framework, it inherits functions designed for tracking data flows. 
 
 
 [`info()`](https://jgcri.github.io/gcamfaostat/reference/info.html)  

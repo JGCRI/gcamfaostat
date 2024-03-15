@@ -93,7 +93,6 @@ outputs_of("module_xfaostat_L106_FoodMacroNutrient")
 # Not evaluated for convenience 
 # Load gcamfaostat
 devtools::load_all() 
-devtools::load_all() 
 
 # Load FAO_items from cache
 load_from_cache("aglu/FAO/FAO_items") %>% first() -> FAO_items
