@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>gcamfaostat data processing</h1>
             
-            <h4 data-toc-skip class="date">2024-02-12</h4>
+            <h4 data-toc-skip class="date">2024-03-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_processing_flow.Rmd" class="external-link"><code>vignettes/vignette_processing_flow.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_processing_flow.Rmd</code></div>
@@ -227,71 +227,70 @@ can be used to assign each object in the list to a data frame.</p>
 <h3 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Load gcamfaostat</span>
-<span class="co"># devtools::load_all() </span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jgcri.github.io/gcamfaostat">gcamfaostat</a></span><span class="op">)</span>
-<span class="co"># package data, GCAM_DATA_MAP, will be loaded</span>
-
-<span class="co"># Get information for an intermediate data frame QCL_CROP_PRIMARY</span>
-<span class="fu"><a href="../reference/info.html">info</a></span><span class="op">(</span><span class="st">"QCL_CROP_PRIMARY"</span><span class="op">)</span>
-<span class="co">#&gt; QCL_CROP_PRIMARY - produced by module_xfaostat_L102_ProductionArea </span>
-<span class="co">#&gt;  FAO primary crop area and production (various)</span>
-<span class="co">#&gt;  Detailed FAO QCL data processing for crop area and production</span>
-<span class="co">#&gt;  Dependent: xfaostat_L199_GCAMDATA_FAOSTAT_CSV</span>
-<span class="co">#&gt;  Precursor: aglu/FAO/FAO_an_items_PRODSTAT</span>
-<span class="co">#&gt;  Precursor: QCL_wide</span>
-<span class="co">#&gt;  Precursor: FBS_wide</span>
-<span class="co">#&gt;  Precursor: FBSH_CB_wide</span>
-
-<span class="co"># Trace all downstream data flows for SCL_wide</span>
-<span class="fu"><a href="../reference/dstrace.html">dstrace</a></span><span class="op">(</span><span class="st">"SCL_wide"</span>, direction <span class="op">=</span> <span class="st">"downstream"</span>, recurse <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> 
-<span class="co">#&gt; 1 - SCL_wide - produced by module_xfaostat_L101_RawDataPreProc3_SCL_FBS </span>
-<span class="co">#&gt;  FAO supply utilization account dataset, 2010+, wide (tonne)</span>
-<span class="co">#&gt;  Preprocessed FAOSTAT SCL; ** PRE-BUILT **</span>
-<span class="co">#&gt;  Dependent: Bal_new_all (#2 below)</span>
-<span class="co">#&gt;  Dependent: SUA_food_macronutrient_rate (#3 below)</span>
-<span class="co">#&gt; 2 - Bal_new_all - produced by module_xfaostat_L105_DataConnectionToSUA </span>
-<span class="co">#&gt;  Bal_new_all (Ktonne)</span>
-<span class="co">#&gt;  Preprocessed FAO SUA 2010 - 2019</span>
-<span class="co">#&gt;  Dependent: xfaostat_L199_GCAMDATA_FAOSTAT_CSV (#4 below)</span>
-<span class="co">#&gt; 4 - xfaostat_L199_GCAMDATA_FAOSTAT_CSV - produced by module_xfaostat_L199_CSVExportAgSUA </span>
-<span class="co">#&gt;  Export CSV to DIR_OUTPUT_CSV (NA)</span>
-<span class="co">#&gt;  Export CSV</span>
-<span class="co">#&gt;  No dependents</span>
-<span class="co">#&gt; 3 - SUA_food_macronutrient_rate - produced by module_xfaostat_L106_FoodMacroNutrient </span>
-<span class="co">#&gt;  FAO food calories and macronutrient rate (rates)</span>
-<span class="co">#&gt;  Detailed FAO food calories and macrotunitent info for 414 SUA items +</span>
-<span class="co">#&gt;  12 fish items</span>
-<span class="co">#&gt;  Dependent: xfaostat_L199_GCAMDATA_FAOSTAT_CSV (#4 above)</span>
-
-<span class="co"># Get input of a module</span>
-<span class="fu"><a href="../reference/inputs_of.html">inputs_of</a></span><span class="op">(</span><span class="st">"module_xfaostat_L105_DataConnectionToSUA"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "aglu/FAO/FAO_items"                "aglu/FAO/Mapping_FBSH_SCL_OilCake"</span>
-<span class="co">#&gt; [3] "QCL_PROD"                          "QCL_AN_LIVEANIMAL_MEATEQ"         </span>
-<span class="co">#&gt; [5] "TCL_wide"                          "TM_bilateral_wide"                </span>
-<span class="co">#&gt; [7] "FBSH_CB_wide"                      "FBS_wide"                         </span>
-<span class="co">#&gt; [9] "SCL_wide"</span>
-
-<span class="co"># Get output of a module</span>
-<span class="fu"><a href="../reference/outputs_of.html">outputs_of</a></span><span class="op">(</span><span class="st">"module_xfaostat_L106_FoodMacroNutrient"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "SUA_food_macronutrient_rate"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Load gcamfaostat</span></span>
+<span><span class="co"># devtools::load_all() </span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jgcri.github.io/gcamfaostat">gcamfaostat</a></span><span class="op">)</span></span>
+<span><span class="co"># package data, GCAM_DATA_MAP, will be loaded</span></span>
+<span></span>
+<span><span class="co"># Get information for an intermediate data frame QCL_CROP_PRIMARY</span></span>
+<span><span class="fu"><a href="../reference/info.html">info</a></span><span class="op">(</span><span class="st">"QCL_CROP_PRIMARY"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; QCL_CROP_PRIMARY - produced by module_xfaostat_L102_ProductionArea </span></span>
+<span><span class="co">#&gt;  FAO primary crop area and production (various)</span></span>
+<span><span class="co">#&gt;  Detailed FAO QCL data processing for crop area and production</span></span>
+<span><span class="co">#&gt;  Dependent: xfaostat_L199_GCAMDATA_FAOSTAT_CSV</span></span>
+<span><span class="co">#&gt;  Precursor: aglu/FAO/FAO_an_items_PRODSTAT</span></span>
+<span><span class="co">#&gt;  Precursor: QCL_wide</span></span>
+<span><span class="co">#&gt;  Precursor: FBS_wide</span></span>
+<span><span class="co">#&gt;  Precursor: FBSH_CB_wide</span></span>
+<span></span>
+<span><span class="co"># Trace all downstream data flows for SCL_wide</span></span>
+<span><span class="fu"><a href="../reference/dstrace.html">dstrace</a></span><span class="op">(</span><span class="st">"SCL_wide"</span>, direction <span class="op">=</span> <span class="st">"downstream"</span>, recurse <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> </span>
+<span><span class="co">#&gt; 1 - SCL_wide - produced by module_xfaostat_L101_RawDataPreProc3_SCL_FBS </span></span>
+<span><span class="co">#&gt;  FAO supply utilization account dataset, 2010+, wide (tonne)</span></span>
+<span><span class="co">#&gt;  Preprocessed FAOSTAT SCL; ** PRE-BUILT **</span></span>
+<span><span class="co">#&gt;  Dependent: Bal_new_all (#2 below)</span></span>
+<span><span class="co">#&gt;  Dependent: SUA_food_macronutrient_rate (#3 below)</span></span>
+<span><span class="co">#&gt; 2 - Bal_new_all - produced by module_xfaostat_L105_DataConnectionToSUA </span></span>
+<span><span class="co">#&gt;  Bal_new_all (Ktonne)</span></span>
+<span><span class="co">#&gt;  Preprocessed FAO SUA 2010 - 2019</span></span>
+<span><span class="co">#&gt;  Dependent: xfaostat_L199_GCAMDATA_FAOSTAT_CSV (#4 below)</span></span>
+<span><span class="co">#&gt; 4 - xfaostat_L199_GCAMDATA_FAOSTAT_CSV - produced by module_xfaostat_L199_CSVExportAgSUA </span></span>
+<span><span class="co">#&gt;  Export CSV to DIR_OUTPUT_CSV (NA)</span></span>
+<span><span class="co">#&gt;  Export CSV</span></span>
+<span><span class="co">#&gt;  No dependents</span></span>
+<span><span class="co">#&gt; 3 - SUA_food_macronutrient_rate - produced by module_xfaostat_L106_FoodMacroNutrient </span></span>
+<span><span class="co">#&gt;  FAO food calories and macronutrient rate (rates)</span></span>
+<span><span class="co">#&gt;  Detailed FAO food calories and macrotunitent info for 414 SUA items +</span></span>
+<span><span class="co">#&gt;  12 fish items</span></span>
+<span><span class="co">#&gt;  Dependent: xfaostat_L199_GCAMDATA_FAOSTAT_CSV (#4 above)</span></span>
+<span></span>
+<span><span class="co"># Get input of a module</span></span>
+<span><span class="fu"><a href="../reference/inputs_of.html">inputs_of</a></span><span class="op">(</span><span class="st">"module_xfaostat_L105_DataConnectionToSUA"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "aglu/FAO/FAO_items"                "aglu/FAO/Mapping_FBSH_SCL_OilCake"</span></span>
+<span><span class="co">#&gt; [3] "QCL_PROD"                          "QCL_AN_LIVEANIMAL_MEATEQ"         </span></span>
+<span><span class="co">#&gt; [5] "TCL_wide"                          "TM_bilateral_wide"                </span></span>
+<span><span class="co">#&gt; [7] "FBSH_CB_wide"                      "FBS_wide"                         </span></span>
+<span><span class="co">#&gt; [9] "SCL_wide"</span></span>
+<span></span>
+<span><span class="co"># Get output of a module</span></span>
+<span><span class="fu"><a href="../reference/outputs_of.html">outputs_of</a></span><span class="op">(</span><span class="st">"module_xfaostat_L106_FoodMacroNutrient"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "SUA_food_macronutrient_rate"</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Not evaluated for convenience </span>
-<span class="co"># Load gcamfaostat</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span> 
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span> 
-
-<span class="co"># Load FAO_items from cache</span>
-<span class="fu"><a href="../reference/load_from_cache.html">load_from_cache</a></span><span class="op">(</span><span class="st">"aglu/FAO/FAO_items"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">first</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">FAO_items</span>
-<span class="co"># Print</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">FAO_items</span><span class="op">)</span>
-
-<span class="co"># Define a list of input data</span>
-<span class="va">MODULE_INPUTS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Bal_new_all"</span><span class="op">)</span>
-<span class="co"># Load a list of MODULE_INPUTS from cache and assign to their name</span>
-<span class="fu"><a href="../reference/get_data_list.html">get_data_list</a></span><span class="op">(</span>all_data <span class="op">=</span> <span class="fu"><a href="../reference/load_from_cache.html">load_from_cache</a></span><span class="op">(</span><span class="va">MODULE_INPUTS</span><span class="op">)</span>, data_list <span class="op">=</span> <span class="va">MODULE_INPUTS</span><span class="op">)</span>
-<span class="co"># Print</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">Bal_new_all</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Not evaluated for convenience </span></span>
+<span><span class="co"># Load gcamfaostat</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span></span>
+<span><span class="co"># Load FAO_items from cache</span></span>
+<span><span class="fu"><a href="../reference/load_from_cache.html">load_from_cache</a></span><span class="op">(</span><span class="st">"aglu/FAO/FAO_items"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">first</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">FAO_items</span></span>
+<span><span class="co"># Print</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">FAO_items</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Define a list of input data</span></span>
+<span><span class="va">MODULE_INPUTS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Bal_new_all"</span><span class="op">)</span></span>
+<span><span class="co"># Load a list of MODULE_INPUTS from cache and assign to their name</span></span>
+<span><span class="fu"><a href="../reference/get_data_list.html">get_data_list</a></span><span class="op">(</span>all_data <span class="op">=</span> <span class="fu"><a href="../reference/load_from_cache.html">load_from_cache</a></span><span class="op">(</span><span class="va">MODULE_INPUTS</span><span class="op">)</span>, data_list <span class="op">=</span> <span class="va">MODULE_INPUTS</span><span class="op">)</span></span>
+<span><span class="co"># Print</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">Bal_new_all</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2 unnumbered">

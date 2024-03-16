@@ -105,7 +105,7 @@ Users should now be ready to run the driver, which is the main processing functi
 
 See [here](https://jgcri.github.io/gcamdata/reference/driver.html) for more options when running the driver, such as what outputs to generate or when to stop.  
 
-For `gcamfaostat`, it is recommended to use `driver_drake()` so the data tracing and exploring after the drive will be possible, even thought it may take longer to run and additional space (for drake cache) compared to `driver()`. The `driver()` approach has a default option (`write_outputs =  T`) to write the intermediate `csv` outputs to `./outputs`. 
+For `gcamfaostat`, it is recommended to use `driver_drake()` so the data tracing and exploring after the drive will be possible, even though it may take longer to run and additional space (for drake cache) compared to `driver()`. The `driver()` approach has a default option (`write_outputs =  T`) to write the intermediate `csv` outputs to `./outputs`. 
 
 #### Output files  
 * In `constants.R`, users can set `OUTPUT_Export_CSV == TRUE` and specify the output directory (`DIR_OUTPUT_CSV`) to export and store the output csv files. 

@@ -101,21 +101,21 @@ have actually changed.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">driver_drake</span><span class="op">(</span>
-  stop_before <span class="op">=</span> <span class="cn">NULL</span>,
-  stop_after <span class="op">=</span> <span class="cn">NULL</span>,
-  return_inputs_of <span class="op">=</span> <span class="va">stop_before</span>,
-  return_outputs_of <span class="op">=</span> <span class="va">stop_after</span>,
-  return_data_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">union</a></span><span class="op">(</span><span class="fu"><a href="inputs_of.html">inputs_of</a></span><span class="op">(</span><span class="va">return_inputs_of</span><span class="op">)</span>, <span class="fu"><a href="outputs_of.html">outputs_of</a></span><span class="op">(</span><span class="va">return_outputs_of</span><span class="op">)</span><span class="op">)</span>,
-  return_data_map_only <span class="op">=</span> <span class="cn">FALSE</span>,
-  return_plan_only <span class="op">=</span> <span class="cn">FALSE</span>,
-  write_xml <span class="op">=</span> <span class="op">!</span><span class="va">return_data_map_only</span>,
-  xmldir <span class="op">=</span> <span class="va">XML_DIR</span>,
-  quiet <span class="op">=</span> <span class="cn">FALSE</span>,
-  user_modifications <span class="op">=</span> <span class="cn">NULL</span>,
-  xml_suffix <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">driver_drake</span><span class="op">(</span></span>
+<span>  stop_before <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  stop_after <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  return_inputs_of <span class="op">=</span> <span class="va">stop_before</span>,</span>
+<span>  return_outputs_of <span class="op">=</span> <span class="va">stop_after</span>,</span>
+<span>  return_data_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">union</a></span><span class="op">(</span><span class="fu"><a href="inputs_of.html">inputs_of</a></span><span class="op">(</span><span class="va">return_inputs_of</span><span class="op">)</span>, <span class="fu"><a href="outputs_of.html">outputs_of</a></span><span class="op">(</span><span class="va">return_outputs_of</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  return_data_map_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  return_plan_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  write_xml <span class="op">=</span> <span class="op">!</span><span class="va">return_data_map_only</span>,</span>
+<span>  xmldir <span class="op">=</span> <span class="va">XML_DIR</span>,</span>
+<span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  user_modifications <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  xml_suffix <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">

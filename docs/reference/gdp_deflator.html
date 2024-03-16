@@ -105,7 +105,7 @@ result will be prices in the converted dollar year.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">gdp_deflator</span><span class="op">(</span><span class="va">year</span>, <span class="va">base_year</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">gdp_deflator</span><span class="op">(</span><span class="va">year</span>, <span class="va">base_year</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="source">
@@ -139,8 +139,8 @@ of St. Louis; https://fred.stlouisfed.org/series/A191RD3A086NBEA, April 12,
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">gdp_bil_1990USD</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4770</span>, <span class="fl">4779</span>, <span class="fl">4937</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">gdp_bil_2010USD</span> <span class="op">&lt;-</span> <span class="va">gdp_bil_1990USD</span> <span class="op">*</span> <span class="fu">gdp_deflator</span><span class="op">(</span><span class="fl">2010</span>, base_year <span class="op">=</span> <span class="fl">1990</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">gdp_bil_1990USD</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4770</span>, <span class="fl">4779</span>, <span class="fl">4937</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">gdp_bil_2010USD</span> <span class="op">&lt;-</span> <span class="va">gdp_bil_1990USD</span> <span class="op">*</span> <span class="fu">gdp_deflator</span><span class="op">(</span><span class="fl">2010</span>, base_year <span class="op">=</span> <span class="fl">1990</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>

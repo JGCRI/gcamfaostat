@@ -91,13 +91,13 @@
 
 <div id="summary" class="section level1">
 
-<p>The <strong><code>gcamfaostat</code></strong> R package is designed for the preparation, processing, and synthesis of the Food and Agriculture Organization (FAO) Statistics (<a href="https://www.fao.org/faostat/en/#data" class="external-link">FAOSTAT</a>) agroeconomic data. The primary purpose is to facilitate FAOSTAT data use in global economic and multisector dynamic models while ensuring transparency, traceability, and reproducibility. Here, we provide an overview of the development of <strong><code>gcamfaostat v1.0.0</code></strong> and demonstrate its capabilities in generating and maintaining agroeconomic data required for the Global Change Analysis Model (<a href="https://jgcri.github.io/gcam-doc/toc.html" class="external-link">GCAM</a>). Our initiative seeks to enhance the quality and accessibility of data for the global agroeconomic modeling community, with the aim of fostering more robust and harmonized outcomes in a collaborative, efficient, and open-source framework. One of the important features of the package is the possibility to construct the FAO Food Balance Sheets at the disaggregated commodity level (with over 500 commodities), which provides a comprehensive and detailed data input for a variety of analytical and modeling applications. The processed data and visualizations offered by <strong><code>gcamfaostat</code></strong> can also be valuable to a broader audience interested in gaining insights into the intricacies of global agriculture.</p>
+<p>The <strong><code>gcamfaostat</code></strong> R package is designed for the preparation, processing, and synthesis of the Food and Agriculture Organization (FAO) Statistics (<a href="https://www.fao.org/faostat/en/#data" class="external-link">FAOSTAT</a>) agroeconomic data. The primary purpose is to facilitate FAOSTAT data use in global economic and multisector dynamic models while ensuring transparency, traceability, and reproducibility. Here, we provide an overview of the development of <strong><code>gcamfaostat v1.0.0</code></strong> and demonstrate its capabilities in generating and maintaining agroeconomic data required for the Global Change Analysis Model (<a href="https://jgcri.github.io/gcam-doc/toc.html" class="external-link">GCAM</a>). Our initiative seeks to enhance the quality and accessibility of data for the global agroeconomic modeling community, with the aim of fostering more robust and harmonized outcomes in a collaborative, efficient, and open-source framework. The processed data and visualizations offered by <strong><code>gcamfaostat</code></strong> can also be valuable to a broader audience interested in gaining insights into the intricacies of global agriculture.</p>
 </div>
 <div class="section level1">
 <h1 id="statement-of-need">Statement of need<a class="anchor" aria-label="anchor" href="#statement-of-need"></a></h1>
-<p>Global economic and multisector dynamic models have become pivotal tools for investigating complex interactions between human activities and the environment, as evident in recent research [@Doelman2022Quantifying;@Fujimori2022Land-based;@IPCC2022Annex;@Ven2023multimodel]. Agriculture and land use (AgLU) plays a critical role in these models, particularly when used to address key agroeconomic questions [@Graham2023Agricultural;@Yarlagadda2023Trade;@Zhang2023Agriculture;@Zhao2021Global;@Zhao2020critical]. Sound economic modeling hinges significantly upon the accessibility and quality of data [@Bruckner2019FABIO;@Calvin2022GMD;@Chepeliev2022JGEA]. The FAOSTAT serves as one of the key global data sources, offering open-access data on country-level agricultural production, land use, trade, food consumption, nutrient content, prices, and more [@FAOSTAT2023FAOSTAT]. However, the raw data from FAOSTAT requires cleaning, balancing, and synthesis, involving assumptions such as interpolation and mapping, which can introduce uncertainties. In addition, some of the core datasets reported by FAOSTAT, such as FAO’s Food Balance Sheets (FBS), are compiled at a specific level of aggregation, combining together primary and processed commodities (e.g., wheat and flour), which creates additional data processing challenges for the agroeconomic modeling community [@Chepeliev2022JGEA]. It is noteworthy that each agroeconomic modeling team typically develops its own assumptions and methods to prepare and process FAOSTAT data [@bond2019gcamdata]. While largely overlooked, the uncertainty in the base data calibration approach likely contribute to the disparities in model outcomes [@Lampe2014AgMIP;@zhao2021role]. Hence, our motivation is to create an open-source tool (<strong><code>gcamfaostat</code></strong>) for the preparation, processing, and synthesis of FAOSTAT data for global agroeconomic modeling. This tool bridges a crucial gap in the literature by offering several key features and capabilities.</p>
+<p>Global economic and multisector dynamic models have become pivotal tools for investigating complex interactions between human activities and the environment, as evident in recent research [@Doelman2022Quantifying;@Fujimori2022Land-based;@Ven2023multimodel]. Agriculture and land use (AgLU) plays a critical role in these models, particularly when used to address key agroeconomic questions [@Graham2023Agricultural;@Yarlagadda2023Trade;@Zhang2023Agriculture;@Zhao2021Global;@Zhao2020critical]. Sound economic modeling hinges significantly upon the accessibility and quality of data [@Bruckner2019FABIO;@Calvin2022GMD;@Chepeliev2022JGEA]. The FAOSTAT serves as one of the key global data sources, offering open-access data on country-level agricultural production, land use, trade, food consumption, nutrient content, prices, and more [@FAOSTAT2023FAOSTAT]. However, the raw data from FAOSTAT requires cleaning, balancing, and synthesis, involving assumptions such as interpolation and mapping, which can introduce uncertainties. In addition, some of the core datasets reported by FAOSTAT, such as FAO’s Food Balance Sheets (FBS), are compiled at a specific level of aggregation, combining together primary and processed commodities (e.g., wheat and flour), which creates additional data processing challenges for the agroeconomic modeling community [@Chepeliev2022JGEA]. It is noteworthy that each agroeconomic modeling team typically develops its own assumptions and methods to prepare and process FAOSTAT data [@bond2019gcamdata]. While largely overlooked, the uncertainty in the base data calibration approach likely contribute to the disparities in model outcomes [@Lampe2014AgMIP;@zhao2021role]. Hence, our motivation is to create an open-source tool (<strong><code>gcamfaostat</code></strong>) for the preparation, processing, and synthesis of FAOSTAT data for global agroeconomic modeling. To the best of our knowledge, such a tool has not been developed yet. <code>gcamfaostat</code> bridges a crucial gap in the literature by offering several key features and capabilities.</p>
 <ol style="list-style-type: decimal"><li>
-<strong>Transparency and Reproducibility</strong>: <strong><code>gcamfaostat</code></strong> incorporates functions for downloading, cleaning, synthesizing, and balancing agroeconomic datasets in a traceable, transparent, and reproducible manner. This enhances the credibility of the processing and allows for better scrutiny of the methods. We have documented and demonstrated the use of the package in generating and updating agroeconomic data needed for the GCAM.<br></li>
+<strong>Transparency and Reproducibility</strong>: <strong><code>gcamfaostat</code></strong> incorporates functions for downloading, cleaning, synthesizing, and balancing agroeconomic datasets in a traceable, transparent, and reproducible manner [@wilkinson_fair_2016]. This enhances the credibility of the processing and allows for better scrutiny of the methods. We have documented and demonstrated the use of the package in generating and updating agroeconomic data needed for GCAM v7 [@bond_lamberty_2023].<br></li>
 <li>
 <strong>Expandability and Consistency</strong>: <strong><code>gcamfaostat</code></strong> can be used to flexibly process and update agroeconomic data for any agroeconomic model. The package framework can be also easily expanded to include new modules for consistently processing new data.<br></li>
 <li>
@@ -109,117 +109,98 @@
 <h1 id="design-and-functionality">Design and Functionality<a class="anchor" aria-label="anchor" href="#design-and-functionality"></a></h1>
 <div class="section level2">
 <h2 id="bridging-the-gap-between-faostat-and-global-economic-modeling">Bridging the gap between FAOSTAT and global economic modeling<a class="anchor" aria-label="anchor" href="#bridging-the-gap-between-faostat-and-global-economic-modeling"></a></h2>
-<p> shows a standard framework of using FAOSTAT data in GCAM. GCAM is a widely recognized global economic and multisector dynamic model complemented by the gcamdata R package, which serves as its data processing system. Particularly, gcamdata includes modules (data processing chunks) and functions to convert raw data inputs into hundreds of XML input files used by GCAM [@bond2019gcamdata]. As an illustration, in the latest GCAM version, GCAM v7 [@bond_lamberty_2023], about 280 XML files, with a combined size of 4.1 GB, are generated. Although AgLU-related XMLs represent only about 10% of the total number of files, they contribute over 50% in size (~2.1 GB). The majority of AgLU-related data, whether directly or indirectly, rely on raw data sourced from the FAOSTAT.</p>
-<p>Nonetheless, the FAOSTAT data employed within gcamdata has traditionally involved manual downloads and may have undergone preprocessing. In light of the increasing data needs, maintaining the FAOSTAT data processing tasks in gcamdata has become increasingly challenging. In addition, the processing of FAOSTAT data in the AgLU modules of gcamdata is tailored specifically for GCAM. Consequently, the integration of FAOSTAT data updates has proven to be a non-trivial task, and the data processed by the AgLU module has limited applicability in other modeling contexts [@zhao_cmp360]. The <strong><code>gcamfaostat</code></strong> package aims to address these limitations (). The targeted approach incorporates data preparation, processing, and synthesis capabilities within a dedicated package, gcamfaostat, while regional and sectoral aggregation functions in the model data system are implemented using standalone routines within the gcamdata package. This strategy not only ensures the streamlined operation of <strong><code>gcamfaostat</code></strong> but also contributes to keeping model data system lightweight and more straightforward to maintain.</p>
+<p> shows a standard framework of using FAOSTAT data in GCAM. GCAM is a widely recognized global economic and multisector dynamic model complemented by the <code>gcamdata</code> R package, which serves as its data processing system. Particularly, <code>gcamdata</code> includes modules (data processing chunks) and functions to convert raw data inputs into hundreds of XML input files used by GCAM [@bond2019gcamdata]. As an illustration, in the latest GCAM version, GCAM v7 [@bond_lamberty_2023], about 280 XML files, with a combined size of 4.1 GB, are generated. Although AgLU-related XMLs represent only about 10% of the total number of files, they contribute over 50% in size (~2.1 GB). The majority of AgLU-related data, whether directly or indirectly, rely on raw data sourced from FAOSTAT.</p>
+<p>Nonetheless, the FAOSTAT data employed within <code>gcamdata</code> has traditionally involved manual downloads and may have undergone preprocessing. In light of the increasing data needs, maintaining the FAOSTAT data processing tasks in <code>gcamdata</code> has become increasingly challenging. In addition, the processing of FAOSTAT data in the AgLU modules of <code>gcamdata</code> is tailored specifically for GCAM. Consequently, the integration of FAOSTAT data updates has proven to be a non-trivial task, and the data processed by the AgLU module has limited applicability in other modeling contexts [@zhao_cmp360]. The <strong><code>gcamfaostat</code></strong> package aims to address these limitations (). The targeted approach incorporates data preparation, processing, and synthesis capabilities within a dedicated package, <strong><code>gcamfaostat</code></strong>, while regional and sectoral aggregation functions in the model data system are implemented using standalone routines within the <code>gcamdata</code> package. This strategy not only ensures the streamlined operation of <strong><code>gcamfaostat</code></strong> but also contributes to keeping model data system lightweight and more straightforward to maintain.</p>
 <div class="float">
-<img src="./reference/figures/Fig_FAOSTAT_gcamdata.jpg" style="width:70.0%" alt="The original framework of utilizing FAOSTAT data in GCAM and similar large-scale models. Note that FAOSTAT data is mainly processed in the AgLU modules in gcamdata while there could be interdependency across data processing modules. "><div class="figcaption">The original framework of utilizing FAOSTAT data in GCAM and similar large-scale models. Note that FAOSTAT data is mainly processed in the AgLU modules in gcamdata while there could be interdependency across data processing modules. </div>
+<img src="./reference/figures/Fig_FAOSTAT_gcamdata.jpg" style="width:70.0%" alt="Original framework of utilizing FAOSTAT data in GCAM and similar large-scale models. Note that FAOSTAT data is mainly processed in the AgLU modules in gcamdata while there could be interdependency across data processing modules. "><div class="figcaption">Original framework of utilizing FAOSTAT data in GCAM and similar large-scale models. Note that FAOSTAT data is mainly processed in the AgLU modules in gcamdata while there could be interdependency across data processing modules. </div>
 </div>
 <div class="float">
-<img src="./reference/figures/Fig_gcamfaostat_and_gcamdata.jpg" style="width:70.0%" alt="The new framework of utilizing FAOSTAT data in GCAM and similar large-scale models through gcamfaostat. Modules with identifier “xfaostat” only exist in gcamfaostat. The AgLU-related modules (“aglu”) that rely on outputs from gcamfaostat can run in both packages. Other gcamdata modules that process data in such areas as energy, emissions, water, and socioeconomics only exist in gcamdata. "><div class="figcaption">The new framework of utilizing FAOSTAT data in GCAM and similar large-scale models through gcamfaostat. Modules with identifier “<em>xfaostat</em>” only exist in gcamfaostat. The AgLU-related modules (“<em>aglu</em>”) that rely on outputs from gcamfaostat can run in both packages. Other gcamdata modules that process data in such areas as energy, emissions, water, and socioeconomics only exist in gcamdata. </div>
+<img src="./reference/figures/Fig_gcamfaostat_and_gcamdata.jpg" style="width:70.0%" alt="New framework of utilizing FAOSTAT data in GCAM and similar large-scale models through gcamfaostat. Modules with identifier “xfaostat” only exist in gcamfaostat. The AgLU-related modules (“aglu”) that rely on outputs from gcamfaostat can run in both packages. Other gcamdata modules that process data in such areas as energy, emissions, water, and socioeconomics only exist in gcamdata. "><div class="figcaption">New framework of utilizing FAOSTAT data in GCAM and similar large-scale models through gcamfaostat. Modules with identifier “<em>xfaostat</em>” only exist in gcamfaostat. The AgLU-related modules (“<em>aglu</em>”) that rely on outputs from gcamfaostat can run in both packages. Other gcamdata modules that process data in such areas as energy, emissions, water, and socioeconomics only exist in gcamdata. </div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="key-functions">Key functions<a class="anchor" aria-label="anchor" href="#key-functions"></a></h2>
-<p>In this section we describe key functions included in gcamfaostat. More details about the functions and documentations can be found in the online <a href="https://jgcri.github.io/gcamfaostat/index.html"><strong>User Guide</strong></a>.</p>
+<p>In this section we describe key functions included in <strong><code>gcamfaostat (v1.0.0)</code></strong>. More details about the functions and documentations can be found in the online <a href="https://jgcri.github.io/gcamfaostat/index.html"><strong>User Guide</strong></a>.</p>
 <div class="section level3">
 <h3 id="data-preparation">Data preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a></h3>
-<p><code>gcamfaostat</code> includes functions to generate metadata (<code>gcamfaostat_metadata</code>) and download FAOSTAT raw data from either a remote archive (<code>FF_download_RemoteArchive</code>) or directly from FAOSTAT (<code>FF_download_FAOSTAT</code>).</p>
+<p><strong><code>gcamfaostat</code></strong> includes functions to generate metadata (<code>gcamfaostat_metadata</code>) and download FAOSTAT raw data from either a remote archive (<code>FF_download_RemoteArchive</code>) or directly from FAOSTAT (<code>FF_download_FAOSTAT</code>).</p>
 <p><a href="https://jgcri.github.io/gcamfaostat/reference/gcamfaostat_metadata.html"><code>gcamfaostat_metadata()</code></a></p>
-<ul><li>The function accesses both the latest FAOSTAT metadata and local data information and returns a summary table including the dataset information needed for gcamfaostat (see <a href="#Tab1">Table 1</a> below).</li>
+<ul><li>The function accesses both the latest FAOSTAT metadata and local data information and returns a summary table including the dataset information needed for <strong><code>gcamfaostat</code></strong> (see <a href="#Tab1">Table 1</a> below).</li>
 <li>The function will save the latest FAOSTAT metadata to the <a href="https://github.com/JGCRI/gcamfaostat/tree/main/inst/extdata/aglu/FAO/FAOSTAT/metadata_log" class="external-link">metadata_log</a>
 </li>
 <li>The dataset code needed were specified in the function to get a subset of the FAOSTAT metadata. The function will return only dataset code required when setting <code>OnlyReturnDatasetCodeRequired = FALSE</code>.</li>
-<li>The function will check whether FAOSTAT raw data exists locally (<code>Exist_Local</code>) and in <a href="https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda" class="external-link">Prebuilt Data</a> (<code>Exist_Prebuilt</code>). If <code>Exist_Prebuilt</code> is <code>TRUE</code> for all dataset, the package is ready to be built based on the Prebuilt package data.</li>
+<li>The function will check whether FAOSTAT raw data exists locally (<code>Exist_Local</code>; not show in <a href="#Tab1">Table 1</a>) and in <a href="https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda" class="external-link">Prebuilt Data</a> (<code>Exist_Prebuilt</code>). If <code>Exist_Prebuilt</code> is <code>TRUE</code> for all dataset, the package is ready to be built based on the Prebuilt package data.</li>
 <li>
-<code>FAO update data</code> and <code>FAO size</code> indicate the information based on the latest FAOSTAT metadata.</li>
-</ul><p><a href="https://jgcri.github.io/gcamfaostat/reference/FF_download_RemoteArchive.html"><code>FF_download_RemoteArchive()</code></a></p>
-<ul><li>The function downloads the FAOSTAT raw data needed for the package from a remote archive.</li>
-<li>The default Zenodo archive currently included in the function includes a snapshot of FAOSTAT data to ensure replicability.</li>
-<li>The archived data is consistent with the Prebuilt package data.</li>
-</ul><p><a href="https://jgcri.github.io/gcamfaostat/reference/FF_download_FAOSTAT.html"><code>FF_download_FAOSTAT()</code></a></p>
-<ul><li>The function downloads the latest raw data from FAOSTAT.</li>
-</ul><p>Table 1. FAOSTAT dataset processed in gcamfaostat v1.0.0.</p>
-<table class="table"><colgroup><col width="10%"><col width="46%"><col width="10%"><col width="12%"><col width="12%"><col width="7%"></colgroup><thead><tr class="header"><th align="center">Dataset Code</th>
+<code>FAO update data</code> and <code>FAO size</code> indicate the information based on the latest FAOSTAT metadata.<br></li>
+<li>Users can use <a href="https://jgcri.github.io/gcamfaostat/reference/FF_rawdata_info.html"><code>FF_rawdata_info()</code></a> function to download nonexist raw data from a remote archive or FAOSTAT.</li>
+</ul><p>Table 1. FAOSTAT dataset processed in <strong><code>gcamfaostat v1.0.0</code></strong>.</p>
+<table style="width:100%;" class="table"><colgroup><col width="12%"><col width="51%"><col width="13%"><col width="13%"><col width="8%"></colgroup><thead><tr class="header"><th align="center">Dataset Code</th>
 <th align="center">Dataset Name</th>
-<th align="center">Exist_Local</th>
 <th align="center">Exist_Prebuilt</th>
 <th align="center">FAO update date</th>
 <th align="center">FAO size</th>
 </tr></thead><tbody><tr class="odd"><td align="center">CB</td>
 <td align="center">Food Balances: Commodity Balances (non-food) (2010-)</td>
 <td align="center">TRUE</td>
-<td align="center">TRUE</td>
 <td align="center">8/25/2022</td>
 <td align="center">1MB</td>
 </tr><tr class="even"><td align="center">FBSH</td>
 <td align="center">Food Balances: Food Balances (-2013, old methodology and population)</td>
-<td align="center">TRUE</td>
 <td align="center">TRUE</td>
 <td align="center">3/10/2023</td>
 <td align="center">69MB</td>
 </tr><tr class="odd"><td align="center">TM</td>
 <td align="center">Trade: Detailed trade matrix</td>
 <td align="center">TRUE</td>
-<td align="center">TRUE</td>
 <td align="center">2/14/2022</td>
 <td align="center">454MB</td>
 </tr><tr class="even"><td align="center">OA</td>
 <td align="center">Population and Employment: Annual population</td>
-<td align="center">TRUE</td>
 <td align="center">TRUE</td>
 <td align="center">10/24/2022</td>
 <td align="center">2MB</td>
 </tr><tr class="odd"><td align="center">FO</td>
 <td align="center">Forestry: Forestry Production and Trade</td>
 <td align="center">TRUE</td>
-<td align="center">TRUE</td>
 <td align="center">9/5/2023</td>
 <td align="center">15MB</td>
 </tr><tr class="even"><td align="center">QCL</td>
 <td align="center">Production: Crops and livestock products</td>
-<td align="center">TRUE</td>
 <td align="center">TRUE</td>
 <td align="center">3/22/2023</td>
 <td align="center">29MB</td>
 </tr><tr class="odd"><td align="center">PD</td>
 <td align="center">Prices: Deflators</td>
 <td align="center">TRUE</td>
-<td align="center">TRUE</td>
 <td align="center">8/16/2023</td>
 <td align="center">1MB</td>
 </tr><tr class="even"><td align="center">TCL</td>
 <td align="center">Trade: Crops and livestock products</td>
-<td align="center">TRUE</td>
 <td align="center">TRUE</td>
 <td align="center">8/14/2023</td>
 <td align="center">229MB</td>
 </tr><tr class="odd"><td align="center">FBS</td>
 <td align="center">Food Balances: Food Balances (2010-)</td>
 <td align="center">TRUE</td>
-<td align="center">TRUE</td>
 <td align="center">5/4/2023</td>
 <td align="center">50MB</td>
 </tr><tr class="even"><td align="center">RFN</td>
 <td align="center">Land, Inputs and Sustainability: Fertilizers by Nutrient</td>
-<td align="center">TRUE</td>
 <td align="center">TRUE</td>
 <td align="center">7/5/2023</td>
 <td align="center">2MB</td>
 </tr><tr class="odd"><td align="center">RL</td>
 <td align="center">Land, Inputs and Sustainability: Land Use</td>
 <td align="center">TRUE</td>
-<td align="center">TRUE</td>
 <td align="center">7/10/2023</td>
 <td align="center">2MB</td>
 </tr><tr class="even"><td align="center">PP</td>
 <td align="center">Prices: Producer Prices</td>
 <td align="center">TRUE</td>
-<td align="center">TRUE</td>
 <td align="center">2/23/2023</td>
 <td align="center">10MB</td>
 </tr><tr class="odd"><td align="center">SCL</td>
 <td align="center">Food Balances: Supply Utilization Accounts (2010-)</td>
-<td align="center">TRUE</td>
 <td align="center">TRUE</td>
 <td align="center">4/26/2023</td>
 <td align="center">59MB</td>
@@ -227,74 +208,34 @@
 <div class="section level3">
 <h3 id="data-processing">Data processing<a class="anchor" aria-label="anchor" href="#data-processing"></a></h3>
 <p><strong>Module structure</strong></p>
-<p>The architecture of gcamfaostat processing modules is depicted in . This framework currently comprises eight preprocessing modules and nine processing and synthesizing modules, generating twelve output files tailored for <a href="https://github.com/JGCRI/gcam-core/releases/tag/gcam-v7.0" class="external-link">GCAM v7</a>. Each module is essentially an <code>R</code> function with well-defined inputs and outputs. To showcase the flexibility and expandability of our package, we also incorporated two AgLU modules (from <code>gcamdata</code>) that exemplify the data aggregation processes, e.g., across regions, sectors, and time. Moreover, the <code>driver_drake</code> function plays a pivotal role by executing all available data processing modules, thereby generating both intermediate and final outputs, which are vital components of our comprehensive data processing pipeline.</p>
+<p>The architecture of <strong><code>gcamfaostat</code></strong> processing modules is depicted in . This framework currently comprises eight preprocessing modules and nine processing and synthesizing modules, generating twelve output files tailored for <a href="https://github.com/JGCRI/gcam-core/releases/tag/gcam-v7.0" class="external-link">GCAM v7</a>. Each module is essentially an <code>R</code> function with well-defined inputs and outputs. To showcase the flexibility and expandability of our package, we also incorporated two AgLU modules (from <code>gcamdata</code>) that exemplify the data aggregation processes, e.g., across regions, sectors, and time. Moreover, the <code>driver_drake</code> function plays a pivotal role by executing all available data processing modules, thereby generating both intermediate and final outputs, which are vital components of our comprehensive data processing pipeline.</p>
 <div class="float">
-<img src="./reference/figures/Fig_data_processing_flow.jpg" style="width:100.0%" alt="The architecture of data processing modules in gcamfaostat. "><div class="figcaption">The architecture of data processing modules in gcamfaostat. </div>
-</div>
-<p><strong>Data synthesizing in a key module</strong></p>
-<p>Of particular significance is the <code>module_xfaostat_L105_DataConnectionToSUA</code>, which plays a pivotal role in harmonizing various FAOSTAT datasets to generate a cohesive set of agricultural supply and utilization accounts (SUA) data. This complex process is elucidated in . This endeavor entails working through nine tiers of data, each sourced differently, with the aim of producing an harmonized agricultural SUA dataset for over 500 agricultural commodities. Compared to the FAO’s FBS, which report food and nutritional information for about 100 composite categories, in many cases combining primary and processed commodities (e.g., wheat and flour) within a single category (e.g., wheat and products), the constructed SUA explicitly trace the transformations between primary and processed commodities, while reporting nutritional details at a highly disaggregated level (over 500 commodities). In doing so, the constructed dataset substantially simplifies the FAOSTAT data processing steps by explicitly distinguishing food and nutritional supply at the individual commodity level and facilitating a straightforward mapping of the corresponding data to the global agroeconomic models.</p>
-<p>As an illustrative example, the first tier comprises 168 commodities, generated by combining production data from QCL, trade data from TM, and other essential balancing elements (such as opening and closing stocks, food and feed uses, and other industrial uses) from SCL. For a more comprehensive understanding of these procedures, we encourage an interested user to explore the mapping file, <code>FAO_items</code>. It is crucial to underscore the importance of these processing procedures, as raw FAOSTAT data often contains duplicated elements and inconsistencies among different datasets. For instance, trade data can be found in TCL, TM, SCL, and FBS, while production data exists in QCL and SCL (please see Table 1 for the corresponding dataset codes).</p>
-<div class="float">
-<img src="./reference/figures/Fig_KeyModule_xfaostat_L105.jpg" style="width:100.0%" alt="FAOSTAT agricultural supply utilization data synthesis in module_xfaostat_L105_DataConnectionToSUA. Note that the nine tiers of data, distinguished by commodities (or items in FAOSTAT terms) included, have different sources for generating agricultural supply utilization accounts. "><div class="figcaption">FAOSTAT agricultural supply utilization data synthesis in module_xfaostat_L105_DataConnectionToSUA. Note that the nine tiers of data, distinguished by commodities (or items in FAOSTAT terms) included, have different sources for generating agricultural supply utilization accounts. </div>
+<img src="./reference/figures/Fig_data_processing_flow.jpg" style="width:100.0%" alt="Data processing architecture in gcamfaostat. "><div class="figcaption">Data processing architecture in gcamfaostat. </div>
 </div>
 <p><strong>Drive the modules</strong></p>
 <p><a href="https://jgcri.github.io/gcamfaostat/reference/driver_drake.html"><code>driver_drake()</code></a></p>
-<ul><li>The function runs data processing modules sequentially to generate intermediate data outputs and final output (e.g., csv or other files) for GCAM (gcamdata) or other models.</li>
-<li>The function is inherited from gcamdata and it uses the drake [@Landau2018] pipeline framework, which simplifies module updates, data tracing, and results visualization process.</li>
+<ul><li>The function runs data processing modules sequentially to generate intermediate data outputs and final output (e.g., csv or other files) for GCAM (<code>gcamdata</code>) or other models.</li>
+<li>The function is inherited from <code>gcamdata</code> and it uses the drake [@Landau2018] pipeline framework, which simplifies module updates, data tracing, and results visualization process.</li>
 <li>It stores the outputs in a drake cache so that when the function is run again, it skips the steps that are up-to-date.</li>
-<li>In constants.R, users can set <code>OUTPUT_Export_CSV = TRUE</code> and specify the output directory (<code>DIR_OUTPUT_CSV</code>) to export and store the output csv files (currently the default option for GCAM v7).</li>
+<li>In <code>constants.R</code>, users can set <code>OUTPUT_Export_CSV = TRUE</code> and specify the output directory (<code>DIR_OUTPUT_CSV</code>) to export and store the output csv files (currently the default option for GCAM v7).</li>
 </ul></div>
 <div class="section level3">
 <h3 id="data-tracing">Data tracing<a class="anchor" aria-label="anchor" href="#data-tracing"></a></h3>
-<p>As gcamfaostat is built upon the foundation of gcamdata and leverages the powerful drake framework, inheriting functions designed for tracking data flows. Here we describe several key functions.</p>
+<p>As <strong><code>gcamfaostat</code></strong> is built upon the foundation of <code>gcamdata</code> and leverages the powerful drake framework, it inherits functions designed for tracking data flows.</p>
 <p><a href="https://jgcri.github.io/gcamfaostat/reference/info.html"><code>info()</code></a></p>
 <ul><li>The function returns information of an object, including name, metadata information, precursors and dependents.</li>
-</ul><p><a href="https://jgcri.github.io/gcamfaostat/reference/dstrace.html"><code>dstrace()</code></a></p>
-<ul><li>The function is able to trace data flows by providing precursors and dependents of an object recursively.</li>
 </ul><p><a href="https://jgcri.github.io/gcamfaostat/reference/load_from_cache.html"><code>load_from_cache()</code></a></p>
 <ul><li>If a drake cache is available, e.g., when <code><a href="reference/driver_drake.html">driver_drake()</a></code> had been run, this function, if given a list of object names, loads the objects from the cache into a list of data frames.</li>
 <li>The function <a href="https://jgcri.github.io/gcamfaostat/reference/get_data_list.html"><code>get_data_list</code></a> can be used to assign each object in the list to a data frame.</li>
 </ul></div>
-<div class="section level3">
-<h3 id="visualization">Visualization<a class="anchor" aria-label="anchor" href="#visualization"></a></h3>
-<p>In addition to generating data for modeling purposes, we also provide illustrative <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_visualization.html">examples</a> for visualizing the key data elements. Here are some examples for using the processed data to illustrate the connection of harvested area () and food calories () via supply utilization accounts (). These figures focus on the 2013 – 2017 mean values as they are the base calibration years of GCAM. A user can change the years and mappings as desired.</p>
-<div class="float">
-<img src="./reference/figures/Fig_WorldAreaHarvested.png" style="width:100.0%" alt="World area harvested (shares) grouped by GCAM crops based on the 2013 – 2017 mean values. The total harvested area is 1509 million hectares (Mha). "><div class="figcaption">World area harvested (shares) grouped by GCAM crops based on the 2013 – 2017 mean values. The total harvested area is 1509 million hectares (Mha). </div>
-</div>
-<div class="float">
-<img src="./reference/figures/Fig_WorldFoodCaloriesRegPcPerDay.png" style="width:100.0%" alt="Food calories availability per capita per day grouped by GCAM regions and commodities based on the 2013 – 2017 mean values. The world average value is 2902 Kcal per capita per day (Kcal/ca/d). "><div class="figcaption">Food calories availability per capita per day grouped by GCAM regions and commodities based on the 2013 – 2017 mean values. The world average value is 2902 Kcal per capita per day (Kcal/ca/d). </div>
-</div>
-<div class="float">
-<img src="./reference/figures/Fig_WorldSUA.png" style="width:100.0%" alt="World supply utilization accounts for key commodities based on the 2013 – 2017 mean values. Note that negative values are used for demand categories and positive values are used for supply categories. Other uses include seed use, losses, and industrial use; residuals (mostly small) indicate the imbalance in the data. The total supply is equal to the total demand. "><div class="figcaption">World supply utilization accounts for key commodities based on the 2013 – 2017 mean values. Note that negative values are used for demand categories and positive values are used for supply categories. Other uses include seed use, losses, and industrial use; residuals (mostly small) indicate the imbalance in the data. The total supply is equal to the total demand. </div>
-</div>
-</div>
 </div>
 <div class="section level2">
-<h2 id="other-functions-and-capabilities">Other functions and capabilities<a class="anchor" aria-label="anchor" href="#other-functions-and-capabilities"></a></h2>
-<p><strong>FAOSTAT raw data and processing output updates</strong></p>
-<p>To update the output data by including new data years, e.g., for model base year updates, the user needs to implement the following steps:<br>
-1. Download the latest FAOSTAT data using the <code>FF_download_FAOSTAT</code> function.<br>
-2. In the configuration file (<code>constants.R</code>), adjust the year variables and set <code>Process_Raw_FAO_Data</code> to <code>TRUE</code>.<br>
-3. Verify and update the output formats and names in the data exporting modules.<br>
-4. Execute the <code>driver_drake</code> function to initiate the data processing.</p>
-<p><strong>Generating output for a new agroeconomic model</strong></p>
-<p>If all the necessary FAOSTAT raw data is already incorporated into gcamfaostat, users can directly produce output for a new agroeconomic model. This can be achieved by either adding an output exporting module (e.g., <code>module_xfaostat_L199_CSVExportAgSUA</code>) or adapting an existing module (e.g., <code>module_xfaostat_L201_Forestry</code>) to export data in the required format. Notably, gcamfaostat presently includes a function, <code>output_csv_data</code>, for exporting data to CSV files. Additionally, users have the flexibility to expand the functionality by incorporating new functions to export data in alternative formats as needed. In cases when the required data is not readily available, users should proceed by introducing new processing modules.</p>
-<p><strong>Country aggregation and disaggregation</strong></p>
-<p>Since the 1970s, the number of countries in the world has increased due to the dissolution of regions. In other words, when a region dissolves, the country associated with it ceases to exist, and new countries emerge in its place, see . We included functions to deal with changes in the country classifications.</p>
-<p><a href="https://jgcri.github.io/gcamfaostat/reference/FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL.html"><code>FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL()</code></a></p>
-<ul><li>The function disaggregates regions into smaller countries.</li>
-<li>All dissolved regions (since 1970s) are disaggregated in historical periods (before dissolution) based on the data after dissolution.</li>
-</ul><p><a href="https://jgcri.github.io/gcamfaostat/reference/FAOSTAT_AREA_RM_NONEXIST.html"><code>FAOSTAT_AREA_RM_NONEXIST()</code></a></p>
-<ul><li>The function removes nonexistent FAO region using area_code, e.g., USSR after 1991.</li>
-<li>All nonexistent countries due to dissolution are removed by default.</li>
-<li>Small regions/areas with low data quality can also be removed using this function.</li>
-</ul><div class="float">
-<img src="./reference/figures/Fig_CountryChanges.png" style="width:70.0%" alt="Country changes since 1970s. "><div class="figcaption">Country changes since 1970s. </div>
-</div>
+<h2 id="visualization-and-other-capabilities">Visualization and Other capabilities<a class="anchor" aria-label="anchor" href="#visualization-and-other-capabilities"></a></h2>
+<p>In addition to generating data for modeling purposes, we also provide illustrative <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_visualization.html">examples</a> for visualizing the key data elements. Other functions and capabilities including raw data updates and generating new outputs are discussed in <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html">Use Cases</a>.</p>
 </div>
 </div>
 <div class="section level1">
-<h1 id="future-work-and-contribution">Future work and contribution<a class="anchor" aria-label="anchor" href="#future-work-and-contribution"></a></h1>
+<h1 id="future-work">Future work<a class="anchor" aria-label="anchor" href="#future-work"></a></h1>
 <p>Data development is never a once and for all task, and continued efforts are needed to sustain and improve the processing procedures. Further improvements might include:</p>
 <ol style="list-style-type: decimal"><li>
 <strong>Sustain processing functions for updated raw data</strong>: ensuring that our processing functions remain up-to-date when raw data undergoes revisions is imperative.<br></li>
@@ -303,11 +244,10 @@
 <li>
 <strong>Revise assumptions in low-quality data zones</strong>: regions and sectors with little or low-quality data require careful consideration. We will need to adjust our assumptions when improved data becomes available.<br></li>
 <li>
-<strong>Promoting broader applications</strong>: leveraging data processed by gcamfaostat can significantly contribute to harmonizing input data in global agroeconomic modeling. Encouraging the utilization of this data and fostering collaboration to enhance data processing is crucial.<br></li>
+<strong>Promoting broader applications</strong>: leveraging data processed by <strong><code>gcamfaostat</code></strong> can significantly contribute to harmonizing input data in global agroeconomic modeling. Encouraging the utilization of this data and fostering collaboration to enhance data processing is crucial.<br></li>
 <li>
 <strong>Assess sensitivity in downstream applications</strong>: understanding the sensitivity of downstream data applications, e.g., global agroeconomic projections, to upstream data processing assumptions is crucial. This awareness empowers us to make informed decisions and refinements.</li>
-</ol><p>We welcome and value community contributions to gcamfaostat.Through collective and collaborative efforts, we hope to improve the interface between raw data, modeling community, and broader audience. We would be grateful for the feedback and suggestions on potential improvements of the developed data processing framework.</p>
-</div>
+</ol></div>
 <div class="section level1">
 <h1 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a></h1>
 <p>This research was supported by the US Department of Energy, Office of Science, as part of research in MultiSector Dynamics, Earth and Environmental System Modeling Program. The Pacific Northwest National Laboratory is operated for DOE by Battelle Memorial Institute under contract DE-AC05-76RL01830. Dr. Calvin is currently detailed to the National Aeronautics and Space Administration. Dr. Calvin’s contributions to this article occurred prior to her detail. The views expressed are her own and do not necessarily represent the views of the National Aeronautics and Space Administration or the United States Government. We extend our sincere appreciation to Matthew Binsted and Page Kyle for their invaluable contributions.</p>
