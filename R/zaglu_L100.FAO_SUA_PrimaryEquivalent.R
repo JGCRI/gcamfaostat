@@ -187,13 +187,13 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     # 2.1 Helper functions for SUA primary equivalent aggregation ----
 
 
-    #' Get extraction rate
-    #' @description Gross extraction rate is calculated for domestic, traded, and lagged values.
-    #' By gross, it means sink items are aggregated.
-    #' The function is used in Proc_primarize.
-    #' @param DF_CURR_NEST Input supply-utilization accounting data frame with one tier of processing
-    #' @param DF_ALL Input supply-utilization accounting data frame with ALL the data
-    #' @return A data frame including regional, traded, and world extraction rates of a processing
+    # Get extraction rate
+    # @description Gross extraction rate is calculated for domestic, traded, and lagged values.
+    # By gross, it means sink items are aggregated.
+    # The function is used in Proc_primarize.
+    # @param DF_CURR_NEST Input supply-utilization accounting data frame with one tier of processing
+    # @param DF_ALL Input supply-utilization accounting data frame with ALL the data
+    # @return A data frame including regional, traded, and world extraction rates of a processing
 
     Get_GROSS_EXTRACTION_RATE <- function(DF_CURR_NEST, DF_ALL) {
       curr_sink_items = unique(DF_CURR_NEST$item_code)
@@ -248,10 +248,10 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     }
 
 
-    #' Separate the SUA balance into domestic and imported balanced for sink_item
-    #' @description The function is used in Proc_primarize
-    #' @param DF_CURR_NEST Input supply-utilization accounting data frame with one tier of processing
-    #' @return SUA DF
+    # Separate the SUA balance into domestic and imported balanced for sink_item
+    # @description The function is used in Proc_primarize
+    # @param DF_CURR_NEST Input supply-utilization accounting data frame with one tier of processing
+    # @return SUA DF
 
     Get_ARMINGTON_BALANCE <- function(DF_CURR_NEST) {
       Import_Demand_Item <- factor(c("Food", "Feed", "Processed", "Other uses", "Seed", "Loss"), levels=All_Bal_element)
@@ -308,11 +308,11 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     }
 
 
-    #' Separate the domestic SUA balance into current and lagged balanced for sink_item
-    #' @description The function is used in Proc_primarize
-    #' @param DF_CURR_NEST_TradeAdj Output from Get_ARMINGTON_BALANCE. Input supply-utilization accounting data frame with one tier of processing and
-    #' @param .SINK_ITEM Sink items or processed items in the processing
-    #' @return SUA DF
+    # Separate the domestic SUA balance into current and lagged balanced for sink_item
+    # @description The function is used in Proc_primarize
+    # @param DF_CURR_NEST_TradeAdj Output from Get_ARMINGTON_BALANCE. Input supply-utilization accounting data frame with one tier of processing and
+    # @param .SINK_ITEM Sink items or processed items in the processing
+    # @return SUA DF
 
     Get_STOCK_BALANCE <- function(DF_CURR_NEST_TradeAdj) {
       Opening_Stock_Item <- factor(c("Food", "Feed", "Processed", "Other uses", "Seed", "Loss"), levels=All_Bal_element)
@@ -380,9 +380,9 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     }
 
 
-    #' Primary equivalent aggregation
-    #' @param DF_ALL Input supply-utilization accounting data frame with all levels of data nested which need to be primarized
-    #' @return A supply-utilization accounting data frame with all levels processed and aggregated to GCAM_commodity
+    # Primary equivalent aggregation
+    # @param DF_ALL Input supply-utilization accounting data frame with all levels of data nested which need to be primarized
+    # @return A supply-utilization accounting data frame with all levels processed and aggregated to GCAM_commodity
 
     Proc_primarize <- function(DF_ALL){
       MaxNest = max(DF_ALL$nest_level)

@@ -19,3 +19,8 @@ coverage.R
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^.drake/
+^tests/testthat/.drake/
+^inst/extdata/aglu/FAO/FAOSTAT_Archive/
+^inst/extdata/aglu/FAO/FAOSTAT/*.zip
+^.github

@@ -229,7 +229,8 @@ FF_rawdata_info <- function(
            grepl("zip$", filelocation)) %>%
     transmute(filelocation = basename(filelocation),
               ctime = as.Date(ctime), mtime = as.Date(mtime),
-              localfilesize = utils:::format.object_size(size, "MB", digits = 0)) %>%
+              #localfilesize = utils:::format.object_size(size, "MB", digits = 0),
+              localfilesize = paste0(round(size/10^6, digits = 0), " MB" )) %>%
     # Join the latest metadata
     # Note that FAO raw data had a typo (missing space) in Trade_CropsLivestock_E_All_Data_(Normalized).zip
     # Temporary fix here
