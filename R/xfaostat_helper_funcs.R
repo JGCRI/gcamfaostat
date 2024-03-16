@@ -96,7 +96,7 @@ FF_download_FAOSTAT <- function(DATASETCODE,
   assertthat::assert_that(is.character(DATASETCODE))
   assertthat::assert_that(is.character(DATA_FOLDER))
   assertthat::assert_that(OverWrite == TRUE|OverWrite == FALSE)
-  assertthat::assert_that(length(DATASETCODE) == 1, msg = "Single dataset allowed; consider using loop or the function FF_rawdata_info() for downloading multiple datasets")
+  assertthat::assert_that(length(DATASETCODE) == 1, msg = "Single dataset allowed; consider using a loop or the function FF_rawdata_info() for downloading multiple datasets")
 
   dir.create(DIR_RAW_DATA_FAOSTAT, showWarnings = F)
 
@@ -152,7 +152,7 @@ FF_download_RemoteArchive <-
     assertthat::assert_that(is.character(RemoteArchiveURL))
     assertthat::assert_that(is.character(DATA_FOLDER))
     assertthat::assert_that(OverWrite == TRUE|OverWrite == FALSE)
-    assertthat::assert_that(length(DATASETCODE) == 1, msg = "Single dataset allowed; consider using loop or the function FF_rawdata_info() for downloading multiple datasets")
+    assertthat::assert_that(length(DATASETCODE) == 1, msg = "Single dataset allowed; consider using a loop or the function FF_rawdata_info() for downloading multiple datasets")
 
     dir.create(DATA_FOLDER, showWarnings = F)
 
