@@ -113,7 +113,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Preparing data for gcamfaostat</h1>
             
-            <h4 data-toc-skip class="date">2024-04-03</h4>
+            <h4 data-toc-skip class="date">2024-04-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_preparing_data.Rmd" class="external-link"><code>vignettes/vignette_preparing_data.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_preparing_data.Rmd</code></div>
@@ -139,11 +139,16 @@ raw data and facilitate the processing.</p>
 <p>When <code>gcamfaostat</code> is downloaded, preprocessed FAOSTAT
 data, i.e., output of the <code>xfaostat_L101_RawDataPreProc*</code>
 modules, are stored in the <a href="https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda" class="external-link">Prebuilt
-Data</a> of the package. * The package can be run with using those data,
-but make sure <code>Process_Raw_FAO_Data &lt;- FALSE</code> in
-<code>constants.R</code>. * The prebuilt data were generated using
-FAOSTAT data archived in Zenodo address specified in the
-<code>FF_download_RemoteArchive</code> function <span class="citation">(Zhao 2023)</span>.</p>
+Data</a> of the package.</p>
+<ul>
+<li>The package can be run with using those data, but make sure
+<code>Process_Raw_FAO_Data &lt;- FALSE</code> in
+<code>constants.R</code>.<br>
+</li>
+<li>The prebuilt data were generated using FAOSTAT data archived in
+Zenodo address specified in the <code>FF_download_RemoteArchive</code>
+function <span class="citation">(Zhao 2023)</span>.</li>
+</ul>
 <div class="section level3">
 <h3 id="get-the-latest-faostat-metadata">1. Get the latest FAOSTAT Metadata<a class="anchor" aria-label="anchor" href="#get-the-latest-faostat-metadata"></a>
 </h3>
