@@ -22,7 +22,8 @@ knitr::opts_chunk$set(
 The `gcamfaostat` tool is designed to streamline the processing and synthesis of raw data sourced from [FAOSTAT](https://www.fao.org/faostat/en/#data). The initial phase of this process involves data procurement, with a critical awareness of FAOSTAT's ongoing data updates. These updates encompass a spectrum of improvements, including, e.g., the addition of historical data for new countries and items, data completion for previously missing entries, and refinements such as changes in country nomenclature. This dynamic data landscape underscores the need for a robust and adaptable approach in the `gcamfaostat` workflow. Here we describe a few key functions in `gcamdatafaostat` created to procure the raw data and facilitate the processing.
 
 When `gcamfaostat` is downloaded, preprocessed FAOSTAT data, i.e., output of the `xfaostat_L101_RawDataPreProc*` modules, are stored in the [Prebuilt Data](https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda) of the package. 
-* The package can be run with using those data, but make sure `Process_Raw_FAO_Data <- FALSE` in `constants.R`. 
+
+* The package can be run with using those data, but make sure `Process_Raw_FAO_Data <- FALSE` in `constants.R`.  
 * The prebuilt data were generated using FAOSTAT data archived in Zenodo address specified in the `FF_download_RemoteArchive` function [@xin_zhao_2023_8260225].
 
 

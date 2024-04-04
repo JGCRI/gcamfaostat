@@ -58,13 +58,16 @@ As an illustrative example, the first tier comprises 168 commodities, generated 
 As gcamfaostat is built upon the foundation of `gcamdata` and leverages the powerful drake framework, inheriting functions designed for tracking data flows. In the following, we will delve into several key features that exemplify the strengths of this integration. 
 
 [`info`](https://jgcri.github.io/gcamfaostat/reference/info.html) 
+
 * The function returns information of an object, including name, metadata information, precursors and dependents.
 
 [`dstrace`](https://jgcri.github.io/gcamfaostat/reference/dstrace.html)
+
 * The function is able to trace data flows by providing precursors and dependents of an object recursively.
 
 [`load_from_cache`](https://jgcri.github.io/gcamfaostat/reference/load_from_cache.html)
-*	If a drake cache is available, e.g., when `driver_drake()` had been run, this function, if given a list of object names, loads the objects from the cache into a list of data frames.  
+
+*	If a drake cache is available, e.g., when `driver_drake()` had been run, this function, if given a list of object names, loads the objects from the cache into a list of data frames.   
 *	The function [`get_data_list`](https://jgcri.github.io/gcamfaostat/reference/get_data_list.html) can be used to assign each object in the list to a data frame.  
 
 
