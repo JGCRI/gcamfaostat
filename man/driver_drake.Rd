@@ -12,7 +12,7 @@ driver_drake(
   return_data_names = union(inputs_of(return_inputs_of), outputs_of(return_outputs_of)),
   return_data_map_only = FALSE,
   return_plan_only = FALSE,
-  write_xml = !return_data_map_only,
+  write_xml = FALSE,
   xmldir = XML_DIR,
   quiet = FALSE,
   user_modifications = NULL,

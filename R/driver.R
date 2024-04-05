@@ -500,8 +500,8 @@ driver_drake <- function(
     return_data_names <- union(inputs_of(return_inputs_of), outputs_of(return_outputs_of))
   }
 
-  optional <- input <- from_file <- name <- to_xml <- data_mod <- output <- . <-
-    PREBUILT_DATA <-NULL    # silence notes from package check.
+  optional <- input <- from_file <- name <- to_xml <- data_mod <- output <- . <- NULL
+   # silence notes from package check.
 
   assert_that(is.null(stop_before) | is.character(stop_before))
   assert_that(is.null(stop_after) | is.character(stop_after))
@@ -512,6 +512,8 @@ driver_drake <- function(
   assert_that(is.logical(return_plan_only))
   assert_that(is.logical(write_xml))
   assert_that(is.logical(quiet))
+  # PREBUILT_DATA cannot be NULL
+  assert_that(!is.null(PREBUILT_DATA), msg = "PREBUILT_DATA is NULL")
 
   # we need to use package data to set this in effect in such a way that drake does not notice
   # and think all XML files need to be rebuilt with the suffix
@@ -757,6 +759,7 @@ driver_drake <- function(
 
   # Separate plan for prebuilt_data -- we will track each name and clear the cache for it's chunk if
   # there are any changes
+
   prebuilt_data_plan <- tibble(target = names(PREBUILT_DATA)) %>%
     mutate(command = paste0(PACKAGE_NAME, "::PREBUILT_DATA[['", target, "']]"),
            target = paste0("PREBUILT_", target))
