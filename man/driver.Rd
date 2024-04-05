@@ -12,7 +12,7 @@ driver(
   return_outputs_of = stop_after,
   return_data_names = union(inputs_of(return_inputs_of), outputs_of(return_outputs_of)),
   return_data_map_only = FALSE,
-  write_outputs = !return_data_map_only,
+  write_outputs = FALSE,
   write_xml = write_outputs,
   outdir = OUTPUTS_DIR,
   xmldir = XML_DIR,
