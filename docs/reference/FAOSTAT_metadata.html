@@ -95,7 +95,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">FAOSTAT_metadata</span><span class="op">(</span>code <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">FAOSTAT_metadata</span><span class="op">(</span>code <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -113,20 +113,23 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">FAOSTAT_metadata</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> function (code = NULL) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     FAOxml &lt;- XML::xmlParse(xml2::read_xml("http://fenixservices.fao.org/faostat/static/bulkdownloads/datasets_E.xml"))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     metadata &lt;- XML::xmlToDataFrame(FAOxml, stringsAsFactors = FALSE)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     names(metadata) &lt;- tolower(gsub("\\.", "_", names(metadata)))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     metadata["CB" == metadata[, "datasetcode"], "filelocation"] &lt;- "https://fenixservices.fao.org/faostat/static/bulkdownloads/CommodityBalances_(non-food)_E_All_Data_(Normalized).zip"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     if (!is.null(code)) {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         metadata &lt;- metadata[code == metadata[, "datasetcode"], </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             ]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     return(metadata)</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">FAOSTAT_metadata</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> function (code = NULL){</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   FAOxml &lt;- XML::xmlParse(xml2::read_xml("http://fenixservices.fao.org/faostat/static/bulkdownloads/datasets_E.xml"))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   metadata &lt;- XML::xmlToDataFrame(FAOxml, stringsAsFactors = FALSE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   names(metadata) &lt;- tolower(gsub("\\.", "_", names(metadata)))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   # Bug fix for CB; can remove later if FAOSTAT update the link later</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   metadata["CB" == metadata[, "datasetcode"],"filelocation"] &lt;-</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     "https://fenixservices.fao.org/faostat/static/bulkdownloads/CommodityBalances_(non-food)_E_All_Data_(Normalized).zip"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   if (!is.null(code)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     metadata &lt;- metadata[code == metadata[, "datasetcode"],]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   return(metadata)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x000000002cfcd4c8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x0000000042a70840&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: namespace:gcamfaostat&gt;</span>
 </code></pre></div>
     </div>

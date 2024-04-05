@@ -15,6 +15,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+2023-2-11
+
+* Update trade related figures in [Cast Study](https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html#faostat-raw-data-and-processing-output-updates)
+
 2023-1-28
 
 * The first version of gcamfaostat is still being processed/reviewed at JOSS

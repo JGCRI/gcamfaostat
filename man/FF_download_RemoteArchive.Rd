@@ -12,7 +12,7 @@ FF_download_RemoteArchive(
 )
 }
 \arguments{
-\item{DATASETCODE}{Dataset code in FAO metadata, e.g., QCL is the production dataset.}
+\item{DATASETCODE}{Single dataset code in FAO metadata, e.g., QCL is the production dataset.}
 
 \item{RemoteArchiveURL}{Zenodo URL, default (GCAM v7) = "https://zenodo.org/record/8260225/files/"}
 

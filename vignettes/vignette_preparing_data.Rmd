@@ -22,7 +22,8 @@ knitr::opts_chunk$set(
 The `gcamfaostat` tool is designed to streamline the processing and synthesis of raw data sourced from [FAOSTAT](https://www.fao.org/faostat/en/#data). The initial phase of this process involves data procurement, with a critical awareness of FAOSTAT's ongoing data updates. These updates encompass a spectrum of improvements, including, e.g., the addition of historical data for new countries and items, data completion for previously missing entries, and refinements such as changes in country nomenclature. This dynamic data landscape underscores the need for a robust and adaptable approach in the `gcamfaostat` workflow. Here we describe a few key functions in `gcamdatafaostat` created to procure the raw data and facilitate the processing.
 
 When `gcamfaostat` is downloaded, preprocessed FAOSTAT data, i.e., output of the `xfaostat_L101_RawDataPreProc*` modules, are stored in the [Prebuilt Data](https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda) of the package. 
-* The package can be run with using those data, but make sure `Process_Raw_FAO_Data <- FALSE` in `constants.R`. 
+
+* The package can be run with using those data, but make sure `Process_Raw_FAO_Data <- FALSE` in `constants.R`.  
 * The prebuilt data were generated using FAOSTAT data archived in Zenodo address specified in the `FF_download_RemoteArchive` function [@xin_zhao_2023_8260225].
 
 
@@ -73,15 +74,38 @@ Note that if Exist_Prebuilt is `TRUE` for a dataset, it suggests the raw data wa
  
 Two functions above are created for downloading the raw data from a remote archive or the FAOSTAT API (latest data). The dataset code variable in the two functions, if including all, can be generated using `gcamfaostat_metadata(OnlyReturnDatasetCodeRequired = T)`. 
 
+Example:
+``` {r, eval =FALSE}
+# Dataset PP, producer prices, is downloaded from RemoteArchiveURL to DATA_FOLDER
+# RemoteArchiveURL = "https://zenodo.org/record/8260225/files/"
+# DATA_FOLDER = "inst/extdata/aglu/FAO/FAOSTAT"
+FF_download_RemoteArchive( 
+  DATASETCODE = "PP",   
+  OverWrite = TRUE     # overwrite existing PP dataset 
+  )
+
+# Dataset OA, population, is downloaded from FAOSTAT to DATA_FOLDER
+FF_download_FAOSTAT(DATASETCODE = "OA", OverWrite = TRUE)
+
+# Note that single DATASETCODE is allowed in both functions. 
+```
 
 ### 4. Check local raw data info
 
 [`FF_rawdata_info()`](https://jgcri.github.io/gcamfaostat/reference/FF_rawdata_info.html)  
 
-* Providing more detailed metadata information, similar to `gcamfaostat_metadata`(which calls `FF_rawdata_info`).  
+* Providing more detailed metadata information, similar to `gcamfaostat_metadata` (which calls `FF_rawdata_info`).  
 * Indicate whether an update from FAOSTAT is potentially needed.
 * Can be used to download data if not exist.
 
+Example:
+``` {r, eval =FALSE}
+# Provide detailed metadata of "PP" and "OA" in DATA_FOLDER ("inst/extdata/aglu/FAO/FAOSTAT")
+FF_rawdata_info(DATASETCODE = c("PP", "OA"), DOWNLOAD_NONEXIST = FALSE)
+
+# If "PP" or "OA" does not exist, download from remote archive
+FF_rawdata_info(DATASETCODE = c("PP", "OA"), DOWNLOAD_NONEXIST = TRUE, FAOSTAT_or_Archive = "Archive")
+```
 
 ### 5. Load raw data into package  
 
@@ -89,6 +113,12 @@ Two functions above are created for downloading the raw data from a remote archi
 
 * Loading FAOSTAT raw data, e.g., used in `xfaostat_L191_RawDataPreProc*` modules. 
 * Note that `.` in column name is substituted with `_`.
+
+Example:
+``` {r, eval =FALSE}
+# Read raw data of "PP" and "OA" from DATA_FOLDER ("inst/extdata/aglu/FAO/FAOSTAT") to .GlobalEnv
+FAOSTAT_load_raw_data(DATASETCODE = c("PP", "OA"), .Envir = .GlobalEnv)
+```
 
 ### 6. Update the Prebulit data
 

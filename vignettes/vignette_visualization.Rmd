@@ -64,7 +64,7 @@ World supply utilization accounts for key commodities based on the 2013 – 2017
 
 ## Trade flows
 
-![World bilateral trade flow in 2020. The world total trade was 198 million tonnes.](../man/figures/Fig_WheatTrade2020.png){width=100%}
+![World bilateral trade flow in 2021. The world total trade was 199 million tonnes.](../man/figures/Fig_WheatTrade2021.png){width=100%}
 
 ***
 

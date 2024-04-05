@@ -11,7 +11,7 @@ FF_download_FAOSTAT(
 )
 }
 \arguments{
-\item{DATASETCODE}{Dataset code in FAO metadata, e.g., QCL is the production dataset.}
+\item{DATASETCODE}{Single dataset code in FAO metadata, e.g., QCL is the production dataset.}
 
 \item{DATA_FOLDER}{Destination folder for storing raw data}
 

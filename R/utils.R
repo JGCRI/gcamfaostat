@@ -35,7 +35,7 @@ utils::globalVariables(c(
   "FAO_an_items_PRODSTAT", "FAOupdate", "GCAM_AgLU_SUA_APE_1973_2019",
   "GCAM_DATA_MAP", "GCAM_commodity", "GCAM_region_names", "GCAM_subsector",
   "Localupdate", "TM", "Tourist", "consumption", "datasetname", "localfilesize",
-  "moving_avg", "remotefilezize", "unit"))
+  "moving_avg", "remotefilezize", "unit", "Tourist consumption", "xml.XML_SUFFIX"))
 
 #' find_header
 #'

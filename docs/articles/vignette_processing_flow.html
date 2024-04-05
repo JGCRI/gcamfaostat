@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>gcamfaostat data processing</h1>
             
-            <h4 data-toc-skip class="date">2023-11-10</h4>
+            <h4 data-toc-skip class="date">2024-04-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_processing_flow.Rmd" class="external-link"><code>vignettes/vignette_processing_flow.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_processing_flow.Rmd</code></div>
@@ -210,18 +210,26 @@ and leverages the powerful drake framework, inheriting functions
 designed for tracking data flows. In the following, we will delve into
 several key features that exemplify the strengths of this
 integration.</p>
-<p><a href="https://jgcri.github.io/gcamfaostat/reference/info.html"><code>info</code></a>
-* The function returns information of an object, including name,
-metadata information, precursors and dependents.</p>
-<p><a href="https://jgcri.github.io/gcamfaostat/reference/dstrace.html"><code>dstrace</code></a>
-* The function is able to trace data flows by providing precursors and
-dependents of an object recursively.</p>
-<p><a href="https://jgcri.github.io/gcamfaostat/reference/load_from_cache.html"><code>load_from_cache</code></a>
-* If a drake cache is available, e.g., when <code><a href="../reference/driver_drake.html">driver_drake()</a></code>
-had been run, this function, if given a list of object names, loads the
-objects from the cache into a list of data frames.<br>
-* The function <a href="https://jgcri.github.io/gcamfaostat/reference/get_data_list.html"><code>get_data_list</code></a>
-can be used to assign each object in the list to a data frame.</p>
+<p><a href="https://jgcri.github.io/gcamfaostat/reference/info.html"><code>info</code></a></p>
+<ul>
+<li>The function returns information of an object, including name,
+metadata information, precursors and dependents.</li>
+</ul>
+<p><a href="https://jgcri.github.io/gcamfaostat/reference/dstrace.html"><code>dstrace</code></a></p>
+<ul>
+<li>The function is able to trace data flows by providing precursors and
+dependents of an object recursively.</li>
+</ul>
+<p><a href="https://jgcri.github.io/gcamfaostat/reference/load_from_cache.html"><code>load_from_cache</code></a></p>
+<ul>
+<li>If a drake cache is available, e.g., when
+<code><a href="../reference/driver_drake.html">driver_drake()</a></code> had been run, this function, if given a list
+of object names, loads the objects from the cache into a list of data
+frames.<br>
+</li>
+<li>The function <a href="https://jgcri.github.io/gcamfaostat/reference/get_data_list.html"><code>get_data_list</code></a>
+can be used to assign each object in the list to a data frame.</li>
+</ul>
 </div>
 <div class="section level3">
 <h3 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
@@ -279,10 +287,9 @@ can be used to assign each object in the list to a data frame.</p>
 <code class="sourceCode R"><span class="co"># Not evaluated for convenience </span>
 <span class="co"># Load gcamfaostat</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span> 
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span> 
 
 <span class="co"># Load FAO_items from cache</span>
-<span class="fu"><a href="../reference/load_from_cache.html">load_from_cache</a></span><span class="op">(</span><span class="st">"aglu/FAO/FAO_items"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">first</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">FAO_items</span>
+<span class="fu"><a href="../reference/load_from_cache.html">load_from_cache</a></span><span class="op">(</span><span class="st">"aglu/FAO/FAO_items"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">first</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">FAO_items</span>
 <span class="co"># Print</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">FAO_items</span><span class="op">)</span>
 
