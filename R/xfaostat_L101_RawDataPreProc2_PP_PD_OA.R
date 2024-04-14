@@ -21,6 +21,7 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
     c(FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Prices_E_All_Data_Normalized",
       FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Deflators_E_All_Data_Normalized",
       FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Population_E_All_Data_Normalized",
+      FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Investment_CapitalStock_E_All_Data_Normalized",
       FILE = "aglu/FAO/FAOSTAT/Other_supplementary/GDP_deflator_Taiwan",
       "QCL_area_code_map")
 
@@ -28,7 +29,8 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
     MODULE_OUTPUTS <-
     c("PP_wide",          # Producer prices
       "PD",               # GDP deflator
-      "OA")               # Population
+      "OA",               # Population
+      "CS")               # Capital stock
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -52,6 +54,7 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
       PP_wide <- extract_prebuilt_data("PP_wide")
       PD <- extract_prebuilt_data("PD")
       OA <- extract_prebuilt_data("OA")
+      CS <- extract_prebuilt_data("CS")
 
     } else {
 
@@ -216,6 +219,43 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
       OA
 
     verify_identical_prebuilt(OA)
+
+    # *[CS]: Capital stock ----
+
+    FAOSTAT_load_raw_data(DATASETCODE = "CS", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT, .Envir = Curr_Envir)
+
+    CS %>% distinct(element, element_code)
+    CS %>% distinct(item, item_code)
+    # check area mapping
+    CS %>% filter(area_code < 400) %>%
+      distinct(area, area_code) %>% full_join(QCL_area_code_map, by = c("area_code")) -> A
+
+
+    CS %>% filter(area_code %in% QCL_area_code,
+                  # only keep regions with production
+                  element_code == 6184 # Value US$, 2015 prices
+                  )  %>%
+      select(area_code,
+             area,
+             item_code,
+             item,
+             element_code,
+             element,
+             year,
+             value,
+             unit) %>%
+      rm_accent("item", "area") -> CS1
+
+    ### output OA ----
+    CS1 %>%
+      add_title("FAO capiral stock") %>%
+      add_units("2015 USD") %>%
+      add_comments("Preprocessed FAO CS")  %>%
+      add_precursors("aglu/FAO/FAOSTAT/Investment_CapitalStock_E_All_Data_(Normalized)") ->
+      CS
+
+    verify_identical_prebuilt(CS)
+
     }
 
     return_data(MODULE_OUTPUTS)

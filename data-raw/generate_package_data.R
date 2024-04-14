@@ -46,9 +46,10 @@ prebuilt_data_names <- c(
     "QCL_area_code_map"), # Country code
 
   # outputs of module_xfaostat_L101_RawDataPreProc2_PP_PD_OA
-  c("PP_wide",            # Producer prices
-    "PD",                 # GDP deflator
-    "OA"),                # Population
+  c("PP_wide",          # Producer prices
+    "PD",               # GDP deflator
+    "OA",               # Population
+    "CS"),              # Capital stock
 
   # outputs of module_xfaostat_L101_RawDataPreProc3_SCL_FBS
   c("SCL_wide",           # Supply utilization accounting

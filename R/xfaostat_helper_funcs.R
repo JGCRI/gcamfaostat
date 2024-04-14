@@ -28,7 +28,8 @@ gcamfaostat_metadata <- function(.DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
       "RFN",          # Fertilizer by nutrient
       "RL",           # Land Use
       "FO",           # Forest production and trade
-      "OA"            # Population
+      "OA",           # Population
+      "CS"            # Capital stock
     )
 
   if (OnlyReturnDatasetCodeRequired == T) {
