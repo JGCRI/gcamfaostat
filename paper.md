@@ -11,16 +11,16 @@ authors:
   name: Pralit Patel
   orcid: 0000-0003-3992-1061
 - affiliation: 1
-  name: Marshall A. Wise
+  name: Marshall Wise
   orcid: 0000-0002-2718-0051
 - affiliation: 1
-  name: Katherine V. Calvin 
+  name: Katherine Calvin 
   orcid: 0000-0003-2191-4189
 - affiliation: 1
   name: Kanishka Narayan
   orcid: 0000-0001-8483-6216
 - affiliation: 1
-  name: Christopher R. Vernon
+  name: Christ Vernon
   orcid: 0000-0002-3406-6214
 date: "04 April 2024"
 output: pdf_document
