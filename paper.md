@@ -20,7 +20,7 @@ authors:
   name: Kanishka Narayan
   orcid: 0000-0001-8483-6216
 - affiliation: 1
-  name: Christ Vernon
+  name: Chris Vernon
   orcid: 0000-0002-3406-6214
 date: "04 April 2024"
 output: pdf_document
