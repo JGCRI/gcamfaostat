@@ -241,6 +241,12 @@
     <loc>https://jgcri.github.io/gcamfaostat/reference/module_aglu_L100.FAO_SUA_connection.html</loc>
   </url>
   <url>
+    <loc>https://jgcri.github.io/gcamfaostat/reference/module_aglu_L100.FAO_preprocessing_OtherData.html</loc>
+  </url>
+  <url>
+    <loc>https://jgcri.github.io/gcamfaostat/reference/module_aglu_L110.For_FAO_R_Y.html</loc>
+  </url>
+  <url>
     <loc>https://jgcri.github.io/gcamfaostat/reference/module_xfaostat_L101_RawDataPreProc1_QCL.html</loc>
   </url>
   <url>
@@ -280,9 +286,6 @@
     <loc>https://jgcri.github.io/gcamfaostat/reference/module_xfaostat_L106_FoodMacroNutrient.html</loc>
   </url>
   <url>
-    <loc>https://jgcri.github.io/gcamfaostat/reference/module_xfaostat_L199_CSVExportAgSUA.html</loc>
-  </url>
-  <url>
     <loc>https://jgcri.github.io/gcamfaostat/reference/module_xfaostat_L201_Forestry.html</loc>
   </url>
   <url>
@@ -290,6 +293,9 @@
   </url>
   <url>
     <loc>https://jgcri.github.io/gcamfaostat/reference/module_xfaostat_L401_Fertilizer.html</loc>
+  </url>
+  <url>
+    <loc>https://jgcri.github.io/gcamfaostat/reference/module_xfaostat_L999_CSVExport.html</loc>
   </url>
   <url>
     <loc>https://jgcri.github.io/gcamfaostat/reference/normalize_files.html</loc>
