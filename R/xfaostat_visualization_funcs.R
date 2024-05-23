@@ -1,5 +1,78 @@
 
 
+
+#' chord_wrapper: a wrapper function of the chordDiagram function
+#' Title
+#'
+#' @param .DF Input data frame.
+#' @param .FigTitle Figure title
+#' @param .SaveDir The directory for saving the plot; the default is man/figures.
+#' @param .GRIDCOLOR Colors of grid; consider using circlize::rand_color function
+#' @param .ORDER Order of the gird
+#' @param .SaveName Name of the saved file in .SaveDir
+#' @param .SaveScaler A scaler controling the size (dpi = 600)
+#' @importFrom grDevices dev.off png
+#'
+#' @return A saved plot in .SaveDir
+#' @export
+
+
+chord_wrapper <- function(.DF,
+                          .FigTitle = NULL,
+                          .SaveDir = "../man/figures",
+                          .GRIDCOLOR = NULL,
+                          .ORDER = NULL,
+                          .SaveName,
+                          .SaveScaler = 1){
+
+  # treemap save to a path
+  png(filename= file.path(.SaveDir, paste0(.SaveName,".png")), res = 600,
+      width= 7000 * .SaveScaler, height= 7000 * .SaveScaler )
+
+
+  chordDiagram(as.data.frame(.DF),
+               transparency = 0.5,
+               directional = 1,
+               direction.type = c("diffHeight", "arrows"),
+               diffHeight = -uh(2, "mm")
+               ,link.arr.type = "big.arrow"
+               ,annotationTrack = c("grid")
+               ,grid.col = .GRIDCOLOR
+               ,order = .ORDER
+               ,preAllocateTracks = list(list(track.height = c(0.3))
+                                         ,list(track.height = c(0.035))
+               ))
+
+  title(main = .FigTitle)
+
+  circos.track(track.index = 3, panel.fun = function(x, y) {
+    circos.axis(h = 1, labels.cex = 0.8)
+  }, bg.border = NA)
+
+  circos.track(track.index = 1, panel.fun = function(x, y) {
+    xlim = get.cell.meta.data("xlim")
+    xplot = get.cell.meta.data("xplot")
+    ylim = get.cell.meta.data("ylim")
+    sector.name = get.cell.meta.data("sector.index")
+
+    #make text label vertical when space is too small; cex to adjust font size
+
+    if(abs(xplot[2] - xplot[1]) < 20 | abs(xplot[2] - xplot[1]) > 340) {
+      circos.text(mean(xlim), ylim[1], sector.name, facing = "clockwise",
+                  niceFacing = TRUE, adj = c(0, 0.5), col = "black",
+                  cex = 1)
+    } else {
+      circos.text(mean(xlim), ylim[1], sector.name, facing = "inside",
+                  niceFacing = TRUE, adj = c(0.5, 0), col= "black",
+                  cex = 1)
+    }  }, bg.border = NA)
+
+  dev.off() #dump
+
+  circos.clear()
+}
+
+
 #' treemap_wrapper: a warpper function of the treemap function
 #'
 #' @param .DF  Input data frame. The data frame needs to include index columns (need to be first columns) and a value column.

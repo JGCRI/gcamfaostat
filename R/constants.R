@@ -9,6 +9,11 @@ Process_Raw_FAO_Data <- FALSE
 # If TRUE, CSV will be generated and saved to DIR_OUTPUT_CSV
 OUTPUT_Export_CSV <- FALSE
 
+DISABLED_MODULES <-
+  c("aglu_L100.FAO_SUA_PrimaryEquivalent",
+    "aglu_L100.FAO_SUA_connection",
+    "aglu_L100.FAO_preprocessing_OtherData",
+    "aglu_L110.For_FAO_R_Y")
 
 # Directories ----
 
@@ -98,7 +103,7 @@ COMMENT_CHAR             <- "#"
 UNDER_TIMESHIFT          <- FALSE
 YEAR_PATTERN             <- "^(1|2)[0-9]{3}$"   # a 1 or 2 followed by three digits, and nothing else
 LOGIT_TYPE_COLNAME       <- "logit.type"        # will be removed by test code before old-new comparison
-DISABLED_MODULES         <- "NONE"
+
 
 
 # Flags ======================================================================
