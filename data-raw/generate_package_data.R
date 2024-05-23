@@ -64,7 +64,7 @@ prebuilt_data_names <- c(
   c("TM_bilateral_wide"), # Bilateral trade
 
   # outputs of  module_xfaostat_L101_RawDataPreProc7_FO
-  c("FO_Roundwood"),      # Forestry data
+  c("FO_RoundwoodProducts"),      # Forestry data
 
   # outputs of module_xfaostat_L101_RawDataPreProc8_RL_RFN
   c("RL",                 # Land

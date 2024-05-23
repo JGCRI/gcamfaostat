@@ -18,9 +18,9 @@
 module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(OPTIONAL_FILE = "aglu/FAO/FAOSTAT/Prices_E_All_Data_(Normalized)_PalceHolder",
-      OPTIONAL_FILE = "aglu/FAO/FAOSTAT/Deflators_E_All_Data_(Normalized)_PalceHolder",
-      OPTIONAL_FILE = "aglu/FAO/FAOSTAT/Population_E_All_Data_(Normalized)_PalceHolder",
+    c(FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Prices_E_All_Data_Normalized",
+      FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Deflators_E_All_Data_Normalized",
+      FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Population_E_All_Data_Normalized",
       FILE = "aglu/FAO/FAOSTAT/Other_supplementary/GDP_deflator_Taiwan",
       "QCL_area_code_map")
 
@@ -125,7 +125,7 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
       add_units("USD/tonne") %>%
       add_comments("Preprocessed FAOSTAT producer prices") %>%
       add_precursors("QCL_area_code_map",
-                     "aglu/FAO/FAOSTAT/Prices_E_All_Data_(Normalized)_PalceHolder") ->
+                     "aglu/FAO/FAOSTAT/Prices_E_All_Data_Normalized") ->
       PP_wide
     verify_identical_prebuilt(PP_wide)
 
@@ -140,7 +140,7 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
     PD %>% distinct(item, item_code)
 
     PD %>% filter(
-      year %in% FAOSTAT_Hist_Year,
+      year >= min(FAOSTAT_Hist_Year),
       area_code < 350,
       area_code %in% QCL_area_code,
       # only keep regions with production
@@ -178,7 +178,7 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
       add_units("Unitless") %>%
       add_comments("Preprocessed FAOSTAT regional gdp deflators") %>%
       add_precursors("QCL_area_code_map",
-                     "aglu/FAO/FAOSTAT/Deflators_E_All_Data_(Normalized)_PalceHolder",
+                     "aglu/FAO/FAOSTAT/Deflators_E_All_Data_Normalized",
                      "aglu/FAO/FAOSTAT/Other_supplementary/GDP_deflator_Taiwan") ->
       PD
 
@@ -211,8 +211,8 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
     OA1 %>%
       add_title("FAO population") %>%
       add_units("tonne") %>%
-      add_comments("Preprocessed FAO OA") %>%
-      add_precursors("aglu/FAO/FAOSTAT/Population_E_All_Data_(Normalized)_PalceHolder") ->
+      add_comments("Preprocessed FAO OA")  %>%
+      add_precursors("aglu/FAO/FAOSTAT/Population_E_All_Data_Normalized") ->
       OA
 
     verify_identical_prebuilt(OA)

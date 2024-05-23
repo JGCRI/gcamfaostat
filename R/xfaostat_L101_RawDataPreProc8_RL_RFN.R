@@ -18,8 +18,8 @@
 module_xfaostat_L101_RawDataPreProc8_RL_RFN <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(OPTIONAL_FILE = "aglu/FAO/FAOSTAT/Inputs_LandUse_E_All_Data_(Normalized)_PalceHolder",
-      OPTIONAL_FILE = "aglu/FAO/FAOSTAT/Inputs_FertilizersNutrient_E_All_Data_(Normalized)_PalceHolder")
+    c(FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Inputs_LandUse_E_All_Data_Normalized",
+      FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Inputs_FertilizersNutrient_E_All_Data_Normalized")
 
   MODULE_OUTPUTS <-
     c("RL",                # Land
@@ -54,7 +54,7 @@ module_xfaostat_L101_RawDataPreProc8_RL_RFN <- function(command, ...) {
       FAOSTAT_load_raw_data(DATASETCODE = "RL", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT, .Envir = Curr_Envir)
 
       RL %>%
-        filter(year %in% FAOSTAT_Hist_Year,
+        filter(year >= min(FAOSTAT_Hist_Year),
                area_code < 350,       # Rm aggregated area
                item_code %in% c(6621, 6630, 6640)) ->  # Keep Arable land, Temporary crops, Fallow land
         RL
@@ -65,7 +65,7 @@ module_xfaostat_L101_RawDataPreProc8_RL_RFN <- function(command, ...) {
         add_title("FAO land data") %>%
         add_units("ha") %>%
         add_comments("FAO raw land data") %>%
-        add_precursors("aglu/FAO/FAOSTAT/Inputs_LandUse_E_All_Data_(Normalized)_PalceHolder") ->
+        add_precursors("aglu/FAO/FAOSTAT/Inputs_LandUse_E_All_Data_Normalized") ->
         RL
 
       verify_identical_prebuilt(RL)
@@ -87,7 +87,7 @@ module_xfaostat_L101_RawDataPreProc8_RL_RFN <- function(command, ...) {
         add_title("FAO fertilizer data") %>%
         add_units("t N") %>%
         add_comments("FAO raw fertilizer data") %>%
-        add_precursors("aglu/FAO/FAOSTAT/Inputs_FertilizersNutrient_E_All_Data_(Normalized)_PalceHolder") ->
+        add_precursors("aglu/FAO/FAOSTAT/Inputs_FertilizersNutrient_E_All_Data_Normalized") ->
         RFN
 
       verify_identical_prebuilt(RFN)

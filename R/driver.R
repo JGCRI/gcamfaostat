@@ -650,7 +650,10 @@ driver_drake <- function(
     chunks_to_run <- c(unfound_inputs$input, chunklist$name)
   }
 
-  dir.create(xmldir, showWarnings = FALSE, recursive = TRUE)
+  if (write_xml == TRUE) {
+    dir.create(xmldir, showWarnings = FALSE, recursive = TRUE)
+  }
+
 
   # Loop over each chunk and add a target for it and the command to build it
   # as appropriate for if it is just loading a FILE or running an actual chunk.
@@ -666,10 +669,16 @@ driver_drake <- function(
       # get the file details including if it was optional and the actual file name
       unfound_chunk = unfound_inputs[unfound_inputs$input == chunk, ]
       optional <- all(unfound_chunk$optional)
+      faostat <- all(unfound_chunk$faostat)
       fqfn <- find_csv_file(chunk, optional, quiet = TRUE)
       # add the chunk to the target list
       target <- c(target, make.names(chunk))
-      if(is.null(fqfn)) {
+
+      if (faostat == TRUE) {
+        # Setting to always missing for now
+         command <- c(command, paste0("list('", chunk, "' = missing_data())"))
+      }
+      else if(is.null(fqfn)) {
         assert_that(optional)
         # In the case of optional missing data just set it to missing with command:
         # `target <- list( chunk = missing_data() )`
@@ -704,6 +713,7 @@ driver_drake <- function(
       # different than in driver where we give `all_data`, again this is for drake so it
       # can match up target names to commands and develop the dependencies between them.
       nsprefix <- if_else(chunk %in% user_modifications, "", paste0(PACKAGE_NAME, ":::"))
+
       command <- c(command, paste0(nsprefix, chunk, "('", driver.MAKE, "', c(", paste(make.names(input_names), collapse = ","), "))"))
 
       # A chunk should in principle generate many output targets however drake assumes

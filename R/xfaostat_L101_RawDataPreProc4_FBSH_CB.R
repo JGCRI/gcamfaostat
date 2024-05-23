@@ -18,8 +18,8 @@
 module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(OPTIONAL_FILE = "aglu/FAO/FAOSTAT/FoodBalanceSheetsHistoric_E_All_Data_(Normalized)_PalceHolder",
-      OPTIONAL_FILE = "aglu/FAO/FAOSTAT/CommodityBalances_(non-food)_E_All_Data_(Normalized)_PalceHolder",
+    c(FAOSTAT_FILE = "aglu/FAO/FAOSTAT/FoodBalanceSheetsHistoric_E_All_Data_Normalized",
+      FAOSTAT_FILE = "aglu/FAO/FAOSTAT/CommodityBalances_(non-food)_E_All_Data_Normalized",
       "QCL_area_code_map")
 
   MODULE_OUTPUTS <-
@@ -85,6 +85,8 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
     ## *[CB] Non-food Balance ----
 
     FAOSTAT_load_raw_data("CB", .Envir = Curr_Envir)    # Old FBS-nonfood -2013
+
+    assertthat::assert_that(CB %>% pull(year) %>% max <= 2013)
 
     CB %>% distinct(element, element_code, unit)
     # Keep population (old)
@@ -181,8 +183,8 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
       add_title("FAO FBSH and CB, food and commodity balance before 2013, wide", overwrite = T) %>%
       add_units("1000 tonne") %>%
       add_comments("Preprocessed FAO FBSH_CB") %>%
-      add_precursors("aglu/FAO/FAOSTAT/FoodBalanceSheetsHistoric_E_All_Data_(Normalized)_PalceHolder",
-                     "aglu/FAO/FAOSTAT/CommodityBalances_(non-food)_E_All_Data_(Normalized)_PalceHolder",
+      add_precursors("aglu/FAO/FAOSTAT/FoodBalanceSheetsHistoric_E_All_Data_Normalized",
+                     "aglu/FAO/FAOSTAT/CommodityBalances_(non-food)_E_All_Data_Normalized",
                      "QCL_area_code_map") ->
       FBSH_CB_wide
 

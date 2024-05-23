@@ -19,7 +19,6 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
   MODULE_INPUTS <-
     c(FILE = "aglu/FAO/FAO_items",
-      FILE = "aglu/FAO/Mapping_FBSH_SCL_OilCake",
       "QCL_PROD",
       "QCL_AN_LIVEANIMAL_MEATEQ",
       "TCL_wide",
@@ -40,7 +39,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
     SCL_wide <- element_code <- element <- area_code <- item_code <- area <-
       item <- unit <- FBS_wide <- FBSH_CB_wide <- TCL_wide <- TM_bilateral_wide <-
-      QCL_PROD <- FAO_items <- tier <- QCL <- Mapping_FBSH_SCL_OilCake <- oil <-
+      QCL_PROD <- FAO_items <- tier <- QCL <- oil <-
       cake <- SCL_item_oil <- SCL_item_cake <- cake_rate <- cake_rate_world <-
       DS_key_coproduct_item <- Production <- Import <- Export <- DS_demand <-
       DS_production <- CoproductRate <- QCL_AN_LIVEANIMAL_MEATEQ <- `Closing stocks` <-
@@ -79,7 +78,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
 
     # Get area code in QCL that is consistent with FBS e.g., after 2010 only
-    QCL_PROD %>% filter(year %in% FAOSTAT_Hist_Year_FBS) %>%  distinct(area_code) %>% pull ->
+    QCL_PROD %>% filter(year >= min (FAOSTAT_Hist_Year_FBS)) %>%  distinct(area_code) %>% pull ->
       QCL_area_code_FBS
 
     ## 1.2. Get FAO supply-utilization SCL ready ----
@@ -143,8 +142,11 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
              element = replace(element, element == "Losses", "Loss"),
              element = replace(element, element == "Processing", "Processed")) %>%
       # convert units back to tonnes first since FBS originally used 1000 tons
-      mutate(value = value * 1000, unit = "tonnes")->
+      mutate(value = value * 1000, unit = "tonnes") ->
       FBS
+
+    # FBS has all needed elements in FBS_element_new
+    assertthat::assert_that(setdiff(SCL_element_new, unique(FBS$element)) == "Opening stocks")
 
     ## 1.6. Define balance elements ----
 
@@ -168,7 +170,6 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     # Update area code in QCL
     QCL_PROD %>% filter(year %in% FAOSTAT_Hist_Year_FBS) %>%  distinct(area_code) %>% pull ->
       QCL_area_code_FBS
-
 
     # 2. Create helper functions to simplify join by data set ----
 
@@ -467,99 +468,29 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
     assert_FBS_balance(.DF = Bal_new_tier4)
 
+
     ## 3.5 Bal_new_tier5 ----
-    # Tier5 includes 10 oilseed cake items that were omitted in FAOSTAT
-    # Note  key oilseed cake data are not currently provided by FAOSTAT after 2013.
-    # We extrapolate the data based on oil-cake rates in 2010 to 2013
+    #Tier7 includes 12 fish items from FBS and FBSH. Item code came from FBS as well
 
-    ### 3.5.1 Get oil cake production data based on cake rate from CB_FBS_CakeRate ----
-
-    # Get the mapping of oil and cake items between FBSH, CB and SCL
-    # read in already
-    #Mapping_FBSH_SCL_OilCake <- readr::read_csv(file.path("inst/extdata/aglu/FAO", "Mapping_FBSH_SCL_OilCake.csv"), comment = "#")
-
-    # The reference period is 2011: 2013 for cake rate calculation
-    # Merge oil and cake data
-    Mapping_FBSH_SCL_OilCake %>%
-      # Join oilseed oil production from FBSH in the reference periods
-      left_join(FBSH_CB %>% filter(year %in% 2011:2013, element == "Production") %>%
-                  transmute(area_code, FBSH_item_oil = item, year, oil = value),
-                by = "FBSH_item_oil") %>%
-      # Join oilseed cake production from CB
-      left_join(FBSH_CB %>% filter(year %in% 2011:2013, element == "Production") %>%
-                  # Convert unit for consistency to Kton
-                  transmute(area_code, FBSH_item_cake = item, year, cake = value),
-                by = c("FBSH_item_cake", "area_code", "year")) %>%
-      # Sum across time
-      group_by_at(vars(-year, -oil, -cake)) %>%
-      summarise(oil = sum(oil, na.rm = T),
-                cake = sum(cake, na.rm = T), .groups = "drop") ->
-      FBSH_SCL_OilCake
-    # Calculate cake rate
-    FBSH_SCL_OilCake %>% mutate(cake_rate = cake / oil) %>%
-      select(area_code, item = SCL_item_oil, cake_item = SCL_item_cake, cake_rate) %>%
-      # Join world average rates
-      left_join(
-        FBSH_SCL_OilCake %>%
-          group_by_at(vars(-area_code, -oil, -cake)) %>%
-          summarise(oil = sum(oil, na.rm = T),
-                    cake = sum(cake, na.rm = T), .groups = "drop") %>%
-          transmute(item = SCL_item_oil, cake_rate_world = cake / oil),
-        by = "item"
-      ) %>%
-      # Use world average to fill in NA
-      # No need to complete area_code here since world average is kept in the data
-      mutate(cake_rate = if_else(cake_rate == 0 | is.finite(cake_rate) == F,
-                                 cake_rate_world, cake_rate)) ->
-      CB_FBS_CakeRate
-
-    # Get the production of the corresponding oil items from processed Tier 1, 2, and 4
-    Bal_new_tier1 %>%
-      bind_rows(Bal_new_tier2) %>%
-      bind_rows(Bal_new_tier4) %>%
-      select(area_code, year, element, item_oil = item, value) %>%
-      filter(element == "Production") %>%
-      mutate(value = value * 1000) %>%  # convert units back to tonne!!!
-      # Join to keep Tier 5 items
-      right_join(FAO_items %>% filter(tier == 5) %>% select(item_code, item, item_oil = DS_key_coproduct_item),
-                 by = "item_oil") %>%
-      # Join cake rate
-      left_join(CB_FBS_CakeRate %>% select(area_code, cake_rate, cake_rate_world, item_oil = item),
-                by = c("area_code", "item_oil")) %>%
-      # fill world same rate for all areas here
-      group_by(item_code) %>%
-      fill(cake_rate_world, .direction = "updown") %>%
-      ungroup() %>%
-      # and world rate when regional rate is not available
-      mutate(cake_rate = if_else(is.na(cake_rate), cake_rate_world, cake_rate)) %>%
-      transmute(area_code, year, item_code, element, value = value * cake_rate) ->
-      QCL_Cake
-
-    ### 3.5.2 Process to get Bal_new_tier5 ----
     Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 5) %>% pull(item_code)) %>%
-      SUA_TEMPLATE_LEFT_JOIN("TM", .DS_TM_Assert_Item = F) %>%
-      SUA_TEMPLATE_LEFT_JOIN("QCL_Cake") %>%
-      mutate(value = case_when(
-        element %in% c("Export", "Import") & item_code == 341 ~ 0, # Cake, others no TM
-        element %in% c("Export", "Import") ~ TCL,
-        element %in% c("Production") ~ QCL,
-        element %in% SCL_element_new ~ 0) ) %>%
-      select(-TCL, -QCL) %>%
+      SUA_TEMPLATE_LEFT_JOIN("FBS") %>%
+      mutate(value = if_else(is.na(value) & element == "Stock Variation", 0, value)) %>%
+      group_by(area_code, item_code, element) %>%
+      #fill NA up-down across year
+      fill(value, .direction = "updown") %>%
+      ungroup() %>%
       replace_na(list(value = 0)) %>%
-      spread(element, value) %>%
-      # Allocate all demostic demand to feed
-      mutate(Feed = if_else(Production + Import - Export > 0,
-                            Production + Import - Export, 0)) %>%
-      gather(element, value, -area_code, -year, -item_code) %>%
+      GROSS_TRADE_ADJUST(.MIN_TRADE_PROD_RATIO = 0.01) %>%
       SUA_bal_adjust %>%  # Unit is converted to 1000 tonnes!
       left_join(FAO_items %>% select(item_code, item), by = "item_code") ->
       Bal_new_tier5
+
     assert_FBS_balance(.DF = Bal_new_tier5)
-    rm(QCL_Cake, CB_FBS_CakeRate, FBSH_SCL_OilCake, Mapping_FBSH_SCL_OilCake)
+
 
     ## 3.6 Bal_new_tier6 ----
     # Tier6 includes 29 items that included in QCL for production but not in Tier1 to Tier5
-    # 29 -1 = 28 items.  "Rice, paddy (rice milled equivalent)" removed as not needed and excluded by FAOSTAT in 2023
+    # "Rice, paddy (rice milled equivalent)" removed as not needed and excluded by FAOSTAT in 2023
 
     Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 6) %>% pull(item_code)) %>%
       SUA_TEMPLATE_LEFT_JOIN("QCL") %>%
@@ -595,75 +526,56 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     assert_FBS_balance(.DF = Bal_new_tier6)
 
 
+
+
     ## 3.7 Bal_new_tier7 ----
-    #Tier7 includes 12 fish items from FBS and FBSH. Item code came from FBS as well
-
-    Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 7) %>% pull(item_code)) %>%
-      SUA_TEMPLATE_LEFT_JOIN("FBS") %>%
-      mutate(value = if_else(is.na(value) & element == "Stock Variation", 0, value)) %>%
-      group_by(area_code, item_code, element) %>%
-      #fill NA up-down across year
-      fill(value, .direction = "updown") %>%
-      ungroup() %>%
-      replace_na(list(value = 0)) %>%
-      GROSS_TRADE_ADJUST(.MIN_TRADE_PROD_RATIO = 0.01) %>%
-      SUA_bal_adjust %>%  # Unit is converted to 1000 tonnes!
-      left_join(FAO_items %>% select(item_code, item), by = "item_code") ->
-      Bal_new_tier7
-
-    assert_FBS_balance(.DF = Bal_new_tier7)
-
-
-    ## 3.8 Bal_new_tier8 ----
-    # Tier8 include 11 cake or fiber items that coproduced in oil crop crushing. Item code used 0
+    # Tier8 include 4 cake or fiber items that coproduced in oil crop crushing. Item code used 0
     #  Note the FAOSTAT does not provide data for Tier8 item so they are generated based extraction rate and assumed no trade and single use.
 
-    ### 3.8.1 Get production of the main product and process coproduction ----
-    # Get the production of the corresponding coproducing items from processed Tier 1, 2, 4 and 5
-    Bal_new_tier1 %>%
-      bind_rows(Bal_new_tier2) %>%
-      bind_rows(Bal_new_tier4) %>%
-      bind_rows(Bal_new_tier5) %>%
-      select(area_code, year, element, coproduct_item = item, value) %>%
+    ### 3.7.1 Get production of the main product and process coproduction ----
+    # Get the production of the corresponding coproducing items from processed Tier 2
+
+    Bal_new_tier2 %>%
+      select(area_code, year, element, coproduct_item_code = item_code, value) %>%
       filter(element == "Production") %>%
       mutate(value = value * 1000) %>%  # convert units back to tonne!!!
       # Join to keep Tier 8 items
-      right_join(FAO_items %>% filter(tier == 8) %>%
+      right_join(FAO_items %>% filter(tier == 7) %>%
                    # Get co-production rate from DS_production which is uniform across regions
                    mutate(CoproductRate = as.numeric(gsub("Coproduction_Rate \\(|)","", DS_production))) %>%
-                   select(item_code, item, coproduct_item = DS_key_coproduct_item, CoproductRate),
-                 by = "coproduct_item") %>%
+                   select(item_code, item, coproduct_item = DS_key_coproduct_item, coproduct_item_code = DS_key_coproduct_item_code, CoproductRate),
+                 by = "coproduct_item_code") %>%
       transmute(area_code, year, item_code, item, element, value = value * CoproductRate) ->
       QCL_Coproduct
 
 
-    ### 3.8.2 Process to get Bal_new_tier8 ----
-    Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 8) %>% pull(item_code)) %>%
+    ### 3.7.2 Process to get Bal_new_tier7 ----
+    Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 7) %>% pull(item_code)) %>%
       SUA_TEMPLATE_LEFT_JOIN("QCL_Coproduct") %>%
       replace_na(list(value = 0)) %>%
       spread(element, value) %>%
       # Processing to add demand based on DS_demand in FAO_items
       # Only an exclusive use is assumed
-      mutate(Feed = if_else(item_code %in% c(FAO_items %>% filter(tier == 8, grepl("Feed", DS_demand)) %>%
+      mutate(Feed = if_else(item_code %in% c(FAO_items %>% filter(tier == 7, grepl("Feed", DS_demand)) %>%
                                               pull(item_code) ) & Production > 0,
                            Production, 0),
-             `Other uses` = if_else(item_code %in% c(FAO_items %>% filter(tier == 8, grepl("Other", DS_demand)) %>%
+             `Other uses` = if_else(item_code %in% c(FAO_items %>% filter(tier == 7, grepl("Other", DS_demand)) %>%
                                                       pull(item_code) ) & Production > 0,
                                    Production, 0) ) %>%
       gather(element, value, -area_code, -item_code, -year) %>%
       SUA_bal_adjust %>%  # Unit is converted to 1000 tonnes!
       left_join(FAO_items %>% select(item, item_code), by = "item_code") ->
-      Bal_new_tier8
+      Bal_new_tier7
 
-    assert_FBS_balance(.DF = Bal_new_tier8)
+    assert_FBS_balance(.DF = Bal_new_tier7)
     rm(QCL_Coproduct)
 
-    ## 3.9 Bal_new_tier9 ----
+    ## 3.8 Bal_new_tier8 ----
     # Tier9 includes 16 meat equivalent items converted from live animals. Item code used 0
     #  Note that these items were preprocessed based on mainly carcass yield implied by data for adjusting production and stocks
     #  Note that for meat equivalent items only stock variation was accounted since 2010 when the data first available
 
-    ### 3.9.1 Process the live animal meat equivalent data APE_live_an_MeatEQ ----
+    ### 3.8.1 Process the live animal meat equivalent data APE_live_an_MeatEQ ----
 
     # read in QCL_AN_LIVEANIMAL_MEATEQ live animal meat equivalent
     # Treat live animal as stock and adjust using production or other demand
@@ -693,8 +605,8 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       transmute(area_code, year, item_code, element, value) ->
       APE_live_an_MeatEQ
 
-    ### 3.9.2 Process to get Bal_new_tier9 ----
-    Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 9) %>% pull(item_code)) %>%
+    ### 3.8.2 Process to get Bal_new_tier9 ----
+    Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 8) %>% pull(item_code)) %>%
       SUA_TEMPLATE_LEFT_JOIN("APE_live_an_MeatEQ") %>%
       spread(element, value) %>%
       # only keep net openning stock in the study period
@@ -704,9 +616,9 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       gather(element, value, -area_code, -item_code, -year) %>%
       SUA_bal_adjust %>%  # Unit is converted to 1000 tonnes!
       left_join(FAO_items %>% select(item, item_code), by = "item_code") ->
-      Bal_new_tier9
+      Bal_new_tier8
 
-    assert_FBS_balance(.DF = Bal_new_tier9)
+    assert_FBS_balance(.DF = Bal_new_tier8)
     rm(QCL_AN_LIVEANIMAL_MEATEQ, APE_live_an_MeatEQ)
 
 
@@ -725,7 +637,6 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
         bind_rows(Bal_new_tier6) %>%
         bind_rows(Bal_new_tier7) %>%
         bind_rows(Bal_new_tier8) %>%
-        bind_rows(Bal_new_tier9) %>%
       # Add area_code
       left_join(QCL_PROD %>% distinct(area, area_code), by = "area_code")->
       Bal_new_all
@@ -735,13 +646,12 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     rm(TCL_gross, TCL_TM, SCL, FBS, FBSH_CB, FAO_items)
     rm(list = ls(pattern = "Bal_new_tier*"))
 
-    ### output GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019 and clean memory ----
+
     Bal_new_all %>%
       add_title("Bal_new_all") %>%
       add_units("Ktonne") %>%
-      add_comments("Preprocessed FAO SUA 2010 - 2019") %>%
+      add_comments("Preprocessed FAO SUA 2010 - 2021") %>%
       add_precursors("aglu/FAO/FAO_items",
-                     "aglu/FAO/Mapping_FBSH_SCL_OilCake",
                      "QCL_PROD",
                      "QCL_AN_LIVEANIMAL_MEATEQ",
                      "TCL_wide",
@@ -758,3 +668,107 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     stop("Unknown command")
   }
 }
+
+
+# Update log
+# The old tier 5 was not needed (oil seed cake) as the data is available
+
+# ***Generate/check FAO_items ----
+
+#  Curr_Envir <- environment()
+#
+#  FAOSTAT_load_raw_data("TM", GET_MAPPINGCODE = "ItemCodes", .Envir = Curr_Envir)
+#  TM_ItemCodes
+#
+#  FAOSTAT_load_raw_data("SCL", GET_MAPPINGCODE = "ItemCodes", .Envir = Curr_Envir)
+#
+#  SCL_ItemCodes
+#  SCL %>% distinct(item)
+#
+#  TCL_TM %>% mutate(item = 1) -> TCL_TM1
+#
+#  FF_join_checkmap(c("SCL", "QCL_PROD", "TCL_TM1", "FBSH_CB"), COL_by = c("item_code"), COL_rename = "item" ) ->
+#    JoinItemMap
+#
+#
+#  JoinItemMap %>%
+#    filter( !(is.na(SCL_item)|is.na(QCL_PROD_item)|is.na(TCL_TM1_item) )) %>%
+#    # remove soy oil here and others had data issue
+#    filter(!item_code %in% c(237, 982, 953, 311) ) %>%
+#    select(item_code, item = QCL_PROD_item) %>%  mutate(tier = 1) -> Tier1
+#
+#  JoinItemMap %>% anti_join(Tier1, by = "item_code") %>%
+#    filter(!(is.na(SCL_item)|is.na(TCL_TM1_item))) %>%
+#    select(item_code, item = SCL_item) %>%  mutate(tier = 2) -> Tier2
+#
+#  JoinItemMap %>%
+#    anti_join(Tier1, by = "item_code") %>%
+#    anti_join(Tier2, by = "item_code") %>%
+#    filter(!(is.na(SCL_item)|is.na(QCL_PROD_item))) %>%
+#    select(item_code, item = SCL_item) %>%  mutate(tier = 3) -> Tier3
+#
+#  JoinItemMap %>%
+#    anti_join(Tier1, by = "item_code") %>%
+#    anti_join(Tier2, by = "item_code") %>%
+#    anti_join(Tier3, by = "item_code") %>%
+#    filter(!is.na(SCL_item)) %>%
+#    select(item_code, item = SCL_item) %>%  mutate(tier = 4) -> Tier4
+#
+#  # 12 Fish items
+#  JoinItemMap %>%
+#    filter(!(is.na(FBSH_CB_item)|is.na(QCL_PROD_item)),
+#           is.na(SCL_item)) %>%
+#    select(item_code, item = FBSH_CB_item) %>%  mutate(tier = 7) -> Tier5
+#
+#  assertthat::assert_that(nrow(Tier5) == 12)
+#
+#  JoinItemMap %>%
+#    anti_join(Tier1, by = "item_code") %>%
+#    anti_join(Tier2, by = "item_code") %>%
+#    anti_join(Tier3, by = "item_code") %>%
+#    anti_join(Tier4, by = "item_code") %>%
+#    anti_join(Tier5, by = "item_code") %>%
+#    filter(!is.na(QCL_PROD_item)) %>%
+#    select(item_code, item = QCL_PROD_item) %>%  mutate(tier = 6) %>%
+#    # item_code (30 paddy rice milled equivalent) is not included as it is not used and discontinued by FAOSTAT
+#    filter(item_code != 30) -> Tier6
+#
+#  Tier6 %>% left_join(
+#    FAO_items %>% filter(tier == 6) %>% select(item_code, DS_trade, DS_production, DS_demand, DS_key_coproduct_item)
+#  )  %>% replace_na(list(DS_demand = "Other use only")) -> Tier6
+#
+#  Tier6 %>% inner_join(
+#    TCL_TM %>% distinct(item_code)
+#  ) %>% mutate(DS_trade = "TM") %>%
+#    bind_rows(
+#      Tier6 %>% anti_join(
+#        TCL_TM %>% distinct(item_code)) %>% mutate(DS_trade = "TM")
+#    ) %>%
+#    mutate(DS_production = "QCL") -> Tier6
+#
+#
+#  FAO_items %>% filter(tier %in% 8) %>%
+#    select(item_code, item, DS_trade, DS_production, DS_demand, DS_key_coproduct_item) %>%  mutate(tier = 8) %>%
+#    filter(!grepl("rice|maize|hempseed|linseed|kapok|poppy|safflower", item)) %>%
+#    mutate(coproduct_item_code = c(274, 278, 332, 340))-> Tier7
+#
+# # "Oil of olive residues|Jojoba oil|Cake of cottonseed|Other oil of vegetable origin, crude n.e.c."
+#
+#  FAO_items %>% filter(tier %in% 9) %>%
+#    select(item_code, item) %>%  mutate(tier = 9) -> Tier8
+#
+#  Tier1 %>% mutate(DS_trade = "TM", DS_production = "QCL", DS_demand = "SCL") %>%
+#    bind_rows(Tier2 %>% mutate(DS_trade = "TM", DS_production = "SCL", DS_demand = "SCL") ) %>%
+#    bind_rows(Tier3 %>% mutate(DS_trade = "SCL", DS_production = "QCL", DS_demand = "SCL") ) %>%
+#    bind_rows(Tier4 %>% mutate(DS_trade = "SCL", DS_production = "SCL", DS_demand = "SCL") ) %>%
+#    bind_rows(Tier5 %>% mutate(DS_trade = "FBS_FBSH", DS_production = "FBS_FBSH", DS_demand = "FBS_FBSH") ) %>%
+#    bind_rows(Tier6) %>%
+#    bind_rows(Tier7) %>%
+#    bind_rows(Tier8) -> Tier_All
+#
+#  FAO_items %>% filter(tier %in% 1:9) %>% anti_join(Tier_All, by = c("item_code"))
+#  Tier_All %>% anti_join(FAO_items, by = c("item_code"))
+#
+#  Tier_All -> FAO_items
+#
+

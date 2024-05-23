@@ -18,10 +18,10 @@
 module_xfaostat_L101_RawDataPreProc7_FO <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(OPTIONAL_FILE = "aglu/FAO/FAOSTAT/Forestry_E_All_Data_(Normalized)_PalceHolder")
+    c(FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Forestry_E_All_Data_Normalized")
 
   MODULE_OUTPUTS <-
-    c("FO_Roundwood")       # Forestry data
+    c("FO_RoundwoodProducts")       # Forestry data
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -38,10 +38,9 @@ module_xfaostat_L101_RawDataPreProc7_FO <- function(command, ...) {
     Curr_Envir <- environment()
 
 
-
     if (Process_Raw_FAO_Data == FALSE) {
       # Prebuilt data is read here ----
-      FO_Roundwood <- extract_prebuilt_data("FO_Roundwood")
+      FO_RoundwoodProducts <- extract_prebuilt_data("FO_RoundwoodProducts")
 
 
     } else {
@@ -51,34 +50,45 @@ module_xfaostat_L101_RawDataPreProc7_FO <- function(command, ...) {
 
       FAOSTAT_load_raw_data(DATASETCODE = "FO", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT, .Envir = Curr_Envir)
 
-      # Only keep roundwood
-      FO %>% filter(year %in% FAOSTAT_Hist_Year,
+      FO %>% filter(year >= min(FAOSTAT_Hist_Year),
                     area_code < 350,     # Rm aggregated area
-                    item_code == 1861) %>% # Roundwood
-        select(area_code,
-               area,
-               item_code,
-               item,
-               element_code,
-               element,
-               year,
-               value,
-               unit) %>%
+                    item_code %in% c(1861, 1864, 1865, 2038, 1868, 1871,
+                                     1634, 1873, 1872, 1875)) %>%
+      # see meta data in https://www.fao.org/faostat/en/#data/FO
+      # 1861	Roundwood
+      # 1864	Wood fuel
+      # 1865	Industrial roundwood
+      # 2038	Pulpwood, round and split, all species (production)
+      # 1868	Sawlogs and veneer logs
+      # 1871	Other industrial roundwood
+      # 1634	Veneer sheets
+      # 1873	Wood-based panels
+      # 1872	Sawnwood
+      # 1875	Wood pulp
+      select(area_code,
+             area,
+             item_code,
+             item,
+             element_code,
+             element,
+             year,
+             value,
+             unit) %>%
         filter(!is.na(value)) %>%
         rm_accent("item", "area") ->
-        FO_Roundwood
+        FO_RoundwoodProducts
 
 
       ### output FO ----
-      FO_Roundwood %>%
+      FO_RoundwoodProducts %>%
         add_title("FAO forestry data") %>%
         add_units("m3") %>%
-        add_comments("FAO raw forestry data") %>%
-        add_precursors("aglu/FAO/FAOSTAT/Forestry_E_All_Data_(Normalized)_PalceHolder") ->
-        FO_Roundwood
+        add_comments("FAO raw forestry data and main products") %>%
+        add_precursors("aglu/FAO/FAOSTAT/Forestry_E_All_Data_Normalized") ->
+        FO_RoundwoodProducts
 
 
-      verify_identical_prebuilt(FO_Roundwood)
+      verify_identical_prebuilt(FO_RoundwoodProducts)
 
     }
 
@@ -88,3 +98,9 @@ module_xfaostat_L101_RawDataPreProc7_FO <- function(command, ...) {
     stop("Unknown command")
   }
 }
+
+# developer
+
+# FO %>% distinct(element, unit)
+# FO %>% filter(area == "World", year == 2015, element == "Production", unit %in% c("t", "m3")) %>%
+#   mutate(value = value / 10^9)  %>% write.csv("CheckItems_FO.csv")

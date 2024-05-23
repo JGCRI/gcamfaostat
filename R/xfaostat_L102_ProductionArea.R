@@ -18,7 +18,7 @@
 module_xfaostat_L102_ProductionArea <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(FILE = "aglu/FAO/FAO_an_items_PRODSTAT",
+    c(#FILE = "aglu/FAO/FAO_an_items_PRODSTAT",
         "QCL_wide", "FBS_wide", "FBSH_CB_wide")
 
   MODULE_OUTPUTS <-
@@ -46,6 +46,8 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
 
     get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
+    # Prepare data and mappings ----
+
     # wide to long
     QCL_wide %>% gather_years() %>%
       FAOSTAT_AREA_RM_NONEXIST() -> QCL
@@ -57,27 +59,23 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       FAOSTAT_AREA_RM_NONEXIST() -> FBSH_CB
 
 
-
-
-    FAO_an_items_PRODSTAT <- FAO_an_items_PRODSTAT %>% filter(!is.na(GCAM_commodity))
-
-
     # All Ag and An production data, including livestock animal, and area harvested, are included in QCL.
     # FBSH and FBS are added to get fish production data
 
     # quick plot
-    # QCL %>% FF_check_count_plot(c("Production", "Area harvested", "Stocks", "Milk Animals", "Laying"))
+    # QCL %>% FF_check_count_plot(c("Production", "Area harvested", "Stocks", "Milk Animals", "Laying")) +
+    #   ggplot2::labs(title = "QCL summary")
 
     # Check elements
     QCL %>% distinct(element, element_code, unit)
-    QCL %>% distinct(item, item_code) # 276 = 160 primary crop + 45 primary an + 17 live animal + 54 others
+    QCL %>% distinct(item, item_code) # 276 = 160 primary crop + 46 primary an + 17 live animal + 54 others
 
     # QCL will be grouped by elements
     # Pull primary crop items with positive harvested area 160
     QCL %>% filter(element_code == 5312) %>% filter(value >0) %>%
       distinct(item_code, item) -> QCL_COMM_CROP_PRIMARY
 
-    # Primary animal products, including fat hides etc. 45
+    # Primary animal products, including fat hides etc. 46
     QCL %>% filter(element_code %in% c(5410, 5413, 5420, 5417, 5422, 5424, 5320)) %>%
       distinct(item, item_code) -> QCL_COMM_AN_PRIMARY
 
@@ -104,7 +102,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
 
     QCL %>%
       filter(item_code %in% c(QCL_COMM_CROP_PRIMARY %>% pull(item_code))) %>%  #160 primary items
-      filter(element_code != 5419) %>%
+      filter(element_code != 5419) %>% # rm yield
       # complete all
       complete(nesting(area_code, area), nesting(item_code, item), nesting(element_code, element, unit), year) %>%
       select(-unit, -element_code) %>%
@@ -118,7 +116,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       QCL_CROP_PRIMARY
 
     #QCL_CROP_PRIMARY %>% FF_check_count_plot()
-    QCL_CROP_PRIMARY %>% nrow()/(160); QCL_CROP_PRIMARY %>% distinct(year); QCL_CROP_PRIMARY %>% distinct(area_code)
+    #QCL_CROP_PRIMARY %>% nrow()/(160); QCL_CROP_PRIMARY %>% distinct(year); QCL_CROP_PRIMARY %>% distinct(area_code)
 
     ## QCL_COMM_AN_PRIMARY ----
     #*******************************************
@@ -158,7 +156,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
 
     QCL %>%
       filter(item_code %in% c(QCL_COMM_AN_PRIMARY_MEAT1 %>% pull(item_code))) %>%
-      filter(element_code != 5417) %>%
+      filter(element_code != 5417) %>% # rm yield
       # complete year
       complete(nesting(area_code, area, item_code, item), nesting(element_code, element, unit), year) %>%
       select(-unit, -element_code) %>%
@@ -178,7 +176,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
 
     QCL %>%
       filter(item_code %in% c(QCL_COMM_AN_PRIMARY_MEAT2 %>% pull(item_code))) %>%
-      filter(element_code != 5424) %>%
+      filter(element_code != 5424) %>% # rm yield
       # complete year
       complete(nesting(area_code, area, item_code, item), nesting(element_code, element, unit), year) %>%
       select(-unit, -element_code) %>%
@@ -316,6 +314,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
     ## QCL_AN_LIVEANIMAL_MEATEQ ----
     #*******************************************
 
+    # We convert live animal to their meat equivalent using yield here
     QCL_AN_LIVEANIMAL %>%
       distinct(element_code, element, unit)
     QCL_AN_PRIMARY_MEAT1 %>%
@@ -323,7 +322,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
     QCL_AN_PRIMARY_MEAT2 %>%
       distinct(element_code, element, unit)
 
-    # live animal item_code + 1 matches primary meat code
+    # live animal item_code + 1 matches primary meat code!!
     QCL_COMM_AN_LIVEANIMAL %>% mutate(item_code = item_code + 1) %>%
       full_join(QCL_COMM_AN_PRIMARY_MEAT1 %>%
                    bind_rows(QCL_COMM_AN_PRIMARY_MEAT2) %>%
@@ -355,28 +354,17 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
 
     FBS %>% distinct(element, element_code, unit)
 
-    # Get fish items through mapping
-    Curr_Envir <- environment()
-    checkitem <-
-      FF_join_checkmap(DFs = c("QCL_COMM_AN_PRIMARY", "FAO_an_items_PRODSTAT"),
-                       COL_by = "item_code",
-                       COL_rename =  "item",
-                       .ENVIR = Curr_Envir
-                       ) %>%
-      mutate(M = if_else(QCL_COMM_AN_PRIMARY_item == FAO_an_items_PRODSTAT_item, T, F))
+    # Update the fish item mapping directly using item_code
 
-
-    checkitem %>% filter(is.na(M)|M == F)
-    FBS_COMM_FISH <- checkitem %>% filter(is.na(QCL_COMM_AN_PRIMARY_item)) %>%
-      dplyr::transmute(item_code, item = FAO_an_items_PRODSTAT_item) %>%
-      filter(item_code %in% c(2761 : 2782))
-    # 1176 snails were in other proc
+    FBS_COMM_FISH <-
+      FBS %>% filter(item_code %in% c(2761 : 2782) ) %>% distinct(item, item_code)
+    assertthat::assert_that(nrow(FBS_COMM_FISH) == 12)
 
     FBS_FISH <-
-      FBS %>% filter(year >= 2010, element_code == 5511, # production
+      FBS %>% filter(year >= min(FAOSTAT_Hist_Year_FBS), element_code == 5511, # production
                      item_code %in% c(FBS_COMM_FISH %>% pull(item_code))) %>%
       bind_rows(
-        FBSH_CB %>% filter(year < 2010, element_code == 5511, # production
+        FBSH_CB %>% filter(year < min(FAOSTAT_Hist_Year_FBS), element_code == 5511, # production
                         item_code %in% c(FBS_COMM_FISH %>% pull(item_code)))
       ) %>%
       replace_na(list(value = 0)) %>%
@@ -418,8 +406,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       add_title("FAO live animal stock and production") %>%
       add_units("various") %>%
       add_comments("Detailed FAO QCL data processing for live animal and production") %>%
-      add_precursors("aglu/FAO/FAO_an_items_PRODSTAT",
-                     "QCL_wide", "FBS_wide", "FBSH_CB_wide") ->
+      add_precursors("QCL_wide", "FBS_wide", "FBSH_CB_wide") ->
       QCL_AN_LIVEANIMAL
 
     QCL_AN_PRIMARY_MILK %>%
@@ -466,7 +453,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
 
     QCL_ALL %>% distinct(year); # 60 years
     QCL_ALL %>% distinct(element, element_code, unit) # QCL_COMM_AN_LIVEANIMAL_MEATEQ has no element_code
-    QCL_ALL %>% distinct(item)  # 160 primary crop + 45 primary an + 54 others + 17 +12
+    QCL_ALL %>% distinct(item)  # 160 primary crop + 46 primary an + 54 others + 17 +12
 
 
     # QCL_ALL %>%
@@ -476,8 +463,32 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
     #   QCL_ALL
 
 
+    return_data(MODULE_OUTPUTS)
+
+
 
     # P.S.  Check primary product mapping ----
+
+    #FAO_an_items_PRODSTAT <- FAO_an_items_PRODSTAT %>% filter(!is.na(GCAM_commodity))
+
+    # # Get fish items through mapping
+    # Curr_Envir <- environment()
+    # checkitem <-
+    #   FF_join_checkmap(DFs = c("QCL_COMM_AN_PRIMARY", "FAO_an_items_PRODSTAT"),
+    #                    COL_by = "item_code",
+    #                    COL_rename =  "item",
+    #                    .ENVIR = Curr_Envir
+    #                    ) %>%
+    #   mutate(M = if_else(QCL_COMM_AN_PRIMARY_item == FAO_an_items_PRODSTAT_item, T, F))
+    #
+    #
+    # checkitem %>% filter(is.na(M)|M == F)
+    # FBS_COMM_FISH <- checkitem %>% filter(is.na(QCL_COMM_AN_PRIMARY_item)) %>%
+    #   dplyr::transmute(item_code, item = FAO_an_items_PRODSTAT_item) %>%
+    #   filter(item_code %in% c(2761 : 2782))
+    # # 1176 snails were in other proc
+
+
     # FAO_ag_items_PRODSTAT is not read in anymore
     # checkitem <-
     #  FF_join_checkmap(c("QCL_COMM_CROP_PRIMARY", "FAO_ag_items_PRODSTAT"), "item_code", "item",.ENVIR = Curr_Envir) %>%
@@ -493,8 +504,9 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
     # # 12 fish items will be provided by FBS
 
 
+    # For laying chicken yield, weight is used; the number of eggs are not used but can be added.
 
-    return_data(MODULE_OUTPUTS)
+
 
   } else {
     stop("Unknown command")

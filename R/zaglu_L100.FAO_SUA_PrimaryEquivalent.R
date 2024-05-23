@@ -28,18 +28,17 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     c(FILE = "aglu/AGLU_ctry",
       FILE = "common/iso_GCAM_regID",
       FILE = "common/GCAM_region_names",
-      FILE = "aglu/FAO/GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019",
-      FILE = "aglu/FAO/GCAMDATA_FAOSTAT_BiTrade_194Regs_400Items_2010to2020",
+      FILE = "aglu/FAO/GCAMFAOSTAT_SUA",
+      FILE = "aglu/FAO/GCAMFAOSTAT_BiTrade",
       FILE = "aglu/FAO/Mapping_SUA_PrimaryEquivalent",
       FILE = "aglu/FAO/SUA_item_code_map",
-      FILE = "aglu/FAO/GCAMDATA_FAOSTAT_ProdArea_195Regs_271Prod160AreaItems_1973to2020",
-      FILE = "aglu/FAO/GCAMDATA_FAOSTAT_FBSH_CB_173Regs_118Items_1973to2009",
+      FILE = "aglu/FAO/GCAMFAOSTAT_NonFodderProdArea",
+      FILE = "aglu/FAO/GCAMFAOSTAT_FBSH_CB",
       FILE = "aglu/FAO/Mapping_item_FBS_GCAM",
-      FILE = "aglu/FAO/GCAMDATA_FAOSTAT_ProdArea_96Regs_16FodderItems_1973to2020",
+      FILE = "aglu/FAO/GCAMFAOSTAT_FodderProdArea",
       FILE = "aglu/FAO/FAO_ag_items_PRODSTAT",
       FILE = "aglu/FAO/FAO_an_items_PRODSTAT",
-      FILE = "aglu/FAO/GCAMDATA_FAOSTAT_MacroNutrientRate_179Regs_426Items_2010to2019Mean"
-    )
+      FILE = "aglu/FAO/GCAMFAOSTAT_MacroNutrientRate")
 
   MODULE_OUTPUTS <-
     c("GCAM_AgLU_SUA_APE_1973_2019",
@@ -59,7 +58,7 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
       source_item <- Prod_diff <- Processed <- `Stock Variation` <- Production <-
       Import <- Export <- Food <- Feed <- `Other uses` <- `Regional supply` <-
       `Regional demand` <- item <- GCAM_subsector <- GCAM_subsector <-  CropMeat <-
-      FAO_an_items_PRODSTAT <- GCAMDATA_FAOSTAT_ProdArea_96Regs_16FodderItems_1973to2020 <-
+      FAO_an_items_PRODSTAT <-
       macronutrient <- macronutrient_value <- calperg <- proteinperc <-
       macronutrient_value_World <- Food_Kt <- area_code <- area <- AGLU_ctry <-
       iso_GCAM_regID <- GCAM_region_ID <- GCAM_region_names <-  NULL
@@ -70,17 +69,18 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
 
     get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
+
     # Get Supply-utilization account (SUA) elements and use as factor
-    All_Bal_element <- levels(GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019$element)
+    All_Bal_element <- levels(GCAMFAOSTAT_SUA$element)
     All_Bal_element <- factor(All_Bal_element, levels = All_Bal_element)
 
     # Bilateral trade item indicator is added to SUA_item_code_map
-    # filter GCAMDATA_FAOSTAT_BiTrade_194Regs_400Items_2010to2020 to only include bilateral trade item to be
-    # consistent with GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019
+    # filter GCAMFAOSTAT_BiTrade to only include bilateral trade item to be
+    # consistent with GCAMFAOSTAT_SUA
     BilaterialTrade_ItemCode <- SUA_item_code_map %>% filter(TM == TRUE) %>% distinct(item_code) %>% pull
-    GCAMDATA_FAOSTAT_BiTrade_194Regs_400Items_2010to2020 %>%
+    GCAMFAOSTAT_BiTrade %>%
       filter(item_code %in% BilaterialTrade_ItemCode) ->
-      GCAMDATA_FAOSTAT_BiTrade_194Regs_400Items_2010to2020
+      GCAMFAOSTAT_BiTrade
     SUA_item_code_map %>% select(item, item_code) -> SUA_item_code_map
 
     # Section1: [2010-2019] Region aggregation of supply-utilization-accounting data ----
@@ -94,12 +94,12 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     # rows of legitimate data.
 
     # create a complete area / iso / GCAM region mapping
-    GCAMDATA_FAOSTAT_ProdArea_195Regs_271Prod160AreaItems_1973to2020 %>%
+    GCAMFAOSTAT_NonFodderProdArea %>%
       select(area_code, area) %>%
       distinct() %>%
-      left_join_error_no_match(AGLU_ctry %>% select(area = FAO_country, iso), by="area") %>%
-      left_join(iso_GCAM_regID %>%select(iso, GCAM_region_ID), by = "iso") %>%
-      left_join(GCAM_region_names, by = "GCAM_region_ID") ->
+      left_join_error_no_match(AGLU_ctry %>% distinct(area_code = FAO_country_code, iso), by = c("area_code")) %>%
+      left_join_error_no_match(iso_GCAM_regID %>% select(iso, GCAM_region_ID), by = "iso") %>%
+      left_join_error_no_match(GCAM_region_names, by = "GCAM_region_ID") ->
       Area_Region_Map
 
     # 1.1 Regional aggregation for SUA ----
@@ -107,7 +107,7 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     # Aggregate SUA to GCAM regions
     # Intra regional trade is removed when bilateral trade data is available
 
-    GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019 %>%
+    GCAMFAOSTAT_SUA %>%
       left_join_error_no_match(Area_Region_Map %>% select(area_code, GCAM_region_ID), by="area_code") %>%
       group_by(GCAM_region_ID, item_code, element, year) %>%
       summarize(value = sum(value), .groups = "drop") %>%
@@ -115,7 +115,7 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
       DF_SUA_Agg
 
     # Calculate intra regional trade
-    GCAMDATA_FAOSTAT_BiTrade_194Regs_400Items_2010to2020 %>%
+    GCAMFAOSTAT_BiTrade %>%
       left_join_error_no_match(Area_Region_Map %>% select(area_code, GCAM_region_ID), by="area_code") %>%
       left_join_error_no_match(Area_Region_Map %>% select(source_code = area_code, source_GCAM_region_ID = GCAM_region_ID), by="source_code") %>%
       filter(GCAM_region_ID == source_GCAM_region_ID) %>%
@@ -162,10 +162,10 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
 
 
     Min_SUA_Year <- min(FAO_SUA_Kt_2010to2019_R$year)
-    FAO_SUA_Kt_2010to2019 <- GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019
+    FAO_SUA_Kt_2010to2019 <- GCAMFAOSTAT_SUA
     ## Clean up
-    rm(GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019)
-    rm(GCAMDATA_FAOSTAT_BiTrade_194Regs_400Items_2010to2020)
+    rm(GCAMFAOSTAT_SUA)
+    rm(GCAMFAOSTAT_BiTrade)
     ## Done Section1 ----
     #****************************----
 
@@ -575,7 +575,7 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     # 3.2. Execution ----
     ## a. FBSH_CB aggregate to GCAM commodity and region----
 
-    GCAMDATA_FAOSTAT_FBSH_CB_173Regs_118Items_1973to2009 %>%
+    GCAMFAOSTAT_FBSH_CB %>%
       gather_years() %>%
       filter(year < Min_SUA_Year) %>%
       filter(!is.na(value)) ->
@@ -591,7 +591,7 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
       select(item_code, GCAM_commodity)%>%
       filter(!is.na(GCAM_commodity)) %>%
       left_join(FBSH_CB, by = "item_code")  %>%
-      left_join_error_no_match(AGLU_ctry %>% select(area = FAO_country, iso), by = "area") %>%
+      left_join_error_no_match(AGLU_ctry %>% distinct(area_code = FAO_country_code, iso), by = c("area_code")) %>%
       left_join_error_no_match(iso_GCAM_regID %>% select(iso, GCAM_region_ID), by = "iso") %>%
       left_join_error_no_match(GCAM_region_names, by = "GCAM_region_ID") %>%
       dplyr::group_by_at(vars(area = region, year, GCAM_commodity, element)) %>%
@@ -604,7 +604,7 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
 
     ## b. Get primary production in GCAM region and sector ----
 
-    GCAMDATA_FAOSTAT_ProdArea_195Regs_271Prod160AreaItems_1973to2020 %>%
+    GCAMFAOSTAT_NonFodderProdArea %>%
       gather_years() %>%
       filter(year < Min_SUA_Year) %>%
       filter(!is.na(value), element == "Production") %>%
@@ -613,7 +613,7 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
           distinct(GCAM_commodity, item = source_item) %>%
           left_join_error_no_match(SUA_item_code_map, by = "item") %>% select(-item),
         by = "item_code") %>%
-      left_join_error_no_match(AGLU_ctry %>% select(area = FAO_country, iso), by = "area") %>%
+      left_join_error_no_match(AGLU_ctry %>% distinct(area_code = FAO_country_code, iso), by = c("area_code")) %>%
       left_join_error_no_match(iso_GCAM_regID %>% select(iso, GCAM_region_ID), by = "iso") %>%
       left_join_error_no_match(GCAM_region_names, by = "GCAM_region_ID") %>%
       dplyr::group_by_at(vars(area = region, year, GCAM_commodity, element)) %>%
@@ -795,9 +795,9 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
 
     ## Bind production and area data for both fodder and nonfodder ----
     FAO_AgProd_Kt_Area_Kha <-
-      GCAMDATA_FAOSTAT_ProdArea_96Regs_16FodderItems_1973to2020%>%
+      GCAMFAOSTAT_FodderProdArea%>%
       mutate(item_set = "QCL_COMM_CROP_PRIMARY_FODDER") %>%
-      bind_rows(GCAMDATA_FAOSTAT_ProdArea_195Regs_271Prod160AreaItems_1973to2020) %>%
+      bind_rows(GCAMFAOSTAT_NonFodderProdArea) %>%
       gather_years() %>%
       filter(!is.na(value))
 
@@ -846,7 +846,8 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
           # ensure we at least have a complete series across time otherwise it may
           # throw off moving avg calculations
           complete(area_code = Area_Region_Map$area_code, year = pull(., year) %>% unique(), nesting(item_code, element), fill=list(value=0)) %>%
-          left_join_error_no_match(SUA_item_code_map, by = c("item_code"))) %>%
+          left_join_error_no_match(SUA_item_code_map, by = c("item_code"))
+        ) %>%
       bind_rows(
         # bind fodder crops for after 2010
         FAO_AgProd_Kt_Area_Kha %>%
@@ -940,7 +941,7 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     # b. There are 426 FAO food items, all included in FAO_SUA_Kt_2010to2019 (530 items)
     # SUA_Items_Food includes both GCAM and NonGCAM(NEC)
     SUA_item_code_map %>%
-      filter(item_code %in% unique(GCAMDATA_FAOSTAT_MacroNutrientRate_179Regs_426Items_2010to2019Mean$item_code)) %>%
+      filter(item_code %in% unique(GCAMFAOSTAT_MacroNutrientRate$item_code)) %>%
       left_join(SUA_Items_GCAM %>% select(-item), by = "item_code") %>%
       # For NA GCAM_commodity: not elsewhere classified (NEC)
       # So we would know % of food calories not included in GCAM commodities
@@ -953,7 +954,7 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     ### a. Get world average macronutrient ----
     # For filling in missing values
 
-    GCAMDATA_FAOSTAT_MacroNutrientRate_179Regs_426Items_2010to2019Mean %>%
+    GCAMFAOSTAT_MacroNutrientRate %>%
       tidyr::gather(macronutrient, macronutrient_value, calperg:proteinperc) %>%
       group_by(item, item_code, macronutrient) %>%
       summarise(macronutrient_value_World = mean(macronutrient_value), .groups = "drop") %>%
@@ -974,7 +975,7 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
       repeat_add_columns(
         tibble(macronutrient = c("calperg", "fatperc", "proteinperc"))) %>%
       left_join(
-        GCAMDATA_FAOSTAT_MacroNutrientRate_179Regs_426Items_2010to2019Mean %>%
+        GCAMFAOSTAT_MacroNutrientRate %>%
           select(-item) %>%
           tidyr::gather(macronutrient, macronutrient_value, calperg:proteinperc),
         by = c("area_code", "item_code", "macronutrient")
@@ -1000,7 +1001,7 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
 
     ### c. Get the max values of macronutrient conversion rate (per GCAM_commodity) ----
     # This will be used later as an upper bound to improve the data
-    GCAMDATA_FAOSTAT_MacroNutrientRate_179Regs_426Items_2010to2019Mean %>%
+    GCAMFAOSTAT_MacroNutrientRate %>%
       tidyr::gather(macronutrient, macronutrient_value, calperg:proteinperc) %>%
       left_join_error_no_match(SUA_Items_Food %>% select(-item),
                                by = c("item_code")) %>%
@@ -1020,12 +1021,12 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
       add_precursors("aglu/AGLU_ctry",
                      "common/iso_GCAM_regID",
                      "common/GCAM_region_names",
-                     "aglu/FAO/GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019",
-                     "aglu/FAO/GCAMDATA_FAOSTAT_BiTrade_194Regs_400Items_2010to2020",
+                     "aglu/FAO/GCAMFAOSTAT_SUA",
+                     "aglu/FAO/GCAMFAOSTAT_BiTrade",
                      "aglu/FAO/Mapping_SUA_PrimaryEquivalent",
                      "aglu/FAO/SUA_item_code_map",
-                     "aglu/FAO/GCAMDATA_FAOSTAT_ProdArea_195Regs_271Prod160AreaItems_1973to2020",
-                     "aglu/FAO/GCAMDATA_FAOSTAT_FBSH_CB_173Regs_118Items_1973to2009",
+                     "aglu/FAO/GCAMFAOSTAT_NonFodderProdArea",
+                     "aglu/FAO/GCAMFAOSTAT_FBSH_CB",
                      "aglu/FAO/Mapping_item_FBS_GCAM") ->
       GCAM_AgLU_SUA_APE_1973_2019
 
@@ -1038,8 +1039,8 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
                      "aglu/FAO/FAO_ag_items_PRODSTAT",
                      "aglu/FAO/FAO_an_items_PRODSTAT",
                      "aglu/FAO/Mapping_SUA_PrimaryEquivalent",
-                     "aglu/FAO/GCAMDATA_FAOSTAT_ProdArea_96Regs_16FodderItems_1973to2020",
-                     "aglu/FAO/GCAMDATA_FAOSTAT_ProdArea_195Regs_271Prod160AreaItems_1973to2020") ->
+                     "aglu/FAO/GCAMFAOSTAT_FodderProdArea",
+                     "aglu/FAO/GCAMFAOSTAT_NonFodderProdArea") ->
       FAO_AgProd_Kt_All
 
     FAO_AgArea_Kha_All %>%
@@ -1051,8 +1052,8 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
                      "aglu/FAO/FAO_ag_items_PRODSTAT",
                      "aglu/FAO/FAO_an_items_PRODSTAT",
                      "aglu/FAO/Mapping_SUA_PrimaryEquivalent",
-                     "aglu/FAO/GCAMDATA_FAOSTAT_ProdArea_96Regs_16FodderItems_1973to2020",
-                     "aglu/FAO/GCAMDATA_FAOSTAT_ProdArea_195Regs_271Prod160AreaItems_1973to2020") ->
+                     "aglu/FAO/GCAMFAOSTAT_FodderProdArea",
+                     "aglu/FAO/GCAMFAOSTAT_NonFodderProdArea") ->
       FAO_AgArea_Kha_All
 
     FAO_Food_Macronutrient_All_2010_2019 %>%
@@ -1061,8 +1062,8 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
       add_comments("Macronutrient consumption values connected to food consumption in GCAM_AgLU_SUA_APE_1973_2019") %>%
       add_precursors("aglu/AGLU_ctry",
                      "common/iso_GCAM_regID",
-                     "aglu/FAO/GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019",
-                     "aglu/FAO/GCAMDATA_FAOSTAT_MacroNutrientRate_179Regs_426Items_2010to2019Mean",
+                     "aglu/FAO/GCAMFAOSTAT_SUA",
+                     "aglu/FAO/GCAMFAOSTAT_MacroNutrientRate",
                      "aglu/FAO/Mapping_SUA_PrimaryEquivalent") ->
       FAO_Food_Macronutrient_All_2010_2019
 
@@ -1072,8 +1073,8 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
       add_comments("The max value of macronutrient conversion rate across region, year, and SUA items (per GCAM_commodity") %>%
       add_precursors("aglu/AGLU_ctry",
                      "common/iso_GCAM_regID",
-                     "aglu/FAO/GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019",
-                     "aglu/FAO/GCAMDATA_FAOSTAT_MacroNutrientRate_179Regs_426Items_2010to2019Mean",
+                     "aglu/FAO/GCAMFAOSTAT_SUA",
+                     "aglu/FAO/GCAMFAOSTAT_MacroNutrientRate",
                      "aglu/FAO/Mapping_SUA_PrimaryEquivalent") ->
       FAO_Food_MacronutrientRate_2010_2019_MaxValue
 

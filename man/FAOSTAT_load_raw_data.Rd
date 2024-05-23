@@ -16,7 +16,7 @@ FAOSTAT_load_raw_data(
 
 \item{DATA_FOLDER}{Path to the folder storing the data.}
 
-\item{GET_MAPPINGCODE}{If NULL return data if char return other mapping files}
+\item{GET_MAPPINGCODE}{If NULL return data if char and in ItemCodes, AreaCodes, or Flags return other mapping files}
 
 \item{.Envir}{Qutput environment}
 }

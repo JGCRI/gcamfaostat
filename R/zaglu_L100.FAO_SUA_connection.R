@@ -93,7 +93,7 @@ module_aglu_L100.FAO_SUA_connection <- function(command, ...) {
       FAO_AgProd_Kt_All %>%
       filter(year >= min(aglu.AGLU_HISTORICAL_YEARS)) %>%
       filter(CropMeat %in% c("Crop_Fodder", "Crop_NonFodder")) %>%
-      transmute(iso, GCAM_region_ID, item, item_code, year, GCAM_commodity, GCAM_subsector,
+      transmute(iso, GCAM_region_ID, item_code, year, GCAM_commodity, GCAM_subsector,
                 element = "Prod_t", value = value * 1000) %>%
       # Adding 5-year moving average here
       dplyr::group_by_at(dplyr::vars(-year, -value)) %>%
@@ -108,7 +108,7 @@ module_aglu_L100.FAO_SUA_connection <- function(command, ...) {
     L100.FAO_ag_HA_ha <-
       FAO_AgArea_Kha_All %>%
       filter(year >= min(aglu.AGLU_HISTORICAL_YEARS)) %>%
-      transmute(iso, GCAM_region_ID, item, item_code, year, GCAM_commodity, GCAM_subsector,
+      transmute(iso, GCAM_region_ID, item_code, year, GCAM_commodity, GCAM_subsector,
                 element = "Area_harvested_ha", value = value * 1000) %>%
       # Adding 5-year moving average here
       dplyr::group_by_at(dplyr::vars(-year, -value)) %>%
@@ -164,7 +164,7 @@ module_aglu_L100.FAO_SUA_connection <- function(command, ...) {
       # complete year and fill zeros
       complete(nesting(area_code, area, iso, GCAM_region_ID),
                nesting(item_code, item, GCAM_commodity, GCAM_subsector, CropMeat), element,
-               year, fill = list(value = 0))%>%
+               year, fill = list(value = 0)) %>%
       # Adding 5-year moving average here
       dplyr::group_by_at(dplyr::vars(-year, -value)) %>%
       mutate(moving_avg = Moving_average(value, periods = aglu.MODEL_MEAN_PERIOD_LENGTH)) %>%
