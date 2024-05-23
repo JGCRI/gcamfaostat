@@ -11,16 +11,16 @@ authors:
   name: Pralit Patel
   orcid: 0000-0003-3992-1061
 - affiliation: 1
-  name: Marshall A. Wise
+  name: Marshall Wise
   orcid: 0000-0002-2718-0051
 - affiliation: 1
-  name: Katherine V. Calvin 
+  name: Katherine Calvin 
   orcid: 0000-0003-2191-4189
 - affiliation: 1
   name: Kanishka Narayan
   orcid: 0000-0001-8483-6216
 - affiliation: 1
-  name: Christopher R. Vernon
+  name: Chris Vernon
   orcid: 0000-0002-3406-6214
 date: "04 April 2024"
 output: pdf_document
@@ -65,13 +65,13 @@ Nonetheless, the FAOSTAT data employed within `gcamdata` has traditionally invol
 ## Key functions 
 
 Here we describe key functions included in **`gcamfaostat (v1.0.0)`** focusing on the data [preparing](https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html) and [processing](https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html). More details about functions and examples for
-[data tracing](https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html#generate-the-metadata-for-the-gcamfaostat-input-data), [visualization](https://jgcri.github.io/gcamfaostat/articles/vignette_visualization.html) and [other cabilities](https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html) are illustrated in the online [**User Guide**](https://jgcri.github.io/gcamfaostat/index.html). 
+[data tracing](https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html#generate-the-metadata-for-the-gcamfaostat-input-data), [visualization](https://jgcri.github.io/gcamfaostat/articles/vignette_visualization.html) and [other cabilities](https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html) are illustrated in the online [User Guide](https://jgcri.github.io/gcamfaostat/index.html). 
 
 The architecture of **`gcamfaostat`** processing modules is depicted in \autoref{fig:Fig2}. This framework currently comprises eight preprocessing modules and nine processing and synthesizing modules, generating twelve output files tailored for
 [GCAM v7.0](https://github.com/JGCRI/gcam-core/releases/tag/gcam-v7.0). Each module is essentially an `R` function with well-defined inputs and outputs. 
 
 
-Note that by default, the preprocessed FAOSTAT data, i.e., outputs of the `xfaostat_L101_*` modules, have been stored in the [`Prebuilt Data`](https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda) of the package. **`gcamfaostat`** includes a function to generate metadata ([`gcamfaostat_metadata`](https://jgcri.github.io/gcamfaostat/reference/gcamfaostat_metadata.html)). It accesses both the latest FAOSTAT metadata and local data information and returns a [summary table] (see [example online](https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html#generate-the-metadata-for-the-gcamfaostat-input-data)) including the dataset information needed for **`gcamfaostat`**. There are also functions to download FAOSTAT raw data from either a remote archive [(`FF_download_RemoteArchive`)](https://jgcri.github.io/gcamfaostat/reference/FF_download_RemoteArchive.html) or directly from FAOSTAT [(`FF_download_FAOSTAT`)](https://jgcri.github.io/gcamfaostat/reference/FF_download_FAOSTAT.html).  
+Note that by default, the preprocessed FAOSTAT data, i.e., outputs of the `xfaostat_L101_*` modules, have been stored in the [`Prebuilt Data`](https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda) of the package. **`gcamfaostat`** includes a function to generate metadata ([`gcamfaostat_metadata`](https://jgcri.github.io/gcamfaostat/reference/gcamfaostat_metadata.html)). It accesses both the latest FAOSTAT metadata and local data information and returns a [summary table](https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html#generate-the-metadata-for-the-gcamfaostat-input-data)) including the dataset information needed for **`gcamfaostat`**. There are also functions to download FAOSTAT raw data from either a remote archive ([`FF_download_RemoteArchive`](https://jgcri.github.io/gcamfaostat/reference/FF_download_RemoteArchive.html)) or directly from FAOSTAT ([`FF_download_FAOSTAT`](https://jgcri.github.io/gcamfaostat/reference/FF_download_FAOSTAT.html)).  
 
 To showcase the flexibility and expandability of our package, we also incorporated two AgLU modules (from `gcamdata`) that exemplify the data aggregation processes, e.g., across regions, sectors, and time. More importantly, the [`driver_drake()`](https://jgcri.github.io/gcamfaostat/reference/driver_drake.html) function plays a pivotal role by executing all available data processing modules, thereby generating both intermediate and final outputs, which are vital components of our comprehensive data processing pipeline. The function was inherited from `gcamdata` and it uses the drake [@Landau2018] pipeline framework, which simplifies module updates, data tracing, and results visualization process. 
 

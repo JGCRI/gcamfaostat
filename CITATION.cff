@@ -1,0 +1,65 @@
+cff-version: "1.2.0"
+authors:
+- family-names: Zhao
+  given-names: Xin
+  orcid: "https://orcid.org/0000-0002-1801-4393"
+- family-names: Chepeliev
+  given-names: Maksym
+  orcid: "https://orcid.org/0000-0001-8585-2314"
+- family-names: Patel
+  given-names: Pralit
+  orcid: "https://orcid.org/0000-0003-3992-1061"
+- family-names: Wise
+  given-names: Marshall
+  orcid: "https://orcid.org/0000-0002-2718-0051"
+- family-names: Calvin
+  given-names: Katherine
+  orcid: "https://orcid.org/0000-0003-2191-4189"
+- family-names: Narayan
+  given-names: Kanishka
+  orcid: "https://orcid.org/0000-0001-8483-6216"
+- family-names: Vernon
+  given-names: Chris
+  orcid: "https://orcid.org/0000-0002-3406-6214"
+doi: 10.5281/zenodo.10967067
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Zhao
+    given-names: Xin
+    orcid: "https://orcid.org/0000-0002-1801-4393"
+  - family-names: Chepeliev
+    given-names: Maksym
+    orcid: "https://orcid.org/0000-0001-8585-2314"
+  - family-names: Patel
+    given-names: Pralit
+    orcid: "https://orcid.org/0000-0003-3992-1061"
+  - family-names: Wise
+    given-names: Marshall
+    orcid: "https://orcid.org/0000-0002-2718-0051"
+  - family-names: Calvin
+    given-names: Katherine
+    orcid: "https://orcid.org/0000-0003-2191-4189"
+  - family-names: Narayan
+    given-names: Kanishka
+    orcid: "https://orcid.org/0000-0001-8483-6216"
+  - family-names: Vernon
+    given-names: Chris
+    orcid: "https://orcid.org/0000-0002-3406-6214"
+  date-published: 2024-04-22
+  doi: 10.21105/joss.06388
+  issn: 2475-9066
+  issue: 96
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 6388
+  title: "gcamfaostat: An R package to prepare, process, and synthesize
+    FAOSTAT data for global agroeconomic and multisector dynamic
+    modeling"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.06388"
+  volume: 9
+title: "gcamfaostat: An R package to prepare, process, and synthesize
+  FAOSTAT data for global agroeconomic and multisector dynamic modeling"
