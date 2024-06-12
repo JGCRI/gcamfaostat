@@ -12,11 +12,9 @@ driver_drake(
   return_data_names = union(inputs_of(return_inputs_of), outputs_of(return_outputs_of)),
   return_data_map_only = FALSE,
   return_plan_only = FALSE,
-  write_xml = FALSE,
-  xmldir = XML_DIR,
+  write_csv_model = FALSE,
+  csv_dir = paste0("gcamfaostat_", write_csv_model),
   quiet = FALSE,
-  user_modifications = NULL,
-  xml_suffix = NULL,
   ...
 )
 }
@@ -38,18 +36,15 @@ the other \code{return_*} parameters above}
 
 \item{return_plan_only}{Return only the drake plan (logical)}
 
-\item{write_xml}{Write XML Batch chunk outputs to disk?}
-
-\item{xmldir}{Location to write output XML (ignored if \code{write_outputs} is \code{FALSE})}
+\item{write_csv_model}{If "GCAM", the CSV will be generated and saved to DIR_OUTPUT_CSV}
 
 \item{quiet}{Suppress output?}
 
-\item{user_modifications}{A list of function names which implement a user mod chunk. See vignettes/usermod_vignette.Rmd for more details and examples.}
-
-\item{xml_suffix}{A suffix to be appended at the end of all XML file name if not null.  Such a feature is
-useful when using \code{user_modifications} to generate alternative scenarios.}
-
 \item{...}{Additional arguments to be forwarded on to \code{make}}
+
+\item{write_xml}{Write XML Batch chunk outputs to disk?}
+
+\item{xmldir}{Location to write output XML (ignored if \code{write_outputs} is \code{FALSE})}
 }
 \value{
 A list of all built data (or a data map tibble if requested).

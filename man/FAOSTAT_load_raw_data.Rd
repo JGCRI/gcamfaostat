@@ -6,7 +6,7 @@
 \usage{
 FAOSTAT_load_raw_data(
   DATASETCODE,
-  DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+  DATA_FOLDER = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
   GET_MAPPINGCODE = NULL,
   .Envir = NULL
 )

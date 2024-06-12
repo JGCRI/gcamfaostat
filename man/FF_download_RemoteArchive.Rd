@@ -6,8 +6,8 @@
 \usage{
 FF_download_RemoteArchive(
   DATASETCODE = NULL,
-  RemoteArchiveURL = "https://zenodo.org/record/8260225/files/",
-  DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+  RemoteArchiveURL = "https://zenodo.org/record/11602356/files/",
+  DATA_FOLDER = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
   OverWrite = FALSE
 )
 }

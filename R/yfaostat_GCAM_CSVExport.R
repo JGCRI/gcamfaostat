@@ -34,21 +34,21 @@ module_yfaostat_GCAM_CSVExport <- function(command, ...) {
       "RL_LandCover",
       "RFN_ProdDemand")
 
-  MODULE_OUTPUTS <-
-    c("yfaostat_GCAM_GCAMFAOSTAT_CSV",
-      CSV = "GCAMFAOSTAT_SUA",
-      CSV = "GCAMFAOSTAT_BiTrade",
-      CSV = "GCAMFAOSTAT_FBSH_CB",
-      CSV = "GCAMFAOSTAT_NonFodderProdArea",
-      CSV = "GCAMFAOSTAT_FodderProdArea",
-      CSV = "GCAMFAOSTAT_AnimalStock",
-      CSV = "GCAMFAOSTAT_ProdPrice",
-      CSV = "FAO_GDP_Deflators",
-      CSV = "GCAMFAOSTAT_MacroNutrientRate",
-      CSV = "GCAMFAOSTAT_ForProdTrade",
-      CSV = "GCAMFAOSTAT_ForExpPrice",
-      CSV = "GCAMFAOSTAT_LandCover",
-      CSV = "GCAMFAOSTAT_NFertilizer")
+    MODULE_OUTPUTS <-
+      c("yfaostat_GCAM_GCAMFAOSTAT_CSV",
+        CSV = "GCAMFAOSTAT_SUA",
+        CSV = "GCAMFAOSTAT_BiTrade",
+        CSV = "GCAMFAOSTAT_FBSH_CB",
+        CSV = "GCAMFAOSTAT_NonFodderProdArea",
+        CSV = "GCAMFAOSTAT_FodderProdArea",
+        CSV = "GCAMFAOSTAT_AnimalStock",
+        CSV = "GCAMFAOSTAT_ProdPrice",
+        CSV = "FAO_GDP_Deflators",
+        CSV = "GCAMFAOSTAT_MacroNutrientRate",
+        CSV = "GCAMFAOSTAT_ForProdTrade",
+        CSV = "GCAMFAOSTAT_ForExpPrice",
+        CSV = "GCAMFAOSTAT_LandCover",
+        CSV = "GCAMFAOSTAT_NFertilizer")
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -69,20 +69,10 @@ module_yfaostat_GCAM_CSVExport <- function(command, ...) {
 
     # adding dummy output ----
     yfaostat_GCAM_GCAMFAOSTAT_CSV <-
-      tibble(CSV_export =
-               MODULE_OUTPUTS)
+      tibble(CSV_export = MODULE_OUTPUTS)
 
 
-    if (OUTPUT_Export_CSV == FALSE) {
-
-    lapply(MODULE_OUTPUTS[MODULE_OUTPUTS %>% names() == "CSV"],
-           function(output){
-             assign(output, empty_data() %>%
-                      add_title(output) %>%
-                      add_precursors("yfaostat_GCAM_GCAMFAOSTAT_CSV"), envir =  Curr_Envir)
-           })
-    }
-    else {
+    if (OUTPUT_Export_CSV == "GCAM") {
 
       # Load required inputs ----
       get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
@@ -536,9 +526,16 @@ module_yfaostat_GCAM_CSVExport <- function(command, ...) {
         code = "NA",
         out_dir = DIR_OUTPUT_CSV
       )
-
-
       }
+    else {
+
+        lapply(MODULE_OUTPUTS[MODULE_OUTPUTS %>% names() == "CSV"],
+               function(output){
+                 assign(output, empty_data() %>%
+                          add_title(output) %>%
+                          add_precursors("yfaostat_GCAM_GCAMFAOSTAT_CSV"), envir =  Curr_Envir)
+               })
+        }
 
     yfaostat_GCAM_GCAMFAOSTAT_CSV %>%
       add_title("Export CSV to DIR_OUTPUT_CSV") %>%
@@ -549,7 +546,6 @@ module_yfaostat_GCAM_CSVExport <- function(command, ...) {
 
 
     return_data(MODULE_OUTPUTS)
-
 
   } else {
     stop("Unknown command")

@@ -18,7 +18,7 @@ Rplots.pdf
 # Vignette files
 inst/doc
 
-# Proprietary files
+# Potential proprietary files
 IEA_EnergyBalances_2019.csv.gz
 *CEDS_emissions.csv
 
@@ -33,8 +33,19 @@ IEA_EnergyBalances_2019.csv.gz
 
 
 # FAOSTATA raw zip
-inst/extdata/aglu/FAO/FAOSTAT/*.zip
-inst/extdata/aglu/FAO/FAOSTAT_Archive/*
+inst/extdata/FAOSTAT/*.zip
+inst/extdata/FAOSTAT_Archive*/*
+
+# Model-specific gcamfaostat output files
+gcamfaostat*/
+
+# Model-specific input files
+inst/extdata/GCAM/*
+
+
+
+# Developer
 paper
 developertemp
+
 #docs

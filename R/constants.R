@@ -5,10 +5,11 @@
 # Key parameters
 # If TRUE, process raw FAO data
 # If FALSE, use prebuilt data to load FAO data
-Process_Raw_FAO_Data <- TRUE
-# If TRUE, CSV will be generated and saved to DIR_OUTPUT_CSV
-OUTPUT_Export_CSV <- FALSE
+Process_Raw_FAO_Data <- FALSE
 
+# OUTPUT_Export_CSV option moved to driver_drake as write_csv_model
+# The default is NULL
+# If "GCAM", CSV will be generated and saved to DIR_OUTPUT_CSV
 
 
 DISABLED_MODULES <-
@@ -27,9 +28,6 @@ DISABLED_MODULES <-
 
 ## Fao raw data folder
 DIR_RAW_DATA_FAOSTAT <- "FAOSTAT"
-## Output GCAM csv
-DIR_OUTPUT_CSV <- file.path("outputs", "gcamfaostat_csv_output")
-dir.create(DIR_OUTPUT_CSV, recursive = T, showWarnings = FALSE)
 
 
 # Historical years of focus ----
@@ -42,6 +40,7 @@ FAOSTAT_Hist_Year_TCL <- seq(1973, 2021)
 FAOSTAT_Hist_Year_FBSH <- seq(1973, 2013)
 FAOSTAT_Hist_Year_FBS <- seq(2010, 2021) # New FBS years
 MIN_HIST_PP_YEAR = 2010 # first producer price year
+Hist_MEAN_Year_NUTRIENT_MASS_CONV <- 2010:2021 # average cal per g
 
 
 
@@ -64,9 +63,8 @@ c("Opening stocks", "Production", "Import",
 For_Export_Production_Ratio_Adj = 0.9
 
 # Boundary used for correct regional value with world of the conversion from mass to macro-nutrient
-# Used in FAOSTAT_S1D_Food_Kcal.R
+# Used in xfaostat_L106_FoodMacroNutrient.R.R
 REGIONAL_NUTRIENT_MASS_CONV_OUTLIER_BOUNDARY <- 0.15
-Hist_MEAN_Year_NUTRIENT_MASS_CONV <- 2010:2019 # average cal per g
 
 
 # Other utils ----
