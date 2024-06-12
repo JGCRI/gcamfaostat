@@ -19,15 +19,15 @@
 module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(FILE = "aglu/AGLU_ctry",
-      FILE = "common/iso_GCAM_regID",
-      FILE = "common/GCAM_region_names",
-      FILE = "aglu/FAO/GCAMFAOSTAT_SUA",
-      FILE = "aglu/FAO/GCAMFAOSTAT_BiTrade",
-      FILE = "aglu/FAO/Mapping_SUA_PrimaryEquivalent",
-      FILE = "aglu/FAO/SUA_item_code_map",
-      FILE = "aglu/FAO/GCAMFAOSTAT_NonFodderProdArea",
-      FILE = "aglu/FAO/GCAMFAOSTAT_MacroNutrientRate")
+    c(FILE = "GCAM/aglu/AGLU_ctry",
+      FILE = "GCAM/common/iso_GCAM_regID",
+      FILE = "GCAM/common/GCAM_region_names",
+      FILE = "GCAM/aglu/FAO/GCAMFAOSTAT_SUA",
+      FILE = "GCAM/aglu/FAO/GCAMFAOSTAT_BiTrade",
+      FILE = "GCAM/aglu/FAO/Mapping_SUA_PrimaryEquivalent",
+      FILE = "GCAM/aglu/FAO/SUA_item_code_map",
+      FILE = "GCAM/aglu/FAO/GCAMFAOSTAT_NonFodderProdArea",
+      FILE = "GCAM/aglu/FAO/GCAMFAOSTAT_MacroNutrientRate")
 
   MODULE_OUTPUTS <-
     c("FAO_Food_Macronutrient_All_2010_2019",

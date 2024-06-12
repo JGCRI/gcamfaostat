@@ -40,8 +40,9 @@ inst/extdata/FAOSTAT_Archive*/*
 gcamfaostat*/
 
 # Model-specific input files
-inst/extdata/GCAM/*
-
+inst/extdata/GCAM/mi_headers
+inst/extdata/GCAM/ModelInterface
+inst/extdata/GCAM/aglu/FAO/GCAMFAOSTAT*
 
 
 # Developer

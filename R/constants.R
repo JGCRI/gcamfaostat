@@ -19,8 +19,7 @@ DISABLED_MODULES <-
   c("aglu_L100.FAO_SUA_PrimaryEquivalent",
     "aglu_L100.FAO_SUA_connection",
     "aglu_L100.FAO_preprocessing_OtherData",
-    "aglu_L110.For_FAO_R_Y",
-    "yextension_L100_FoodBalanceSheet")
+    "aglu_L110.For_FAO_R_Y")
 
 
 
