@@ -18,12 +18,12 @@
 module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(FILE = "aglu/FAO/FAO_items",
+    c(FILE = file.path(DIR_RAW_DATA_FAOSTAT, "FAO_items"),
       "QCL_PROD",
       "QCL_AN_LIVEANIMAL_MEATEQ",
       "TCL_wide",
       "TM_bilateral_wide",
-      "FBSH_CB_wide",
+      "FBSH_CBH_wide",
       "FBS_wide",
       "SCL_wide")
 
@@ -38,7 +38,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
     SCL_wide <- element_code <- element <- area_code <- item_code <- area <-
-      item <- unit <- FBS_wide <- FBSH_CB_wide <- TCL_wide <- TM_bilateral_wide <-
+      item <- unit <- FBS_wide <- FBSH_CBH_wide <- TCL_wide <- TM_bilateral_wide <-
       QCL_PROD <- FAO_items <- tier <- QCL <- oil <-
       cake <- SCL_item_oil <- SCL_item_cake <- cake_rate <- cake_rate_world <-
       DS_key_coproduct_item <- Production <- Import <- Export <- DS_demand <-
@@ -62,7 +62,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
       FAOSTAT_AREA_RM_NONEXIST() -> FBS
 
-    FBSH_CB_wide %>% gather_years() %>%
+    FBSH_CBH_wide %>% gather_years() %>%
       filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
       FAOSTAT_AREA_RM_NONEXIST() -> FBSH_CB
 
@@ -74,7 +74,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
       filter(value > 0) -> TM_bilateral
 
-    rm(SCL_wide, FBS_wide, FBSH_CB_wide, TCL_wide, TM_bilateral_wide)
+    rm(SCL_wide, FBS_wide, FBSH_CBH_wide, TCL_wide, TM_bilateral_wide)
 
 
     # Get area code in QCL that is consistent with FBS e.g., after 2010 only
@@ -385,8 +385,10 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
     # 3. Process items in FAO_items to get Balanced SUA data ----
     ## 3.1 Bal_new_tier1 ----
-    # Tier1 includes 168 items with best sources e.g. bilateral trade (TM)  prodstat (QCL) and supply-utilization-account (SCL)
-    #  SCL has balanced data processed by FAO but the quality was poor with low consistency
+    # Tier1 includes 209 = 210-1 items with best sources e.g. bilateral trade (TM)  prodstat (QCL) and supply-utilization-account (SCL)
+    # Note that item 237 Oil soybean was moved from Tier1 to Tier2 to use SCL for production due to Brazil data issue in QCL
+    # SCL has balanced data processed by FAO but the quality was poor with low consistency
+
 
     Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 1) %>% pull(item_code)) %>%
       SUA_TEMPLATE_LEFT_JOIN("QCL") %>%
@@ -406,7 +408,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     assert_FBS_balance(Bal_new_tier1)
 
     ## 3.2 Bal_new_tier2 ----
-    # Tier2 includes 139 items that had no data or low quality data in QCL so used production from SCL
+    # Tier2 includes 204 items that had no data or low quality data in QCL so used production from SCL
 
     Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 2) %>% pull(item_code)) %>%
       SUA_TEMPLATE_LEFT_JOIN("TM") %>%
@@ -423,7 +425,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
 
     ## 3.3 Bal_new_tier3 ----
-    # Tier3 includes 61 items that had QCL but no bilateral trade data
+    # Tier3 includes 21 items that had QCL but no bilateral trade data
     # so use gross trade from SCL
 
     Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 3) %>% pull(item_code)) %>%
@@ -449,7 +451,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     assert_FBS_balance(Bal_new_tier3)
 
     ## 3.4 Bal_new_tier4 ----
-    # Tier4 includes 84 items included in SCL but not in Tier1-3
+    # Tier4 includes 40 items included in SCL but not in Tier1-3
 
     Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 4) %>% pull(item_code)) %>%
       SUA_TEMPLATE_LEFT_JOIN("SCL") %>%
@@ -470,7 +472,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
 
     ## 3.5 Bal_new_tier5 ----
-    #Tier7 includes 12 fish items from FBS and FBSH. Item code came from FBS as well
+    #Tier5 includes 12 fish items from FBS and FBSH. Item code came from FBS as well
 
     Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 5) %>% pull(item_code)) %>%
       SUA_TEMPLATE_LEFT_JOIN("FBS") %>%
@@ -491,6 +493,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     ## 3.6 Bal_new_tier6 ----
     # Tier6 includes 29 items that included in QCL for production but not in Tier1 to Tier5
     # "Rice, paddy (rice milled equivalent)" removed as not needed and excluded by FAOSTAT in 2023
+    # 773 (Flax, processed but not spun) is changed to 771 (Flax, raw or retted)
 
     Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 6) %>% pull(item_code)) %>%
       SUA_TEMPLATE_LEFT_JOIN("QCL") %>%
@@ -523,9 +526,8 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       SUA_bal_adjust %>%  # Unit is converted to 1000 tonnes!
       left_join(FAO_items %>% select(item_code, item), by = "item_code") ->
       Bal_new_tier6
+
     assert_FBS_balance(.DF = Bal_new_tier6)
-
-
 
 
     ## 3.7 Bal_new_tier7 ----
@@ -651,12 +653,12 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       add_title("Bal_new_all") %>%
       add_units("Ktonne") %>%
       add_comments("Preprocessed FAO SUA 2010 - 2021") %>%
-      add_precursors("aglu/FAO/FAO_items",
+      add_precursors(file.path(DIR_RAW_DATA_FAOSTAT, "FAO_items"),
                      "QCL_PROD",
                      "QCL_AN_LIVEANIMAL_MEATEQ",
                      "TCL_wide",
                      "TM_bilateral_wide",
-                     "FBSH_CB_wide",
+                     "FBSH_CBH_wide",
                      "FBS_wide",
                      "SCL_wide")->
       Bal_new_all

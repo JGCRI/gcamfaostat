@@ -18,7 +18,7 @@
 module_xfaostat_L104_ProductionAreaAddFodder <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(FILE = "aglu/FAO/FAOSTAT/Other_supplementary/FAO_fodder_Prod_t_HA_ha_PRODSTAT_2011",
+    c(FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Other_supplementary/FAO_fodder_Prod_t_HA_ha_PRODSTAT_2011"),
       "QCL_area_code_map")
 
   MODULE_OUTPUTS <-
@@ -103,7 +103,7 @@ module_xfaostat_L104_ProductionAreaAddFodder <- function(command, ...) {
       add_title("Processed fodder crop production and area") %>%
       add_units("tonne and ha") %>%
       add_comments("Data is from old GCAM data v5.4") %>%
-      add_precursors("aglu/FAO/FAOSTAT/Other_supplementary/FAO_fodder_Prod_t_HA_ha_PRODSTAT_2011",
+      add_precursors(file.path(DIR_RAW_DATA_FAOSTAT, "Other_supplementary/FAO_fodder_Prod_t_HA_ha_PRODSTAT_2011"),
                      "QCL_area_code_map")->
       QCL_FODDERCROP
 

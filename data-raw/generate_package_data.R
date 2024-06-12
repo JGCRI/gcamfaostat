@@ -55,7 +55,7 @@ prebuilt_data_names <- c(
     "FBS_wide"),          # New food balance sheet
 
   # outputs of module_xfaostat_L101_RawDataPreProc4_FBSH_CB
-  c("FBSH_CB_wide"),      # Combined FBSH and CB
+  c("FBSH_CBH_wide"),      # Combined FBSH and CB
 
   # outputs of module_xfaostat_L101_RawDataPreProc5_TCL
   c("TCL_wide"),          # Gross trade

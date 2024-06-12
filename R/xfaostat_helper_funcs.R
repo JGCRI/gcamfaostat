@@ -12,7 +12,7 @@
 #' @return Information of FAOSTAT input dataset
 #' @export
 
-gcamfaostat_metadata <- function(.DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
+gcamfaostat_metadata <- function(.DIR_RAW_DATA_FAOSTAT = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
                                  OnlyReturnDatasetCodeRequired = FALSE){
 
   assertthat::assert_that(OnlyReturnDatasetCodeRequired == TRUE|OnlyReturnDatasetCodeRequired == FALSE)
@@ -24,7 +24,8 @@ gcamfaostat_metadata <- function(.DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
       "TCL",  "TM",   # Gross and bilateral trade
       "SCL",          # Supply utilization accounting
       "FBS",  "FBSH", # New and old food balance sheet
-      "CB",           # Old non food utilization accounting
+      #"CB",
+      "CBH",  # New and old non food utilization accounting
       "RFN",          # Fertilizer by nutrient
       "RL",           # Land Use
       "FO",           # Forest production and trade
@@ -88,7 +89,7 @@ gcamfaostat_metadata <- function(.DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
 #' @export
 
 FF_download_FAOSTAT <- function(DATASETCODE,
-                                DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+                                DATA_FOLDER = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
                                 OverWrite = FALSE){
 
   FAOSTAT_metadata <- `download.file` <- NULL
@@ -98,7 +99,7 @@ FF_download_FAOSTAT <- function(DATASETCODE,
   assertthat::assert_that(OverWrite == TRUE|OverWrite == FALSE)
   assertthat::assert_that(length(DATASETCODE) == 1, msg = "Single dataset allowed; consider using a loop or the function FF_rawdata_info() for downloading multiple datasets")
 
-  dir.create(DIR_RAW_DATA_FAOSTAT, showWarnings = F)
+  dir.create(DATA_FOLDER, showWarnings = F)
 
 
 
@@ -145,7 +146,7 @@ FF_download_FAOSTAT <- function(DATASETCODE,
 FF_download_RemoteArchive <-
   function(DATASETCODE = NULL,
            RemoteArchiveURL = "https://zenodo.org/record/8260225/files/",
-           DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+           DATA_FOLDER = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
            OverWrite = FALSE){
 
     warnings("The current archive is for GCAM v7 release, not the latest!")
@@ -209,7 +210,7 @@ FF_download_RemoteArchive <-
 #' @export
 
 FF_rawdata_info <- function(
-    DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+    DATA_FOLDER = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
     DATASETCODE,
     DOWNLOAD_NONEXIST = FALSE,
     FAOSTAT_or_Archive = "Archive"){
@@ -327,7 +328,7 @@ FAOSTAT_metadata <- function (code = NULL){
 #' @export
 
 FAOSTAT_load_raw_data <- function(DATASETCODE,
-                                  DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+                                  DATA_FOLDER = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
                                   GET_MAPPINGCODE = NULL,
                                   .Envir = NULL ){
   assertthat::assert_that(is.character(DATASETCODE))

@@ -1,0 +1,561 @@
+# File: FAO_items.csv
+# Title: Mapping of FAO items from different FAOSTAT dataset source
+# Units: NA
+# Description: This mapping is constructed to generate balanced data based best sources
+# The corresponding CPC and FBS item and code are included when available
+# Items are separated into different tiers based on data source
+# Item_code should be unique. For non-FAO items including some cakes and meat Eq their code were created by adding 0000 to the corresponding oil or animal items
+# Tier1 includes 209 items with best sources e.g. bilateral trade (TM)  prodstat (QCL) and supply-utilization-account (SCL)
+#  Note that item_code (982 953 311) are moved to Tier3 from Tier1 since TM data not available after 2010.
+#  Note that item 237 Oil soybean was moved from Tier1 to Tier2 to use SCL for production due to Brazil data issue in QCL
+#  SCL has balanced data processed by FAO but the quality was poor with low consistency
+# Tier2 includes 204 items that had no data or low quality data in QCL so used production from SCL
+# Tier3 includes 21 items that had QCL but no bilateral trade data so use gross trade from SCL
+# Tier4 includes 40 items included in SCL but not in Tier1-3
+# Tier5 includes 12 fish items from FBS and FBSH. Item code came from FBS as well
+# Tier6 includes 29 items that included in QCL for production but not in Tier1 to Tier5. 
+#  Note that item_code (30 paddy rice milled equivalent) is not included as it is not used and discontinued by FAOSTAT.  Flax, processed but not spun (773) is changed to Flax, raw or retted (771).
+# Tier7 include 4 cake or fiber items that coproduced in oil crop crushing. Item code used 0
+#  Note the FAOSTAT does not provide data for Tier8 item so they are generated based extraction rate and assumed no trade and single use.
+# Tier8 includes 16 meat equivalent items converted from live animals. Item code used 0
+#  Note that these items were preprocessed based on mainly carcass yield implied by data for adjusting production and stocks
+#  Note that for meat equivalent items only stock variation was accounted since 2010 when the data first available
+# Last update: 06-09-2024 (XZ)
+# Column types: icicccciccic
+# ----------
+item_code,item,tier,DS_trade,DS_production,DS_demand,DS_key_coproduct_item,DS_key_coproduct_item_code,CPC_code,CPC_item,FBS_item_code,FBS_item
+15,Wheat,1,TM,QCL,SCL,,,CPC0111,wheat,2511,Wheat and products
+27,Rice,1,TM,QCL,SCL,,,CPC0113,rice,2807,Rice and products
+44,Barley,1,TM,QCL,SCL,,,CPC0115,barley,2513,Barley and products
+51,"Beer of barley, malted",1,TM,QCL,SCL,,,CPC24310.01,"Beer of barley, malted",2656,Beer and products
+56,Maize (corn),1,TM,QCL,SCL,,,CPC0112,maize (corn),2514,Maize and products (including white maize)
+60,Oil of maize,1,TM,QCL,SCL,,,CPC21691.02,oil of maize,2582,Maize Germ Oil and products
+71,Rye,1,TM,QCL,SCL,,,CPC0116,rye,2515,Rye and products
+75,Oats,1,TM,QCL,SCL,,,CPC0117,oats,2516,Oats and products
+79,Millet,1,TM,QCL,SCL,,,CPC0118,millet,2517,Millet and products
+83,Sorghum,1,TM,QCL,SCL,,,CPC0114,sorghum,2518,Sorghum and products
+89,Buckwheat,1,TM,QCL,SCL,,,CPC01192,buckwheat,2520,"Cereals, Other and products"
+92,Quinoa,1,TM,QCL,SCL,,,CPC01194,quinoa,2520,"Cereals, Other and products"
+97,Triticale,1,TM,QCL,SCL,,,CPC01191,triticale,2520,"Cereals, Other and products"
+101,Canary seed,1,TM,QCL,SCL,,,CPC01195,canary seed,2520,"Cereals, Other and products"
+108,Cereals n.e.c.,1,TM,QCL,SCL,,,CPC01199.90,other cereals n.e.c.,2520,"Cereals, Other and products"
+116,Potatoes,1,TM,QCL,SCL,,,CPC01510,potatoes,2531,Potatoes and products
+122,Sweet potatoes,1,TM,QCL,SCL,,,CPC01530,sweet potatoes,2533,Sweet potatoes and products
+135,Yautia,1,TM,QCL,SCL,,,CPC01591,yautia,2534,"Roots, Other and products"
+136,Taro,1,TM,QCL,SCL,,,CPC01550,taro,2534,"Roots, Other and products"
+149,"Edible roots and tubers with high starch or inulin content, n.e.c., fresh",1,TM,QCL,SCL,,,CPC01599.10,"edible roots and tubers with high starch or inulin content, n.e.c., fresh",2534,"Roots, Other and products"
+157,Sugar beet,1,TM,QCL,SCL,,,CPC01801,sugar beet,2537,Sugar beet and products
+162,Raw cane or beet sugar (centrifugal only),1,TM,QCL,SCL,,,CPC2351f,raw cane or beet sugar (centrifugal only),2542,Sugar (Raw Equivalent) and products
+165,Molasses,1,TM,QCL,SCL,,,CPC23540,"molasses (from beet, cane and maize) [only calories]",2543,"Sweeteners, Other and products"
+176,"Beans, dry",1,TM,QCL,SCL,,,CPC01701,"beans, dry",2546,Beans and products
+181,"Broad beans and horse beans, dry",1,TM,QCL,SCL,,,CPC01702,"broad beans and horse beans, dry",2549,"Pulses, Other and products"
+187,"Peas, dry",1,TM,QCL,SCL,,,CPC01705,"peas, dry",2547,Peas and products
+191,"Chick peas, dry",1,TM,QCL,SCL,,,CPC01703,"chick peas, dry",2549,"Pulses, Other and products"
+197,"Pigeon peas, dry",1,TM,QCL,SCL,,,CPC01707,"pigeon peas, dry",2549,"Pulses, Other and products"
+201,"Lentils, dry",1,TM,QCL,SCL,,,CPC01704,"lentils, dry",2549,"Pulses, Other and products"
+205,Vetches,1,TM,QCL,SCL,,,CPC01709.01,vetches,2549,"Pulses, Other and products"
+211,Other pulses n.e.c.,1,TM,QCL,SCL,,,CPC01709.90,other pulses n.e.c.,2549,"Pulses, Other and products"
+216,"Brazil nuts, in shell",1,TM,QCL,SCL,,,CPC01377,"brazil nuts, in shell",2551,Nuts and products
+217,"Cashew nuts, in shell",1,TM,QCL,SCL,,,CPC01372,"cashew nuts, in shell",2551,Nuts and products
+220,"Chestnuts, in shell",1,TM,QCL,SCL,,,CPC01373,"chestnuts, in shell",2551,Nuts and products
+221,"Almonds, in shell",1,TM,QCL,SCL,,,CPC01371,"almonds, in shell",2551,Nuts and products
+222,"Walnuts, in shell",1,TM,QCL,SCL,,,CPC01376,"walnuts, in shell",2551,Nuts and products
+223,"Pistachios, in shell",1,TM,QCL,SCL,,,CPC01375,"pistachios, in shell",2551,Nuts and products
+225,"Hazelnuts, in shell",1,TM,QCL,SCL,,,CPC01374,"hazelnuts, in shell",2551,Nuts and products
+234,"Other nuts (excluding wild edible nuts and groundnuts), in shell, n.e.c.",1,TM,QCL,SCL,,,CPC01379.90,"other nuts (excluding wild edible nuts and groundnuts), in shell, n.e.c.",2551,Nuts and products
+236,Soya beans,1,TM,QCL,SCL,,,CPC0141,soya beans,2555,Soyabeans and products
+242,"Groundnuts, excluding shelled",1,TM,QCL,SCL,,,CPC0142,"groundnuts, excluding shelled",2552,Groundnuts (Shelled Eq) and products
+244,Groundnut oil,1,TM,QCL,SCL,,,CPC2162,groundnut oil,2572,Groundnut Oil and products
+249,"Coconuts, in shell",1,TM,QCL,SCL,,,CPC01460,"coconuts, in shell",2560,Coconuts (including copra) and products
+252,Coconut oil,1,TM,QCL,SCL,,,CPC2166,coconut oil,2578,Coconut Oil and products
+257,Palm oil,1,TM,QCL,SCL,,,CPC2165,palm oil,2577,Palm Oil and products
+258,Oil of palm kernel,1,TM,QCL,SCL,,,CPC21691.14,oil of palm kernel,2576,Palmkernel Oil and products
+260,Olives,1,TM,QCL,SCL,,,CPC01450,olives,2563,Olives (including preserved) and products
+261,Olive oil,1,TM,QCL,SCL,,,CPC2167,olive oil,2580,Olive Oil and products
+267,Sunflower seed,1,TM,QCL,SCL,,,CPC01445,sunflower seed,2557,Sunflower seed and products
+268,"Sunflower-seed oil, crude",1,TM,QCL,SCL,,,CPC21631.01,"sunflower-seed oil, crude",2573,Sunflowerseed Oil and products
+270,Rape or colza seed,1,TM,QCL,SCL,,,CPC01443,rapeseed or colza seed,2558,Rape and Mustardseed and products
+271,"Rapeseed or canola oil, crude",1,TM,QCL,SCL,,,CPC21641.01,"rapeseed or canola oil , crude",2574,Rape and Mustard Oil and products
+280,Safflower seed,1,TM,QCL,SCL,,,CPC01446,safflower seed,2570,"Oilcrops, Other and products"
+281,"Safflower-seed oil, crude",1,TM,QCL,SCL,,,CPC21631.02,"safflower-seed oil, crude",2586,"Oilcrops Oil, Other and products"
+289,Sesame seed,1,TM,QCL,SCL,,,CPC01444,sesame seed,2561,Sesame seed and products
+290,Oil of sesame seed,1,TM,QCL,SCL,,,CPC21691.07,oil of sesame seed,2579,Sesameseed Oil and products
+292,Mustard seed,1,TM,QCL,SCL,,,CPC01442,mustard seed,2558,Rape and Mustardseed and products
+296,Poppy seed,1,TM,QCL,SCL,,,CPC01448,poppy seed,2570,"Oilcrops, Other and products"
+299,Melonseed,1,TM,QCL,SCL,,,CPC01449.01,melonseed,2570,"Oilcrops, Other and products"
+329,Cotton seed,1,TM,QCL,SCL,,,CPC0143,cottonseed,2559,Cottonseed and products
+331,Cottonseed oil,1,TM,QCL,SCL,,,CPC2168,cottonseed oil,2575,Cottonseed Oil and products
+333,Linseed,1,TM,QCL,SCL,,,CPC01441,linseed,2570,"Oilcrops, Other and products"
+334,Oil of linseed,1,TM,QCL,SCL,,,CPC21691.12,oil of linseed,2586,"Oilcrops Oil, Other and products"
+336,Hempseed,1,TM,QCL,SCL,,,CPC01449.02,hempseed,2570,"Oilcrops, Other and products"
+339,"Other oil seeds, n.e.c.",1,TM,QCL,SCL,,,CPC01449.90,"other oil seeds, n.e.c.",2570,"Oilcrops, Other and products"
+358,Cabbages,1,TM,QCL,SCL,,,CPC01212,cabbages,2605,"Vegetables, Other and products"
+366,Artichokes,1,TM,QCL,SCL,,,CPC01216,artichokes,2605,"Vegetables, Other and products"
+367,Asparagus,1,TM,QCL,SCL,,,CPC01211,asparagus,2605,"Vegetables, Other and products"
+372,Lettuce and chicory,1,TM,QCL,SCL,,,CPC01214,lettuce and chicory,2605,"Vegetables, Other and products"
+373,Spinach,1,TM,QCL,SCL,,,CPC01215,spinach,2605,"Vegetables, Other and products"
+388,Tomatoes,1,TM,QCL,SCL,,,CPC01234,tomatoes,2601,Tomatoes and products
+393,Cauliflowers and broccoli,1,TM,QCL,SCL,,,CPC01213,cauliflowers and broccoli,2605,"Vegetables, Other and products"
+394,"Pumpkins, squash and gourds",1,TM,QCL,SCL,,,CPC01235,"pumpkins, squash and gourds",2605,"Vegetables, Other and products"
+397,Cucumbers and gherkins,1,TM,QCL,SCL,,,CPC01232,cucumbers and gherkins,2605,"Vegetables, Other and products"
+399,Eggplants (aubergines),1,TM,QCL,SCL,,,CPC01233,eggplants (aubergines),2605,"Vegetables, Other and products"
+401,"Chillies and peppers, green (Capsicum spp. and Pimenta spp.)",1,TM,QCL,SCL,,,CPC01231,"chillies and peppers, green (capsicum spp. and pimenta spp.)",2605,"Vegetables, Other and products"
+402,"Onions and shallots, green",1,TM,QCL,SCL,,,CPC01253.01,"onions and shallots, green",2605,"Vegetables, Other and products"
+403,"Onions and shallots, dry (excluding dehydrated)",1,TM,QCL,SCL,,,CPC01253.02,"onions and shallots, dry (excluding dehydrated)",2602,Onions and products
+406,Green garlic,1,TM,QCL,SCL,,,CPC01252,green garlic,2605,"Vegetables, Other and products"
+407,Leeks and other alliaceous vegetables,1,TM,QCL,SCL,,,CPC01254,leeks and other alliaceous vegetables,2605,"Vegetables, Other and products"
+414,"Other beans, green",1,TM,QCL,SCL,,,CPC01241.90,"other beans, green",2605,"Vegetables, Other and products"
+417,"Peas, green",1,TM,QCL,SCL,,,CPC01242,"peas, green",2605,"Vegetables, Other and products"
+420,"Broad beans and horse beans, green",1,TM,QCL,SCL,,,CPC01243,"broad beans and horse beans, green",2605,"Vegetables, Other and products"
+426,Carrots and turnips,1,TM,QCL,SCL,,,CPC01251,carrots and turnips,2605,"Vegetables, Other and products"
+446,Green corn (maize),1,TM,QCL,SCL,,,CPC01290.01,green corn (maize),2605,"Vegetables, Other and products"
+449,Mushrooms and truffles,1,TM,QCL,SCL,,,CPC01270,mushrooms and truffles,2605,"Vegetables, Other and products"
+461,Locust beans (carobs),1,TM,QCL,SCL,,,CPC01356,locust beans (carobs),2605,"Vegetables, Other and products"
+463,"Other vegetables, fresh n.e.c.",1,TM,QCL,SCL,,,CPC01290.90,"other vegetables, fresh n.e.c.",2605,"Vegetables, Other and products"
+486,Bananas,1,TM,QCL,SCL,,,CPC01312,bananas,2615,Bas and products
+489,Plantains and cooking bananas,1,TM,QCL,SCL,,,CPC01313,plantains and others,2616,Plantains and products
+490,Oranges,1,TM,QCL,SCL,,,CPC01323,oranges,2611,"Oranges, Mandarines and products"
+495,"Tangerines, mandarins, clementines",1,TM,QCL,SCL,,,CPC01324,"tangerines, mandarins, clementines",2611,"Oranges, Mandarines and products"
+497,Lemons and limes,1,TM,QCL,SCL,,,CPC01322,lemons and limes,2612,"Lemons, Limes and products"
+507,Pomelos and grapefruits,1,TM,QCL,SCL,,,CPC01321,pomelos and grapefruits,2613,Grapefruit and products
+512,"Other citrus fruit, n.e.c.",1,TM,QCL,SCL,,,CPC01329,"other citrus fruit, n.e.c.",2614,"Citrus, Other and products"
+515,Apples,1,TM,QCL,SCL,,,CPC01341,apples,2617,Apples and products
+521,Pears,1,TM,QCL,SCL,,,CPC01342.01,pears,2625,"Fruits, Other and products"
+523,Quinces,1,TM,QCL,SCL,,,CPC01342.02,quinces,2625,"Fruits, Other and products"
+526,Apricots,1,TM,QCL,SCL,,,CPC01343,apricots,2625,"Fruits, Other and products"
+530,Sour cherries,1,TM,QCL,SCL,,,CPC01344.01,sour cherries,2625,"Fruits, Other and products"
+531,Cherries,1,TM,QCL,SCL,,,CPC01344.02,cherries,2625,"Fruits, Other and products"
+534,Peaches and nectarines,1,TM,QCL,SCL,,,CPC01345,peaches and nectarines,2625,"Fruits, Other and products"
+536,Plums and sloes,1,TM,QCL,SCL,,,CPC01346,plums and sloes,2625,"Fruits, Other and products"
+541,Other stone fruits,1,TM,QCL,SCL,,,CPC01349.20,other stone fruits,2625,"Fruits, Other and products"
+544,Strawberries,1,TM,QCL,SCL,,,CPC01354,strawberries,2625,"Fruits, Other and products"
+547,Raspberries,1,TM,QCL,SCL,,,CPC01353.01,raspberries,2625,"Fruits, Other and products"
+550,Currants,1,TM,QCL,SCL,,,CPC01351.01,currants,2625,"Fruits, Other and products"
+552,Blueberries,1,TM,QCL,SCL,,,CPC01355.01,blueberries,2625,"Fruits, Other and products"
+554,Cranberries,1,TM,QCL,SCL,,,CPC01355.02,cranberries,2625,"Fruits, Other and products"
+558,Other berries and fruits of the genus vaccinium n.e.c.,1,TM,QCL,SCL,,,CPC01355.90,other berries and fruits of the genus vaccinium,2625,"Fruits, Other and products"
+560,Grapes,1,TM,QCL,SCL,,,CPC01330,grapes,2620,Grapes and products (excludingexcl wine) and products
+564,Wine,1,TM,QCL,SCL,,,CPC24212.02,wine,2655,Wine and products
+567,Watermelons,1,TM,QCL,SCL,,,CPC01221,watermelons,2605,"Vegetables, Other and products"
+568,Cantaloupes and other melons,1,TM,QCL,SCL,,,CPC01229,cantaloupes and other melons,2605,"Vegetables, Other and products"
+569,Figs,1,TM,QCL,SCL,,,CPC01315,figs,2625,"Fruits, Other and products"
+571,"Mangoes, guavas and mangosteens",1,TM,QCL,SCL,,,CPC01316,"mangoes, guavas, mangosteens",2625,"Fruits, Other and products"
+572,Avocados,1,TM,QCL,SCL,,,CPC01311,avocados,2625,"Fruits, Other and products"
+574,Pineapples,1,TM,QCL,SCL,,,CPC01318,pineapples,2618,Pineapples and products
+577,Dates,1,TM,QCL,SCL,,,CPC01314,dates,2619,Dates and products
+587,Persimmons,1,TM,QCL,SCL,,,CPC01359.01,persimmons,2625,"Fruits, Other and products"
+592,Kiwi fruit,1,TM,QCL,SCL,,,CPC01352,kiwi fruit,2625,"Fruits, Other and products"
+600,Papayas,1,TM,QCL,SCL,,,CPC01317,papayas,2625,"Fruits, Other and products"
+603,"Other tropical fruits, n.e.c.",1,TM,QCL,SCL,,,CPC01319,"other tropical fruits, n.e.c.",2625,"Fruits, Other and products"
+619,"Other fruits, n.e.c.",1,TM,QCL,SCL,,,CPC01359.90,other fruits n.e.c.,2625,"Fruits, Other and products"
+656,"Coffee, green",1,TM,QCL,SCL,,,CPC01610,"coffee, green",2630,Coffee and products
+661,Cocoa beans,1,TM,QCL,SCL,,,CPC01640,cocoa beans,2633,Cocoa Beans and products
+667,Tea leaves,1,TM,QCL,SCL,,,CPC01620,tea leaves,2635,Tea (including mate) and products
+671,Mate leaves,1,TM,QCL,SCL,,,CPC01630,mat<e9> leaves,2635,Tea (including mate) and products
+687,"Pepper (Piper spp.), raw",1,TM,QCL,SCL,,,CPC01651,"pepper (piper spp.), raw",2640,Pepper and products
+689,"Chillies and peppers, dry (Capsicum spp., Pimenta spp.), raw",1,TM,QCL,SCL,,,CPC01652,"chillies and peppers, dry (capsicum spp. and pimenta spp.), raw",2641,Pimento and products
+692,"Vanilla, raw",1,TM,QCL,SCL,,,CPC01658,"vanilla, raw",2645,"Spices, Other and products"
+693,"Cinnamon and cinnamon-tree flowers, raw",1,TM,QCL,SCL,,,CPC01655,"cinnamon and cinnamon-tree flowers, raw",2645,"Spices, Other and products"
+698,"Cloves (whole stems), raw",1,TM,QCL,SCL,,,CPC01656,"cloves (whole stems), raw",2642,Cloves and products
+702,"Nutmeg, mace, cardamoms, raw",1,TM,QCL,SCL,,,CPC01653,"nutmeg, mace, cardamoms, raw",2645,"Spices, Other and products"
+711,"Anise, badian, coriander, cumin, caraway, fennel and juniper berries, raw",1,TM,QCL,SCL,,,CPC01654,"anise, badian, coriander, cumin, caraway, fennel and juniper berries, raw",2645,"Spices, Other and products"
+720,"Ginger, raw",1,TM,QCL,SCL,,,CPC01657,"ginger, raw",2645,"Spices, Other and products"
+723,"Other stimulant, spice and aromatic crops, n.e.c.",1,TM,QCL,SCL,,,CPC01699,"other stimulant, spice and aromatic crops, n.e.c.",2645,"Spices, Other and products"
+867,"Meat of cattle with the bone, fresh or chilled",1,TM,QCL,SCL,,,CPC21111.01,"meat of cattle with the bone, fresh or chilled",2731,Bovine Meat and products
+868,"Edible offal of cattle, fresh, chilled or frozen",1,TM,QCL,SCL,,,CPC21151,"edible offal of cattle, fresh, chilled or frozen",2736,"Offals, Edible and products"
+869,"Cattle fat, unrendered",1,TM,QCL,SCL,,,CPC21512,"cattle fat, unrendered",2737,"Fats, Animals, Raw and products"
+882,Raw milk of cattle,1,TM,QCL,SCL,,,CPC02211,raw milk of cattle,2848,Milk - (Excluding excluding Butter butter) and products
+885,"Cream, fresh",1,TM,QCL,SCL,,,CPC22120,"cream, fresh [only calories]",2743,Cream and products
+886,Butter of cow milk,1,TM,QCL,SCL,,,CPC22241.01,butter of cow milk [only calories],2740,"Butter, Ghee and products"
+888,Skim milk of cows,1,TM,QCL,SCL,,,CPC22110.02,skim milk of cows,2848,Milk - (Excluding excluding Butter butter) and products
+889,"Whole milk, condensed",1,TM,QCL,SCL,,,CPC22222.01,"whole milk, condensed",2848,Milk - (Excluding excluding Butter butter) and products
+890,"Whey, condensed",1,TM,QCL,SCL,,,CPC22130.03,"whey, condensed",2848,Milk - (Excluding excluding Butter butter) and products
+894,"Whole milk, evaporated",1,TM,QCL,SCL,,,CPC22221.01,"whole milk, evaporated",2848,Milk - (Excluding excluding Butter butter) and products
+895,"Skim milk, evaporated",1,TM,QCL,SCL,,,CPC22221.02,"skim milk, evaporated",2848,Milk - (Excluding excluding Butter butter) and products
+896,"Skim milk, condensed",1,TM,QCL,SCL,,,CPC22222.02,"skim milk, condensed",2848,Milk - (Excluding excluding Butter butter) and products
+897,Whole milk powder,1,TM,QCL,SCL,,,CPC22211,whole milk powder,2848,Milk - (Excluding excluding Butter butter) and products
+898,Skim milk and whey powder,1,TM,QCL,SCL,,,CPC22212,skim milk and whey powder,2848,Milk - (Excluding excluding Butter butter) and products
+899,"Buttermilk, dry",1,TM,QCL,SCL,,,CPC22230.04,"buttermilk, dry",2848,Milk - (Excluding excluding Butter butter) and products
+900,"Whey, dry",1,TM,QCL,SCL,,,CPC22130.02,"whey, dry",2848,Milk - (Excluding excluding Butter butter) and products
+901,Cheese from whole cow milk,1,TM,QCL,SCL,,,CPC22251.01,cheese from whole cow milk,2848,Milk - (Excluding excluding Butter butter) and products
+904,Cheese from skimmed cow milk,1,TM,QCL,SCL,,,CPC22251.02,cheese from skimmed cow milk,2848,Milk - (Excluding excluding Butter butter) and products
+977,"Meat of sheep, fresh or chilled",1,TM,QCL,SCL,,,CPC21115,"meat of sheep, fresh or chilled",2732,Mutton & and Goat Meat and products
+978,"Edible offal of sheep, fresh, chilled or frozen",1,TM,QCL,SCL,,,CPC21155,"edible offal of sheep, fresh, chilled or frozen",2736,"Offals, Edible and products"
+979,"Sheep fat, unrendered",1,TM,QCL,SCL,,,CPC21514,"sheep fat, unrendered",2737,"Fats, Animals, Raw and products"
+1017,"Meat of goat, fresh or chilled",1,TM,QCL,SCL,,,CPC21116,"meat of goat, fresh or chilled",2732,Mutton & and Goat Meat and products
+1018,"Edible offal of goat, fresh, chilled or frozen",1,TM,QCL,SCL,,,CPC21156,"edible offal of goat, fresh, chilled or frozen",2736,"Offals, Edible and products"
+1022,Butter of goat milk,1,TM,QCL,SCL,,,CPC22249.02,butter of goat milk [only calories],2740,"Butter, Ghee and products"
+1035,"Meat of pig with the bone, fresh or chilled",1,TM,QCL,SCL,,,CPC21113.01,"meat of pig with the bone, fresh or chilled",2733,Pigmeat and products
+1036,"Edible offal of pigs, fresh, chilled or frozen",1,TM,QCL,SCL,,,CPC21153,"edible offal of pigs, fresh, chilled or frozen",2736,"Offals, Edible and products"
+1037,Fat of pigs,1,TM,QCL,SCL,,,CPC21511.01,fat of pigs,2737,"Fats, Animals, Raw and products"
+1043,"Pig fat, rendered",1,TM,QCL,SCL,,,CPC21521,"pig fat, rendered",2737,"Fats, Animals, Raw and products"
+1058,"Meat of chickens, fresh or chilled",1,TM,QCL,SCL,,,CPC21121,"meat of chickens, fresh or chilled",2734,Poultry Meat and products
+1062,"Hen eggs in shell, fresh",1,TM,QCL,SCL,,,CPC0231,"hen eggs in shell, fresh",2744,Eggs and products
+1069,"Meat of ducks, fresh or chilled",1,TM,QCL,SCL,,,CPC21122,"meat of ducks, fresh or chilled",2734,Poultry Meat and products
+1073,"Meat of geese, fresh or chilled",1,TM,QCL,SCL,,,CPC21123,"meat of geese, fresh or chilled",2734,Poultry Meat and products
+1080,"Meat of turkeys, fresh or chilled",1,TM,QCL,SCL,,,CPC21124,"meat of turkeys, fresh or chilled",2734,Poultry Meat and products
+1091,"Eggs from other birds in shell, fresh, n.e.c.",1,TM,QCL,SCL,,,CPC0232,"eggs from other birds in shell, fresh, n.e.c.",2744,Eggs and products
+1141,"Meat of rabbits and hares, fresh or chilled",1,TM,QCL,SCL,,,CPC21114,"meat of rabbits and hares, fresh or chilled",2735,"Meat, Other and products"
+1163,"Game meat, fresh, chilled or frozen",1,TM,QCL,SCL,,,CPC21170.02,"game meat, fresh, chilled or frozen",2735,"Meat, Other and products"
+1166,"Other meat n.e.c. (excluding mammals), fresh, chilled or frozen",1,TM,QCL,SCL,,,CPC21170.92,"other meat n.e.c., fresh, chilled or frozen",2735,"Meat, Other and products"
+1182,Natural honey,1,TM,QCL,SCL,,,CPC02910,Natural honey,2745,Honey and products
+1225,Tallow,1,TM,QCL,SCL,,,CPC21523,tallow,2737,"Fats, Animals, Raw and products"
+1242,Margarine and shortening,1,TM,QCL,SCL,,,CPC21700.02,margarine and shortening,2586,"Oilcrops Oil, Other and products"
+137,Yams,1,TM,QCL,SCL,,,CPC01540,yams,2535,Yams and products
+156,Sugar cane,1,TM,QCL,SCL,,,CPC01802,sugar cane,2536,Sugar cane and products
+195,"Cow peas, dry",1,TM,QCL,SCL,,,CPC01706,"cow peas, dry",2549,"Pulses, Other and products"
+203,"Bambara beans, dry",1,TM,QCL,SCL,,,CPC01708,"bambara beans, dry",2549,"Pulses, Other and products"
+224,Kola nuts,1,TM,QCL,SCL,,,CPC01379.02,kola nuts,2551,Nuts and products
+226,Areca nuts,1,TM,QCL,SCL,,,CPC01379.01,areca nuts,2551,Nuts and products
+256,Palm kernels,1,TM,QCL,SCL,,,CPC01491.02,palm kernels [only calories],2562,Palm kernels and products
+265,Castor oil seeds,1,TM,QCL,SCL,,,CPC01447,castor oil seeds,2570,"Oilcrops, Other and products"
+430,Okra,1,TM,QCL,SCL,,,CPC01239.01,okra,2605,"Vegetables, Other and products"
+459,Chicory roots,1,TM,QCL,SCL,,,CPC01691,chicory roots,2605,"Vegetables, Other and products"
+549,Gooseberries,1,TM,QCL,SCL,,,CPC01351.02,gooseberries,2625,"Fruits, Other and products"
+887,Ghee from cow milk,1,TM,QCL,SCL,,,CPC22241.02,ghee from cow milk [only calories],2740,"Butter, Ghee and products"
+891,Yoghurt,1,TM,QCL,SCL,,,CPC22230.01,yoghurt,2848,Milk - (Excluding excluding Butter butter) and products
+947,"Meat of buffalo, fresh or chilled",1,TM,QCL,SCL,,,CPC21112,"meat of buffalo, fresh or chilled",2731,Bovine Meat and products
+983,Butter and ghee of sheep milk,1,TM,QCL,SCL,,,CPC22249.01,butter and ghee of sheep milk [only calories],2740,"Butter, Ghee and products"
+984,"Cheese from milk of sheep, fresh or processed",1,TM,QCL,SCL,,,CPC22253,"cheese from milk of sheep, fresh or processed",2848,Milk - (Excluding excluding Butter butter) and products
+1021,"Cheese from milk of goats, fresh or processed",1,TM,QCL,SCL,,,CPC22254,"cheese from milk of goats, fresh or processed",2848,Milk - (Excluding excluding Butter butter) and products
+1127,"Meat of camels, fresh or chilled",1,TM,QCL,SCL,,,CPC21117.01,"meat of camels, fresh or chilled",2735,"Meat, Other and products"
+1129,Fat of camels,1,TM,QCL,SCL,,,CPC21519.02,fat of camels,2737,"Fats, Animals, Raw and products"
+103,Mixed grain,1,TM,QCL,SCL,,,CPC01199.02,mixed grain,2520,"Cereals, Other and products"
+263,Karite nuts (sheanuts),1,TM,QCL,SCL,,,CPC01499.01,karite nuts (sheanuts),2570,"Oilcrops, Other and products"
+948,"Edible offal of buffalo, fresh, chilled or frozen",1,TM,QCL,SCL,,,CPC21152,"edible offal of buffalo, fresh, chilled or frozen",2736,"Offals, Edible and products"
+1089,"Meat of pigeons and other birds n.e.c., fresh, chilled or frozen",1,TM,QCL,SCL,,,CPC21170.01,"meat of pigeons and other birds n.e.c., fresh, chilled or frozen",2735,"Meat, Other and products"
+1097,"Horse meat, fresh or chilled",1,TM,QCL,SCL,,,CPC21118.01,"horse meat, fresh or chilled",2735,"Meat, Other and products"
+1098,"Edible offals of horses and other equines,  fresh, chilled or frozen",1,TM,QCL,SCL,,,CPC21159.01,"edible offals of horses and other equines,  fresh, chilled or frozen",2736,"Offals, Edible and products"
+161,Other sugar crops n.e.c.,1,TM,QCL,SCL,,,CPC01809,other sugar crops n.e.c.,2543,"Sweeteners, Other and products"
+94,Fonio,1,TM,QCL,SCL,,,CPC01193,fonio,2520,"Cereals, Other and products"
+125,"Cassava, fresh",1,TM,QCL,SCL,,,CPC01520.01,"cassava, fresh",2532,Cassava and products
+210,Lupins,1,TM,QCL,SCL,,,CPC01709.02,lupins,2549,"Pulses, Other and products"
+275,Tung nuts,1,TM,QCL,SCL,,,CPC01499.02,tung nuts,2570,"Oilcrops, Other and products"
+423,String beans,1,TM,QCL,SCL,,,CPC01241.01,string beans,2605,"Vegetables, Other and products"
+591,Cashewapple,1,TM,QCL,SCL,,,CPC01359.02,cashewapple,2625,"Fruits, Other and products"
+16,Wheat and meslin flour,2,TM,SCL,SCL,,,CPC23110,wheat and meslin flour,2511,Wheat and products
+17,Bran of wheat,2,TM,SCL,SCL,,,CPC39120.01,bran of wheat [only calories],2511,Wheat and products
+18,"Uncooked pasta, not stuffed or otherwise prepared",2,TM,SCL,SCL,,,CPC23710,"uncooked pasta, not stuffed or otherwise prepared",2511,Wheat and products
+19,Germ of wheat,2,TM,SCL,SCL,,,CPC23140.01,germ of wheat [only calories),2511,Wheat and products
+20,Bread,2,TM,SCL,SCL,,,CPCF0020,bread,2511,Wheat and products
+22,Pastry,2,TM,SCL,SCL,,,CPCF0022,pastry,2511,Wheat and products
+28,Husked rice,2,TM,SCL,SCL,,,CPC23162,husked rice,2807,Rice and products
+31,"Rice, milled",2,TM,SCL,SCL,,,CPC23161.02,"rice, milled",2807,Rice and products
+32,"Rice, broken",2,TM,SCL,SCL,,,CPC23161.03,"rice, broken",2807,Rice and products
+37,Cake of rice bran,2,TM,SCL,SCL,,,NA,NA,NA,NA
+38,Flour of rice,2,TM,SCL,SCL,,,CPC23120.01,flour of rice,2807,Rice and products
+41,Breakfast cereals,2,TM,SCL,SCL,,,CPC23140.03,breakfast cereals,2511,Wheat and products
+45,Pot barley,2,TM,SCL,SCL,,,CPC23140.04,pot barley,2513,Barley and products
+48,Barley flour and grits,2,TM,SCL,SCL,,,CPC23120.02,barley flour and grits [only calories],2513,Barley and products
+49,"Malt, whether or not roasted",2,TM,SCL,SCL,,,CPC24320,"malt, whether or not roasted",2513,Barley and products
+50,Malt extract,2,TM,SCL,SCL,,,CPC23999.01,malt extract,2513,Barley and products
+57,Germ of maize,2,TM,SCL,SCL,,,CPC23140.06,germ of maize [only calories],2514,Maize and products (including white maize)
+58,Flour of maize,2,TM,SCL,SCL,,,CPC23120.03,flour of maize,2514,Maize and products (including white maize)
+59,Bran of maize,2,TM,SCL,SCL,,,CPC39120.04,bran of maize [only calories],2514,Maize and products (including white maize)
+72,Flour of rye,2,TM,SCL,SCL,,,CPC23120.04,flour of rye,2515,Rye and products
+76,"Oats, rolled",2,TM,SCL,SCL,,,CPC23140.07,"oats, rolled",2516,Oats and products
+104,Flour of mixed grain,2,TM,SCL,SCL,,,CPC23120.10,flour of mixed grain,2520,"Cereals, Other and products"
+109,Infant food,2,TM,SCL,SCL,,,CPC23991.01,infant food,2680,Infant food and products
+110,"Communion wafers, empty cachets of a kind suitable for pharmaceutical use, sealing wafers, rice paper and similar products.",2,TM,SCL,SCL,,,CPC23490.01,"communion wafers, empty cachets of a kind suitable for pharmaceutical use, sealing wafers, rice paper and similar products.",2511,Wheat and products
+111,Flour of cereals n.e.c.,2,TM,SCL,SCL,,,CPC23120.90,flour of cereals nes,2520,"Cereals, Other and products"
+112,Bran of cereals n.e.c.,2,TM,SCL,SCL,,,CPC39120.13,bran of cereals nes [only calories],2520,"Cereals, Other and products"
+113,Cereal preparations,2,TM,SCL,SCL,,,CPC23140.08,cereal preparations,2520,"Cereals, Other and products"
+114,Mixes and doughs for the preparation of bakers wares,2,TM,SCL,SCL,,,CPC23180,mixes and doughs for the preparation of bakers' wares,2511,Wheat and products
+115,"Food preparations of flour, meal or malt extract",2,TM,SCL,SCL,,,CPC23999.02,"food preparations of flour, meal or malt extract",2511,Wheat and products
+117,"Flour, meal, powder, flakes, granules and pellets of potatoes",2,TM,SCL,SCL,,,CPC21392,"flour, meal, powder, flakes, granules and pellets of potatoes",2531,Potatoes and products
+118,"Potatoes, frozen",2,TM,SCL,SCL,,,CPC21313,"potatoes, frozen",2531,Potatoes and products
+121,Tapioca of potatoes,2,TM,SCL,SCL,,,CPC23230.01,tapioca of potatoes,2531,Potatoes and products
+128,"Cassava, dry",2,TM,SCL,SCL,,,CPC01520.02,"cassava, dried",2532,Cassava and products
+129,Starch of cassava,2,TM,SCL,SCL,,,CPC23220.06,starch of cassava,2532,Cassava and products
+150,Flour of roots and tubers n.e.c.,2,TM,SCL,SCL,,,CPC23170.02,flour of roots and tubers nes,2534,"Roots, Other and products"
+160,"Refined cane or beet sugar, in solid form, containing added flavouring or colouring matter; maple sugar and maple syrup",2,TM,SCL,SCL,,,CPC23530,"refined cane or beet sugar, in solid form, containing added flavouring or colouring matter; maple sugar and maple syrup",2543,"Sweeteners, Other and products"
+164,Refined sugar,2,TM,SCL,SCL,,,CPC23520,refined sugar,2542,Sugar (Raw Equivalent) and products
+166,Other fructose and syrup,2,TM,SCL,SCL,,,CPC23210.03,other fructose and syrup,2543,"Sweeteners, Other and products"
+167,Sugar and syrups n.e.c.,2,TM,SCL,SCL,,,CPC23210.04,sugar and syrups nes,2543,"Sweeteners, Other and products"
+168,Sugar confectionery,2,TM,SCL,SCL,,,CPC23670.01,sugar confectionery,2542,Sugar (Raw Equivalent) and products
+172,Glucose and dextrose,2,TM,SCL,SCL,,,CPC23210.05,glucose and dextrose,2543,"Sweeteners, Other and products"
+173,Lactose,2,TM,SCL,SCL,,,CPC23210.06,lactose,2543,"Sweeteners, Other and products"
+175,Isoglucose,2,TM,SCL,SCL,,,CPC23210.08,isoglucose,2543,"Sweeteners, Other and products"
+212,Flour of pulses,2,TM,SCL,SCL,,,CPC23170.03,flour of pulses,2549,"Pulses, Other and products"
+213,Bran of pulses,2,TM,SCL,SCL,,,CPC39120.14,bran of pulses [only calories],2549,"Pulses, Other and products"
+229,"Brazil nuts, shelled",2,TM,SCL,SCL,,,CPC21429.01,"brazil nuts, shelled",2551,Nuts and products
+230,"Cashew nuts, shelled",2,TM,SCL,SCL,,,CPC21424,"cashew nuts, shelled",2551,Nuts and products
+231,"Almonds, shelled",2,TM,SCL,SCL,,,CPC21422,"almonds, shelled",2551,Nuts and products
+232,"Walnuts, shelled",2,TM,SCL,SCL,,,CPC21429.02,"walnuts, shelled",2551,Nuts and products
+233,"Hazelnuts, shelled",2,TM,SCL,SCL,,,CPC21423,"hazelnuts, shelled",2551,Nuts and products
+235,Prepared nuts,2,TM,SCL,SCL,,,CPCF0235,prepared nuts,2551,Nuts and products
+237,Soya bean oil,2,TM,SCL,SCL,,,CPC2161,soya bean oil,2571,Soyabean Oil and products
+238,Cake of  soya beans,2,TM,SCL,SCL,,,NA,NA,NA,NA
+239,Soya sauce,2,TM,SCL,SCL,,,CPC23995.01,soya sauce,2555,Soyabeans and products
+240,Soya paste,2,TM,SCL,SCL,,,CPC23995.02,soya paste,2555,Soyabeans and products
+243,"Groundnuts, shelled",2,TM,SCL,SCL,,,CPC21421,"groundnuts, shelled",2552,Groundnuts (Shelled Eq) and products
+246,Prepared groundnuts,2,TM,SCL,SCL,,,CPC21495.01,prepared groundnuts,2552,Groundnuts (Shelled Eq) and products
+247,Peanut butter,2,TM,SCL,SCL,,,CPC21495.02,peanut butter,2552,Groundnuts (Shelled Eq) and products
+250,"Coconuts, desiccated",2,TM,SCL,SCL,,,CPC21429.07,"coconuts, desiccated",2560,Coconuts (including copra) and products
+262,Olives preserved,2,TM,SCL,SCL,,,CPCF0262,olives preserved,2563,Olives (including preserved) and products
+264,Butter of karite nuts,2,TM,SCL,SCL,,,CPC21691.03,butter of karite nuts,2586,"Oilcrops Oil, Other and products"
+266,Oil of castor beans,2,TM,SCL,SCL,,,CPC21691.04,oil of castor beans,2586,"Oilcrops Oil, Other and products"
+269,Cake of sunflower seed,2,TM,SCL,SCL,,,NA,NA,NA,NA
+274,Oil of olive residues,2,TM,SCL,SCL,,,CPC21673,oil of olive residues,2580,Olive Oil and products
+295,Flour of mustard seed,2,TM,SCL,SCL,,,CPC23995.03,flour of mustard seed,2558,Rape and Mustardseed and products
+340,"Other oil of vegetable origin, crude n.e.c.",2,TM,SCL,SCL,,,CPC21691.90,"other oil of vegetable origin, crude n.e.c.",2586,"Oilcrops Oil, Other and products"
+341,"Cake, oilseeds nes",2,TM,SCL,SCL,,,NA,NA,NA,NA
+343,"Flours and meals of oil seeds or oleaginous fruits, except those of mustard",2,TM,SCL,SCL,,,CPC21920,"flours and meals of oil seeds or oleaginous fruits, except those of mustard",2570,"Oilcrops, Other and products"
+390,Tomato juice,2,TM,SCL,SCL,,,CPC21321,tomato juice,2601,Tomatoes and products
+391,Paste of tomatoes,2,TM,SCL,SCL,,,CPC21399.01,paste of tomatoes,2601,Tomatoes and products
+392,"Tomatoes, peeled (o/t vinegar)",2,TM,SCL,SCL,,,CPC21399.02,"tomatoes, peeled (o/t vinegar)",2601,Tomatoes and products
+447,"Sweet corn, frozen",2,TM,SCL,SCL,,,CPC21319.01,"sweet corn, frozen",2605,"Vegetables, Other and products"
+448,"Sweet corn, prepared or preserved",2,TM,SCL,SCL,,,CPC21399.03,"sweet corn, prepared or preserved",2605,"Vegetables, Other and products"
+450,Dried mushrooms,2,TM,SCL,SCL,,,CPC21393.01,dried mushrooms,2605,"Vegetables, Other and products"
+451,Canned mushrooms,2,TM,SCL,SCL,,,CPC21397.01,canned mushrooms,2605,"Vegetables, Other and products"
+460,"Vegetable products, fresh or dry n.e.c.",2,TM,SCL,SCL,,,NA,NA,NA,NA
+466,Other vegetable juices,2,TM,SCL,SCL,,,CPC21329,other vegetable juices,2605,"Vegetables, Other and products"
+469,"Vegetables, dehydrated",2,TM,SCL,SCL,,,CPC21393.90,"vegetables, dehydrated",2605,"Vegetables, Other and products"
+471,"Vegetables, pulses and potatoes, preserved by vinegar or acetic acid",2,TM,SCL,SCL,,,CPC21340,"vegetables, pulses and potatoes, preserved by vinegar or acetic acid",2605,"Vegetables, Other and products"
+472,Vegetables preserved nes (o/t vinegar),2,TM,SCL,SCL,,,CPCF0472,vegetables preserved nes (o/t vinegar),2605,"Vegetables, Other and products"
+473,Vegetables frozen,2,TM,SCL,SCL,,,CPCF0473,vegetables frozen,2605,"Vegetables, Other and products"
+474,Other vegetables provisionally preserved,2,TM,SCL,SCL,,,CPC21330.90,other vegetables provisionally preserved,2605,"Vegetables, Other and products"
+475,Vegetables preserved (frozen),2,TM,SCL,SCL,,,CPCF0475,vegetables preserved (frozen),2605,"Vegetables, Other and products"
+476,Homogenized vegetable preparations,2,TM,SCL,SCL,,,CPC23991.02,homogenized vegetable preparations,2605,"Vegetables, Other and products"
+491,Orange juice,2,TM,SCL,SCL,,,CPC21431.01,orange juice,2611,"Oranges, Mandarines and products"
+492,"Orange juice, concentrated",2,TM,SCL,SCL,,,CPC21431.02,"orange juice, concentrated",2611,"Oranges, Mandarines and products"
+498,Juice of lemon,2,TM,SCL,SCL,,,CPC21439.02,juice of lemon,2612,"Lemons, Limes and products"
+509,Grapefruit juice,2,TM,SCL,SCL,,,CPC21432,grapefruit juice,2613,Grapefruit and products
+510,"Grapefruit juice, concentrated",2,TM,SCL,SCL,,,CPC21432.01,"grapefruit juice, concentrated",2613,Grapefruit and products
+513,Juice of citrus fruit n.e.c.,2,TM,SCL,SCL,,,CPC21439.04,Juice of citrus fruit n.e.c.,2614,"Citrus, Other and products"
+514,"Citrus juice, concentrated n.e.c.",2,TM,SCL,SCL,,,CPC21439.05,"Citrus juice, concentrated n.e.c.",2614,"Citrus, Other and products"
+517,Cider and other fermented beverages,2,TM,SCL,SCL,,,CPC24230.03,cider and other fermented beverages,2657,"Beverages, Fermented and products"
+518,Apple juice,2,TM,SCL,SCL,,,CPC21435.01,apple juice,2617,Apples and products
+519,"Apple juice, concentrated",2,TM,SCL,SCL,,,CPC21435.02,"apple juice, concentrated",2617,Apples and products
+527,"Apricots, dried",2,TM,SCL,SCL,,,CPC21419.01,"apricots, dried",2625,"Fruits, Other and products"
+537,"Plums, dried",2,TM,SCL,SCL,,,CPC21412,"plums, dried",2625,"Fruits, Other and products"
+561,Raisins,2,TM,SCL,SCL,,,CPC21411,raisins,2620,Grapes and products (excludingexcl wine) and products
+562,Grape juice,2,TM,SCL,SCL,,,CPC21434,grape juice,2620,Grapes and products (excludingexcl wine) and products
+563,Must of grape,2,TM,SCL,SCL,,,CPC24212.01,must of grape,2620,Grapes and products (excludingexcl wine) and products
+565,Vermouth and other wine of fresh grapes flavoured with plats or aromatic substances,2,TM,SCL,SCL,,,CPC24220,vermouth and other wine of fresh grapes flavoured with plats or aromatic substances,2655,Wine and products
+570,"Figs, dried",2,TM,SCL,SCL,,,CPC21419.02,"figs, dried",2625,"Fruits, Other and products"
+575,"Pineapples, otherwise prepared or preserved",2,TM,SCL,SCL,,,CPC21491,"pineapples, otherwise prepared or preserved",2618,Pineapples and products
+576,Pineapple juice,2,TM,SCL,SCL,,,CPC21433,pineapple juice,2618,Pineapples and products
+580,"Juice of pineapples, concentrated",2,TM,SCL,SCL,,,CPC21433.01,"juice of pineapples, concentrated",2618,Pineapples and products
+583,Juice of mango,2,TM,SCL,SCL,,,CPC21439.08,Juice of mango,2625,"Fruits, Other and products"
+584,Mango pulp,2,TM,SCL,SCL,,,NA,NA,NA,NA
+604,"Other tropical fruit, dried",2,TM,SCL,SCL,,,CPC21419.91,"other tropical fruit, dried [only calories]",2625,"Fruits, Other and products"
+620,"Other fruit n.e.c., dried",2,TM,SCL,SCL,,,CPC21419.99,"other fruit n.e.c., dried",2625,"Fruits, Other and products"
+622,Juice of fruits n.e.c.,2,TM,SCL,SCL,,,CPC21439.90,juice of fruits n.e.c.,2625,"Fruits, Other and products"
+623,Fruit prepared n.e.c.,2,TM,SCL,SCL,,,CPCF0623,fruit prepared n.e.c.,2625,"Fruits, Other and products"
+624,Flour of fruits,2,TM,SCL,SCL,,,CPC23170.04,flour of fruits,2625,"Fruits, Other and products"
+625,"Fruit, nuts, peel, sugar preserved",2,TM,SCL,SCL,,,CPC23670.02,"fruit, nuts, peel, sugar preserved",2625,"Fruits, Other and products"
+626,"Homogenized cooked fruit, prepared",2,TM,SCL,SCL,,,CPC23991.03,"homogenized cooked fruit, prepared",2625,"Fruits, Other and products"
+633,Other non-alcoholic caloric beverages,2,TM,SCL,SCL,,,NA,NA,NA,NA
+634,"Undenatured ethyl alcohol of an alcoholic strength by volume of less than 80% vol; spirits, liqueurs and other spirituous beverages",2,TM,SCL,SCL,,,CPC2413,"undenatured ethyl alcohol of an alcoholic strength by volume of less than 80% vol; spirits, liqueurs and other spirituous beverages",2658,"Beverages, Alcoholic and products"
+657,"Coffee, decaffeinated or roasted",2,TM,SCL,SCL,,,CPC23911,"coffee, decaffeinated or roasted",2630,Coffee and products
+658,Coffee substitutes,2,TM,SCL,SCL,,,CPC23912.01,coffee substitutes,2605,"Vegetables, Other and products"
+659,Coffee extracts,2,TM,SCL,SCL,,,CPC23912.02,coffee extracts,2630,Coffee and products
+662,Cocoa paste not defatted,2,TM,SCL,SCL,,,CPC23610.01,cocoa paste not defatted,2633,Cocoa Beans and products
+663,Cocoa husks and shells,2,TM,SCL,SCL,,,NA,NA,NA,NA
+664,"Cocoa butter, fat and oil",2,TM,SCL,SCL,,,CPC23620,"cocoa butter, fat and oil",2586,"Oilcrops Oil, Other and products"
+665,Cocoa powder and cake,2,TM,SCL,SCL,,,CPCF0665,cocoa powder and cake [only calories],2633,Cocoa Beans and products
+666,Chocolate products nes,2,TM,SCL,SCL,,,CPCF0666,chocolate products nes,2633,Cocoa Beans and products
+672,"Extracts, essences and concentrates of tea or mate, and preparations with a basis thereof or with a basis of tea or mate",2,TM,SCL,SCL,,,CPC23914,"extracts, essences and concentrates of tea or mate, and preparations with a basis thereof or with a basis of tea or mat<e9>",2635,Tea (including mate) and products
+846,Gluten feed and meal,2,TM,SCL,SCL,,,CPC39130.04,gluten feed and meal,2514,Maize and products (including white maize)
+870,"Meat of cattle boneless, fresh or chilled",2,TM,SCL,SCL,,,CPC21111.02,"meat of cattle boneless, fresh or chilled",2731,Bovine Meat and products
+872,"Bovine meat, salted, dried or smoked",2,TM,SCL,SCL,,,CPC21182,"bovine meat, salted, dried or smoked",2731,Bovine Meat and products
+873,"Extracts and juices of meat, fish, crustaceans, molluscs or other aquatic invertebrates",2,TM,SCL,SCL,,,CPC21185,"extracts and juices of meat, fish, crustaceans, molluscs or other aquatic invertebrates",2731,Bovine Meat and products
+875,beef and veal preparations nes,2,TM,SCL,SCL,,,CPCF0875,beef and veal preparations nes,2731,Bovine Meat and products
+877,Homogenized meat preparations,2,TM,SCL,SCL,,,CPC23991.04,homogenized meat preparations,2731,Bovine Meat and products
+878,Liver preparations,2,TM,SCL,SCL,,,CPC21189.01,liver preparations,2736,"Offals, Edible and products"
+892,"Yoghurt, with additives",2,TM,SCL,SCL,,,CPC22230.02,"yoghurt, with additives",2848,Milk - (Excluding excluding Butter butter) and products
+893,"Buttermilk, curdled and acidified milk",2,TM,SCL,SCL,,,CPC22230.03,"buttermilk, curdled and acidified milk",2848,Milk - (Excluding excluding Butter butter) and products
+903,"Whey, fresh",2,TM,SCL,SCL,,,CPC22130.01,"whey, fresh [only calories]",2848,Milk - (Excluding excluding Butter butter) and products
+907,Processed cheese,2,TM,SCL,SCL,,,CPC22251.04,processed cheese,2848,Milk - (Excluding excluding Butter butter) and products
+909,Dairy products n.e.c.,2,TM,SCL,SCL,,,CPC22290,dairy products n.e.c. [only calories],2848,Milk - (Excluding excluding Butter butter) and products
+910,Ice cream and other edible ice,2,TM,SCL,SCL,,,CPC22270,ice cream and other edible ice [only calories],2848,Milk - (Excluding excluding Butter butter) and products
+994,Wool grease and lanolin,2,TM,SCL,SCL,,,CPCF0994,wool grease and lanolin,2737,"Fats, Animals, Raw and products"
+1038,"Meat of pig boneless, fresh or chilled",2,TM,SCL,SCL,,,CPC21113.02,"meat of pig boneless, fresh or chilled",2733,Pigmeat and products
+1039,"Pig meat, cuts, salted, dried or smoked (bacon and ham)",2,TM,SCL,SCL,,,CPC21181,"pig meat, cuts, salted, dried or smoked (bacon and ham)",2733,Pigmeat and products
+1041,"Sausages and similar products of meat, offal or blood of pig",2,TM,SCL,SCL,,,CPC21184.02,"sausages and similar products of meat, offal or blood of pig",2733,Pigmeat and products
+1042,Pig meat preparations,2,TM,SCL,SCL,,,CPCF1042,pig meat preparations,2733,Pigmeat and products
+1059,"Edible offals and liver of chickens and guinea fowl, fresh, chilled or frozen",2,TM,SCL,SCL,,,CPC21160.01,"edible offals and liver of chickens and guinea fowl, fresh, chilled or frozen",2736,"Offals, Edible and products"
+1060,Fatty liver preparations,2,TM,SCL,SCL,,,CPC21189.02,fatty liver preparations,2734,Poultry Meat and products
+1061,Poultry meat preparations,2,TM,SCL,SCL,,,CPCF1061,poultry meat preparations,2734,Poultry Meat and products
+1063,"Eggs, liquid",2,TM,SCL,SCL,,,CPC23993.02,"eggs, liquid",2744,Eggs and products
+1064,"Eggs, dried",2,TM,SCL,SCL,,,CPC23993.03,"eggs, dried",2744,Eggs and products
+1065,Fat of poultry,2,TM,SCL,SCL,,,CPC21511.03,fat of poultry,2737,"Fats, Animals, Raw and products"
+1066,"Poultry fat, rendered",2,TM,SCL,SCL,,,CPC21522,"poultry fat, rendered",2737,"Fats, Animals, Raw and products"
+1075,"Edible offals and liver of ducks, fresh, chilled or frozen",2,TM,SCL,SCL,,,CPC21160.03,"edible offals and liver of ducks, fresh, chilled or frozen",2736,"Offals, Edible and products"
+1081,"Edible offals and liver of turkey, fresh, chilled or frozen",2,TM,SCL,SCL,,,CPC21160.04,"edible offals and liver of turkey,fresh, chilled or frozen",2736,"Offals, Edible and products"
+1164,"Other meat and edible meat offal, salted, in brine, dried or smoked; edible flours and meals of meat or meat offal",2,TM,SCL,SCL,,,CPC21183,"other meat and edible meat offal, salted, in brine, dried or smoked; edible flours and meals of meat or meat offal",2735,"Meat, Other and products"
+1167,"Offals n.e.c. (excluding mammals), fresh, chilled or frozen",2,TM,SCL,SCL,,,CPC21170.93,"offals n.e.c.,fresh, chilled or frozen",2736,"Offals, Edible and products"
+1168,Animal oils and fats n.e.c.,2,TM,SCL,SCL,,,CPC21529.03,animal oils and fats nes,2737,"Fats, Animals, Raw and products"
+1172,Meat prepared n.e.c.,2,TM,SCL,SCL,,,CPCF1172,meat prepared n.e.c.,2735,"Meat, Other and products"
+1221,Lard stearine and lard oil,2,TM,SCL,SCL,,,CPC21529.02,lard stearine and lard oil,2737,"Fats, Animals, Raw and products"
+1232,Food preparations n.e.c.,2,TM,SCL,SCL,,,CPCF1232,food preparations n.e.c.,2899,Miscellaneous and products
+1241,Liquid margarine,2,TM,SCL,SCL,,,CPC21700.01,liquid margarine,2586,"Oilcrops Oil, Other and products"
+1243,Fat preparations n.e.c.,2,TM,SCL,SCL,,,CPCF1243,fat preparations n.e.c.,2737,"Fats, Animals, Raw and products"
+1274,"Animal or vegetable fats and oils and their fractions, chemically modified, except those hydrogenated, inter-esterified, re-esterified or elaidinized; inedible mixtures or preparations of animal or vegetable fats or oils",2,TM,SCL,SCL,,,CPC34550,"animal or vegetable fats and oils and their fractions, chemically modified, except those hydrogenated, inter-esterified, re-esterified or elaidinized; inedible mixtures or preparations of animal or vegetable fats or oils",2586,"Oilcrops Oil, Other and products"
+1275,hydrogenated oils and fats,2,TM,SCL,SCL,,,CPCF1275,hydrogenated oils and fats,2586,"Oilcrops Oil, Other and products"
+1276,Industrial monocarboxylic fatty acids; acid oils from refining,2,TM,SCL,SCL,,,CPC34120,industrial monocarboxylic fatty acids; acid oils from refining,2577,Palm Oil and products
+1277,Residues of fatty substances,2,TM,SCL,SCL,,,CPC21932.02,residues of fatty substances,2577,Palm Oil and products
+21,Bulgur,2,TM,SCL,SCL,,,CPC23140.02,bulgur,2511,Wheat and products
+29,"Rice, milled (husked)",2,TM,SCL,SCL,,,CPC23161.01,"rice, milled (husked)",2807,Rice and products
+35,Bran of rice,2,TM,SCL,SCL,,,CPC39120.02,bran of rice [only calories],2807,Rice and products
+36,Oil of rice bran,2,TM,SCL,SCL,,,CPC21691.01,oil of rice bran,2581,Ricebran Oil and products
+39,Rice-fermented beverages,2,TM,SCL,SCL,,,CPC24230.02,rice-fermented beverages,2657,"Beverages, Fermented and products"
+46,"Barley, pearled",2,TM,SCL,SCL,,,CPC23140.05,"barley, pearled",2513,Barley and products
+47,Bran of barley,2,TM,SCL,SCL,,,CPC39120.03,bran of barley [only calories],2513,Barley and products
+61,Cake of maize,2,TM,SCL,SCL,,,NA,NA,NA,NA
+73,Bran of rye,2,TM,SCL,SCL,,,CPC39120.05,bran of rye [only calories],2515,Rye and products
+77,Bran of oats,2,TM,SCL,SCL,,,CPC39120.06,bran of oats [only calories],2516,Oats and products
+80,Flour of millet,2,TM,SCL,SCL,,,CPC23120.05,flour of millet,2517,Millet and products
+81,Bran of millet,2,TM,SCL,SCL,,,CPC39120.07,bran of millet [only calories],2517,Millet and products
+84,Flour of sorghum,2,TM,SCL,SCL,,,CPC23120.06,flour of sorghum,2518,Sorghum and products
+85,Bran of sorghum,2,TM,SCL,SCL,,,CPC39120.08,bran of sorghum [only calories],2518,Sorghum and products
+90,Flour of buckwheat,2,TM,SCL,SCL,,,CPC23120.07,flour of buckwheat,2520,"Cereals, Other and products"
+105,Bran of mixed grain,2,TM,SCL,SCL,,,CPC39120.12,bran of mixed grain [only calories],2520,"Cereals, Other and products"
+126,Flour of cassava,2,TM,SCL,SCL,,,CPC23170.01,flour of cassava,2532,Cassava and products
+127,Tapioca of cassava,2,TM,SCL,SCL,,,CPC23230.02,tapioca of cassava,2532,Cassava and products
+151,"Edible roots and tubers with high starch or inulin content, n.e.c., dry",2,TM,SCL,SCL,,,CPC01599.20,"edible roots and tubers with high starch or inulin content, n.e.c., dry",2534,"Roots, Other and products"
+163,"Cane sugar, non-centrifugal",2,TM,SCL,SCL,,,CPC23511.02,"cane sugar, non-centrifugal",2541,Sugar non-centrifugal and products
+245,Cake of groundnuts,2,TM,SCL,SCL,,,NA,NA,NA,NA
+251,Copra,2,TM,SCL,SCL,,,CPC01492,copra,2560,Coconuts (including copra) and products
+253,Cake of copra,2,TM,SCL,SCL,,,NA,NA,NA,NA
+259,Cake of palm kernel,2,TM,SCL,SCL,,,NA,NA,NA,NA
+272,Cake of rapeseed,2,TM,SCL,SCL,,,NA,NA,NA,NA
+276,Oil of tung nuts,2,TM,SCL,SCL,,,CPC21691.05,oil of tung nuts,2586,"Oilcrops Oil, Other and products"
+282,Cake of safflowerseed,2,TM,SCL,SCL,,,NA,NA,NA,NA
+291,Cake of sesame seed,2,TM,SCL,SCL,,,NA,NA,NA,NA
+293,"Mustard seed oil, crude",2,TM,SCL,SCL,,,CPC21641.02,"mustardseed oil, crude",2574,Rape and Mustard Oil and products
+294,Cake of mustard seed,2,TM,SCL,SCL,,,NA,NA,NA,NA
+332,Cake of cottonseed,2,TM,SCL,SCL,,,NA,NA,NA,NA
+335,Cake of  linseed,2,TM,SCL,SCL,,,NA,NA,NA,NA
+496,Juice of tangerine,2,TM,SCL,SCL,,,CPC21439.01,juice of tangerine,2611,"Oranges, Mandarines and products"
+499,"Lemon juice, concentrated",2,TM,SCL,SCL,,,CPC21439.03,"Lemon juice, concentrated",2612,"Lemons, Limes and products"
+871,"Cattle, butcher fat",2,TM,SCL,SCL,,,CPC21512.01,"cattle, butcher fat [only calories]",2737,"Fats, Animals, Raw and products"
+874,"Sausages and similar products of meat, offal or blood of beef and veal",2,TM,SCL,SCL,,,CPC21184.01,"sausages and similar products of meat, offal or blood of beef and veal",2731,Bovine Meat and products
+905,Whey cheese,2,TM,SCL,SCL,,,CPC22251.03,whey cheese,2848,Milk - (Excluding excluding Butter butter) and products
+1040,"Pig, butcher fat",2,TM,SCL,SCL,,,CPC21511.02,"pig, butcher fat [only calories]",2737,"Fats, Animals, Raw and products"
+1074,"Edible offals and liver of geese, fresh, chilled or frozen",2,TM,SCL,SCL,,,CPC21160.02,"edible offals and liver of geese, fresh, chilled or frozen",2736,"Offals, Edible and products"
+1222,Degras,2,TM,SCL,SCL,,,CPC21932.01,degras,2737,"Fats, Animals, Raw and products"
+278,Jojoba oil,2,TM,SCL,SCL,,,CPC21691.06,jojoba oil,2586,"Oilcrops Oil, Other and products"
+311,Kapokseed in shell,3,SCL,QCL,SCL,,,CPC01499.06,kapokseed in shell,2570,"Oilcrops, Other and products"
+982,Raw milk of sheep,3,SCL,QCL,SCL,,,CPC02291,raw milk of sheep,2848,Milk - (Excluding excluding Butter butter) and products
+1019,"Goat fat, unrendered",3,SCL,QCL,SCL,,,CPC21515,"goat fat, unrendered",2737,"Fats, Animals, Raw and products"
+1020,Raw milk of goats,3,SCL,QCL,SCL,,,CPC02292,raw milk of goats,2848,Milk - (Excluding excluding Butter butter) and products
+1176,"Snails, fresh, chilled, frozen, dried, salted or in brine, except sea snails",3,SCL,QCL,SCL,,,CPC02920,"snails, fresh, chilled, frozen, dried, salted or in brine, except sea snails",2735,"Meat, Other and products"
+378,Cassava leaves,3,SCL,QCL,SCL,,,CPC01219.01,cassava leaves,2605,"Vegetables, Other and products"
+952,Butter of buffalo milk,3,SCL,QCL,SCL,,,CPC22242.01,butter of buffalo milk [only calories],2740,"Butter, Ghee and products"
+953,Ghee from buffalo milk,3,SCL,QCL,SCL,,,CPC22242.02,"ghee, from buffalo milk [only calories]",2740,"Butter, Ghee and products"
+955,"Cheese from milk of buffalo, fresh or processed",3,SCL,QCL,SCL,,,CPC22252,"cheese from milk of buffalo, fresh or processed",2848,Milk - (Excluding excluding Butter butter) and products
+1128,"Edible offals of camels and other camelids, fresh, chilled or frozen",3,SCL,QCL,SCL,,,CPC21159.02,"edible offals of camels and other camelids, fresh, chilled or frozen",2736,"Offals, Edible and products"
+1130,Raw milk of camel,3,SCL,QCL,SCL,,,CPC02293,raw milk of camel,2848,Milk - (Excluding excluding Butter butter) and products
+949,"Buffalo fat, unrendered",3,SCL,QCL,SCL,,,CPC21513,"buffalo fat, unrendered",2737,"Fats, Animals, Raw and products"
+951,Raw milk of buffalo,3,SCL,QCL,SCL,,,CPC02212,raw milk of buffalo,2848,Milk - (Excluding excluding Butter butter) and products
+1108,"Meat of asses, fresh or chilled",3,SCL,QCL,SCL,,,CPC21118.02,"meat of asses, fresh or chilled",2735,"Meat, Other and products"
+1111,"Meat of mules, fresh or chilled",3,SCL,QCL,SCL,,,CPC21118.03,"meat of mules, fresh or chilled",2735,"Meat, Other and products"
+254,Oil palm fruit,3,SCL,QCL,SCL,,,CPC01491.01,oil palm fruit,2562,Palm kernels and products
+1151,"Meat of other domestic rodents, fresh or chilled",3,SCL,QCL,SCL,,,CPC21119.01,"meat of other domestic rodents, fresh or chilled",2735,"Meat, Other and products"
+542,Other pome fruits,3,SCL,QCL,SCL,,,CPC01349.10,other pome fruits,2625,"Fruits, Other and products"
+305,Tallowtree seeds,3,SCL,QCL,SCL,,,CPC01499.04,tallowtree seeds,2570,"Oilcrops, Other and products"
+310,Kapok fruit,3,SCL,QCL,SCL,,,CPC01499.05,kapok fruit,2570,"Oilcrops, Other and products"
+277,Jojoba seeds,3,SCL,QCL,SCL,,,CPC01499.03,jojoba seeds,2570,"Oilcrops, Other and products"
+23,Starch of wheat,4,SCL,SCL,SCL,,,CPC23220.01,starch of wheat,2511,Wheat and products
+24,Wheat gluten,4,SCL,SCL,SCL,,,CPC23220.02,wheat gluten [only calories],2511,Wheat and products
+34,Starch of rice,4,SCL,SCL,SCL,,,CPC23220.03,starch of rice,2807,Rice and products
+63,Maize gluten,4,SCL,SCL,SCL,,,CPC39130.02,maize gluten [only calories],2514,Maize and products (including white maize)
+64,Starch of maize,4,SCL,SCL,SCL,,,CPC23220.04,starch of maize,2514,Maize and products (including white maize)
+119,Starch of potatoes,4,SCL,SCL,SCL,,,CPC23220.05,starch of potatoes,2531,Potatoes and products
+154,"Fructose, chemically pure",4,SCL,SCL,SCL,,,CPC23210.01,"fructose, chemically pure",2543,"Sweeteners, Other and products"
+155,"Maltose, chemically pure",4,SCL,SCL,SCL,,,CPC23210.02,"maltose, chemically pure",2543,"Sweeteners, Other and products"
+241,Soya curd,4,SCL,SCL,SCL,,,CPC23999.03,soya curd,2555,Soyabeans and products
+306,Vegetable tallow,4,SCL,SCL,SCL,,,CPC21691.09,vegetable tallow [only calories],2586,"Oilcrops Oil, Other and products"
+312,"Kapokseed, shelled",4,SCL,SCL,SCL,,,CPC01499.07,"kapokseed, shelled",2570,"Oilcrops, Other and products"
+313,Oil of kapok,4,SCL,SCL,SCL,,,CPC21691.11,oil of kapok,2586,"Oilcrops Oil, Other and products"
+314,Cake of kapok,4,SCL,SCL,SCL,,,NA,NA,NA,NA
+632,Undenatured ethyl alcohol of an alcoholic strength by volume of 80% vol or higher,4,SCL,SCL,SCL,,,CPC24110,undenatured ethyl alcohol of an alcoholic strength by volume of 80% vol or higher,2659,"Alcohol, Non-Food and products"
+916,Egg albumin,4,SCL,SCL,SCL,,,CPC23993.01,egg albumin,2744,Eggs and products
+917,Casein,4,SCL,SCL,SCL,,,CPC22260,casein,2848,Milk - (Excluding excluding Butter butter) and products
+1273,"Castor oil, hydrogenated",4,SCL,SCL,SCL,,,CPC21693.02,"castor oil, hydrogenated",2586,"Oilcrops Oil, Other and products"
+26,Wheat-fermented beverages,4,SCL,SCL,SCL,,,CPC24230.01,wheat-fermented beverages,2657,"Beverages, Fermented and products"
+33,"Rice, gluten",4,SCL,SCL,SCL,,,CPC39130.01,"rice, gluten [only calories]",2807,Rice and products
+66,"Beer of maize, malted",4,SCL,SCL,SCL,,,CPC24310.02,"Beer of maize, malted",2657,"Beverages, Fermented and products"
+82,"Beer of millet, malted",4,SCL,SCL,SCL,,,CPC24310.03,"Beer of millet, malted",2657,"Beverages, Fermented and products"
+86,"Beer of sorghum, malted",4,SCL,SCL,SCL,,,CPC24310.04,"Beer of sorghum, malted",2657,"Beverages, Fermented and products"
+91,Bran of buckwheat,4,SCL,SCL,SCL,,,CPC39120.09,bran of buckwheat [only calories],2520,"Cereals, Other and products"
+95,Flour of fonio,4,SCL,SCL,SCL,,,CPC23120.08,flour of fonio,2520,"Cereals, Other and products"
+96,Bran of fonio,4,SCL,SCL,SCL,,,CPC39120.10,bran of fonio [only calories],2520,"Cereals, Other and products"
+98,Flour of triticale,4,SCL,SCL,SCL,,,CPC23120.09,flour of triticale,2520,"Cereals, Other and products"
+99,Bran of triticale,4,SCL,SCL,SCL,,,CPC39120.11,bran of triticale [only calories],2520,"Cereals, Other and products"
+337,Oil of hempseed,4,SCL,SCL,SCL,,,CPC21691.13,oil of hempseed,2586,"Oilcrops Oil, Other and products"
+338,Cake of hempseed,4,SCL,SCL,SCL,,,NA,NA,NA,NA
+539,"Juice of plum, concentrated",4,SCL,SCL,SCL,,,CPC21439.07,"Juice of plum, concentrated",2625,"Fruits, Other and products"
+908,Reconstituted milk,4,SCL,SCL,SCL,,,CPC22110.03,reconstituted milk,2848,Milk - (Excluding excluding Butter butter) and products
+954,Skim milk of buffalo,4,SCL,SCL,SCL,,,CPC22110.04,skim milk of buffalo,2848,Milk - (Excluding excluding Butter butter) and products
+985,Skim sheep milk,4,SCL,SCL,SCL,,,CPC22110.05,skim sheep milk,2848,Milk - (Excluding excluding Butter butter) and products
+297,Oil of poppy seed,4,SCL,SCL,SCL,,,CPC21691.08,oil of poppy seed,2586,"Oilcrops Oil, Other and products"
+298,"Cake, poppy seed",4,SCL,SCL,SCL,,,NA,NA,NA,NA
+1160,Fat of other camelids,4,SCL,SCL,SCL,,,CPC21519.03,fat of other camelids,2737,"Fats, Animals, Raw and products"
+883,Standardized milk,4,SCL,SCL,SCL,,,NA,NA,NA,NA
+158,"Cane sugar, centrifugal",4,SCL,SCL,SCL,,,CPC23511.01,"cane sugar, centrifugal",2542,Sugar (Raw Equivalent) and products
+538,Juice of plum,4,SCL,SCL,SCL,,,CPC21439.06,Juice of plum,2625,"Fruits, Other and products"
+1023,Skim milk of goat,4,SCL,SCL,SCL,,,CPC22110.06,skim milk of goat,2848,Milk - (Excluding excluding Butter butter) and products
+2761,Freshwater Fish,5,FBS_FBSH,FBS_FBSH,FBS_FBSH,,,,,,
+2762,Demersal Fish,5,FBS_FBSH,FBS_FBSH,FBS_FBSH,,,,,,
+2763,Pelagic Fish,5,FBS_FBSH,FBS_FBSH,FBS_FBSH,,,,,,
+2764,"Marine Fish, Other",5,FBS_FBSH,FBS_FBSH,FBS_FBSH,,,,,,
+2765,Crustaceans,5,FBS_FBSH,FBS_FBSH,FBS_FBSH,,,,,,
+2766,Cephalopods,5,FBS_FBSH,FBS_FBSH,FBS_FBSH,,,,,,
+2767,"Molluscs, Other",5,FBS_FBSH,FBS_FBSH,FBS_FBSH,,,,,,
+2769,"Aquatic Animals, Others",5,FBS_FBSH,FBS_FBSH,FBS_FBSH,,,,,,
+2775,Aquatic Plants,5,FBS_FBSH,FBS_FBSH,FBS_FBSH,,,,,,
+2781,"Fish, Body Oil",5,FBS_FBSH,FBS_FBSH,FBS_FBSH,,,,,,
+2782,"Fish, Liver Oil",5,FBS_FBSH,FBS_FBSH,FBS_FBSH,,,,,,
+2768,"Meat, Aquatic Mammals",5,FBS_FBSH,FBS_FBSH,FBS_FBSH,,,,,,
+677,Hop cones,6,TM,QCL,Food only,,,,,,
+748,"Peppermint, spearmint",6,TM,QCL,Food only,,,,,,
+754,"Pyrethrum, dried flowers",6,TM,QCL,Food only,,,,,,
+771,"Flax, raw or retted",6,TM,QCL,Other use only,,,,,,
+777,"True hemp, raw or retted",6,TM,QCL,Other use only,,,,,,
+780,"Jute, raw or retted",6,TM,QCL,Other use only,,,,,,
+782,"Kenaf, and other textile bast fibres, raw or retted",6,TM,QCL,Other use only,,,,,,
+788,"Ramie, raw or retted",6,TM,QCL,Other use only,,,,,,
+789,"Sisal, raw",6,TM,QCL,Other use only,,,,,,
+809,"Abaca, manila hemp, raw",6,TM,QCL,Other use only,,,,,,
+821,"Other fibre crops, raw, n.e.c.",6,TM,QCL,Other use only,,,,,,
+826,Unmanufactured tobacco,6,TM,QCL,Other use only,,,,,,
+836,Natural rubber in primary forms,6,TM,QCL,Other use only,,,,,,
+987,"Shorn wool, greasy, including fleece-washed shorn wool",6,TM,QCL,Other use only,,,,,,
+767,"Cotton lint, ginned",6,TM,QCL,Other use only,,,,,,
+1185,Silk-worm cocoons suitable for reeling,6,TM,QCL,Processed only,,,,,,
+1186,Raw silk (not thrown),6,TM,QCL,Other use only,,,,,,
+1183,Beeswax,6,TM,QCL,Other use only,,,,,,
+813,"Coir, raw",6,TM,QCL,Other use only,,,,,,
+839,"Balata, gutta-percha, guayule, chicle and similar natural gums in primary forms or in plates, sheets or strip",6,TM,QCL,Other use only,,,,,,
+328,"Seed cotton, unginned",6,TM,QCL,Processed only,,,,,,
+800,"Agave fibres, raw, n.e.c.",6,TM,QCL,Other use only,,,,,,
+919,Raw hides and skins of cattle,6,TM,QCL,Other use only,,,,,,
+995,Raw hides and skins of sheep or lambs,6,TM,QCL,Other use only,,,,,,
+1025,Raw hides and skins of goats or kids,6,TM,QCL,Other use only,,,,,,
+957,Raw hides and skins of buffaloes,6,TM,QCL,Other use only,,,,,,
+675,"Green tea (not fermented), black tea (fermented) and partly fermented tea, in immediate packings of a content not exceeding 3 kg",6,TM,QCL,Other use only,,,,,,
+1158,"Meat of other domestic camelids, fresh or chilled",6,TM,QCL,Food only,,,,,,
+778,"Kapok fibre, raw",6,TM,QCL,Other use only,,,,,,
+2740000,"Cake, olive residues",7,None,Coproduction_Rate (14.385),Feed only,"Oil, olive residues",274,,,,
+2780000,"Cake, jojoba",7,None,Coproduction_Rate (1.222),Feed only,"Oil, jojoba",278,,,,
+3320000,"Fiber, cottonseed",7,None,Coproduction_Rate (0.053),Other use only,"Cake, cottonseed",332,,,,
+3400000,"Cake, vegetable origin nes",7,None,Coproduction_Rate (1.222),Feed only,"Oil, vegetable origin nes",340,,,,
+8670000,"AnMeatEq, cattle",8,None,QCL,QCL,,,,,,
+9470000,"AnMeatEq, buffalo",8,None,QCL,QCL,,,,,,
+9770000,"AnMeatEq, sheep",8,None,QCL,QCL,,,,,,
+10170000,"AnMeatEq, goat",8,None,QCL,QCL,,,,,,
+10350000,"AnMeatEq, pig",8,None,QCL,QCL,,,,,,
+10580000,"AnMeatEq, chicken",8,None,QCL,QCL,,,,,,
+10690000,"AnMeatEq, duck",8,None,QCL,QCL,,,,,,
+10730000,"AnMeatEq, goose and guinea fowl",8,None,QCL,QCL,,,,,,
+10800000,"AnMeatEq, turkey",8,None,QCL,QCL,,,,,,
+10970000,"AnMeatEq, horse",8,None,QCL,QCL,,,,,,
+11080000,"AnMeatEq, ass",8,None,QCL,QCL,,,,,,
+11110000,"AnMeatEq, mule",8,None,QCL,QCL,,,,,,
+11270000,"AnMeatEq, camel",8,None,QCL,QCL,,,,,,
+11410000,"AnMeatEq, rabbit",8,None,QCL,QCL,,,,,,
+11510000,"AnMeatEq, other rodents",8,None,QCL,QCL,,,,,,
+11580000,"AnMeatEq, other camelids",8,None,QCL,QCL,,,,,,

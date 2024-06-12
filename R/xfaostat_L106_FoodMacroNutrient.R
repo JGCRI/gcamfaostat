@@ -21,8 +21,8 @@ module_xfaostat_L106_FoodMacroNutrient <- function(command, ...) {
     c("SCL_wide",
       "FBS_wide",
       "OA",
-      FILE = "aglu/FAO/FAO_an_items_cal_SUA",
-      FILE = "aglu/FAO/MAPPING_FAO_FBS_SUA")
+      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "FAO_an_items_cal_SUA"),
+      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "MAPPING_FAO_FBS_SUA"))
 
   MODULE_OUTPUTS <-
     c("SUA_food_macronutrient_rate")
@@ -259,8 +259,8 @@ module_xfaostat_L106_FoodMacroNutrient <- function(command, ...) {
       add_precursors("SCL_wide",
                      "FBS_wide",
                      "OA",
-                     "aglu/FAO/FAO_an_items_cal_SUA",
-                     "aglu/FAO/MAPPING_FAO_FBS_SUA") ->
+                     file.path(DIR_RAW_DATA_FAOSTAT, "FAO_an_items_cal_SUA"),
+                     file.path(DIR_RAW_DATA_FAOSTAT, "MAPPING_FAO_FBS_SUA")) ->
       SUA_food_macronutrient_rate
 
     # P.S. ----

@@ -18,8 +18,9 @@
 module_xfaostat_L102_ProductionArea <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(#FILE = "aglu/FAO/FAO_an_items_PRODSTAT",
-        "QCL_wide", "FBS_wide", "FBSH_CB_wide")
+    c("QCL_wide",
+      "FBS_wide",
+      "FBSH_CBH_wide")
 
   MODULE_OUTPUTS <-
     c("QCL_PROD",
@@ -36,9 +37,8 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
     QCL_wide <- element_code <- element <- area_code <- item_code <- area <-
-      item <- unit <- FBS_wide <- FBSH_CB_wide <- GCAM_commodity <- Production <-
-      `Producing Animals/Slaughtered` <- Yield <- QCL_COMM_AN_PRIMARY_item <-
-      FAO_an_items_PRODSTAT_item <- NULL
+      item <- unit <- FBS_wide <- FBSH_CBH_wide <- GCAM_commodity <- Production <-
+      `Producing Animals/Slaughtered` <- Yield <- QCL_COMM_AN_PRIMARY_item <- NULL
 
     all_data <- list(...)[[1]]
 
@@ -55,7 +55,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
     FBS_wide %>% gather_years() %>%
       FAOSTAT_AREA_RM_NONEXIST() -> FBS
 
-    FBSH_CB_wide %>% gather_years() %>%
+    FBSH_CBH_wide %>% gather_years() %>%
       FAOSTAT_AREA_RM_NONEXIST() -> FBSH_CB
 
 
@@ -68,14 +68,15 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
 
     # Check elements
     QCL %>% distinct(element, element_code, unit)
-    QCL %>% distinct(item, item_code) # 276 = 160 primary crop + 46 primary an + 17 live animal + 54 others
+    QCL %>% distinct(item, item_code) # 276 = 160 primary crop (-2) + 45 primary an + 17 live animal + 57 others
 
     # QCL will be grouped by elements
-    # Pull primary crop items with positive harvested area 160
-    QCL %>% filter(element_code == 5312) %>% filter(value >0) %>%
+    # Pull primary crop items with positive harvested area 160 - 2
+    # Brazil nuts, with shell (216) and Mushrooms and truffles (449) are removed since FAO removed area harvested
+    QCL %>% filter(element_code == 5312) %>% filter(value > 0) %>%
       distinct(item_code, item) -> QCL_COMM_CROP_PRIMARY
 
-    # Primary animal products, including fat hides etc. 46
+    # Primary animal products, including fat hides etc. 45
     QCL %>% filter(element_code %in% c(5410, 5413, 5420, 5417, 5422, 5424, 5320)) %>%
       distinct(item, item_code) -> QCL_COMM_AN_PRIMARY
 
@@ -101,7 +102,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       distinct(element,element_code, unit) -> UnitMap
 
     QCL %>%
-      filter(item_code %in% c(QCL_COMM_CROP_PRIMARY %>% pull(item_code))) %>%  #160 primary items
+      filter(item_code %in% c(QCL_COMM_CROP_PRIMARY %>% pull(item_code))) %>%  #158 primary items
       filter(element_code != 5419) %>% # rm yield
       # complete all
       complete(nesting(area_code, area), nesting(item_code, item), nesting(element_code, element, unit), year) %>%
@@ -116,11 +117,11 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       QCL_CROP_PRIMARY
 
     #QCL_CROP_PRIMARY %>% FF_check_count_plot()
-    #QCL_CROP_PRIMARY %>% nrow()/(160); QCL_CROP_PRIMARY %>% distinct(year); QCL_CROP_PRIMARY %>% distinct(area_code)
+    #QCL_CROP_PRIMARY %>% nrow()/(158); QCL_CROP_PRIMARY %>% distinct(year); QCL_CROP_PRIMARY %>% distinct(area_code)
 
     ## QCL_COMM_AN_PRIMARY ----
     #*******************************************
-    # 45 items 19 meat + 2 egg + 5 milk + (2+9) bee & hide + 13 fat & offal
+    # 45 items 19 meat + 2 egg + 5 milk + 1 bee  + 18 fat & offal & hide & snails
     QCL %>%
       filter(item_code %in% c(QCL_COMM_AN_PRIMARY %>% pull(item_code))) %>%
       distinct(element_code, element, unit)
@@ -406,7 +407,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       add_title("FAO live animal stock and production") %>%
       add_units("various") %>%
       add_comments("Detailed FAO QCL data processing for live animal and production") %>%
-      add_precursors("QCL_wide", "FBS_wide", "FBSH_CB_wide") ->
+      add_precursors("QCL_wide", "FBS_wide", "FBSH_CBH_wide") ->
       QCL_AN_LIVEANIMAL
 
     QCL_AN_PRIMARY_MILK %>%
@@ -451,9 +452,9 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
     #        dpi = 200, width = 9, height = 5 )
     # rm(p)
 
-    QCL_ALL %>% distinct(year); # 60 years
+    QCL_ALL %>% distinct(year); # 53 years
     QCL_ALL %>% distinct(element, element_code, unit) # QCL_COMM_AN_LIVEANIMAL_MEATEQ has no element_code
-    QCL_ALL %>% distinct(item)  # 160 primary crop + 46 primary an + 54 others + 17 +12
+    QCL_ALL %>% distinct(item)  # 158 primary crop + 45 primary an + 57 others + 17 +12
 
 
     # QCL_ALL %>%
@@ -468,6 +469,8 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
 
 
     # P.S.  Check primary product mapping ----
+
+    # Load "aglu/FAO/FAO_an_items_PRODSTAT"
 
     #FAO_an_items_PRODSTAT <- FAO_an_items_PRODSTAT %>% filter(!is.na(GCAM_commodity))
 
@@ -494,8 +497,8 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
     #  FF_join_checkmap(c("QCL_COMM_CROP_PRIMARY", "FAO_ag_items_PRODSTAT"), "item_code", "item",.ENVIR = Curr_Envir) %>%
     #   mutate(match = if_else(QCL_COMM_CROP_PRIMARY_item == FAO_ag_items_PRODSTAT_item , T, F))
     # checkitem %>% filter(is.na(match)|match == F)
-    # # 160 primary items (matching here) + 15/16 fodder crops
-    #
+    # 158 primary items (matching here) + 15/16 fodder crops
+
     # checkitem <-
     #   FF_join_checkmap(c("QCL_COMM_AN_PRIMARY", "FAO_an_items_PRODSTAT"), "item_code", "item",.ENVIR = Curr_Envir) %>%
     #   mutate(match = if_else(QCL_COMM_AN_PRIMARY_item == FAO_an_items_PRODSTAT_item, T, F))
