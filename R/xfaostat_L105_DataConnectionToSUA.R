@@ -64,7 +64,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
     FBSH_CBH_wide %>% gather_years() %>%
       filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
-      FAOSTAT_AREA_RM_NONEXIST() -> FBSH_CB
+      FAOSTAT_AREA_RM_NONEXIST() -> FBSH_CBH
 
     TCL_wide %>% gather_years() %>%
       filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
@@ -160,7 +160,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     # Merge Sudan regions to be consistent with data
     # Mainly for storage data concerns
     # And only keep data > min(FAOSTAT_Hist_Year_FBS)
-    for (.DF in c("SCL", "TCL_TM", "TCL_gross", "FBSH_CB", "FBS", "QCL_PROD")) {
+    for (.DF in c("SCL", "TCL_TM", "TCL_gross", "FBSH_CBH", "FBS", "QCL_PROD")) {
       get(.DF) %>% filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
         # merge Sudan and South Sudan
         FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL(SUDAN2012_MERGE = T) %>%
@@ -645,7 +645,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
     assert_FBS_balance(.DF = Bal_new_all)
 
-    rm(TCL_gross, TCL_TM, SCL, FBS, FBSH_CB, FAO_items)
+    rm(TCL_gross, TCL_TM, SCL, FBS, FBSH_CBH, FAO_items)
     rm(list = ls(pattern = "Bal_new_tier*"))
 
 

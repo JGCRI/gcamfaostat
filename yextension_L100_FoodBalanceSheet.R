@@ -7,7 +7,7 @@
 #' @param command API command to execute
 #' @param ... other optional parameters, depending on command
 #' @return Depends on \code{command}: either a vector of required inputs, a vector of output names, or (if
-#'   \code{command} is "MAKE") all the generated outputs: \code{FAO_Food_Macronutrient_All},
+#'   \code{command} is "MAKE") all the generated outputs: \code{FAO_Food_Macronutrient_All_2010_2019},
 #'   \code{FAO_Food_MacronutrientRate_2010_2019_MaxValue}
 #' @details This chunk aggregates supply utilization accounts into food balance sheet items
 #' @importFrom assertthat assert_that
@@ -27,11 +27,14 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
       "SUA_food_macronutrient_rate",
       FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_SUA_PrimaryEquivalent"),
       FILE = file.path(DIR_RAW_DATA_FAOSTAT, "SUA_item_code_map"),
-      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_FAO_iso_reg") )
+      FILE = "GCAM/aglu/AGLU_ctry",
+      FILE = "GCAM/common/iso_GCAM_regID",
+      FILE = "GCAM/common/GCAM_region_names")
 
   MODULE_OUTPUTS <-
     c("GCAM_APE_after2010",
-      "FAO_Food_Macronutrient_All")
+      "FAO_Food_Macronutrient_All_2010_2019",
+      "FAO_Food_MacronutrientRate_2010_2019_MaxValue")
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -97,7 +100,11 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
       transmute(area_code, item_code, element, year, value) ->
       GCAMFAOSTAT_SUA
 
-    SUA_food_macronutrient_rate -> GCAMFAOSTAT_MacroNutrientRate
+
+
+    SUA_food_macronutrient_rate ->
+      GCAMFAOSTAT_MacroNutrientRate
+
 
     # Fix Sudan with code 206 and 276 after 2012
     if (206 %in% GCAMFAOSTAT_MacroNutrientRate$area_code == F) {
@@ -107,6 +114,17 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
         GCAMFAOSTAT_MacroNutrientRate
     }
 
+
+
+    FBS_wide %>% gather_years() %>%
+      filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
+      FAOSTAT_AREA_RM_NONEXIST() -> FBS
+
+    for (.DF in c("FBS")) {
+      get(.DF) %>% filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
+        # merge Sudan and South Sudan
+        FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL(SUDAN2012_MERGE = T) %>%
+        assign(x = .DF, envir = parent.env(environment()))  }
 
 
 
@@ -135,9 +153,16 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
 
     # create a complete area / iso / GCAM region mapping
     GCAMFAOSTAT_NonFodderProdArea %>%
-      distinct(area_code, area) %>%
-      left_join_error_no_match(Mapping_FAO_iso_reg %>% distinct(area_code, iso, region_ID), by = c("area_code")) ->
+      select(area_code, area) %>%
+      distinct() %>%
+      left_join_error_no_match(AGLU_ctry %>% distinct(area_code = FAO_country_code, iso), by = c("area_code")) %>%
+      left_join_error_no_match(iso_GCAM_regID %>% select(iso, GCAM_region_ID), by = "iso") %>%
+      left_join_error_no_match(GCAM_region_names, by = "GCAM_region_ID") ->
       Area_Region_Map
+
+    # All regions
+    #Area_Region_Map %>% mutate(GCAM_region_ID = if_else(GCAM_region_ID %in% c(1, 11), GCAM_region_ID, 111)) %>% select(-region) -> Area_Region_Map
+    Area_Region_Map %>% mutate(GCAM_region_ID = area_code) -> Area_Region_Map
 
     # 1.1 Regional aggregation for SUA ----
 
@@ -145,18 +170,18 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
     # Intra regional trade is removed when bilateral trade data is available
 
     GCAMFAOSTAT_SUA %>%
-      left_join_error_no_match(Area_Region_Map %>% select(area_code, region_ID), by="area_code") %>%
-      group_by(region_ID, item_code, element, year) %>%
+      left_join_error_no_match(Area_Region_Map %>% select(area_code, GCAM_region_ID), by="area_code") %>%
+      group_by(GCAM_region_ID, item_code, element, year) %>%
       summarize(value = sum(value), .groups = "drop") %>%
       ungroup() ->
       DF_SUA_Agg
 
     # Calculate intra regional trade
     GCAMFAOSTAT_BiTrade %>%
-      left_join_error_no_match(Area_Region_Map %>% select(area_code, region_ID), by="area_code") %>%
-      left_join_error_no_match(Area_Region_Map %>% select(source_code = area_code, source_region_ID = region_ID), by="source_code") %>%
-      filter(region_ID == source_region_ID) %>%
-      group_by(region_ID, item_code, year) %>%
+      left_join_error_no_match(Area_Region_Map %>% select(area_code, GCAM_region_ID), by="area_code") %>%
+      left_join_error_no_match(Area_Region_Map %>% select(source_code = area_code, source_GCAM_region_ID = GCAM_region_ID), by="source_code") %>%
+      filter(GCAM_region_ID == source_GCAM_region_ID) %>%
+      group_by(GCAM_region_ID, item_code, year) %>%
       summarize(value = sum(value), .groups = "drop") %>%
       ungroup() %>%
       mutate(value = -value) ->
@@ -169,7 +194,7 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
     bind_rows(DF_INTRA_REG_TRADE %>% mutate(element = All_Bal_element[All_Bal_element == "Export"]),
               DF_INTRA_REG_TRADE %>% mutate(element = All_Bal_element[All_Bal_element == "Import"])) %>%
       rename(TCL = value) %>%
-      right_join(DF_SUA_Agg, by = c("region_ID", "item_code", "year", "element")) %>%
+      right_join(DF_SUA_Agg, by = c("GCAM_region_ID", "item_code", "year", "element")) %>%
       mutate(value = if_else(is.na(TCL), value, value + TCL)) %>%
       select(-TCL) %>%
       filter(value != 0.0) ->
@@ -190,7 +215,7 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
     bind_rows(GrossTradeRM %>% mutate(element = All_Bal_element[All_Bal_element == "Export"]),
               GrossTradeRM %>% mutate(element = All_Bal_element[All_Bal_element == "Import"]),
               DF_SUA_Agg_TradeAdj) %>%
-      group_by(region_ID, item_code, element, year) %>%
+      group_by(GCAM_region_ID, item_code, element, year) %>%
       summarize(value = sum(value), .groups = "drop") %>%
       ungroup() ->
       FAO_SUA_Kt_2010to2019_R
@@ -255,7 +280,7 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
         dplyr::group_by_at(vars(-item_code, -value)) %>%
         summarize(value=sum(value), .groups = "drop") %>%
         ungroup() %>%
-        complete(region_ID = unique(Area_Region_Map$region_ID), nesting(element, year, APE_comm), fill=list(value=0)) %>%
+        complete(GCAM_region_ID = unique(Area_Region_Map$GCAM_region_ID), nesting(element, year, APE_comm), fill=list(value=0)) %>%
         spread(element, value, fill = 0.0) %>%
         left_join_error_no_match(MIN_EXTRACTION_RATE, by=c("APE_comm")) %>%
         group_by(APE_comm, year) %>%
@@ -274,11 +299,11 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
                # both processed and production > 0
                positive_prod = Production > 0 & Processed > 0) %>%
         ungroup() %>%
-        group_by(APE_comm, region_ID) %>%
+        group_by(APE_comm, GCAM_region_ID) %>%
         # Calculate lagged extraction_rate but replace NA with current rate (first period)
         mutate(extraction_rate_lag = lag(extraction_rate, default=extraction_rate[1])) %>%
         ungroup() %>%
-        select(APE_comm, region_ID, year, bal_import = extraction_rate_trade, bal_domestic_lag = extraction_rate_lag, bal_domestic_current = extraction_rate) %>%
+        select(APE_comm, GCAM_region_ID, year, bal_import = extraction_rate_trade, bal_domestic_lag = extraction_rate_lag, bal_domestic_current = extraction_rate) %>%
         gather(bal_source, extraction_rate, bal_import, bal_domestic_lag, bal_domestic_current, factor_key = TRUE)
     }
 
@@ -307,7 +332,7 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
         filter(element == "Import" | element %in% Import_Demand_Item) %>%
         mutate(is_import = element == "Import") %>%
         spread(is_import, value, fill=0.0) %>%
-        group_by(APE_comm, region_ID, year, item_code) %>%
+        group_by(APE_comm, GCAM_region_ID, year, item_code) %>%
         summarize(import = sum(`TRUE`),
                   import_demand = sum(`FALSE`), .groups = "drop") %>%
         ungroup() %>%
@@ -318,8 +343,8 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
                Import_Demand_Share = pmin(Import_Demand_Share, 1),
                residual = import - import_demand * Import_Demand_Share) %>%
         ungroup() %>%
-        select(APE_comm, region_ID, item_code, year, Import_Demand_Share, residual) %>%
-        left_join(DF_CURR_NEST, ., by=c("APE_comm", "region_ID", "item_code", "year")) %>%
+        select(APE_comm, GCAM_region_ID, item_code, year, Import_Demand_Share, residual) %>%
+        left_join(DF_CURR_NEST, ., by=c("APE_comm", "GCAM_region_ID", "item_code", "year")) %>%
         # when Import_Demand_Item consumption < Import they are used to share out Import consumptions
         # otherwise, Residuals is used for adjustments
         mutate(bal_import = case_when(element == "Import" ~ value,
@@ -340,7 +365,7 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
         mutate(is_supply = element %in% Regional_supply_elements,
                is_demand = element %in% Regional_demand_elements) %>%
         filter(is_supply | is_demand) %>%
-        group_by(APE_comm, region_ID, year, item_code, bal_source) %>%
+        group_by(APE_comm, GCAM_region_ID, year, item_code, bal_source) %>%
         # Clean the bal items
         summarize(`Regional supply` = sum(value[is_supply]),
                   `Regional demand` = sum(value[is_demand]), .groups = "drop") %>%
@@ -374,7 +399,7 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
         filter(element == "Opening stocks" | element %in% Opening_Stock_Item) %>%
         mutate(is_opening = element == "Opening stocks") %>%
         spread(is_opening, value, fill=0.0) %>%
-        group_by(APE_comm, region_ID, year, item_code) %>%
+        group_by(APE_comm, GCAM_region_ID, year, item_code) %>%
         summarize(Ostock = sum(`TRUE`),
                   Ostock_demand = sum(`FALSE`), .groups = "drop") %>%
         ungroup() %>%
@@ -385,8 +410,8 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
                Ostock_Demand_Share = pmin(Ostock_Demand_Share, 1),
                residual = Ostock - Ostock_demand * Ostock_Demand_Share) %>%
         ungroup() %>%
-        select(APE_comm, region_ID, item_code, year, Ostock_Demand_Share, residual) %>%
-        left_join(StockCalcNested %>% get_bal_source_data("bal_domestic"), ., by=c("APE_comm", "region_ID", "item_code", "year")) %>%
+        select(APE_comm, GCAM_region_ID, item_code, year, Ostock_Demand_Share, residual) %>%
+        left_join(StockCalcNested %>% get_bal_source_data("bal_domestic"), ., by=c("APE_comm", "GCAM_region_ID", "item_code", "year")) %>%
         mutate(bal_domestic_lag = case_when(element == "Opening stocks" ~ value,
                                             element %in% Opening_Stock_Item ~ value * Ostock_Demand_Share,
                                             element == "Residuals" ~ residual,
@@ -402,10 +427,10 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
       Bal_types = c("bal_import", "bal_domestic_lag", "bal_domestic_current")
       Bal_types = factor(Bal_types, levels=Bal_types)
       StockBal_Data %>%
-        complete(year = unique(StockBal_Data$year), nesting(region_ID, item_code, element, APE_comm, bal_source), fill=list(value=0)) %>%
+        complete(year = unique(StockBal_Data$year), nesting(GCAM_region_ID, item_code, element, APE_comm, bal_source), fill=list(value=0)) %>%
         mutate(is_supply = element %in% Regional_supply_elements,
                is_demand = element %in% Regional_demand_elements) %>%
-        group_by(APE_comm, region_ID, year, item_code, bal_source) %>%
+        group_by(APE_comm, GCAM_region_ID, year, item_code, bal_source) %>%
         # Clean the bal items
         summarize(`Regional supply` = sum(value[is_supply]),
                   `Regional demand` = sum(value[is_demand]),
@@ -475,7 +500,7 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
           # Note that regional extraction rate could be inf
           # It is likely due to data inconsistency, e.g., zero processed in source but positive sink
           # No adjustments were made since 1/inf become zero in the scaling process, preserving primary balance
-          left_join(Get_GROSS_EXTRACTION_RATE(DF_CURR_NEST, DF_ALL), by=c("APE_comm", "region_ID", "year", "bal_source")) %>%
+          left_join(Get_GROSS_EXTRACTION_RATE(DF_CURR_NEST, DF_ALL), by=c("APE_comm", "GCAM_region_ID", "year", "bal_source")) %>%
           # Scale sink items to get source item equivalent
           mutate(value = value / extraction_rate) %>%
           select(-extraction_rate) ->
@@ -492,13 +517,13 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
           .df2
 
         .df2 %>%
-          complete(region_ID = unique(Area_Region_Map$region_ID), nesting(APE_comm, item_code, nest_level, year), fill=list(value=0)) %>%
-          complete(.df2 %>% distinct(APE_comm, item_code, nest_level), nesting(region_ID, year), fill=list(value=0)) %>%
+          complete(GCAM_region_ID = unique(Area_Region_Map$GCAM_region_ID), nesting(APE_comm, item_code, nest_level, year), fill=list(value=0)) %>%
+          complete(.df2 %>% distinct(APE_comm, item_code, nest_level), nesting(GCAM_region_ID, year), fill=list(value=0)) %>%
           # Use global value (year is specified now!)
           group_by(APE_comm, item_code, year) %>%
           mutate(value = sum(value)) %>%
           ungroup() %>%
-          group_by(APE_comm, region_ID, year) %>%
+          group_by(APE_comm, GCAM_region_ID, year) %>%
           mutate(share = value/ sum(value),
                  share = if_else(is.finite(share), share, dplyr::n()/sum(dplyr::n()))) %>%
           ungroup() %>%
@@ -512,16 +537,16 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
         # prepare sink item SUAs and map them to source item(s)
         # multiple source items are possible but source item will be shared out
         .df1 %>%
-          left_join(source_share, by=c("APE_comm", "region_ID", "year"), relationship = "many-to-many") %>%
+          left_join(source_share, by=c("APE_comm", "GCAM_region_ID", "year"), relationship = "many-to-many") %>%
           filter(!is.na(share)) %>%
           mutate(value = value * share,
                  item_code = source_item_code) %>%
           select(-share) %>%
-          group_by(nest_level, APE_comm, region_ID, year, item_code, element) %>%
+          group_by(nest_level, APE_comm, GCAM_region_ID, year, item_code, element) %>%
           summarize(value = sum(value), .groups = "drop") %>%
           ungroup() %>%
-          complete(element=All_Bal_element[All_Bal_element %in% c("Prodution", "Processed")], nesting(nest_level, APE_comm, region_ID, year, item_code), fill=list(value=0)) %>%
-          group_by(nest_level, APE_comm, region_ID, year, item_code) %>%
+          complete(element=All_Bal_element[All_Bal_element %in% c("Prodution", "Processed")], nesting(nest_level, APE_comm, GCAM_region_ID, year, item_code), fill=list(value=0)) %>%
+          group_by(nest_level, APE_comm, GCAM_region_ID, year, item_code) %>%
           # get data ready to merger upper nest and move prod to negative processed
           mutate(value = if_else(element == "Production" | element == "Processed", value - value[element == "Production"], value)) %>%
           ungroup() ->
@@ -542,7 +567,7 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
             bind_rows(
               df3_nested %>% filter(nest_level == nest_i) %>% pull(data) %>% first
             ) %>%
-            group_by(APE_comm, region_ID, year, item_code, element) %>%
+            group_by(APE_comm, GCAM_region_ID, year, item_code, element) %>%
             summarize(value = sum(value), .groups = "drop") %>%
             ungroup() ->
             AGG
@@ -561,7 +586,7 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
       # Combine the remaining items by APE_comm
       DF_ALL %>%
         tidyr::unnest(c("data")) %>%
-        group_by(region_ID, APE_comm, element, year) %>%
+        group_by(GCAM_region_ID, APE_comm, element, year) %>%
         summarize(value = sum(value), .groups = "drop") %>%
         ungroup() %>%
         spread(element, value, fill = 0.0) %>%
@@ -569,7 +594,7 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
         mutate(`Regional supply` = `Opening stocks` + Production + `Import`,
                `Regional demand` = `Export` + Feed + Food + Loss + Processed + Seed + `Other uses` +`Closing stocks`,
                Residuals = `Regional supply` -  `Regional demand`) %>%
-        gather(element, value, -region_ID, -APE_comm, -year) ->
+        gather(element, value, -GCAM_region_ID, -APE_comm, -year) ->
         APE_AGG
 
       # Aggregate by GCAM_commodity
@@ -578,11 +603,12 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
       APE_AGG %>%
         left_join_error_no_match(Mapping_SUA_PrimaryEquivalent %>% select(GCAM_commodity, APE_comm) %>% distinct(),
                                  by = c("APE_comm")) %>%
-        group_by(region_ID, GCAM_commodity, element, year) %>%
+        group_by(GCAM_region_ID, GCAM_commodity, element, year) %>%
         summarize(value = sum(value), .groups = "drop") %>%
         ungroup() %>%
+        #left_join_error_no_match(GCAM_region_names, by=c("GCAM_region_ID")) %>%
         mutate(element = as.character(element)) %>%
-        select(region_ID, year, GCAM_commodity, element, value) ->
+        select(GCAM_region_ID, year, GCAM_commodity, element, value) ->
         GCAM_APE_after2010
 
       return(GCAM_APE_after2010)
@@ -622,6 +648,66 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
 
 
 
+
+
+    # Section4 [1970-2019] GCAM_APE SUA ----
+
+    # 4.1. Helper functions ----
+    Check_Balance_SUA <- function(.DF){
+      NULL -> element -> GCAM_commodity -> Import -> Export -> Production -> Food ->
+        Feed -> `Other uses` -> `Regional supply` -> `Regional demand` -> bal ->
+        region
+
+      assertthat::assert_that(all(c("element") %in% names(.DF)))
+      assertthat::assert_that(all(c("Import", "Export", "Production",
+                                    "Food", "Feed", "Other uses") %in%
+                                    c(.DF %>% distinct(element) %>% pull)))
+      # 0. Check NA
+      if (.DF %>% filter(is.na(value)) %>% nrow() > 0) {
+        warning("NA values in SUA Balance")
+      }
+
+
+      # 1. Positive value except stock variation and residues
+      if (isFALSE(.DF %>% filter(!element %in% c("Stock Variation", "Other uses")) %>%
+                  summarise(min = min(value, na.rm = T)) %>% pull(min) >= -0.001)) {
+        warning("Negative values in key elements (not including stock variation and other uses)")
+      }
+
+      # 2. Trade balance in all year and items
+      if (isFALSE(.DF %>% filter(element %in% c("Import", "Export")) %>%
+                  group_by(year, GCAM_commodity, element) %>%
+                  summarise(value = sum(value), .groups = "drop") %>%
+                  spread(element, value) %>% filter(abs(Import - Export) > 0.0001) %>% nrow() == 0)) {
+        warning("Gross trade imbalance")
+      }
+
+      # 3. SUA balance check
+      if (isFALSE(.DF %>%
+                  spread(element, value) %>%
+                  mutate(`Regional supply` = Production + `Import`,
+                         `Regional demand` = `Export` + Feed + Food  + `Other uses`,
+                         bal = abs(`Regional supply` -  `Regional demand`)) %>%
+                  filter(bal > 0.0001) %>% nrow() == 0)) {
+        warning("Regional supply != Regional demand + Residuals")
+      }
+
+      # 4. Balanced in all dimensions
+      assertthat::assert_that(.DF %>% nrow() ==
+                                .DF %>% distinct(year) %>% nrow *
+                                .DF %>% distinct(GCAM_commodity) %>% nrow *
+                                .DF %>% distinct(element) %>% nrow *
+                                .DF %>% distinct(region) %>% nrow)
+
+    }
+
+
+
+    ## Done Section4 ----
+
+
+
+    #****************************----
     #Section6 Connect food items and macronutrient rates ----
 
     # 6.1 Separate FAO food items into GCAM food items and NEC for macronutrient ----
@@ -708,21 +794,19 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
         macronutrient == "calperg" ~ "MKcal",
         macronutrient == "fatperc" ~ "MtFat",
         macronutrient == "proteinperc" ~ "MtProtein" )) %>%
-      left_join_error_no_match(Area_Region_Map, by = "area_code") ->
-      FAO_Food_Macronutrient_All
+      left_join_error_no_match(Area_Region_Map %>% select(-region), by = "area_code") ->
+      FAO_Food_Macronutrient_All_2010_2019
 
+    ### c. Get the max values of macronutrient conversion rate (per GCAM_commodity) ----
+    # This will be used later as an upper bound to improve the data
+    GCAMFAOSTAT_MacroNutrientRate %>%
+      tidyr::gather(macronutrient, macronutrient_value, calperg:proteinperc) %>%
+      left_join_error_no_match(SUA_Items_Food %>% select(-item),
+                               by = c("item_code")) %>%
+      group_by(GCAM_commodity, macronutrient) %>%
+      summarise(max_macronutrient_value = max(macronutrient_value), .groups = "drop") ->
+      FAO_Food_MacronutrientRate_2010_2019_MaxValue
 
-    # Compare recompiled FBS with the original FBS ----
-
-    FBS_wide %>% gather_years() %>%
-      filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
-      FAOSTAT_AREA_RM_NONEXIST() -> FBS
-
-    for (.DF in c("FBS")) {
-      get(.DF) %>% filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
-        # merge Sudan and South Sudan
-        FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL(SUDAN2012_MERGE = T) %>%
-        assign(x = .DF, envir = parent.env(environment()))  }
 
     #****************************----
     # Produce outputs ----
@@ -734,17 +818,20 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
     #   add_comments("Supply utilization balance for GCAM commodities and regions in primary equivalent") %>%
     #   add_precursors("aglu/AGLU_ctry",
     #                  "common/iso_GCAM_regID",
+    #                  "common/GCAM_region_names",
     #                  "aglu/FAO/GCAMFAOSTAT_SUA",
     #                  "aglu/FAO/GCAMFAOSTAT_BiTrade",
     #                  "aglu/FAO/Mapping_SUA_PrimaryEquivalent",
     #                  "aglu/FAO/SUA_item_code_map",
-    #                  "aglu/FAO/GCAMFAOSTAT_NonFodderProdArea") ->
+    #                  "aglu/FAO/GCAMFAOSTAT_NonFodderProdArea",
+    #                  "aglu/FAO/GCAMFAOSTAT_FBSH_CB",
+    #                  "aglu/FAO/Mapping_item_FBS_GCAM") ->
     #   GCAM_AgLU_SUA_APE_1973_2019
 
 
 
     #
-    #     FAO_Food_Macronutrient_All %>%
+    #     FAO_Food_Macronutrient_All_2010_2019 %>%
     #       add_title("GCAM_AgLU_SUA_APE_1973_2019") %>%
     #       add_units("MKcal, MtFat, MtProtein") %>%
     #       add_comments("Macronutrient consumption values connected to food consumption in GCAM_AgLU_SUA_APE_1973_2019") %>%
@@ -753,8 +840,18 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
     #                      "aglu/FAO/GCAMFAOSTAT_SUA",
     #                      "aglu/FAO/GCAMFAOSTAT_MacroNutrientRate",
     #                      "aglu/FAO/Mapping_SUA_PrimaryEquivalent") ->
-    #       FAO_Food_Macronutrient_All
+    #       FAO_Food_Macronutrient_All_2010_2019
     #
+    #     FAO_Food_MacronutrientRate_2010_2019_MaxValue %>%
+    #       add_title("FAO_Food_MacronutrientRate_2010_2019_MaxValue") %>%
+    #       add_units("cal per g, fat perc. , protein perc.") %>%
+    #       add_comments("The max value of macronutrient conversion rate across region, year, and SUA items (per GCAM_commodity") %>%
+    #       add_precursors("aglu/AGLU_ctry",
+    #                      "common/iso_GCAM_regID",
+    #                      "aglu/FAO/GCAMFAOSTAT_SUA",
+    #                      "aglu/FAO/GCAMFAOSTAT_MacroNutrientRate",
+    #                      "aglu/FAO/Mapping_SUA_PrimaryEquivalent") ->
+    #       FAO_Food_MacronutrientRate_2010_2019_MaxValue
 
     return_data(MODULE_OUTPUTS)
 

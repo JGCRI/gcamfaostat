@@ -1,8 +1,8 @@
 # Copyright 2019 Battelle Memorial Institute; see the LICENSE file.
 
-#' module_xfaostat_L101_RawDataPreProc4_FBSH_CB
+#' module_xfaostat_L101_RawDataPreProc4_FBSH_CBH
 #'
-#' Preprocess raw faostat data part 4 FBSH and CB
+#' Preprocess raw faostat data part 4 FBSH and CBH
 #'
 #' @param command API command to execute
 #' @param ... other optional parameters, depending on command
@@ -15,7 +15,7 @@
 #' @importFrom tibble tibble
 #' @importFrom tidyr complete drop_na gather nesting spread replace_na
 #' @author XZ 2023
-module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
+module_xfaostat_L101_RawDataPreProc4_FBSH_CBH <- function(command, ...) {
 
   MODULE_INPUTS <-
     c(FAOSTAT_FILE = file.path(DIR_RAW_DATA_FAOSTAT, "FoodBalanceSheetsHistoric_E_All_Data_Normalized"),
@@ -106,7 +106,7 @@ module_xfaostat_L101_RawDataPreProc4_FBSH_CB <- function(command, ...) {
              unit = "1000 tonnes") -> CBH1 # convert to Kton
 
 
-    ## *FBSH_CB merge the two----
+    ## *FBSH_CBH merge the two----
     # load processed data
 
     FBSH1 %>% distinct(item_code) %>%
