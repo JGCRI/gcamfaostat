@@ -73,30 +73,10 @@ scaleFUN <- function(x) sprintf("%.0f", x)
 
 xml.XML_SUFFIX <- NULL
 
-#*******************************************
-
-# Detailed forest CMP constants
-
-aglu.FOREST_commodities <- c("sawnwood","woodpulp")
-aglu.FOREST_demand_sectors <- c("NonFoodDemand_sawnwood","NonFoodDemand_woodpulp")
-aglu.FOREST_supply_sector <- "Forest"
-#Below is a default amount of roundwood required to produce sawnwood.The model will calculate the IO using data. This will get used if and only if
-# the IO calculated by the model is an NA. This is taken as an everage across countries from a UNECE report on forest products. Available here- https://unece.org/fileadmin/DAM/timber/publications/DP-49.pdf
-aglu.FOREST_sawtimber_conversion <- 2.17
-
-#90% of pulp processing is chemical which has an IO of 5.44 and 10% is mechanical which is 2.55. Taking weighted average of the two,
-# we get 5.15. These are calculated as averages across countries.
-#Source- https://unece.org/fileadmin/DAM/timber/publications/DP-49.pdf
-aglu.FOREST_pulp_conversion <- 5.15
-
-aglu.FOREST_max_price <- 165
-
-#*******************************************
 
 
 
-
-
+# **************************************----
 # ***Default constants in gcamdata ----
 
 
@@ -135,21 +115,6 @@ MODEL_YEARS             <- c(MODEL_BASE_YEARS, MODEL_FUTURE_YEARS)
 MODEL_FINAL_BASE_YEAR   <- 2015
 
 
-# GCAM constants ======================================================================
-
-gcam.USA_CODE            <- 1
-gcam.USA_REGION          <- "USA"
-gcam.WESTERN_EUROPE_CODE <- 13
-gcam.LOGIT_TYPES         <- c("relative-cost-logit", "absolute-cost-logit")
-gcam.EQUIV_TABLE         <- "EQUIV_TABLE"
-gcam.IND_ENERGY_USE      <- c("biomass", "coal", "gas", "refined liquids")  # GCAM industrial energy use fuels
-GCAM_REGION_ID      <- "GCAM_region_ID"
-# The default market price GCAM will use to start solving from if it has no other info
-# If users do not have an estimate for a starting price this is a safe one to set
-gcam.DEFAULT_PRICE <- 1.0
-gcam.DEFAULT_SUBSECTOR_LOGIT <- -3
-gcam.DEFAULT_TECH_LOGIT      <- -6
-
 
 # Driver constants ======================================================================
 
@@ -184,101 +149,6 @@ modeltime.HECTOR_EMISSIONS_YEAR  <- 2005
 modeltime.HECTOR_INI_FILE        <- "../input/climate/hector-gcam.ini"
 
 
-# Conversion constants ======================================================================
-# The naming convention is CONV_(FROM-UNIT)_(TO-UNIT).
-
-# Numeric (unitless)
-CONV_BIL_MIL    <- 1000
-CONV_MIL_BIL    <- 1 / CONV_BIL_MIL
-CONV_BIL_THOUS  <- 1e6
-CONV_THOUS_BIL  <- 1 / CONV_BIL_THOUS
-CONV_MIL_THOUS  <- 1000
-CONV_ONES_THOUS <- 0.001
-
-# Mass
-CONV_TON_MEGATON <- 1e-6
-CONV_T_KG <- 1e3
-CONV_KG_T <- 1 / CONV_T_KG
-CONV_T_METRIC_SHORT <- 1000 / 908  # Ratio between metric ton and short ton
-CONV_HA_BM2 <- 1e-5
-CONV_HA_M2 <- 10000
-CONV_THA_KGM2 <- 0.1   # tons C/ha -> kg C/m2
-CONV_G_TG <- 1e-12
-CONV_GG_TG <- 0.001 # gigagrams to tegagrams
-CONV_TST_TG <- 0.000907 # thousand short tons to Tg
-CONV_KG_TO_TG <- 1e-9
-CONV_KT_MT <- 0.001 # kt to Mt
-CONV_T_MT <- 1e-6 # t to Mt
-CONV_G_KG <- 1e-3 # kilograms to grams
-CONV_NH3_N <- 14/17 # Nitrogen to Ammonia
-CONV_KBBL_BBL <- 1000 # thousand barrels to barrels
-CONV_BBL_TONNE_RFO <- 1 / 6.66 # barrels to tons residual fuel oil
-CONV_TONNE_GJ_RFO <- 40.87 # tons to GJ residual fuel oil
-CONV_BBL_TONNE_DISTILLATE <- 1 / 7.46 # barrels to tons distillate
-CONV_BBL_TONNE_RFO  <- 1 / 6.66       # barrels to tons residual fuel oil
-CONV_G_KG           <- 1e-3           # kilograms to grams
-CONV_GG_TG          <- 0.001          # gigagrams to teragrams
-CONV_HA_BM2         <- 1e-5
-CONV_HA_M2          <- 10000
-CONV_KBBL_BBL       <- 1000           # thousand barrels to barrels
-CONV_KG_TO_TG       <- 1e-9
-CONV_KT_MT          <- 0.001          # kt to Mt
-CONV_NH3_N          <- 14/17          # Nitrogen to Ammonia
-CONV_T_KG           <- 1e3
-CONV_KG_T           <- 1 / CONV_T_KG
-CONV_T_METRIC_SHORT <- 1000 / 908     # Ratio between metric ton and short ton
-CONV_T_MT           <- 1e-6           # t to Mt
-CONV_THA_KGM2       <- 0.1            # tons C/ha -> kg C/m2
-CONV_TON_MEGATON    <- 1e-6
-CONV_TONNE_GJ_DISTILLATE  <- 42.91    # tons to GJ distillate
-CONV_TONNE_GJ_RFO   <- 40.87          # tons to GJ residual fuel oil
-
-# Time
-CONV_YEAR_HOURS <- 24 * 365.25
-CONV_DAYS_YEAR <- 1 / 365.25
-CONV_DAY_HOURS <- 24
-
-# Energy
-CONV_MWH_GJ <- 3.6 # Megawatt hours to Gigajoules
-CONV_MWH_EJ <- 3.6e-9 # Megawatt hours to Exajoules
-CONV_GWH_EJ <- 3.6e-6
-CONV_TWH_EJ <- 3.6e-3
-CONV_KWH_GJ <- 3.6e-3
-CONV_GJ_EJ <- 1e-9
-CONV_MJ_EJ <- 1e-12
-CONV_EJ_GJ <- 1 / CONV_GJ_EJ
-CONV_MBLD_EJYR <- 6.119 * 365.25 * 1e-3 # million barrels a day to EJ per year
-CONV_KBTU_EJ <- 1.0551e-12 # KiloBTU to EJ
-CONV_TBTU_EJ <- 0.0010551 # TeraBTU to EJ
-CONV_MJ_BTU <- 947.777
-CONV_BTU_KJ <- 1.0551
-CONV_MMBTU_KGH2 <- 0.113939965425114 # MMBTU/kg H2 - LHV Source: H2 CCTP Workbook.xls (Used for older GCAM assumptions)
-CONV_GJ_KGH2 <- 0.12021 #GJ/kg H2 - LHV
-
-# Distance
-CONV_MILE_KM <- 1.60934 # Mile to km
-CONV_NMILE_KM <- 1.852 # Nautical mile to km
-
-# Other
-CONV_MCAL_PCAL <- 1e-9
-CONV_M3_BM3 <- 1e-09 # Cubic meters (m3) to billion cubic meters (bm3)
-CONV_MILLION_M3_KM3 <- 1e-03
-CONV_M2_ACR <- 0.0002471058
-CONV_HA_M2 <- 1e4 # ha to m2
-CONV_BM2_M2 <- 1e9
-CONV_MILFT2_M2 <- 92900 # Million square feet to square meters
-CONV_FT2_M2 <- 0.0929 # Square feet to square meters
-CONV_GAL_M3 <- 0.00378541 #gallons to m3
-CONV_MI_KM <- 1.60934
-CONV_PERS_MILPERS <- 1000000 #Person to million-passengers
-
-# SO2 related conversion factors
-RESID_BTU_PER_BBL <- 6.29 # Source EIA (Note HHV)
-RESID_BBLS_PER_TONNE <- 6.66 # Source EIA (Note HHV)
-RESID_ENERGY_DENSITY_BTU <- RESID_BTU_PER_BBL * RESID_BBLS_PER_TONNE * 0.95 # Btu/tonne net
-RESID_ENERGY_DENSITY_JOULES <- RESID_ENERGY_DENSITY_BTU * 1055 # TJ/Tg
-RESID_ENERGY_CONTENT <- RESID_ENERGY_DENSITY_JOULES/1E6 # Tg/EJ
-SO2_SHIP_LIMIT_POLICY_MULTIPLIER <- 0.001 * 2
 
 # AgLU constants ======================================================================
 
@@ -394,125 +264,6 @@ aglu.MAX_BIO_YIELD_THA <- 20
 # Energy content of biomass, GJ/ton
 aglu.BIO_ENERGY_CONTENT_GJT <- 17.5
 
-# Regions in which agriculture and land use are not modeled
-# kbn 2019/09/25 Took taiwan out from below since we have data for Taiwan now.
-aglu.NO_AGLU_REGIONS <- ""
-
-# Define GCAM category name of fertilizer
-aglu.FERT_NAME <- "N fertilizer"
-
-# Average Wood Density kg/m^3 for mass conversion
-# Source: http://www.engineeringtoolbox.com/wood-density-d_40.html
-# To Page's knowledge, nobody's ever done a weighted average wood density
-# across all tree species that are commercially logged;
-# 500 was was chosen to be towards the middle of the species that are produced.
-aglu.AVG_WOOD_DENSITY_KGM3 <- 500 # In kg per m3
-# Carbon content of wood is about 50 percent across species
-aglu.AVG_WOOD_DENSITY_KGCM3 <- 250 # In kg carbon per m3
-
-# Carbon content adjustments from unmanaged to managed
-# conversion factor from unmanaged forest to managed forest, where the former is
-# understood to be forest not in logging rotation, and the latter is forest in
-# logging rotation. The average vegetation biomass of the logged forest is assumed
-# to be 50% of that of the unlogged forest (integrated over the rotation period).
-# Using 50% under the assumption that the veg biomass of the logged forest over the
-# rotation period can be approximated by a triangle.
-aglu.CVEG_MULT_UNMGDFOR_MGDFOR <- 0.5
-aglu.CSOIL_MULT_UNMGDFOR_MGDFOR <- 0.87      #source: Guo and Gifford 2002; https://doi.org/10.1046/j.1354-1013.2002.00486.x
-aglu.CVEG_MULT_UNMGDPAST_MGDPAST <- 0.5
-aglu.CSOIL_MULT_UNMGDPAST_MGDPAST <- 0.8     # stay conservative here b/c no data source
-
-# Average Agriculture Density kg/m^3 for mass conversion
-# Source: http://www.engineeringtoolbox.com/wood-density-d_40.html
-aglu.AVG_AG_DENSITY <- 1
-
-# Forest Harvest Index
-aglu.FOREST_HARVEST_INDEX <- 0.8
-
-# Forest Erosion Control in kg/m^2
-aglu.FOREST_EROSION_CTRL_KGM2 <- 0.2
-
-# Mill Erosion Control in kg/m^2
-aglu.MILL_EROSION_CTRL_KGM2 <- 0
-
-# Wood energy content in GJ/kg
-aglu.WOOD_ENERGY_CONTENT_GJKG <- 0.0189
-
-# wood water content
-# Unitless (mass of water / total wood mass)
-aglu.WOOD_WATER_CONTENT <- 0.065
-
-# Min veg and soil carbon densities
-# kg C per m2
-aglu.MIN_VEG_CARBON_DENSITY  <- 0
-aglu.MIN_SOIL_CARBON_DENSITY <- 0
-
-#This is the model carbon year. Carbon outputs are scaled to this year
-MODEL_CARBON_YEAR <- 2010
-
-# These are the default values of carbon desnities from Houghton (in MgC/ha) by land type. moirai only outputs carbon for unmanaged land. Therefore, we need default values for other land types.
-#Moreover we do not have data on carbon for Polar deserts and Tundra. So we use default values for those as well.
-aglu.DEFAULT_SOIL_CARBON_PASTURE <- 13
-aglu.DEFAULT_VEG_CARBON_PASTURE <- 0.7
-aglu.DEFAULT_SOIL_CARBON_CROPLAND <- 9
-aglu.DEFAULT_VEG_CARBON_CROPLAND <- 0.3
-aglu.DEFAULT_SOIL_CARBON_URBANLAND <- 5.8
-aglu.DEFAULT_VEG_CARBON_URBANLAND <- 0.3
-aglu.DEFAULT_SOIL_CARBON_TUNDRA <- 22
-aglu.DEFAULT_VEG_CARBON_TUNDRA <- 0.9
-
-# This is the default maturity age from Houghton.
-aglu.DEFAULT_MATURITY_AGE_PASTURE <- 10
-aglu.DEFAULT_TUNDRA_AGE <- 50
-
-# We may not have maturity age for some land types. If this arises, set it to the below (mean of all LT)
-aglu.DEFAULT_MATURITY_AGE_ALL_LAND <- 35
-
-# Define top-level (zero) land nest logit exponent and logit type
-aglu.N0_LOGIT_EXP  <- 0
-aglu.N0_LOGIT_TYPE <- NA
-
-
-
-#Set the below constant to TRUE to de-activate the protected areas differentiated by land type and region in GCAM. Setting it to TRUE will use the default protection fraction defined in aglu.PROTECT_DEFAULT
-aglu.PROTECTION_DATA_SOURCE_DEFAULT <- FALSE
-#Un-Protected area status- This constant can be used to make more land types from the protection categories available for expansion.
-# The available options for land types are - Unknown, UnsuitableUnprotected, SuitableUnprotected, SuitableHighProtectionIntact, SuitbaleHighProtectionDeforested, SuitableLow Protection, UnsuitableHighProtection, UnsuitableLowProtection
-aglu.NONPROTECT_LAND_STATUS <- c("SuitableUnprotected","Unknown")
-
-# Default fraction for protected land. This is used if the aglu.PROTECTION_DATA_SOURCE is set to TRUE or if protection data is unavailable.
-aglu.PROTECT_DEFAULT<- 0.9
-
-#Set the constants below to select the data source for carbon initialization. Currently set to `houghton`. Alternatively, this can be set to 'moirai'
-aglu.CARBON_DATA_SOURCE <- "moirai"
-
-# Available options for aglu.CARBON_STATE are median_value (median of all available grid cells), min_value (minimum of all available grid cells), max_value (maximum of all available grid cells),
-# weighted_average (weighted average of all available grid cells using the land area as a weight), q1_value (first quartile of all available grid cells) and q3_value (3rd quartile of all available grid cells).
-# Default recommended for GCAM is the q3_value. Note that these states can be selected only when using moirai as the carbon data source.
-aglu.CARBON_STATE <- c("q3_value")
-
-
-# Multiplier on the ghost share for irrigated land
-aglu.IRR_GHOST_SHARE_MULT <- 0.25
-
-# unManaged Land Value
-# 1975$/thou km2 ??
-aglu.UNMANAGED_LAND_VALUE <- 1
-
-# default protected, unmanaged land LN1 logit info
-aglu.LN1_PROTUNMGD_LOGIT_EXP  <- 0
-aglu.LN1_PROTUNMGD_LOGIT_TYPE <- NA
-
-# default logit exponent and type for LN5, the competition betweein high and lo management
-aglu.MGMT_LOGIT_EXP  <- 2.5
-aglu.MGMT_LOGIT_TYPE <- "absolute-cost-logit"
-
-# Statistical differences reconciliation: China's Vegetable production estimates are inconsistent between the PRODSTAT
-# ("Production") and SUA ("Commodity Balances"). Because the latter dataset is used for estimating food consumption in
-# GCAM, and because these SUA food consumption estimates are derived from production data that is about 20% higher than
-# PRODSTAT, this discrepancy causes very high negative "non-food" demands in this nation, which are large enough to
-# result in negative non-food demands globally.
-aglu.CHN_VEG_FOOD_MULT <- 0.8
 
 # XML-related constants
 aglu.CROP_GLU_DELIMITER   <- "_"  # delimiter between the crop name and GLU name
@@ -521,59 +272,124 @@ aglu.IRR_DELIMITER        <- "_"  # delimiter between the appended crop x GLU an
 aglu.LT_GLU_DELIMITER     <-      # delimiter between the land use type name and GLU name. should be the same as the crop-glu delimiter
 aglu.MGMT_DELIMITER       <- "_"  # delimiter between appended tech name and management level
 
-# AgLU digits constants to control the number of digits for rounding going into XMLs.
-aglu.DIGITS_AGPRODCHANGE  <- 4 # rate of change in yield values
-aglu.DIGITS_C_DENSITY     <- 1
-aglu.DIGITS_C_DENSITY_CROP <- 3 # cropland vegetative soil carbon content
-aglu.DIGITS_CALOUTPUT     <- 7 # for production values
-aglu.DIGITS_CALPRICE      <- 4 # prices and costs values
-aglu.DIGITS_EROS_CTRL     <- 2
-aglu.DIGITS_GHOSTSHARE    <- 3
-aglu.DIGITS_HARVEST_INDEX <- 2
-aglu.DIGITS_INCELAS       <- 4 # food demand income elasticity values
-aglu.DIGITS_LAND_TOTAL    <- 2
-aglu.DIGITS_LAND_USE      <- 7
-aglu.DIGITS_LAND_VALUE    <- 0
-aglu.DIGITS_MATUREAGE     <- 0
-aglu.DIGITS_RES_ENERGY    <- 4
-aglu.DIGITS_WATER_CONTENT <- 2
 
+#*******************************************
 
-#Land leaf names used in the data system for different land types
-aglu.PASTURE_NODE_NAMES <- "Pasture"
-aglu.FOREST_NODE_NAMES <- "Forest"
-aglu.GRASSLAND_NODE_NAMES <- "Grassland"
+# Detailed forest CMP constants
+
+aglu.FOREST_commodities <- c("sawnwood","woodpulp")
+aglu.FOREST_demand_sectors <- c("NonFoodDemand_sawnwood","NonFoodDemand_woodpulp")
+aglu.FOREST_supply_sector <- "Forest"
+#Below is a default amount of roundwood required to produce sawnwood.The model will calculate the IO using data. This will get used if and only if
+# the IO calculated by the model is an NA. This is taken as an everage across countries from a UNECE report on forest products. Available here- https://unece.org/fileadmin/DAM/timber/publications/DP-49.pdf
+aglu.FOREST_sawtimber_conversion <- 2.17
+
+#90% of pulp processing is chemical which has an IO of 5.44 and 10% is mechanical which is 2.55. Taking weighted average of the two,
+# we get 5.15. These are calculated as averages across countries.
+#Source- https://unece.org/fileadmin/DAM/timber/publications/DP-49.pdf
+aglu.FOREST_pulp_conversion <- 5.15
+
+aglu.FOREST_max_price <- 165
+
+#*******************************************
 
 
 
-# Emissions constants ======================================================================
+# Conversion constants ======================================================================
+# The naming convention is CONV_(FROM-UNIT)_(TO-UNIT).
 
-# scaling CH4 and N2O emissions to EPA 2019 mitigation report BAU emission trajectory
-emissions.NONCO2.EPA.SCALING <- FALSE
-emissions.EPA.SCALING.THRESHOLD <- 50 # EPA emissions/ CEDS emission, used to check scaling outliers in L112 chunk
-emissions.EPA.SCALING.THRESHOLD.COMBUSTION <- 20 # check scaling outliers in L112 chunk for combustion sector
+# Numeric (unitless)
+CONV_BIL_MIL    <- 1000
+CONV_MIL_BIL    <- 1 / CONV_BIL_MIL
+CONV_BIL_THOUS  <- 1e6
+CONV_THOUS_BIL  <- 1 / CONV_BIL_THOUS
+CONV_MIL_THOUS  <- 1000
+CONV_ONES_THOUS <- 0.001
+
+# Mass
+CONV_TON_MEGATON <- 1e-6
+CONV_T_KG <- 1e3
+CONV_KG_T <- 1 / CONV_T_KG
+CONV_T_METRIC_SHORT <- 1000 / 908  # Ratio between metric ton and short ton
+CONV_HA_BM2 <- 1e-5
+CONV_HA_M2 <- 10000
+CONV_THA_KGM2 <- 0.1   # tons C/ha -> kg C/m2
+CONV_G_TG <- 1e-12
+CONV_GG_TG <- 0.001 # gigagrams to tegagrams
+CONV_TST_TG <- 0.000907 # thousand short tons to Tg
+CONV_KG_TO_TG <- 1e-9
+CONV_KT_MT <- 0.001 # kt to Mt
+CONV_T_MT <- 1e-6 # t to Mt
+CONV_G_KG <- 1e-3 # kilograms to grams
+CONV_NH3_N <- 14/17 # Nitrogen to Ammonia
+CONV_KBBL_BBL <- 1000 # thousand barrels to barrels
+CONV_BBL_TONNE_RFO <- 1 / 6.66 # barrels to tons residual fuel oil
+CONV_TONNE_GJ_RFO <- 40.87 # tons to GJ residual fuel oil
+CONV_BBL_TONNE_DISTILLATE <- 1 / 7.46 # barrels to tons distillate
+CONV_BBL_TONNE_RFO  <- 1 / 6.66       # barrels to tons residual fuel oil
+CONV_G_KG           <- 1e-3           # kilograms to grams
+CONV_GG_TG          <- 0.001          # gigagrams to teragrams
+CONV_HA_BM2         <- 1e-5
+CONV_HA_M2          <- 10000
+CONV_KBBL_BBL       <- 1000           # thousand barrels to barrels
+CONV_KG_TO_TG       <- 1e-9
+CONV_KT_MT          <- 0.001          # kt to Mt
+CONV_NH3_N          <- 14/17          # Nitrogen to Ammonia
+CONV_T_KG           <- 1e3
+CONV_KG_T           <- 1 / CONV_T_KG
+CONV_T_METRIC_SHORT <- 1000 / 908     # Ratio between metric ton and short ton
+CONV_T_MT           <- 1e-6           # t to Mt
+CONV_THA_KGM2       <- 0.1            # tons C/ha -> kg C/m2
+CONV_TON_MEGATON    <- 1e-6
+CONV_TONNE_GJ_DISTILLATE  <- 42.91    # tons to GJ distillate
+CONV_TONNE_GJ_RFO   <- 40.87          # tons to GJ residual fuel oil
 
 # Time
-emissions.CEDS_YEARS              <- 1970:2019           # Year coverage for CEDS inventory.
-emissions.CTRL_BASE_YEAR          <- 1975                # Year to read in pollution controls
-emissions.DEFOREST_COEF_YEARS     <- c(2000, 2005)
-emissions.EDGAR_YEARS             <- 1971:2008
-emissions.EPA_HISTORICAL_YEARS    <- 1971:2002
-emissions.EPA_MACC_YEAR           <- seq(2015, 2050, 5)        # based on 2019 EPA nonCO2 report
-emissions.EPA_MACC_FUTURE_YEAR    <- seq(2055, 2100, 5)        # EPA report only covers till 2050
-emissions.EPA_TC_TIMESTEP         <- 5   # currently calculate EPA MAC-based technological change based on every 5 years
-emissions.EPA_BAU_HIST_YEAR       <- c(1990, 1995, 2000, 2005, 2010, 2015) # based on 2019 EPA nonCO2 report
-emissions.FINAL_EMISS_YEAR        <- min(max(MODEL_BASE_YEARS), 2005)
-emissions.GAINS_BASE_YEAR         <- 2005
-emissions.GAINS_YEARS             <- c(2010, 2020, 2030)
-emissions.GHG_CONTROL_READIN_YEAR <- 1975
-emissions.HFC_MODEL_BASE_YEARS    <- MODEL_YEARS[ MODEL_YEARS <= 2010] # We don't want this to change in timeshift
-emissions.INVENTORY_MATCH_YEAR    <- 2009                # Select year from which to calculate fuel emissions coefficients (2009 is currently the most recent)
-emissions.MODEL_BASE_YEARS        <- MODEL_BASE_YEARS
-emissions.NH3_EXTRA_YEARS         <- 1971:1989
-emissions.NH3_HISTORICAL_YEARS    <- 1990:2002
-emissions.SSP_FUTURE_YEARS        <- MODEL_YEARS[MODEL_YEARS %in% 2015:2100]
-emissions.HFC_FUT_YEAR            <- 2030            # max year for emissions factors in L241.fgas
-emissions.GV_YEARS                <- c(2020, 2030)   # years to fill in from Guus Velders data
+CONV_YEAR_HOURS <- 24 * 365.25
+CONV_DAYS_YEAR <- 1 / 365.25
+CONV_DAY_HOURS <- 24
+
+# Energy
+CONV_MWH_GJ <- 3.6 # Megawatt hours to Gigajoules
+CONV_MWH_EJ <- 3.6e-9 # Megawatt hours to Exajoules
+CONV_GWH_EJ <- 3.6e-6
+CONV_TWH_EJ <- 3.6e-3
+CONV_KWH_GJ <- 3.6e-3
+CONV_GJ_EJ <- 1e-9
+CONV_MJ_EJ <- 1e-12
+CONV_EJ_GJ <- 1 / CONV_GJ_EJ
+CONV_MBLD_EJYR <- 6.119 * 365.25 * 1e-3 # million barrels a day to EJ per year
+CONV_KBTU_EJ <- 1.0551e-12 # KiloBTU to EJ
+CONV_TBTU_EJ <- 0.0010551 # TeraBTU to EJ
+CONV_MJ_BTU <- 947.777
+CONV_BTU_KJ <- 1.0551
+CONV_MMBTU_KGH2 <- 0.113939965425114 # MMBTU/kg H2 - LHV Source: H2 CCTP Workbook.xls (Used for older GCAM assumptions)
+CONV_GJ_KGH2 <- 0.12021 #GJ/kg H2 - LHV
+
+# Distance
+CONV_MILE_KM <- 1.60934 # Mile to km
+CONV_NMILE_KM <- 1.852 # Nautical mile to km
+
+# Other
+CONV_MCAL_PCAL <- 1e-9
+CONV_M3_BM3 <- 1e-09 # Cubic meters (m3) to billion cubic meters (bm3)
+CONV_MILLION_M3_KM3 <- 1e-03
+CONV_M2_ACR <- 0.0002471058
+CONV_HA_M2 <- 1e4 # ha to m2
+CONV_BM2_M2 <- 1e9
+CONV_MILFT2_M2 <- 92900 # Million square feet to square meters
+CONV_FT2_M2 <- 0.0929 # Square feet to square meters
+CONV_GAL_M3 <- 0.00378541 #gallons to m3
+CONV_MI_KM <- 1.60934
+CONV_PERS_MILPERS <- 1000000 #Person to million-passengers
+
+# SO2 related conversion factors
+RESID_BTU_PER_BBL <- 6.29 # Source EIA (Note HHV)
+RESID_BBLS_PER_TONNE <- 6.66 # Source EIA (Note HHV)
+RESID_ENERGY_DENSITY_BTU <- RESID_BTU_PER_BBL * RESID_BBLS_PER_TONNE * 0.95 # Btu/tonne net
+RESID_ENERGY_DENSITY_JOULES <- RESID_ENERGY_DENSITY_BTU * 1055 # TJ/Tg
+RESID_ENERGY_CONTENT <- RESID_ENERGY_DENSITY_JOULES/1E6 # Tg/EJ
+SO2_SHIP_LIMIT_POLICY_MULTIPLIER <- 0.001 * 2
+
 
 
