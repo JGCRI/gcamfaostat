@@ -1,3 +1,10 @@
+Bal_new_all %>% filter(value != 0) %>%
+  spread(year, value) %>%
+  write.csv("B.csv")
+GCAM_APE_after2010 %>%
+  spread(year, value) %>%
+  write.csv("A.csv")
+
 
 # This module compares the new PCE data vs FAO FBS
 
@@ -12,6 +19,13 @@ MODULE_INPUTS <-
 MODULE_INPUTS %>% load_from_cache() -> all_data
 
 get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
+
+GCAM_APE_after2010 %>% distinct(GCAM_commodity)
+
+Bal_new_all %>% filter(value != 0)
+GCAM_APE_after2010 %>% filter(value != 0)
+
+
 
 SUA_item_code_map %>% select(item, item_code) -> SUA_item_code_map
 FAO_Food_Macronutrient_All -> FAO_Food_Macronutrient_rate

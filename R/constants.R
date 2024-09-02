@@ -12,9 +12,9 @@ Process_Raw_FAO_Data <- FALSE
 # If "GCAM", CSV will be generated and saved to DIR_OUTPUT_CSV
 
 
-DISABLED_MODULES <-
-  c("yextension_L100_FoodBalanceSheet")
+DISABLED_MODULES <- c("yextension_L100_FoodBalanceSheet")
 
+# gcamdata specific modules are disabled ----
 DISABLED_MODULES <-
   c("aglu_L100.FAO_SUA_PrimaryEquivalent",
     "aglu_L100.FAO_SUA_connection",
