@@ -53,7 +53,7 @@ module_xfaostat_L101_RawDataPreProc7_FO <- function(command, ...) {
       FO %>% filter(year >= min(FAOSTAT_Hist_Year),
                     area_code < 350,     # Rm aggregated area
                     item_code %in% c(1861, 1864, 1865, 2038, 1868, 1871,
-                                     1634, 1873, 1872, 1875)) %>%
+                                     1634, 1873, 1872, 1875, 1876)) %>%
       # see meta data in https://www.fao.org/faostat/en/#data/FO
       # 1861	Roundwood
       # 1864	Wood fuel
@@ -65,6 +65,7 @@ module_xfaostat_L101_RawDataPreProc7_FO <- function(command, ...) {
       # 1873	Wood-based panels
       # 1872	Sawnwood
       # 1875	Wood pulp
+      # 1876  Paper and paperboard
       select(area_code,
              area,
              item_code,

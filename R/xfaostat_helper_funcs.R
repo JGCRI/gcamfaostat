@@ -145,14 +145,15 @@ FF_download_FAOSTAT <- function(DATASETCODE,
 
 FF_download_RemoteArchive <-
   function(DATASETCODE = NULL,
-           RemoteArchiveURL = "https://zenodo.org/record/11602356/files/",
+           RemoteArchiveURL = "https://zenodo.org/record/13941470/files/",
            DATA_FOLDER = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
            OverWrite = FALSE){
 
 
 
     # version v1.0.0 (August, 2022): "https://zenodo.org/record/8260225/files/"
-    # version v1.0.1 (June, 2024):"https://zenodo.org/record/11602356/files/"
+    # version v1.0.1_temp (June, 2024):"https://zenodo.org/record/11602356/files/"
+    # version v1.0.1 (October, 2024):"https://zenodo.org/record/13941470/files/"
 
     warnings("The current archive is for gcamfaostat v1.0.1")
 

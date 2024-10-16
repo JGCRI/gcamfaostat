@@ -85,7 +85,8 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
     SCL %>% distinct(element)
     # Update SCL element name for convenience
-    SCL %>% mutate(element = gsub(" Quantity| supply quantity \\(tonnes\\)| \\(non-food\\)", "", element)) ->
+    # Will need to update element with element_code for better improvemence
+    SCL %>% mutate(element = gsub(" supply quantity \\(tonnes\\)| \\(non-food\\)| quantity| Quantity", "", element)) ->
       SCL
     SCL_element_new <-
       c("Opening stocks", "Production", "Export", "Import", "Stock Variation",
@@ -138,7 +139,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       # keep only balance items
       filter(!element_code %in% c(645, 664, 674, 684)) %>%
       # simplify elements and make them consistent with SUA
-      mutate(element = gsub(" Quantity| supply quantity \\(tonnes\\)| \\(non-food\\)", "", element),
+      mutate(element = gsub("supply quantity \\(tonnes\\)| \\(non-food\\)| quantity| Quantity", "", element),
              element = replace(element, element == "Losses", "Loss"),
              element = replace(element, element == "Processing", "Processed")) %>%
       # convert units back to tonnes first since FBS originally used 1000 tons

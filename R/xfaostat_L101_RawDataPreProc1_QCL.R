@@ -82,7 +82,11 @@ module_xfaostat_L101_RawDataPreProc1_QCL <- function(command, ...) {
       # All Coir (coconut fiber; item_code == 813) was previously filtered out due to NA, but now available for a few regions
       filter(!is.na(value)) %>%
       # remove accent
-      rm_accent("item", "area") -> QCL1
+      rm_accent("item", "area") %>%
+      # need to ensure all area names came from the same source! 107 and 223
+      mutate(area = replace(area, area == "CA?te dIvoire", "Cote dIvoire"),
+             area = replace(area, area == "TA?rkiye", "Turkiye"))-> QCL1
+
 
     QCL1 %>% spread(year, value) ->
       QCL_wide

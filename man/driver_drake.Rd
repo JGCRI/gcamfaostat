@@ -13,7 +13,7 @@ driver_drake(
   return_data_map_only = FALSE,
   return_plan_only = FALSE,
   write_csv_model = FALSE,
-  csv_dir = paste0("gcamfaostat_", write_csv_model),
+  csv_dir = paste0("output/gcamfaostat_", write_csv_model),
   quiet = FALSE,
   ...
 )

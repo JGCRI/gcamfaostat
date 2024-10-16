@@ -42,14 +42,15 @@ module_xfaostat_L201_Forestry <- function(command, ...) {
 
     ## Proprocess and quick clean ----
 
-    c(1865, 1634, 1873, 872, 1875) -> Key_FO_Items
+    c(1865, 1634, 1873, 1872, 1875, 1876) -> Key_FO_Items
     # 1865	Industrial roundwood
     # 1634	Veneer sheets
     # 1873	Wood-based panels
     # 1872	Sawnwood
     # 1875	Wood pulp
+    # 1876  Paper and paperboard
 
-    FO_RoundwoodProducts %>% filter(item_code %in% c(1865, 1634, 1873, 872, 1875)) ->
+    FO_RoundwoodProducts %>% filter(item_code %in% c(1865, 1634, 1873, 1872, 1875, 1876)) ->
       L201.FO_RoundwoodProducts
 
 

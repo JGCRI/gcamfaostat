@@ -13,7 +13,7 @@ module_yextension_L100_FoodBalanceSheet(command, ...)
 }
 \value{
 Depends on \code{command}: either a vector of required inputs, a vector of output names, or (if
-  \code{command} is "MAKE") all the generated outputs: \code{FAO_Food_Macronutrient_All_2010_2019},
+  \code{command} is "MAKE") all the generated outputs: \code{FAO_Food_Macronutrient_All},
   \code{FAO_Food_MacronutrientRate_2010_2019_MaxValue}
 }
 \description{

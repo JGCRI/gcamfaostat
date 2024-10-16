@@ -190,7 +190,7 @@ module_yfaostat_GCAM_CSVExport <- function(command, ...) {
         FBSH_CB
 
       FBSH_CB %>%
-        mutate(unit = "1000 tonnes", value = value / 1000) %>%
+        mutate(unit = "1000 tonnes", value = value) %>%
         filter(year <= min(FAOSTAT_Hist_Year_FBS) - 1)  %>%
         filter(!is.na(year)) %>%
         spread(year, value) %>%

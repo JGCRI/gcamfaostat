@@ -5,7 +5,7 @@
 # Key parameters
 # If TRUE, process raw FAO data
 # If FALSE, use prebuilt data to load FAO data
-Process_Raw_FAO_Data <- FALSE
+Process_Raw_FAO_Data <- TRUE
 
 # OUTPUT_Export_CSV option moved to driver_drake as write_csv_model
 # The default is NULL
@@ -31,15 +31,15 @@ DIR_RAW_DATA_FAOSTAT <- "FAOSTAT"
 
 # Historical years of focus ----
 #*******************************************
-FAOSTAT_Hist_Year <- seq(1970, 2021)
+FAOSTAT_Hist_Year <- seq(1973, 2022)
 #Bilateral trade year starts from 1986 but higher quality after 1992
 #FAOSTAT_Hist_Year_Bilateral <- seq(1992, 2020)
-FAOSTAT_Hist_Year_TMBilateral <- seq(2010, 2021)
-FAOSTAT_Hist_Year_TCL <- seq(1973, 2021)
+FAOSTAT_Hist_Year_TMBilateral <- seq(2010, 2022)
+FAOSTAT_Hist_Year_TCL <- seq(1973, 2022)
 FAOSTAT_Hist_Year_FBSH <- seq(1973, 2013)
-FAOSTAT_Hist_Year_FBS <- seq(2010, 2021) # New FBS years
+FAOSTAT_Hist_Year_FBS <- seq(2010, 2022) # New FBS years
 MIN_HIST_PP_YEAR = 2010 # first producer price year
-Hist_MEAN_Year_NUTRIENT_MASS_CONV <- 2010:2021 # average cal per g
+Hist_MEAN_Year_NUTRIENT_MASS_CONV <- 2010:2022 # average cal per g
 
 
 
