@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gcamfaostat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -95,27 +95,22 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">gcamfaostat_metadata</span><span class="op">(</span></span>
-<span>  .DIR_RAW_DATA_FAOSTAT <span class="op">=</span> <span class="va">DIR_RAW_DATA_FAOSTAT</span>,</span>
-<span>  OnlyReturnDatasetCodeRequired <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">gcamfaostat_metadata</span><span class="op">(</span>
+  .DIR_RAW_DATA_FAOSTAT <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"inst/extdata"</span>, <span class="va">DIR_RAW_DATA_FAOSTAT</span><span class="op">)</span>,
+  OnlyReturnDatasetCodeRequired <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>.DIR_RAW_DATA_FAOSTAT</dt>
 <dd><p>Path to raw faostat data; default set to DIR_RAW_DATA_FAOSTAT in constants.R</p></dd>
-
-
 <dt>OnlyReturnDatasetCodeRequired</dt>
 <dd><p>If true only required dataset codes are returned</p></dd>
-
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>Information of FAOSTAT input dataset</p>
+    <p>Information of FAOSTAT input dataset</p>
     </div>
 
   </div>
@@ -130,7 +125,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

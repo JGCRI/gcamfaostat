@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gcamfaostat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -95,62 +95,43 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">treemap_wrapper</span><span class="op">(</span></span>
-<span>  <span class="va">.DF</span>,</span>
-<span>  .Depth <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  .Palette <span class="op">=</span> <span class="st">"Set2"</span>,</span>
-<span>  <span class="va">.FigTitle</span>,</span>
-<span>  .FigTitleSize <span class="op">=</span> <span class="fl">12</span>,</span>
-<span>  .LastLabelCol <span class="op">=</span> <span class="st">"orange"</span>,</span>
-<span>  .SaveDir <span class="op">=</span> <span class="st">"../man/figures"</span>,</span>
-<span>  <span class="va">.SaveName</span>,</span>
-<span>  .SaveScaler <span class="op">=</span> <span class="fl">1</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">treemap_wrapper</span><span class="op">(</span>
+  <span class="va">.DF</span>,
+  .Depth <span class="op">=</span> <span class="fl">2</span>,
+  .Palette <span class="op">=</span> <span class="st">"Set2"</span>,
+  <span class="va">.FigTitle</span>,
+  .FigTitleSize <span class="op">=</span> <span class="fl">12</span>,
+  .LastLabelCol <span class="op">=</span> <span class="st">"orange"</span>,
+  .SaveDir <span class="op">=</span> <span class="st">"../man/figures"</span>,
+  <span class="va">.SaveName</span>,
+  .SaveScaler <span class="op">=</span> <span class="fl">1</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>.DF</dt>
 <dd><p>Input data frame. The data frame needs to include index columns (need to be first columns) and a value column.</p></dd>
-
-
 <dt>.Depth</dt>
 <dd><p>Grouping depth of the tree; the columns will be used. The first 2 columns in .DF will be index in treemap</p></dd>
-
-
 <dt>.Palette</dt>
 <dd><p>Color palette (RColorBrewer is used)</p></dd>
-
-
 <dt>.FigTitle</dt>
 <dd><p>Figure title</p></dd>
-
-
 <dt>.FigTitleSize</dt>
 <dd><p>Size of title font</p></dd>
-
-
 <dt>.LastLabelCol</dt>
 <dd><p>Color of the last label</p></dd>
-
-
 <dt>.SaveDir</dt>
 <dd><p>The directory for saving the plot; the default is man/figures.</p></dd>
-
-
 <dt>.SaveName</dt>
 <dd><p>Name of the saved png file in .SaveDir</p></dd>
-
-
 <dt>.SaveScaler</dt>
 <dd><p>A scaler controling the size (dpi = 300)</p></dd>
-
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>A saved plot in .SaveDir</p>
+    <p>A saved plot in .SaveDir</p>
     </div>
 
   </div>
@@ -165,7 +146,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gcamfaostat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -95,47 +95,34 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">info</span><span class="op">(</span></span>
-<span>  <span class="va">object_name</span>,</span>
-<span>  gcam_data_map <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  previous_tracelist <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  upstream <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  downstream <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  print <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">info</span><span class="op">(</span>
+  <span class="va">object_name</span>,
+  gcam_data_map <span class="op">=</span> <span class="cn">NULL</span>,
+  previous_tracelist <span class="op">=</span> <span class="cn">NULL</span>,
+  upstream <span class="op">=</span> <span class="cn">TRUE</span>,
+  downstream <span class="op">=</span> <span class="cn">TRUE</span>,
+  print <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>object_name</dt>
 <dd><p>Name of object to get information about (can be either a data object or a code chunk)</p></dd>
-
-
 <dt>gcam_data_map</dt>
 <dd><p>A tibble of metadata information; normally a built-in package dataset</p></dd>
-
-
 <dt>previous_tracelist</dt>
 <dd><p>Information about previous objects printed (if called from <code><a href="dstrace.html">dstrace</a></code>)</p></dd>
-
-
 <dt>upstream</dt>
 <dd><p>Print and return upstream precursors? Logical</p></dd>
-
-
 <dt>downstream</dt>
 <dd><p>Print and return downstream dependents? Logical</p></dd>
-
-
 <dt>print</dt>
 <dd><p>Print to console? Logical</p></dd>
-
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>If called directly, returns an entry from <code>GCAM_DATA_MAP</code>; if called from <code><a href="dstrace.html">dstrace</a></code>, a two-
+    <p>If called directly, returns an entry from <code>GCAM_DATA_MAP</code>; if called from <code><a href="dstrace.html">dstrace</a></code>, a two-
 element list with linked object and tracelist information. If called and <code>object_name</code> is the name of a
 code chunk (as opposed to that of a data object), the relevant help page will be pulled up.</p>
     </div>
@@ -152,7 +139,7 @@ code chunk (as opposed to that of a data object), the relevant help page will be
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

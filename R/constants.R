@@ -5,23 +5,17 @@
 # Key parameters
 # If TRUE, process raw FAO data
 # If FALSE, use prebuilt data to load FAO data
-Process_Raw_FAO_Data <- TRUE
+Process_Raw_FAO_Data <- FALSE
 
 # OUTPUT_Export_CSV option moved to driver_drake as write_csv_model
 # The default is NULL
-# If "GCAM", CSV will be generated and saved to DIR_OUTPUT_CSV
+# If "GCAM", CSV will be generated and saved to DIR_OUTPUT_CSV (output/gcamfaostat_GCAM)
 
-
-DISABLED_MODULES <- c("yextension_L100_FoodBalanceSheet")
 
 # gcamdata specific modules are disabled ----
-DISABLED_MODULES <-
-  c("aglu_L100.FAO_SUA_PrimaryEquivalent",
-    "aglu_L100.FAO_SUA_connection",
-    "aglu_L100.FAO_preprocessing_OtherData",
-    "aglu_L110.For_FAO_R_Y")
-
-
+DISABLED_MODULES <- c("yextension_L100_FoodBalanceSheet",
+                      "yfaostat_SUA_FBS_CSVExport",
+                      "aglu_")
 
 # Directories ----
 
@@ -277,19 +271,21 @@ aglu.MGMT_DELIMITER       <- "_"  # delimiter between appended tech name and man
 
 # Detailed forest CMP constants
 
-aglu.FOREST_commodities <- c("sawnwood","woodpulp")
-aglu.FOREST_demand_sectors <- c("NonFoodDemand_sawnwood","NonFoodDemand_woodpulp")
-aglu.FOREST_supply_sector <- "Forest"
+aglu.FOREST_COMMODITIES <- c("sawnwood","woodpulp")
+aglu.FOREST_DEMAND_SECTORS <- c("NonFoodDemand_sawnwood","NonFoodDemand_woodpulp")
+aglu.FOREST_SUPPLY_SECTOR <- "Forest"
 #Below is a default amount of roundwood required to produce sawnwood.The model will calculate the IO using data. This will get used if and only if
 # the IO calculated by the model is an NA. This is taken as an everage across countries from a UNECE report on forest products. Available here- https://unece.org/fileadmin/DAM/timber/publications/DP-49.pdf
-aglu.FOREST_sawtimber_conversion <- 2.17
+aglu.FOREST_SAWTIMBER_CONVERSION <- 2.17
+aglu.PAPER_DELETE_AG_DEMAND <- "NonFoodDemand_woodpulp"
+aglu.PAPER_DELETE_AG_DEMAND_USA <- c("woodpulp_energy", "regional woodpulp for energy")
 
 #90% of pulp processing is chemical which has an IO of 5.44 and 10% is mechanical which is 2.55. Taking weighted average of the two,
 # we get 5.15. These are calculated as averages across countries.
 #Source- https://unece.org/fileadmin/DAM/timber/publications/DP-49.pdf
-aglu.FOREST_pulp_conversion <- 5.15
+aglu.FOREST_PULP_CONVERSION <- 5.15
 
-aglu.FOREST_max_price <- 165
+aglu.FOREST_MAX_PRICE <- 165
 
 #*******************************************
 

@@ -49,7 +49,7 @@ When `gcamfaostat` is downloaded, preprocessed FAOSTAT data, i.e., output of the
 library(gcamfaostat)
 library(dplyr)
 library(kableExtra)
-gcamfaostat_metadata(.DIR_RAW_DATA_FAOSTAT = file.path("..", "inst/extdata/aglu/FAO/FAOSTAT")) %>% 
+gcamfaostat_metadata(.DIR_RAW_DATA_FAOSTAT = file.path("..", "inst/extdata/FAOSTAT")) %>% 
   select(-`Local file size`) -> p
 
 p %>%

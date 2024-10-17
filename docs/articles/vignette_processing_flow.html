@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gcamfaostat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>gcamfaostat data processing</h1>
             
-            <h4 data-toc-skip class="date">2024-04-04</h4>
+            <h4 data-toc-skip class="date">2024-10-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_processing_flow.Rmd" class="external-link"><code>vignettes/vignette_processing_flow.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_processing_flow.Rmd</code></div>
@@ -245,24 +245,23 @@ can be used to assign each object in the list to a data frame.</li>
 <span class="co">#&gt; QCL_CROP_PRIMARY - produced by module_xfaostat_L102_ProductionArea </span>
 <span class="co">#&gt;  FAO primary crop area and production (various)</span>
 <span class="co">#&gt;  Detailed FAO QCL data processing for crop area and production</span>
-<span class="co">#&gt;  Dependent: xfaostat_L199_GCAMDATA_FAOSTAT_CSV</span>
-<span class="co">#&gt;  Precursor: aglu/FAO/FAO_an_items_PRODSTAT</span>
+<span class="co">#&gt;  Dependent: yfaostat_GCAM_GCAMFAOSTAT_CSV</span>
 <span class="co">#&gt;  Precursor: QCL_wide</span>
 <span class="co">#&gt;  Precursor: FBS_wide</span>
-<span class="co">#&gt;  Precursor: FBSH_CB_wide</span>
+<span class="co">#&gt;  Precursor: FBSH_CBH_wide</span>
 
 <span class="co"># Trace all downstream data flows for SCL_wide</span>
 <span class="fu"><a href="../reference/dstrace.html">dstrace</a></span><span class="op">(</span><span class="st">"SCL_wide"</span>, direction <span class="op">=</span> <span class="st">"downstream"</span>, recurse <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> 
 <span class="co">#&gt; 1 - SCL_wide - produced by module_xfaostat_L101_RawDataPreProc3_SCL_FBS </span>
 <span class="co">#&gt;  FAO supply utilization account dataset, 2010+, wide (tonne)</span>
-<span class="co">#&gt;  Preprocessed FAOSTAT SCL; ** PRE-BUILT **</span>
+<span class="co">#&gt;  Preprocessed FAOSTAT SCL</span>
 <span class="co">#&gt;  Dependent: Bal_new_all (#2 below)</span>
 <span class="co">#&gt;  Dependent: SUA_food_macronutrient_rate (#3 below)</span>
 <span class="co">#&gt; 2 - Bal_new_all - produced by module_xfaostat_L105_DataConnectionToSUA </span>
 <span class="co">#&gt;  Bal_new_all (Ktonne)</span>
-<span class="co">#&gt;  Preprocessed FAO SUA 2010 - 2019</span>
-<span class="co">#&gt;  Dependent: xfaostat_L199_GCAMDATA_FAOSTAT_CSV (#4 below)</span>
-<span class="co">#&gt; 4 - xfaostat_L199_GCAMDATA_FAOSTAT_CSV - produced by module_xfaostat_L199_CSVExportAgSUA </span>
+<span class="co">#&gt;  Preprocessed FAO SUA 2010 - 2021</span>
+<span class="co">#&gt;  Dependent: yfaostat_GCAM_GCAMFAOSTAT_CSV (#4 below)</span>
+<span class="co">#&gt; 4 - yfaostat_GCAM_GCAMFAOSTAT_CSV - produced by module_yfaostat_GCAM_CSVExport </span>
 <span class="co">#&gt;  Export CSV to DIR_OUTPUT_CSV (NA)</span>
 <span class="co">#&gt;  Export CSV</span>
 <span class="co">#&gt;  No dependents</span>
@@ -270,15 +269,14 @@ can be used to assign each object in the list to a data frame.</li>
 <span class="co">#&gt;  FAO food calories and macronutrient rate (rates)</span>
 <span class="co">#&gt;  Detailed FAO food calories and macrotunitent info for 414 SUA items +</span>
 <span class="co">#&gt;  12 fish items</span>
-<span class="co">#&gt;  Dependent: xfaostat_L199_GCAMDATA_FAOSTAT_CSV (#4 above)</span>
+<span class="co">#&gt;  Dependent: yfaostat_GCAM_GCAMFAOSTAT_CSV (#4 above)</span>
 
 <span class="co"># Get input of a module</span>
 <span class="fu"><a href="../reference/inputs_of.html">inputs_of</a></span><span class="op">(</span><span class="st">"module_xfaostat_L105_DataConnectionToSUA"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "aglu/FAO/FAO_items"                "aglu/FAO/Mapping_FBSH_SCL_OilCake"</span>
-<span class="co">#&gt; [3] "QCL_PROD"                          "QCL_AN_LIVEANIMAL_MEATEQ"         </span>
-<span class="co">#&gt; [5] "TCL_wide"                          "TM_bilateral_wide"                </span>
-<span class="co">#&gt; [7] "FBSH_CB_wide"                      "FBS_wide"                         </span>
-<span class="co">#&gt; [9] "SCL_wide"</span>
+<span class="co">#&gt; [1] "FAOSTAT/FAO_items"        "QCL_PROD"                </span>
+<span class="co">#&gt; [3] "QCL_AN_LIVEANIMAL_MEATEQ" "TCL_wide"                </span>
+<span class="co">#&gt; [5] "TM_bilateral_wide"        "FBSH_CBH_wide"           </span>
+<span class="co">#&gt; [7] "FBS_wide"                 "SCL_wide"</span>
 
 <span class="co"># Get output of a module</span>
 <span class="fu"><a href="../reference/outputs_of.html">outputs_of</a></span><span class="op">(</span><span class="st">"module_xfaostat_L106_FoodMacroNutrient"</span><span class="op">)</span>
@@ -289,7 +287,7 @@ can be used to assign each object in the list to a data frame.</li>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span> 
 
 <span class="co"># Load FAO_items from cache</span>
-<span class="fu"><a href="../reference/load_from_cache.html">load_from_cache</a></span><span class="op">(</span><span class="st">"aglu/FAO/FAO_items"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">first</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">FAO_items</span>
+<span class="fu"><a href="../reference/load_from_cache.html">load_from_cache</a></span><span class="op">(</span><span class="st">"aglu/FAO/FAO_items"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">first</span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">FAO_items</span>
 <span class="co"># Print</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">FAO_items</span><span class="op">)</span>
 
@@ -304,11 +302,12 @@ can be used to assign each object in the list to a data frame.</li>
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-Landau2018" class="csl-entry">
-Landau, William Michael. 2018. <span>“The Drake r Package: A Pipeline
-Toolkit for Reproducibility and High-Performance Computing.”</span>
-<em>Journal of Open Source Software</em> 3 (21): 550. <a href="https://doi.org/10.21105/joss.00550" class="external-link">https://doi.org/10.21105/joss.00550</a>.
+Landau, William Michael. 2018. <span>“The Drake <span>R</span> Package:
+A Pipeline Toolkit for Reproducibility and High-Performance
+Computing.”</span> <em>Journal of Open Source Software</em> 3 (21): 550.
+<a href="https://doi.org/10.21105/joss.00550" class="external-link">https://doi.org/10.21105/joss.00550</a>.
 </div>
 </div>
 </div>
@@ -331,7 +330,7 @@ Toolkit for Reproducibility and High-Performance Computing.”</span>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

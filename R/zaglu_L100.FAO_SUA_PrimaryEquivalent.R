@@ -69,7 +69,6 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
 
     get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
-
     # Get Supply-utilization account (SUA) elements and use as factor
     All_Bal_element <- levels(GCAMFAOSTAT_SUA$element)
     All_Bal_element <- factor(All_Bal_element, levels = All_Bal_element)
@@ -143,10 +142,10 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
 
     # need to remove gross trade when export > production
     # to maintain triangle the inequality rule
-    # Note that Prod < export is still possivle due to "residuals"
+    # Note that Prod < export is still possible due to "residuals"
     DF_SUA_Agg_TradeAdj %>%
       filter(element %in% c("Production", "Import", "Export")) %>%
-      spread(element, value, fill=0.0) %>%
+      spread(element, value, fill = 0.0) %>%
       mutate(value = pmax(Production - Export, -Import)) %>%
       filter(value < 0) %>%
       select(-Production, -Import, -Export) ->
@@ -539,6 +538,7 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     ## Loop through all GCAM_commodity with available data ----
 
     FAO_SUA_Kt_2010to2019_R %>%
+      # In both left_join here, APE_comm could be NA after the join and they are removed later
       left_join(Mapping_SUA_PrimaryEquivalent_ID %>%
                   select(APE_comm, item_code = sink_item_code, nest_level) %>% distinct(), by = c("item_code")) %>%
       left_join(Mapping_SUA_PrimaryEquivalent_ID %>%
@@ -590,7 +590,8 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     Mapping_item_FBS_GCAM %>%
       select(item_code, GCAM_commodity)%>%
       filter(!is.na(GCAM_commodity)) %>%
-      left_join(FBSH_CB, by = "item_code")  %>%
+      # Using inner_join since not all items in FBSH_CB are used; left_join would work the same
+      inner_join(FBSH_CB, by = "item_code") %>%
       left_join_error_no_match(AGLU_ctry %>% distinct(area_code = FAO_country_code, iso), by = c("area_code")) %>%
       left_join_error_no_match(iso_GCAM_regID %>% select(iso, GCAM_region_ID), by = "iso") %>%
       left_join_error_no_match(GCAM_region_names, by = "GCAM_region_ID") %>%
@@ -713,20 +714,29 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
       if (isFALSE(.DF %>%
                  spread(element, value) %>%
                  mutate(`Regional supply` = Production + `Import`,
-                        `Regional demand` = `Export` + Feed + Food  + `Other uses`,
+                        `Regional demand` = `Export` + Feed + Food + `Stock Variation` + Loss + `Other uses`,
                         bal = abs(`Regional supply` -  `Regional demand`)) %>%
                  filter(bal > 0.0001) %>% nrow() == 0)) {
         warning("Regional supply != Regional demand + Residuals")
       }
 
       # 4. Balanced in all dimensions
-      assertthat::assert_that(.DF %>% nrow() ==
-                                .DF %>% distinct(year) %>% nrow *
-                                .DF %>% distinct(GCAM_commodity) %>% nrow *
-                                .DF %>% distinct(element) %>% nrow *
-                                .DF %>% distinct(region) %>% nrow)
+      .DF %>% filter(year < 2010) -> .DF1
+      assertthat::assert_that(.DF1 %>% nrow() ==
+                                .DF1 %>% distinct(year) %>% nrow *
+                                .DF1 %>% distinct(GCAM_commodity) %>% nrow *
+                                .DF1 %>% distinct(element) %>% nrow *
+                                .DF1 %>% distinct(region) %>% nrow)
+
+      .DF %>% filter(year >= 2010) -> .DF1
+      assertthat::assert_that(.DF1 %>% nrow() ==
+                                .DF1 %>% distinct(year) %>% nrow *
+                                .DF1 %>% distinct(GCAM_commodity) %>% nrow *
+                                .DF1 %>% distinct(element) %>% nrow *
+                                .DF1 %>% distinct(region) %>% nrow)
 
     }
+
 
     # 4.2. Connect and bind data from two periods ----
 
@@ -735,17 +745,17 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
       bind_rows(GCAM_APE_after2010) %>%
       mutate(unit = "1000 tonnes") %>%
       # clean and aggregate elements not using
-      filter(!element %in% c("Regional demand", "Regional supply",
-                             "Opening stocks", "Closing stocks")) %>%
+      filter(!element %in% c("Regional demand", "Regional supply")) %>%
       mutate(element = replace(element,
-                               element %in% c("Stock Variation", "Processed",
-                                              "Seed", "Residuals", "Loss"),
+                               element %in% c("Processed",
+                                              "Seed", "Residuals"),
                                "Other uses")) %>%
       dplyr::group_by_at(dplyr::vars(-value)) %>%
       summarise(value = sum(value), .groups = "drop")
 
     ## Check balance
     GCAM_AgLU_SUA_APE_1973_2019 %>% Check_Balance_SUA
+
     rm(GCAM_APE_before2010, GCAM_APE_after2010)
 
 
@@ -942,6 +952,7 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
     # SUA_Items_Food includes both GCAM and NonGCAM(NEC)
     SUA_item_code_map %>%
       filter(item_code %in% unique(GCAMFAOSTAT_MacroNutrientRate$item_code)) %>%
+      # NA expected here
       left_join(SUA_Items_GCAM %>% select(-item), by = "item_code") %>%
       # For NA GCAM_commodity: not elsewhere classified (NEC)
       # So we would know % of food calories not included in GCAM commodities

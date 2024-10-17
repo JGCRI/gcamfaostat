@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gcamfaostat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -95,41 +95,35 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">FAOSTAT_metadata</span><span class="op">(</span>code <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">FAOSTAT_metadata</span><span class="op">(</span>code <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>code</dt>
 <dd><p>FAOSTAT dataset code if filtering specific dataset; NULL by default and return all dataset info</p></dd>
-
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>Dataframe including the metadata of FAOSTAT including URL for download, updating date, detailed descriptions, etc.</p>
+    <p>Dataframe including the metadata of FAOSTAT including URL for download, updating date, detailed descriptions, etc.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">FAOSTAT_metadata</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> function (code = NULL){</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   FAOxml &lt;- XML::xmlParse(xml2::read_xml("http://fenixservices.fao.org/faostat/static/bulkdownloads/datasets_E.xml"))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   metadata &lt;- XML::xmlToDataFrame(FAOxml, stringsAsFactors = FALSE)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   names(metadata) &lt;- tolower(gsub("\\.", "_", names(metadata)))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   # Bug fix for CB; can remove later if FAOSTAT update the link later</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   metadata["CB" == metadata[, "datasetcode"],"filelocation"] &lt;-</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     "https://fenixservices.fao.org/faostat/static/bulkdownloads/CommodityBalances_(non-food)_E_All_Data_(Normalized).zip"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   if (!is.null(code)) {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     metadata &lt;- metadata[code == metadata[, "datasetcode"],]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   return(metadata)</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">FAOSTAT_metadata</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> function (code = NULL) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     FAOxml &lt;- XML::xmlParse(xml2::read_xml("http://fenixservices.fao.org/faostat/static/bulkdownloads/datasets_E.xml"))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     metadata &lt;- XML::xmlToDataFrame(FAOxml, stringsAsFactors = FALSE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     names(metadata) &lt;- tolower(gsub("\\.", "_", names(metadata)))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     metadata["CB" == metadata[, "datasetcode"], "filelocation"] &lt;- "https://fenixservices.fao.org/faostat/static/bulkdownloads/CommodityBalances_(non-food)_E_All_Data_(Normalized).zip"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (!is.null(code)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         metadata &lt;- metadata[code == metadata[, "datasetcode"], </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     return(metadata)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x0000000042a70840&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x00000000480347c8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: namespace:gcamfaostat&gt;</span>
 </code></pre></div>
     </div>
@@ -145,7 +139,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

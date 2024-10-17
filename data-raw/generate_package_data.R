@@ -48,7 +48,9 @@ prebuilt_data_names <- c(
   # outputs of module_xfaostat_L101_RawDataPreProc2_PP_PD_OA
   c("PP_wide",            # Producer prices
     "PD",                 # GDP deflator
-    "OA"),                # Population
+    "OA",               # Population
+    "CS",              # Capital stock
+    "MK"),               # Macro-Statistics (GDP)
 
   # outputs of module_xfaostat_L101_RawDataPreProc3_SCL_FBS
   c("SCL_wide",           # Supply utilization accounting
@@ -82,10 +84,6 @@ prebuilt_data_names <- c(
 # replicated in data.R for that purpose.
 if(USE_DRIVER_DRAKE) {
   PREBUILT_DATA <- load_from_cache(prebuilt_data_names)
-} else {
-  PREBUILT_DATA <- driver(write_outputs = FALSE,
-                          write_xml = FALSE,
-                          return_data_names = prebuilt_data_names)
 }
 # Save these objects as external data (i.e. requires explicit call to `data()` to load)
 usethis::use_data(PREBUILT_DATA, overwrite = TRUE, internal = FALSE)

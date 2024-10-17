@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gcamfaostat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -113,7 +113,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Preparing data for gcamfaostat</h1>
             
-            <h4 data-toc-skip class="date">2024-04-04</h4>
+            <h4 data-toc-skip class="date">2024-10-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_preparing_data.Rmd" class="external-link"><code>vignettes/vignette_preparing_data.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_preparing_data.Rmd</code></div>
@@ -210,10 +210,30 @@ FAO size
 <tbody>
 <tr>
 <td style="text-align:left;">
-CB
+CBH
 </td>
 <td style="text-align:left;">
-Food Balances: Commodity Balances (non-food) (2010-)
+Food Balances: Commodity Balances (non-food) (-2013, old methodology)
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:left;">
+2021-12-03
+</td>
+<td style="text-align:left;">
+8MB
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PD
+</td>
+<td style="text-align:left;">
+Prices: Deflators
 </td>
 <td style="text-align:left;">
 TRUE
@@ -222,10 +242,30 @@ TRUE
 TRUE
 </td>
 <td style="text-align:left;">
-2023-08-08
+2024-06-12
 </td>
 <td style="text-align:left;">
 1MB
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FBS
+</td>
+<td style="text-align:left;">
+Food Balances: Food Balances (2010-)
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:left;">
+2024-07-19
+</td>
+<td style="text-align:left;">
+50MB
 </td>
 </tr>
 <tr>
@@ -250,26 +290,6 @@ TRUE
 </tr>
 <tr>
 <td style="text-align:left;">
-OA
-</td>
-<td style="text-align:left;">
-Population and Employment: Annual population
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-<td style="text-align:left;">
-2022-10-24
-</td>
-<td style="text-align:left;">
-2MB
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 FO
 </td>
 <td style="text-align:left;">
@@ -290,86 +310,6 @@ TRUE
 </tr>
 <tr>
 <td style="text-align:left;">
-QCL
-</td>
-<td style="text-align:left;">
-Production: Crops and livestock products
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-<td style="text-align:left;">
-2023-12-18
-</td>
-<td style="text-align:left;">
-32MB
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-PD
-</td>
-<td style="text-align:left;">
-Prices: Deflators
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-<td style="text-align:left;">
-2023-11-07
-</td>
-<td style="text-align:left;">
-1MB
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TCL
-</td>
-<td style="text-align:left;">
-Trade: Crops and livestock products
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-<td style="text-align:left;">
-2023-12-13
-</td>
-<td style="text-align:left;">
-244MB
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FBS
-</td>
-<td style="text-align:left;">
-Food Balances: Food Balances (2010-)
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-<td style="text-align:left;">
-TRUE
-</td>
-<td style="text-align:left;">
-2023-09-04
-</td>
-<td style="text-align:left;">
-55MB
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 RFN
 </td>
 <td style="text-align:left;">
@@ -382,7 +322,7 @@ TRUE
 TRUE
 </td>
 <td style="text-align:left;">
-2023-07-05
+2024-07-17
 </td>
 <td style="text-align:left;">
 2MB
@@ -402,7 +342,47 @@ TRUE
 TRUE
 </td>
 <td style="text-align:left;">
-2024-02-15
+2024-08-19
+</td>
+<td style="text-align:left;">
+3MB
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CS
+</td>
+<td style="text-align:left;">
+Macro-Economic Indicators: Capital Stock
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:left;">
+2023-12-22
+</td>
+<td style="text-align:left;">
+1MB
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OA
+</td>
+<td style="text-align:left;">
+Population and Employment: Annual population
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:left;">
+2022-11-10
 </td>
 <td style="text-align:left;">
 2MB
@@ -422,10 +402,30 @@ TRUE
 TRUE
 </td>
 <td style="text-align:left;">
-2023-12-19
+2024-01-09
 </td>
 <td style="text-align:left;">
 10MB
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+QCL
+</td>
+<td style="text-align:left;">
+Production: Crops and livestock products
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:left;">
+2024-10-07
+</td>
+<td style="text-align:left;">
+32MB
 </td>
 </tr>
 <tr>
@@ -442,10 +442,30 @@ TRUE
 TRUE
 </td>
 <td style="text-align:left;">
-2023-09-04
+2024-07-19
 </td>
 <td style="text-align:left;">
-72MB
+80MB
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TCL
+</td>
+<td style="text-align:left;">
+Trade: Crops and livestock products
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:left;">
+2023-12-21
+</td>
+<td style="text-align:left;">
+244MB
 </td>
 </tr>
 <tr>
@@ -462,7 +482,7 @@ TRUE
 TRUE
 </td>
 <td style="text-align:left;">
-2023-11-23
+2023-12-21
 </td>
 <td style="text-align:left;">
 446MB
@@ -558,7 +578,7 @@ by sourcing <code>data-raw/generate_package_data.R</code>.</p>
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-xin_zhao_2023_8260225" class="csl-entry">
 Zhao, Xin. 2023. <span>“FAOSTAT AgLU Data Archive GCAMv7.”</span>
 Zenodo. <a href="https://doi.org/10.5281/zenodo.8260225" class="external-link">https://doi.org/10.5281/zenodo.8260225</a>.
@@ -584,7 +604,7 @@ Zenodo. <a href="https://doi.org/10.5281/zenodo.8260225" class="external-link">h
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

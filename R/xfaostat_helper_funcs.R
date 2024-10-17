@@ -29,7 +29,8 @@ gcamfaostat_metadata <- function(.DIR_RAW_DATA_FAOSTAT = file.path("inst/extdata
       "RFN",          # Fertilizer by nutrient
       "RL",           # Land Use
       "FO",           # Forest production and trade
-      "OA"            # Population
+      "OA",           # Population
+      "CS"            # Capital stock
     )
 
   if (OnlyReturnDatasetCodeRequired == T) {

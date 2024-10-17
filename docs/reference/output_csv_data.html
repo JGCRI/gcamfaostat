@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gcamfaostat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -95,51 +95,39 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">output_csv_data</span><span class="op">(</span></span>
-<span>  <span class="va">gcam_dataset</span>,</span>
-<span>  <span class="va">col_type_nonyear</span>,</span>
-<span>  <span class="va">title</span>,</span>
-<span>  <span class="va">unit</span>,</span>
-<span>  description <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  <span class="va">code</span>,</span>
-<span>  out_dir <span class="op">=</span> <span class="va">out_dir</span>,</span>
-<span>  GZIP <span class="op">=</span> <span class="cn">F</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">output_csv_data</span><span class="op">(</span>
+  <span class="va">gcam_dataset</span>,
+  <span class="va">out_filename</span>,
+  <span class="va">col_type_nonyear</span>,
+  <span class="va">title</span>,
+  <span class="va">unit</span>,
+  description <span class="op">=</span> <span class="cn">NA</span>,
+  <span class="va">code</span>,
+  out_dir <span class="op">=</span> <span class="va">out_dir</span>,
+  GZIP <span class="op">=</span> <span class="cn">F</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>gcam_dataset</dt>
 <dd><p>dataframe name to be saved</p></dd>
-
-
+<dt>out_filename</dt>
+<dd><p>file name of the output csv</p></dd>
 <dt>col_type_nonyear</dt>
 <dd><p>column type that is non-year; numeric for years will be pasted</p></dd>
-
-
 <dt>title</dt>
 <dd><p>title in header</p></dd>
-
-
 <dt>unit</dt>
 <dd><p>unit in header</p></dd>
-
-
 <dt>description</dt>
 <dd><p>description in header</p></dd>
-
-
 <dt>code</dt>
 <dd><p>fao dataset domain code</p></dd>
-
-
 <dt>out_dir</dt>
 <dd><p>output directory</p></dd>
-
-
 <dt>GZIP</dt>
 <dd><p>IF TRUE</p></dd>
-
 </dl></div>
 
   </div>
@@ -154,7 +142,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>
