@@ -163,7 +163,7 @@ data<a class="anchor" aria-label="anchor" href="#generate-the-metadata-for-the-g
 </h3>
 <p><a href="https://jgcri.github.io/gcamfaostat/reference/gcamfaostat_metadata.html"><code>gcamfaostat_metadata()</code></a></p>
 <ul>
-<li>The function will save the latest FAOSTAT metadata to the <a href="https://github.com/JGCRI/gcamfaostat/tree/main/inst/extdata/aglu/FAO/FAOSTAT/metadata_log" class="external-link">metadata_log</a><br>
+<li>The function will save the latest FAOSTAT metadata to the <a href="https://github.com/JGCRI/gcamfaostat/tree/main/inst/extdata/FAOSTAT/metadata_log" class="external-link">metadata_log</a><br>
 </li>
 <li>The function will access both the latest FAOSTAT metadata and local
 data information and returns a summary table including the dataset
@@ -517,8 +517,8 @@ variable in the two functions, if including all, can be generated using
 <p>Example:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Dataset PP, producer prices, is downloaded from RemoteArchiveURL to DATA_FOLDER</span>
-<span class="co"># RemoteArchiveURL = "https://zenodo.org/record/8260225/files/"</span>
-<span class="co"># DATA_FOLDER = "inst/extdata/aglu/FAO/FAOSTAT"</span>
+<span class="co"># RemoteArchiveURL = "https://zenodo.org/record/13941470/files/"</span>
+<span class="co"># DATA_FOLDER = "inst/extdata/FAOSTAT"</span>
 <span class="fu"><a href="../reference/FF_download_RemoteArchive.html">FF_download_RemoteArchive</a></span><span class="op">(</span> 
   DATASETCODE <span class="op">=</span> <span class="st">"PP"</span>,   
   OverWrite <span class="op">=</span> <span class="cn">TRUE</span>     <span class="co"># overwrite existing PP dataset </span>
@@ -543,7 +543,7 @@ variable in the two functions, if including all, can be generated using
 </ul>
 <p>Example:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Provide detailed metadata of "PP" and "OA" in DATA_FOLDER ("inst/extdata/aglu/FAO/FAOSTAT")</span>
+<code class="sourceCode R"><span class="co"># Provide detailed metadata of "PP" and "OA" in DATA_FOLDER ("inst/extdata/FAOSTAT")</span>
 <span class="fu"><a href="../reference/FF_rawdata_info.html">FF_rawdata_info</a></span><span class="op">(</span>DATASETCODE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PP"</span>, <span class="st">"OA"</span><span class="op">)</span>, DOWNLOAD_NONEXIST <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="co"># If "PP" or "OA" does not exist, download from remote archive</span>
@@ -561,7 +561,7 @@ variable in the two functions, if including all, can be generated using
 </ul>
 <p>Example:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Read raw data of "PP" and "OA" from DATA_FOLDER ("inst/extdata/aglu/FAO/FAOSTAT") to .GlobalEnv</span>
+<code class="sourceCode R"><span class="co"># Read raw data of "PP" and "OA" from DATA_FOLDER ("inst/extdata/FAOSTAT") to .GlobalEnv</span>
 <span class="fu"><a href="../reference/FAOSTAT_load_raw_data.html">FAOSTAT_load_raw_data</a></span><span class="op">(</span>DATASETCODE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PP"</span>, <span class="st">"OA"</span><span class="op">)</span>, .Envir <span class="op">=</span> <span class="va">.GlobalEnv</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
