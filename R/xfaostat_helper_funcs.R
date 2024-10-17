@@ -59,7 +59,7 @@ gcamfaostat_metadata <- function(.DIR_RAW_DATA_FAOSTAT = file.path("inst/extdata
 
   DataCodePrebuilt <-
     PREBUILT_DATA %>% names() %>% strsplit(split = "_") %>% unlist %>%
-    setdiff(c("wide", "Roundwood", "code", "area", "bilateral", "map"))
+    setdiff(c("wide", "RoundwoodProducts", "code", "area", "bilateral", "map"))
 
   FF_rawdata_info(DATA_FOLDER = .DIR_RAW_DATA_FAOSTAT,
                   DATASETCODE = FAO_dataset_code_required,
@@ -238,7 +238,10 @@ FF_rawdata_info <- function(
   assertthat::assert_that(is.character(DATASETCODE))
   assertthat::assert_that(is.logical(DOWNLOAD_NONEXIST))
   assertthat::assert_that(FAOSTAT_or_Archive == "FAOSTAT"|FAOSTAT_or_Archive == "Archive")
-  assertthat::assert_that(file.exists(DATA_FOLDER))
+
+  if (!file.exists(DATA_FOLDER)) {
+    DATA_FOLDER <- "."
+  }
 
   file.info(dir(DATA_FOLDER, full.names = T)) %>%
     tibble::rownames_to_column(var = "filelocation") %>%
@@ -250,14 +253,8 @@ FF_rawdata_info <- function(
               #localfilesize = utils:::format.object_size(size, "MB", digits = 0),
               localfilesize = paste0(round(size/10^6, digits = 0), " MB" )) %>%
     # Join the latest metadata
-    # Note that FAO raw data had a typo (missing space) in Trade_CropsLivestock_E_All_Data_(Normalized).zip
-    # Temporary fix here
-    # This was fixed in 2022 updates
     right_join(FAOSTAT_metadata() %>% filter(datasetcode %in% DATASETCODE) %>%
-                 mutate(filelocation = basename(filelocation)), #%>%
-               #mutate(filelocation = replace(filelocation,
-               #                              filelocation == "Trade_CropsLivestock_E_All_Data_(Normalized).zip",
-               #                              "Trade_Crops_Livestock_E_All_Data_(Normalized).zip")),
+                 mutate(filelocation = basename(filelocation)),
                by = "filelocation") %>%
     transmute(datasetcode, datasetname,
               FAOupdate = dateupdate, Localupdate = mtime,

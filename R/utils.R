@@ -7,12 +7,7 @@ PACKAGE_NAME <- "gcamfaostat"
 # silence package check
 utils::globalVariables(c(
   ".", "APE_comm", "APE_comm_source", "Area", "harvested", "Closing stocks",
-  "Export", "FALSE", "FAO_ag_items_PRODSTAT",  "Feed", "Food",
-  "GCAMDATA_FAOSTAT_BiTrade_194Regs_400Items_2010to2020",
-  "GCAMDATA_FAOSTAT_FBSH_CB_173Regs_118Items_1973to2009",
-  "GCAMDATA_FAOSTAT_MacroNutrientRate_179Regs_426Items_2010to2019Mean",
-  "GCAMDATA_FAOSTAT_ProdArea_195Regs_271Prod160AreaItems_1973to2020",
-  "GCAMDATA_FAOSTAT_SUA_195Regs_530Items_2010to2019", "Import",
+  "Export", "FALSE", "FAO_ag_items_PRODSTAT",  "Feed", "Food", "Import",
   "Import_Demand_Share", "Loss", "Mapping_SUA_PrimaryEquivalent", "Opening stocks",
   "Opening stocks1", "Ostock", "Ostock_Demand_Share", "Ostock_demand", "Other uses",
   "PREBUILT_DATA", "Processed", "Production", "Q25asMin", "Regional demand",
@@ -35,7 +30,9 @@ utils::globalVariables(c(
   "FAO_an_items_PRODSTAT", "FAOupdate", "GCAM_AgLU_SUA_APE_1973_2019",
   "GCAM_DATA_MAP", "GCAM_commodity", "GCAM_region_names", "GCAM_subsector",
   "Localupdate", "TM", "Tourist", "consumption", "datasetname", "localfilesize",
-  "moving_avg", "remotefilezize", "unit", "Tourist consumption", "xml.XML_SUFFIX"))
+  "moving_avg", "remotefilezize", "unit", "Tourist consumption", "xml.XML_SUFFIX",
+  "macronutrient_value", "source_item", "region_ID", "QCL_CROP_PRIMARY",
+  "DS_key_coproduct_item_code", "CBH", "QCL_Cake"))
 
 #' find_header
 #'
