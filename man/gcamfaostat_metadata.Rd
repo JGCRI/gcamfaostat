@@ -6,7 +6,8 @@
 \usage{
 gcamfaostat_metadata(
   .DIR_RAW_DATA_FAOSTAT = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
-  OnlyReturnDatasetCodeRequired = FALSE
+  OnlyReturnDatasetCodeRequired = FALSE,
+  Save_metadata = FALSE
 )
 }
 \arguments{

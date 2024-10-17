@@ -13,7 +13,8 @@
 #' @export
 
 gcamfaostat_metadata <- function(.DIR_RAW_DATA_FAOSTAT = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
-                                 OnlyReturnDatasetCodeRequired = FALSE){
+                                 OnlyReturnDatasetCodeRequired = FALSE,
+                                 Save_metadata = FALSE){
 
   assertthat::assert_that(OnlyReturnDatasetCodeRequired == TRUE|OnlyReturnDatasetCodeRequired == FALSE)
 
@@ -37,14 +38,21 @@ gcamfaostat_metadata <- function(.DIR_RAW_DATA_FAOSTAT = file.path("inst/extdata
     return(FAO_dataset_code_required)
   }
 
-  DIR_FAOSTAT_METADATA <- file.path(.DIR_RAW_DATA_FAOSTAT, "metadata_log")
-  dir.create(DIR_FAOSTAT_METADATA, showWarnings = F)
 
   # Save a table includes all FAOSTAT data info and links
   fao_metadata <- FAOSTAT_metadata() %>% filter(datasetcode %in% FAO_dataset_code_required)
-  readr::write_csv(fao_metadata, file.path(DIR_FAOSTAT_METADATA, paste0("FAOSTAT_METADATA_", Sys.Date(),".csv")))
-  rlang::inform(paste0("A Full FAOSTAT metadata downloaded and updated in `",
-                       file.path(.DIR_RAW_DATA_FAOSTAT, "metadata_log", "`")))
+
+  if (Save_metadata == TRUE) {
+
+    DIR_FAOSTAT_METADATA <- file.path(.DIR_RAW_DATA_FAOSTAT, "metadata_log")
+    dir.create(DIR_FAOSTAT_METADATA, showWarnings = F)
+
+    readr::write_csv(fao_metadata, file.path(DIR_FAOSTAT_METADATA, paste0("FAOSTAT_METADATA_", Sys.Date(),".csv")))
+    rlang::inform(paste0("A Full FAOSTAT metadata downloaded and updated in `",
+                         file.path(.DIR_RAW_DATA_FAOSTAT, "metadata_log", "`")))
+  }
+
+
   rlang::inform("---------------------------------------------------------")
 
   rlang::inform(paste0("See returned table for the infomation of FAOSTAT dataset processed in this R package"))
