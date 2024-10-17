@@ -5,8 +5,9 @@
 \title{gcamfaostat_metadata: generate metadata information of the input data}
 \usage{
 gcamfaostat_metadata(
-  .DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
-  OnlyReturnDatasetCodeRequired = FALSE
+  .DIR_RAW_DATA_FAOSTAT = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
+  OnlyReturnDatasetCodeRequired = FALSE,
+  Save_metadata = FALSE
 )
 }
 \arguments{

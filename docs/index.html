@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">gcamfaostat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -181,9 +181,9 @@
 <ul>
 <li>To export csv output files, in <code>constants.R</code>,
 <ul>
-<li>set <code>OUTPUT_Export_CSV</code> to <code>TRUE</code>
-</li>
-<li>specify the directory path (<code>DIR_OUTPUT_CSV</code>) for output files.</li>
+<li>set <code>Process_Raw_FAO_Data</code> to <code>TRUE</code> if raw data have been downloaded, <code>PREBUILT_DATA</code> will be used otherwise.</li>
+<li>specify the modules to be excluded (<code>DISABLED_MODULES</code>) if needed.</li>
+<li>modify data years. Most FAOSTAT datasets are available for<code>1960 - 2022</code>.</li>
 </ul>
 </li>
 </ul>
@@ -193,13 +193,16 @@
 </h4>
 <ul>
 <li><code><a href="reference/driver_drake.html">driver_drake()</a></code></li>
+<li>if <code>write_csv_model = GCAM</code> in the function, related CSV will be exported to <code>output/gcamfaostat_GCAM</code>
+</li>
+<li>Users can add and design data flows for other models.</li>
 </ul>
 </div>
 <div class="section level4">
 <h4 id="id_5-use-data-and-package-functions">5. Use data and package functions<a class="anchor" aria-label="anchor" href="#id_5-use-data-and-package-functions"></a>
 </h4>
 <ul>
-<li>Data saved in <code>DIR_OUTPUT_CSV</code> can be used in downstream models.</li>
+<li>Data saved in output can be used in downstream models.</li>
 <li>Once <code>drive_drake</code> has been run, all the intermediate data are saved and can be explored (see examples in <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html">Use Cases</a> and <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_visualization.html">Visualization</a>.</li>
 </ul>
 <hr>
@@ -211,7 +214,7 @@
 <ul>
 <li>
 <strong><code>gcamfaostat</code></strong> processes <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html#metadata">input data</a> to output data in a format that is needed for downstream processing and modeling, e.g., <a href="https://github.com/JGCRI/gcam-core/tree/master/input/gcamdata/inst/extdata/aglu/FAO" class="external-link">data used in gcamdata-aglu-FAO</a> (see the schematic below).</li>
-<li>Input data was stored in the <a href="https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda" class="external-link">Prebuilt Data</a> of the package. The raw data is archived on Zenodo (see Zhao (2022) and URL in the <a href="https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#L144" class="external-link"><code>FF_download_RemoteArchive</code></a> function) to ensure the processing is 100% replicable. Users can also download the latest data using <a href="https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#90" class="external-link"><code>FF_download_FAOSTAT</code></a>.</li>
+<li>Input data was stored in the <a href="https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda" class="external-link">Prebuilt Data</a> of the package. The raw data is archived on Zenodo (see Zhao (2024) and URL in the <a href="https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#L144" class="external-link"><code>FF_download_RemoteArchive</code></a> function) to ensure the processing is 100% replicable. Users can also download the latest data using <a href="https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#90" class="external-link"><code>FF_download_FAOSTAT</code></a>.</li>
 <li>All intermediate processing and data flows are transparent and traceable. See <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html">Processing Flow</a> for data-tracing examples.</li>
 </ul>
 <p><img src="reference/figures/Fig_data_processing_flow.jpg"> Schematic: module (data processing chunk) structure of gcamfaostat</p>
@@ -255,7 +258,7 @@
 </li>
 <li>Zhao, Xin and Marshall Wise. “Core Model Proposal# 360: GCAM agriculture and land use (AgLU) data and method updates: connecting land hectares to food calories.” PNNL <a href="https://jgcri.github.io/gcam-doc/cmp/CMP_360-AgLU_data_method_updates.pdf" class="external-link uri">https://jgcri.github.io/gcam-doc/cmp/CMP_360-AgLU_data_method_updates.pdf</a>
 </li>
-<li>Zhao, Xin (2022). FAOSTAT AgLU data Archive GCAMv7 (1.0) [Data set]. Zenodo. <a href="https://doi.org/10.5281/zenodo.8260225" class="external-link uri">https://doi.org/10.5281/zenodo.8260225</a>
+<li>Zhao, Xin (2024). FAOSTAT AgLU data Archive GCAMv7 (1.0) [Data set]. Zenodo. <a href="https://doi.org/10.5281/zenodo.13941470" class="external-link uri">https://doi.org/10.5281/zenodo.13941470</a>
 </li>
 </ul>
 <p>Copyright 2023 Battelle Memorial Institute; see the LICENSE file.</p>
@@ -309,7 +312,18 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/JGCRI/gcamfaostat/actions/workflows/pages/pages-build-deployment" class="external-link"><img src="https://github.com/JGCRI/gcamfaostat/actions/workflows/pages/pages-build-deployment/badge.svg" alt="pages-build-deployment"></a></li>
+<li><a href="https://github.com/JGCRI/gcamfaostat/actions/workflows/docs.yaml" class="external-link"><img src="https://github.com/JGCRI/gcamfaostat/actions/workflows/docs.yaml/badge.svg" alt="docs"></a></li>
+<li><a href="https://github.com/JGCRI/gcamfaostat/actions/workflows/draft-pdf.yml" class="external-link"><img src="https://github.com/JGCRI/gcamfaostat/actions/workflows/draft-pdf.yml/badge.svg" alt=".github/workflows/draft-pdf.yml"></a></li>
+<li><a href="https://github.com/JGCRI/gcamfaostat/actions/workflows/r.yml" class="external-link"><img src="https://github.com/JGCRI/gcamfaostat/actions/workflows/r.yml/badge.svg" alt="R"></a></li>
+<li><a href="https://github.com/JGCRI/gcamfaostat/actions/workflows/test_coverage.yml" class="external-link"><img src="https://github.com/JGCRI/gcamfaostat/actions/workflows/test_coverage.yml/badge.svg" alt="test_coverage"></a></li>
+<li><a href="https://joss.theoj.org/papers/bf4762e8bef702f36b800e0cb4d478a8" class="external-link"><img src="https://joss.theoj.org/papers/bf4762e8bef702f36b800e0cb4d478a8/status.svg" alt="status"></a></li>
+<li><a href="https://doi.org/10.5281/zenodo.10967067" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.10967067.svg" alt="DOI"></a></li>
+</ul>
+</div>
 
   </div>
 </div>
@@ -322,7 +336,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

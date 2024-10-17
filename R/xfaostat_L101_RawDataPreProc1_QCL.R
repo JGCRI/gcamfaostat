@@ -18,7 +18,7 @@
 module_xfaostat_L101_RawDataPreProc1_QCL <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Trade_CropsLivestock_E_All_Data_Normalized")
+    c(FAOSTAT_FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Production_Crops_Livestock_E_All_Data_Normalized"))
 
   MODULE_OUTPUTS <-
     c("QCL_wide",          # Ag production quantity and harvested area
@@ -55,7 +55,10 @@ module_xfaostat_L101_RawDataPreProc1_QCL <- function(command, ...) {
     # *[QCL] FAOSTAT Production and area ----
 
     ## Load raw data
-    FAOSTAT_load_raw_data(DATASETCODE = "QCL", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT, .Envir = Curr_Envir)
+    FAOSTAT_load_raw_data(DATASETCODE = "QCL", .Envir = Curr_Envir)
+
+    #FAOSTAT_load_raw_data("QCL", GET_MAPPINGCODE = "AreaCodes", .Envir = Curr_Envir)
+    #FAOSTAT_load_raw_data("QCL", GET_MAPPINGCODE = "ItemCodes", .Envir = Curr_Envir)
 
     QCL %>% distinct(element_code, element)
 
@@ -76,10 +79,14 @@ module_xfaostat_L101_RawDataPreProc1_QCL <- function(command, ...) {
       # Prod Popultn (5314) for Beewax and honey is removed since data is only before 1990
       filter(element_code != 5314) %>%
       # Remove NA for simplicity for now; expend.grid later
-      # All Coir (coconut fiber) is filtered out due to NA
+      # All Coir (coconut fiber; item_code == 813) was previously filtered out due to NA, but now available for a few regions
       filter(!is.na(value)) %>%
       # remove accent
-      rm_accent("item", "area") -> QCL1
+      rm_accent("item", "area") %>%
+      # need to ensure all area names came from the same source! 107 and 223
+      mutate(area = replace(area, area == "CA?te dIvoire", "Cote dIvoire"),
+             area = replace(area, area == "TA?rkiye", "Turkiye"))-> QCL1
+
 
     QCL1 %>% spread(year, value) ->
       QCL_wide
@@ -92,14 +99,14 @@ module_xfaostat_L101_RawDataPreProc1_QCL <- function(command, ...) {
       add_title("FAO primary production country and code") %>%
       add_units("NA") %>%
       add_comments("FAO Country and code") %>%
-      add_precursors("aglu/FAO/FAOSTAT/Trade_CropsLivestock_E_All_Data_Normalized") ->
+      add_precursors(file.path(DIR_RAW_DATA_FAOSTAT, "Production_Crops_Livestock_E_All_Data_Normalized")) ->
       QCL_area_code_map
 
     QCL_wide %>%
       add_title("FAO primary production (QCL)", overwrite = TRUE) %>%
       add_units("ha/tonne") %>%
       add_comments("Preprocessed FAOSTAT primary production") %>%
-      add_precursors("aglu/FAO/FAOSTAT/Trade_CropsLivestock_E_All_Data_Normalized") ->
+      add_precursors(file.path(DIR_RAW_DATA_FAOSTAT, "Production_Crops_Livestock_E_All_Data_Normalized")) ->
       QCL_wide
 
       verify_identical_prebuilt(QCL_area_code_map)

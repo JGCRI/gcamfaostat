@@ -27,7 +27,8 @@ module_aglu_L110.For_FAO_R_Y <- function(command, ...) {
       FILE="aglu/A_forest_mapping")
 
   MODULE_OUTPUTS <-
-    c("L110.For_ALL_bm3_R_Y","L110.IO_Coefs_pulp")
+    c("L110.For_ALL_bm3_R_Y",
+      "L110.IO_Coefs_pulp")
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -71,6 +72,7 @@ module_aglu_L110.For_FAO_R_Y <- function(command, ...) {
     # Use spread to have columns for Prod and NetExp instead of flow and value
     # Add a column for the variable consumption, Cons=Prod-NetExp
     L110.FAO_For_ALL_m3 %>%
+      filter(item %in% A_forest_mapping$item) %>%
       left_join_error_no_match(A_forest_mapping, by = c("item")) %>%
       # take the combined tibble
       # do a left join on For_ALL tibble, match up the iso labels from the iso tibble,
@@ -140,42 +142,44 @@ module_aglu_L110.For_FAO_R_Y <- function(command, ...) {
 
     #First separate out roundwood consumption
     L110.For_ALL_bm3_R_Y %>%
-      filter(GCAM_commodity==aglu.FOREST_supply_sector) %>%
+      filter(GCAM_commodity==aglu.FOREST_SUPPLY_SECTOR) %>%
       select(GCAM_region_ID,year,roundwood_cons=Cons_bm3)->L110.Roundwood_Cons
 
-    #Join the same with commoditties.
+    #Join the same with commodities.
     L110.For_ALL_bm3_R_Y %>%
-      filter(GCAM_commodity %in% aglu.FOREST_commodities) %>%
+      filter(GCAM_commodity %in% aglu.FOREST_COMMODITIES) %>%
       select(GCAM_region_ID,year,GCAM_commodity,Prod_bm3) %>%
       spread(GCAM_commodity,Prod_bm3) %>%
       left_join_error_no_match(L110.Roundwood_Cons, by = c("GCAM_region_ID","year")) %>%
       #Assume that pulpwood has a coeff of 5.14 sawtimber is the remaining. There are a couple of adjustments that need to be made.
       mutate(#First adjust sawnwood production here
              #sawnwood= if_else(sawnwood > 2 *roundwood_cons, roundwood_cons *0.05,sawnwood),
-             after_pulp = roundwood_cons-(woodpulp*aglu.FOREST_pulp_conversion),
+             after_pulp = roundwood_cons-(woodpulp*aglu.FOREST_PULP_CONVERSION),
              #If a country does not have enough roundwood cons to produce saw, increase it.
-             roundwood_cons=if_else(after_pulp <0, woodpulp*aglu.FOREST_pulp_conversion*1.1,roundwood_cons),
-             after_pulp = roundwood_cons-(woodpulp*aglu.FOREST_pulp_conversion),
+             roundwood_cons=if_else(after_pulp <0, woodpulp*aglu.FOREST_PULP_CONVERSION*1.1,roundwood_cons),
+             after_pulp = roundwood_cons-(woodpulp*aglu.FOREST_PULP_CONVERSION),
              #Now calculate pulp IO here
              IO=after_pulp/sawnwood,
              #We are going to run in a scenario where the coef is less than 1 in some places.
              IO= if_else(IO < 1,1,IO),
              #Add a max value on the IO here,
+             # Note that Central Asia may need a bigger than 10 IO to avoid negative production in next steps
              IO= if_else(IO > 10,10,IO),
              IO= if_else(sawnwood==0, 0,IO),
-             roundwood_cons=(woodpulp*aglu.FOREST_pulp_conversion)+(IO*sawnwood)) ->L110.IO_Coefs_pulp
+             roundwood_cons=(woodpulp*aglu.FOREST_PULP_CONVERSION)+(IO*sawnwood)) ->L110.IO_Coefs_pulp
 
     #Since we increased roundwood cons in some places, increase production proportionately
     L110.For_ALL_bm3_R_Y %>%
-      filter(GCAM_commodity==aglu.FOREST_supply_sector) %>%
+      filter(GCAM_commodity==aglu.FOREST_SUPPLY_SECTOR) %>%
       left_join_error_no_match(L110.IO_Coefs_pulp %>% select(GCAM_region_ID,year,roundwood_cons), by = c("GCAM_region_ID","year")) %>%
+      # We could add other used for forest later instead of adjustments
       mutate(diff=roundwood_cons-Cons_bm3,
              Prod_bm3= Prod_bm3+diff,
              Cons_bm3=roundwood_cons) %>%
       select(colnames(L110.For_ALL_bm3_R_Y))->L110.For_ALL_bm3_R_Y_Primary
 
     L110.For_ALL_bm3_R_Y %>%
-      filter(GCAM_commodity!=aglu.FOREST_supply_sector) %>%
+      filter(GCAM_commodity!=aglu.FOREST_SUPPLY_SECTOR) %>%
       bind_rows(L110.For_ALL_bm3_R_Y_Primary)->L110.For_ALL_bm3_R_Y
 
 
@@ -188,7 +192,7 @@ module_aglu_L110.For_FAO_R_Y <- function(command, ...) {
     # replace_na here only affect Taiwan, which we did not have trade data.
     L110.For_ALL_bm3_R_Y %>%
       left_join(
-        L100.FAO_For_Exp_m3 %>%
+        L100.FAO_For_Exp_m3 %>% filter(item %in% A_forest_mapping$item) %>%
           left_join_error_no_match(A_forest_mapping, by = c("item")) %>%
           mutate(                   # add the forest commodity label
                  value = CONV_M3_BM3 * value,                 # convert the value units from m3 to bm3, had to add this constant to constants.R

@@ -12,8 +12,9 @@
 #' @return Information of FAOSTAT input dataset
 #' @export
 
-gcamfaostat_metadata <- function(.DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
-                                 OnlyReturnDatasetCodeRequired = FALSE){
+gcamfaostat_metadata <- function(.DIR_RAW_DATA_FAOSTAT = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
+                                 OnlyReturnDatasetCodeRequired = FALSE,
+                                 Save_metadata = FALSE){
 
   assertthat::assert_that(OnlyReturnDatasetCodeRequired == TRUE|OnlyReturnDatasetCodeRequired == FALSE)
 
@@ -24,32 +25,41 @@ gcamfaostat_metadata <- function(.DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
       "TCL",  "TM",   # Gross and bilateral trade
       "SCL",          # Supply utilization accounting
       "FBS",  "FBSH", # New and old food balance sheet
-      "CB",           # Old non food utilization accounting
+      #"CB",
+      "CBH",  # New and old non food utilization accounting
       "RFN",          # Fertilizer by nutrient
       "RL",           # Land Use
       "FO",           # Forest production and trade
-      "OA"            # Population
+      "OA",           # Population
+      "CS"            # Capital stock
     )
 
   if (OnlyReturnDatasetCodeRequired == T) {
     return(FAO_dataset_code_required)
   }
 
-  DIR_FAOSTAT_METADATA <- file.path(.DIR_RAW_DATA_FAOSTAT, "metadata_log")
-  dir.create(DIR_FAOSTAT_METADATA, showWarnings = F)
 
   # Save a table includes all FAOSTAT data info and links
   fao_metadata <- FAOSTAT_metadata() %>% filter(datasetcode %in% FAO_dataset_code_required)
-  readr::write_csv(fao_metadata, file.path(DIR_FAOSTAT_METADATA, paste0("FAOSTAT_METADATA_", Sys.Date(),".csv")))
-  rlang::inform(paste0("A Full FAOSTAT metadata downloaded and updated in `",
-                       file.path(.DIR_RAW_DATA_FAOSTAT, "metadata_log", "`")))
+
+  if (Save_metadata == TRUE) {
+
+    DIR_FAOSTAT_METADATA <- file.path(.DIR_RAW_DATA_FAOSTAT, "metadata_log")
+    dir.create(DIR_FAOSTAT_METADATA, showWarnings = F)
+
+    readr::write_csv(fao_metadata, file.path(DIR_FAOSTAT_METADATA, paste0("FAOSTAT_METADATA_", Sys.Date(),".csv")))
+    rlang::inform(paste0("A Full FAOSTAT metadata downloaded and updated in `",
+                         file.path(.DIR_RAW_DATA_FAOSTAT, "metadata_log", "`")))
+  }
+
+
   rlang::inform("---------------------------------------------------------")
 
   rlang::inform(paste0("See returned table for the infomation of FAOSTAT dataset processed in this R package"))
 
   DataCodePrebuilt <-
     PREBUILT_DATA %>% names() %>% strsplit(split = "_") %>% unlist %>%
-    setdiff(c("wide", "Roundwood", "code", "area", "bilateral", "map"))
+    setdiff(c("wide", "RoundwoodProducts", "code", "area", "bilateral", "map"))
 
   FF_rawdata_info(DATA_FOLDER = .DIR_RAW_DATA_FAOSTAT,
                   DATASETCODE = FAO_dataset_code_required,
@@ -88,7 +98,7 @@ gcamfaostat_metadata <- function(.DIR_RAW_DATA_FAOSTAT = DIR_RAW_DATA_FAOSTAT,
 #' @export
 
 FF_download_FAOSTAT <- function(DATASETCODE,
-                                DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+                                DATA_FOLDER = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
                                 OverWrite = FALSE){
 
   FAOSTAT_metadata <- `download.file` <- NULL
@@ -98,7 +108,7 @@ FF_download_FAOSTAT <- function(DATASETCODE,
   assertthat::assert_that(OverWrite == TRUE|OverWrite == FALSE)
   assertthat::assert_that(length(DATASETCODE) == 1, msg = "Single dataset allowed; consider using a loop or the function FF_rawdata_info() for downloading multiple datasets")
 
-  dir.create(DIR_RAW_DATA_FAOSTAT, showWarnings = F)
+  dir.create(DATA_FOLDER, showWarnings = F)
 
 
 
@@ -144,11 +154,17 @@ FF_download_FAOSTAT <- function(DATASETCODE,
 
 FF_download_RemoteArchive <-
   function(DATASETCODE = NULL,
-           RemoteArchiveURL = "https://zenodo.org/record/8260225/files/",
-           DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+           RemoteArchiveURL = "https://zenodo.org/record/13941470/files/",
+           DATA_FOLDER = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
            OverWrite = FALSE){
 
-    warnings("The current archive is for GCAM v7 release, not the latest!")
+
+
+    # version v1.0.0 (August, 2022): "https://zenodo.org/record/8260225/files/"
+    # version v1.0.1_temp (June, 2024):"https://zenodo.org/record/11602356/files/"
+    # version v1.0.1 (October, 2024):"https://zenodo.org/record/13941470/files/"
+
+    warnings("The current archive is for gcamfaostat v1.0.1")
 
     assertthat::assert_that(is.character(DATASETCODE))
     assertthat::assert_that(is.character(RemoteArchiveURL))
@@ -209,7 +225,7 @@ FF_download_RemoteArchive <-
 #' @export
 
 FF_rawdata_info <- function(
-    DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+    DATA_FOLDER = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
     DATASETCODE,
     DOWNLOAD_NONEXIST = FALSE,
     FAOSTAT_or_Archive = "Archive"){
@@ -222,7 +238,10 @@ FF_rawdata_info <- function(
   assertthat::assert_that(is.character(DATASETCODE))
   assertthat::assert_that(is.logical(DOWNLOAD_NONEXIST))
   assertthat::assert_that(FAOSTAT_or_Archive == "FAOSTAT"|FAOSTAT_or_Archive == "Archive")
-  assertthat::assert_that(file.exists(DATA_FOLDER))
+
+  if (!file.exists(DATA_FOLDER)) {
+    DATA_FOLDER <- "."
+  }
 
   file.info(dir(DATA_FOLDER, full.names = T)) %>%
     tibble::rownames_to_column(var = "filelocation") %>%
@@ -234,14 +253,8 @@ FF_rawdata_info <- function(
               #localfilesize = utils:::format.object_size(size, "MB", digits = 0),
               localfilesize = paste0(round(size/10^6, digits = 0), " MB" )) %>%
     # Join the latest metadata
-    # Note that FAO raw data had a typo (missing space) in Trade_CropsLivestock_E_All_Data_(Normalized).zip
-    # Temporary fix here
-    # This was fixed in 2022 updates
     right_join(FAOSTAT_metadata() %>% filter(datasetcode %in% DATASETCODE) %>%
-                 mutate(filelocation = basename(filelocation)), #%>%
-               #mutate(filelocation = replace(filelocation,
-               #                              filelocation == "Trade_CropsLivestock_E_All_Data_(Normalized).zip",
-               #                              "Trade_Crops_Livestock_E_All_Data_(Normalized).zip")),
+                 mutate(filelocation = basename(filelocation)),
                by = "filelocation") %>%
     transmute(datasetcode, datasetname,
               FAOupdate = dateupdate, Localupdate = mtime,
@@ -327,7 +340,7 @@ FAOSTAT_metadata <- function (code = NULL){
 #' @export
 
 FAOSTAT_load_raw_data <- function(DATASETCODE,
-                                  DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+                                  DATA_FOLDER = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
                                   GET_MAPPINGCODE = NULL,
                                   .Envir = NULL ){
   assertthat::assert_that(is.character(DATASETCODE))

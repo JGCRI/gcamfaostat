@@ -36,7 +36,7 @@ When `gcamfaostat` is downloaded, preprocessed FAOSTAT data, i.e., output of the
 
 [`gcamfaostat_metadata()`](https://jgcri.github.io/gcamfaostat/reference/gcamfaostat_metadata.html)  
 
-* The function will save the latest FAOSTAT metadata to the [metadata_log](https://github.com/JGCRI/gcamfaostat/tree/main/inst/extdata/aglu/FAO/FAOSTAT/metadata_log)  
+* The function will save the latest FAOSTAT metadata to the [metadata_log](https://github.com/JGCRI/gcamfaostat/tree/main/inst/extdata/FAOSTAT/metadata_log)  
 * The function will access both the latest FAOSTAT metadata and local data information and returns a summary table including the dataset information needed for gcamfaostat (see **Table 1** below).  
 * The dataset code needed were specified in the function to get a subset of the FAOSTAT metadata. The function will return only dataset code required when setting `OnlyReturnDatasetCodeRequired = FALSE`.  
 * The function will check whether FAOSTAT raw data exists locally (`Exist_Local`) and in [Prebuilt Data](https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda) (`Exist_Prebuilt`). If `Exist_Prebuilt` is `TRUE` for all dataset, the package is ready to be built based on the Prebuilt package data.   
@@ -49,7 +49,7 @@ When `gcamfaostat` is downloaded, preprocessed FAOSTAT data, i.e., output of the
 library(gcamfaostat)
 library(dplyr)
 library(kableExtra)
-gcamfaostat_metadata(.DIR_RAW_DATA_FAOSTAT = file.path("..", "inst/extdata/aglu/FAO/FAOSTAT")) %>% 
+gcamfaostat_metadata(.DIR_RAW_DATA_FAOSTAT = file.path("..", "inst/extdata/FAOSTAT"), Save_metadata = FALSE) %>% 
   select(-`Local file size`) -> p
 
 p %>%
@@ -77,8 +77,8 @@ Two functions above are created for downloading the raw data from a remote archi
 Example:
 ``` {r, eval =FALSE}
 # Dataset PP, producer prices, is downloaded from RemoteArchiveURL to DATA_FOLDER
-# RemoteArchiveURL = "https://zenodo.org/record/8260225/files/"
-# DATA_FOLDER = "inst/extdata/aglu/FAO/FAOSTAT"
+# RemoteArchiveURL = "https://zenodo.org/record/13941470/files/"
+# DATA_FOLDER = "inst/extdata/FAOSTAT"
 FF_download_RemoteArchive( 
   DATASETCODE = "PP",   
   OverWrite = TRUE     # overwrite existing PP dataset 
@@ -100,7 +100,7 @@ FF_download_FAOSTAT(DATASETCODE = "OA", OverWrite = TRUE)
 
 Example:
 ``` {r, eval =FALSE}
-# Provide detailed metadata of "PP" and "OA" in DATA_FOLDER ("inst/extdata/aglu/FAO/FAOSTAT")
+# Provide detailed metadata of "PP" and "OA" in DATA_FOLDER ("inst/extdata/FAOSTAT")
 FF_rawdata_info(DATASETCODE = c("PP", "OA"), DOWNLOAD_NONEXIST = FALSE)
 
 # If "PP" or "OA" does not exist, download from remote archive
@@ -116,7 +116,7 @@ FF_rawdata_info(DATASETCODE = c("PP", "OA"), DOWNLOAD_NONEXIST = TRUE, FAOSTAT_o
 
 Example:
 ``` {r, eval =FALSE}
-# Read raw data of "PP" and "OA" from DATA_FOLDER ("inst/extdata/aglu/FAO/FAOSTAT") to .GlobalEnv
+# Read raw data of "PP" and "OA" from DATA_FOLDER ("inst/extdata/FAOSTAT") to .GlobalEnv
 FAOSTAT_load_raw_data(DATASETCODE = c("PP", "OA"), .Envir = .GlobalEnv)
 ```
 

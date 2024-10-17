@@ -138,7 +138,7 @@ module_aglu_L100.FAO_preprocessing_OtherData <- function(command, ...) {
       gather_years() %>%
       # NA area values that should not exist, e.g., USSR after 1991
       filter(!is.na(value)) %>%
-      FAO_REG_YEAR_MAP_FOREST ->
+      FAO_REG_YEAR_MAP ->
       L100.For_bal
 
 
@@ -147,7 +147,7 @@ module_aglu_L100.FAO_preprocessing_OtherData <- function(command, ...) {
       filter(element == "Production")  %>%
       add_title("FAO forestry production by country, year") %>%
       add_comments("FAO primary roundwood production") %>%
-      add_units("m3") %>%
+      add_units("m3/t") %>%
       add_precursors("aglu/FAO/GCAMFAOSTAT_ForProdTrade",
                      "aglu/AGLU_ctry",
                      "common/iso_GCAM_regID") ->
@@ -159,7 +159,7 @@ module_aglu_L100.FAO_preprocessing_OtherData <- function(command, ...) {
       filter(element == "Export")  %>%
       add_title("FAO forestry export by country, year") %>%
       add_comments("FAO primary roundwood gross export") %>%
-      add_units("m3") %>%
+      add_units("m3/t") %>%
       add_precursors("aglu/FAO/GCAMFAOSTAT_ForProdTrade",
                      "aglu/AGLU_ctry",
                      "common/iso_GCAM_regID") ->
@@ -171,7 +171,7 @@ module_aglu_L100.FAO_preprocessing_OtherData <- function(command, ...) {
       filter(element == "Import")  %>%
       add_title("FAO forestry import by country, year") %>%
       add_comments("FAO primary roundwood gross import") %>%
-      add_units("m3") %>%
+      add_units("m3/t") %>%
       add_precursors("aglu/FAO/GCAMFAOSTAT_ForProdTrade",
                      "aglu/AGLU_ctry", "common/iso_GCAM_regID") ->
       L100.FAO_For_Imp_m3

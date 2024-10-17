@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gcamfaostat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -95,42 +95,31 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">extract_header_info</span><span class="op">(</span></span>
-<span>  <span class="va">header_lines</span>,</span>
-<span>  <span class="va">label</span>,</span>
-<span>  <span class="va">filename</span>,</span>
-<span>  required <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  multiline <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">extract_header_info</span><span class="op">(</span>
+  <span class="va">header_lines</span>,
+  <span class="va">label</span>,
+  <span class="va">filename</span>,
+  required <span class="op">=</span> <span class="cn">FALSE</span>,
+  multiline <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>header_lines</dt>
 <dd><p>Character vector holding raw header lines</p></dd>
-
-
 <dt>label</dt>
 <dd><p>Label to search for - character</p></dd>
-
-
 <dt>filename</dt>
 <dd><p>Filename (for error reporting purposes)</p></dd>
-
-
 <dt>required</dt>
 <dd><p>Is this label required? (logical)</p></dd>
-
-
 <dt>multiline</dt>
 <dd><p>Can this label hold multi-line information? (logical)</p></dd>
-
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>Extracted label information, as a character vector</p>
+    <p>Extracted label information, as a character vector</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -151,7 +140,7 @@ are not allowed. This function is called by <code><a href="parse_csv_header.html
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

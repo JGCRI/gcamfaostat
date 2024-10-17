@@ -53,14 +53,17 @@ The package is documented in the [online manual](https://jgcri.github.io/gcamfao
 
 #### 3. Modify configurations
 * To export csv output files, in `constants.R`, 
-  * set `OUTPUT_Export_CSV` to `TRUE`
-  * specify the directory path (`DIR_OUTPUT_CSV`) for output files.
+  * set `Process_Raw_FAO_Data` to `TRUE` if raw data have been downloaded, `PREBUILT_DATA` will be used otherwise.
+  * specify the modules to be excluded (`DISABLED_MODULES`) if needed.
+  * modify data years. Most FAOSTAT datasets are available for`1960 - 2022`.
 
 #### 4. Run the driver
 * `driver_drake()` 
+* if `write_csv_model = GCAM` in the function, related CSV will be exported to `output/gcamfaostat_GCAM`
+* Users can add and design data flows for other models.
 
 #### 5. Use data and package functions
-* Data saved in `DIR_OUTPUT_CSV` can be used in downstream models.
+* Data saved in output can be used in downstream models.
 * Once `drive_drake` has been run, all the intermediate data are saved and can be explored (see examples in [Use Cases](https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html) and [Visualization](https://jgcri.github.io/gcamfaostat/articles/vignette_visualization.html).
 
 ***
@@ -69,7 +72,7 @@ The package is documented in the [online manual](https://jgcri.github.io/gcamfao
 
 
 * **`gcamfaostat`** processes [input data](https://jgcri.github.io/gcamfaostat/articles/vignette_preparing_data.html#metadata) to output data in a format that is needed for downstream processing and modeling, e.g., [data used in gcamdata-aglu-FAO](https://github.com/JGCRI/gcam-core/tree/master/input/gcamdata/inst/extdata/aglu/FAO) (see the schematic below).
-* Input data was stored in the [Prebuilt Data](https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda) of the package. The raw data is archived on Zenodo (see Zhao (2022) and URL in the [`FF_download_RemoteArchive`](https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#L144) function) to ensure the processing is 100% replicable. Users can also download the latest data using [`FF_download_FAOSTAT`](https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#90). 
+* Input data was stored in the [Prebuilt Data](https://github.com/JGCRI/gcamfaostat/blob/main/data/PREBUILT_DATA.rda) of the package. The raw data is archived on Zenodo (see Zhao (2024) and URL in the [`FF_download_RemoteArchive`](https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#L144) function) to ensure the processing is 100% replicable. Users can also download the latest data using [`FF_download_FAOSTAT`](https://github.com/JGCRI/gcamfaostat/blob/main/R/xfaostat_helper_funcs.R#90). 
 * All intermediate processing and data flows are transparent and traceable. See [Processing Flow](https://jgcri.github.io/gcamfaostat/articles/vignette_processing_flow.html) for data-tracing examples. 
 
 ![](man/figures/Fig_data_processing_flow.jpg)
@@ -99,7 +102,7 @@ We welcome and value community contributions to gcamfaostat. Please read our [Co
 - Narayan et al., (2021). ambrosia: An R package for calculating and analyzing food demand that is responsive to changing incomes and prices. Journal of Open Source Software, 6(59), 2890. https://doi.org/10.21105/joss.02890
 - Zhao, Xin, Katherine V. Calvin, Marshall A. Wise, and Gokul Iyer. "The role of global agricultural market integration in multiregional economic modeling: Using hindcast experiments to validate an Armington model." Economic Analysis and Policy 72 (2021): 1-17. https://doi.org/10.1016/j.eap.2021.07.007
 - Zhao, Xin and Marshall Wise. "Core Model Proposal# 360: GCAM agriculture and land use (AgLU) data and method updates: connecting land hectares to food calories." PNNL https://jgcri.github.io/gcam-doc/cmp/CMP_360-AgLU_data_method_updates.pdf 
-- Zhao, Xin (2022). FAOSTAT AgLU data Archive GCAMv7 (1.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.8260225
+- Zhao, Xin (2024). FAOSTAT AgLU data Archive GCAMv7 (1.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.13941470
 
 
 

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gcamfaostat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -95,37 +95,28 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">GROSS_TRADE_ADJUST</span><span class="op">(</span></span>
-<span>  <span class="va">.DF</span>,</span>
-<span>  .MIN_TRADE_PROD_RATIO <span class="op">=</span> <span class="fl">0.01</span>,</span>
-<span>  .Reg_VAR <span class="op">=</span> <span class="st">"area_code"</span>,</span>
-<span>  .GROUP_VAR <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"item_code"</span>, <span class="st">"year"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">GROSS_TRADE_ADJUST</span><span class="op">(</span>
+  <span class="va">.DF</span>,
+  .MIN_TRADE_PROD_RATIO <span class="op">=</span> <span class="fl">0.01</span>,
+  .Reg_VAR <span class="op">=</span> <span class="st">"area_code"</span>,
+  .GROUP_VAR <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"item_code"</span>, <span class="st">"year"</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>.DF</dt>
 <dd><p>An input dataframe with an element col including Import and Export</p></dd>
-
-
 <dt>.MIN_TRADE_PROD_RATIO</dt>
 <dd><p>Trade will be removed if world total export or import over production is smaller than .MIN_TRADE_PROD_RATIO, 0.01 default value</p></dd>
-
-
 <dt>.Reg_VAR</dt>
 <dd><p>Region variable name; default is area_code</p></dd>
-
-
 <dt>.GROUP_VAR</dt>
 <dd><p>Group variable; default is item_code and year</p></dd>
-
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>The same dataframe with balanced world export and import.</p>
+    <p>The same dataframe with balanced world export and import.</p>
     </div>
 
   </div>
@@ -140,7 +131,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

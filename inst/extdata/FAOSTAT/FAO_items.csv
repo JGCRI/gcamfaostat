@@ -10,16 +10,17 @@
 #  Note that item 237 Oil soybean was moved from Tier1 to Tier2 to use SCL for production due to Brazil data issue in QCL
 #  SCL has balanced data processed by FAO but the quality was poor with low consistency
 # Tier2 includes 204 items that had no data or low quality data in QCL so used production from SCL
-# Tier3 includes 22 items that had QCL but no bilateral trade data so use gross trade from SCL
+# Tier3 includes 21 items that had QCL but no bilateral trade data so use gross trade from SCL
 # Tier4 includes 40 items included in SCL but not in Tier1-3
 # Tier5 includes 12 fish items from FBS and FBSH. Item code came from FBS as well
-# Tier6 includes 28 items that included in QCL for production but not in Tier1 to Tier5. Note that item_code (30 paddy rice milled equivalent) is not included as it is not used and discontinued by FAOSTAT 
+# Tier6 includes 29 items that included in QCL for production but not in Tier1 to Tier5. 
+#  Note that item_code (30 paddy rice milled equivalent) is not included as it is not used and discontinued by FAOSTAT.  Flax, processed but not spun (773) is changed to Flax, raw or retted (771).
 # Tier7 include 4 cake or fiber items that coproduced in oil crop crushing. Item code used 0
 #  Note the FAOSTAT does not provide data for Tier8 item so they are generated based extraction rate and assumed no trade and single use.
 # Tier8 includes 16 meat equivalent items converted from live animals. Item code used 0
 #  Note that these items were preprocessed based on mainly carcass yield implied by data for adjusting production and stocks
 #  Note that for meat equivalent items only stock variation was accounted since 2010 when the data first available
-# Last update: 11-23-2023 (XZ)
+# Last update: 06-09-2024 (XZ)
 # Column types: icicccciccic
 # ----------
 item_code,item,tier,DS_trade,DS_production,DS_demand,DS_key_coproduct_item,DS_key_coproduct_item_code,CPC_code,CPC_item,FBS_item_code,FBS_item
@@ -512,7 +513,7 @@ item_code,item,tier,DS_trade,DS_production,DS_demand,DS_key_coproduct_item,DS_ke
 677,Hop cones,6,TM,QCL,Food only,,,,,,
 748,"Peppermint, spearmint",6,TM,QCL,Food only,,,,,,
 754,"Pyrethrum, dried flowers",6,TM,QCL,Food only,,,,,,
-773,"Flax, processed but not spun",6,TM,QCL,Other use only,,,,,,
+771,"Flax, raw or retted",6,TM,QCL,Other use only,,,,,,
 777,"True hemp, raw or retted",6,TM,QCL,Other use only,,,,,,
 780,"Jute, raw or retted",6,TM,QCL,Other use only,,,,,,
 782,"Kenaf, and other textile bast fibres, raw or retted",6,TM,QCL,Other use only,,,,,,

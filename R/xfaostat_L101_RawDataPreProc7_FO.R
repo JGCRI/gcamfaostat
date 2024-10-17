@@ -18,7 +18,7 @@
 module_xfaostat_L101_RawDataPreProc7_FO <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Forestry_E_All_Data_Normalized")
+    c(FAOSTAT_FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Forestry_E_All_Data_Normalized"))
 
   MODULE_OUTPUTS <-
     c("FO_RoundwoodProducts")       # Forestry data
@@ -48,12 +48,12 @@ module_xfaostat_L101_RawDataPreProc7_FO <- function(command, ...) {
       # Load required inputs ----
       get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
-      FAOSTAT_load_raw_data(DATASETCODE = "FO", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT, .Envir = Curr_Envir)
+      FAOSTAT_load_raw_data(DATASETCODE = "FO", .Envir = Curr_Envir)
 
       FO %>% filter(year >= min(FAOSTAT_Hist_Year),
                     area_code < 350,     # Rm aggregated area
                     item_code %in% c(1861, 1864, 1865, 2038, 1868, 1871,
-                                     1634, 1873, 1872, 1875)) %>%
+                                     1634, 1873, 1872, 1875, 1876)) %>%
       # see meta data in https://www.fao.org/faostat/en/#data/FO
       # 1861	Roundwood
       # 1864	Wood fuel
@@ -65,6 +65,7 @@ module_xfaostat_L101_RawDataPreProc7_FO <- function(command, ...) {
       # 1873	Wood-based panels
       # 1872	Sawnwood
       # 1875	Wood pulp
+      # 1876  Paper and paperboard
       select(area_code,
              area,
              item_code,
@@ -84,7 +85,7 @@ module_xfaostat_L101_RawDataPreProc7_FO <- function(command, ...) {
         add_title("FAO forestry data") %>%
         add_units("m3") %>%
         add_comments("FAO raw forestry data and main products") %>%
-        add_precursors("aglu/FAO/FAOSTAT/Forestry_E_All_Data_Normalized") ->
+        add_precursors(file.path(DIR_RAW_DATA_FAOSTAT, "Forestry_E_All_Data_Normalized")) ->
         FO_RoundwoodProducts
 
 

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gcamfaostat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -95,26 +95,21 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">FF_download_FAOSTAT</span><span class="op">(</span></span>
-<span>  <span class="va">DATASETCODE</span>,</span>
-<span>  DATA_FOLDER <span class="op">=</span> <span class="va">DIR_RAW_DATA_FAOSTAT</span>,</span>
-<span>  OverWrite <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">FF_download_FAOSTAT</span><span class="op">(</span>
+  <span class="va">DATASETCODE</span>,
+  DATA_FOLDER <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"inst/extdata"</span>, <span class="va">DIR_RAW_DATA_FAOSTAT</span><span class="op">)</span>,
+  OverWrite <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>DATASETCODE</dt>
 <dd><p>Single dataset code in FAO metadata, e.g., QCL is the production dataset.</p></dd>
-
-
 <dt>DATA_FOLDER</dt>
 <dd><p>Destination folder for storing raw data</p></dd>
-
-
 <dt>OverWrite</dt>
 <dd><p>If FALSE, check if the dataset exists and stop if exists; overwrite if TRUE</p></dd>
-
 </dl></div>
 
   </div>
@@ -129,7 +124,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

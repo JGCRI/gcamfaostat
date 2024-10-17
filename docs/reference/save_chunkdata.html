@@ -19,7 +19,7 @@ table flags, writes metadata comments, and so forth."><!-- mathjax --><script sr
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gcamfaostat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -99,46 +99,33 @@ table flags, writes metadata comments, and so forth.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">save_chunkdata</span><span class="op">(</span></span>
-<span>  <span class="va">chunkdata</span>,</span>
-<span>  write_inputs <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  create_dirs <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  write_outputs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  write_xml <span class="op">=</span> <span class="va">write_outputs</span>,</span>
-<span>  outputs_dir <span class="op">=</span> <span class="va">OUTPUTS_DIR</span>,</span>
-<span>  xml_dir <span class="op">=</span> <span class="va">XML_DIR</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">save_chunkdata</span><span class="op">(</span>
+  <span class="va">chunkdata</span>,
+  write_inputs <span class="op">=</span> <span class="cn">FALSE</span>,
+  create_dirs <span class="op">=</span> <span class="cn">FALSE</span>,
+  write_outputs <span class="op">=</span> <span class="cn">TRUE</span>,
+  write_xml <span class="op">=</span> <span class="va">write_outputs</span>,
+  outputs_dir <span class="op">=</span> <span class="va">OUTPUTS_DIR</span>,
+  xml_dir <span class="op">=</span> <span class="va">XML_DIR</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>chunkdata</dt>
 <dd><p>Named list of tibbles (data frames) to write</p></dd>
-
-
 <dt>write_inputs</dt>
 <dd><p>Write data that were read as inputs, not computed? Logical</p></dd>
-
-
 <dt>create_dirs</dt>
 <dd><p>Create directory if necessary, and delete contents? Logical</p></dd>
-
-
 <dt>write_outputs</dt>
 <dd><p>Write all chunk outputs to disk?</p></dd>
-
-
 <dt>write_xml</dt>
 <dd><p>Write XML Batch chunk outputs to disk?</p></dd>
-
-
 <dt>outputs_dir</dt>
 <dd><p>Directory to save data into</p></dd>
-
-
 <dt>xml_dir</dt>
 <dd><p>Directory to save XML results into</p></dd>
-
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -165,7 +152,7 @@ a lot bigger, owing to the large number of digits we have to write.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

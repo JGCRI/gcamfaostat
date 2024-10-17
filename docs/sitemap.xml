@@ -82,6 +82,9 @@
     <loc>https://jgcri.github.io/gcamfaostat/reference/check_chunk_outputs.html</loc>
   </url>
   <url>
+    <loc>https://jgcri.github.io/gcamfaostat/reference/chord_wrapper.html</loc>
+  </url>
+  <url>
     <loc>https://jgcri.github.io/gcamfaostat/reference/chunk_inputs.html</loc>
   </url>
   <url>
@@ -229,10 +232,16 @@
     <loc>https://jgcri.github.io/gcamfaostat/reference/missing_data.html</loc>
   </url>
   <url>
+    <loc>https://jgcri.github.io/gcamfaostat/reference/module_aglu_L100.FAO_preprocessing_OtherData.html</loc>
+  </url>
+  <url>
     <loc>https://jgcri.github.io/gcamfaostat/reference/module_aglu_L100.FAO_SUA_connection.html</loc>
   </url>
   <url>
     <loc>https://jgcri.github.io/gcamfaostat/reference/module_aglu_L100.FAO_SUA_PrimaryEquivalent.html</loc>
+  </url>
+  <url>
+    <loc>https://jgcri.github.io/gcamfaostat/reference/module_aglu_L110.For_FAO_R_Y.html</loc>
   </url>
   <url>
     <loc>https://jgcri.github.io/gcamfaostat/reference/module_xfaostat_L101_RawDataPreProc1_QCL.html</loc>
@@ -245,6 +254,9 @@
   </url>
   <url>
     <loc>https://jgcri.github.io/gcamfaostat/reference/module_xfaostat_L101_RawDataPreProc4_FBSH_CB.html</loc>
+  </url>
+  <url>
+    <loc>https://jgcri.github.io/gcamfaostat/reference/module_xfaostat_L101_RawDataPreProc4_FBSH_CBH.html</loc>
   </url>
   <url>
     <loc>https://jgcri.github.io/gcamfaostat/reference/module_xfaostat_L101_RawDataPreProc5_TCL.html</loc>
@@ -284,6 +296,15 @@
   </url>
   <url>
     <loc>https://jgcri.github.io/gcamfaostat/reference/module_xfaostat_L401_Fertilizer.html</loc>
+  </url>
+  <url>
+    <loc>https://jgcri.github.io/gcamfaostat/reference/module_yextension_L100_FoodBalanceSheet.html</loc>
+  </url>
+  <url>
+    <loc>https://jgcri.github.io/gcamfaostat/reference/module_yfaostat_GCAM_CSVExport.html</loc>
+  </url>
+  <url>
+    <loc>https://jgcri.github.io/gcamfaostat/reference/module_yfaostat_SUA_FBS_CSVExport.html</loc>
   </url>
   <url>
     <loc>https://jgcri.github.io/gcamfaostat/reference/Moving_average.html</loc>

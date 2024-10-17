@@ -5,7 +5,7 @@
 \title{FF_rawdata_info: extract meta info of data (e.g., zip files) in a folder}
 \usage{
 FF_rawdata_info(
-  DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+  DATA_FOLDER = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
   DATASETCODE,
   DOWNLOAD_NONEXIST = FALSE,
   FAOSTAT_or_Archive = "Archive"

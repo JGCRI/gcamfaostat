@@ -1,6 +1,6 @@
 # Copyright 2019 Battelle Memorial Institute; see the LICENSE file.
 
-#' module_xfaostat_L999_CSVExport
+#' module_yfaostat_GCAM_CSVExport
 #'
 #' Generate supply utilization balance in primary equivalent
 #'
@@ -15,12 +15,14 @@
 #' @importFrom tibble tibble
 #' @importFrom tidyr complete drop_na gather nesting spread replace_na
 #' @author XZ Nov2023
-module_xfaostat_L999_CSVExport <- function(command, ...) {
+module_yfaostat_GCAM_CSVExport <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c("PD",
+    c("CS",
+      "PD",
+      "MK",
       "Bal_new_all",
-      "FBSH_CB_wide",
+      "FBSH_CBH_wide",
       "QCL_PROD",
       "QCL_AN_LIVEANIMAL",
       "QCL_AN_PRIMARY_MILK",
@@ -34,21 +36,23 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
       "RL_LandCover",
       "RFN_ProdDemand")
 
-  MODULE_OUTPUTS <-
-    c("xfaostat_L199_GCAMFAOSTAT_CSV",
-      CSV = "GCAMFAOSTAT_SUA",
-      CSV = "GCAMFAOSTAT_BiTrade",
-      CSV = "GCAMFAOSTAT_FBSH_CB",
-      CSV = "GCAMFAOSTAT_NonFodderProdArea",
-      CSV = "GCAMFAOSTAT_FodderProdArea",
-      CSV = "GCAMFAOSTAT_AnimalStock",
-      CSV = "GCAMFAOSTAT_ProdPrice",
-      CSV = "FAO_GDP_Deflators",
-      CSV = "GCAMFAOSTAT_MacroNutrientRate",
-      CSV = "GCAMFAOSTAT_ForProdTrade",
-      CSV = "GCAMFAOSTAT_ForExpPrice",
-      CSV = "GCAMFAOSTAT_LandCover",
-      CSV = "GCAMFAOSTAT_NFertilizer")
+    MODULE_OUTPUTS <-
+      c("yfaostat_GCAM_GCAMFAOSTAT_CSV",
+        CSV = "GCAMFAOSTAT_SUA",
+        CSV = "GCAMFAOSTAT_BiTrade",
+        CSV = "GCAMFAOSTAT_FBSH_CB",
+        CSV = "GCAMFAOSTAT_NonFodderProdArea",
+        CSV = "GCAMFAOSTAT_FodderProdArea",
+        CSV = "GCAMFAOSTAT_AnimalStock",
+        CSV = "GCAMFAOSTAT_ProdPrice",
+        CSV = "FAO_GDP_Deflators",
+        CSV = "GCAMFAOSTAT_CapitalStock",
+        CSV = "CAMFAOSTAT_GDP",
+        CSV = "GCAMFAOSTAT_MacroNutrientRate",
+        CSV = "GCAMFAOSTAT_ForProdTrade",
+        CSV = "GCAMFAOSTAT_ForExpPrice",
+        CSV = "GCAMFAOSTAT_LandCover",
+        CSV = "GCAMFAOSTAT_NFertilizer")
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -57,7 +61,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
   } else if(command == driver.MAKE) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
-    area_code <- source_code <- area_code1 <- item_code <- Bal_new_all <- element <- FBSH_CB_wide <-
+    area_code <- source_code <- area_code1 <- item_code <- Bal_new_all <- element <- FBSH_CBH_wide <-
       element_code <- QCL_CROP_PRIMARY <- QCL_PROD <- unit <- QCL_FODDERCROP <- QCL_AN_LIVEANIMAL <-
       QCL_AN_PRIMARY_MILK <- QCL_PRIMARY_PROD_PV <- area <- PD <- SUA_food_macronutrient_rate  <-
       TM_bilateral_wide <- NULL
@@ -68,28 +72,18 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
     Curr_Envir <- environment()
 
     # adding dummy output ----
-    xfaostat_L199_GCAMFAOSTAT_CSV <-
-      tibble(CSV_export =
-               MODULE_OUTPUTS)
+    yfaostat_GCAM_GCAMFAOSTAT_CSV <-
+      tibble(CSV_export = MODULE_OUTPUTS)
 
 
-    if (OUTPUT_Export_CSV == FALSE) {
-
-    lapply(MODULE_OUTPUTS[MODULE_OUTPUTS %>% names() == "CSV"],
-           function(output){
-             assign(output, empty_data() %>%
-                      add_title(output) %>%
-                      add_precursors("xfaostat_L199_GCAMFAOSTAT_CSV"), envir =  Curr_Envir)
-           })
-    }
-    else {
+    if (OUTPUT_Export_CSV == "GCAM") {
 
       # Load required inputs ----
       get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
 
 
       # Helper functions
-      xfaostat_L199_GCAMFAOSTAT_CSV <- NULL
+      yfaostat_GCAM_GCAMFAOSTAT_CSV <- NULL
       add_to_output_meta <- function(.df = DF_TEMP,
                                      .datasetname){
 
@@ -102,7 +96,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
           YearRange = "BaseYears"
         }
 
-        xfaostat_L199_GCAMFAOSTAT_CSV %>%
+        yfaostat_GCAM_GCAMFAOSTAT_CSV %>%
           bind_rows(
             data.frame(dataset = .datasetname,
                        nReg = .df %>% distinct(area_code) %>% nrow,
@@ -110,7 +104,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
                        Years = YearRange)
           ) -> .df1
 
-        assign("xfaostat_L199_GCAMFAOSTAT_CSV", .df1, envir = Curr_Envir)
+        assign("yfaostat_GCAM_GCAMFAOSTAT_CSV", .df1, envir = Curr_Envir)
       }
 
 
@@ -144,7 +138,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
         add_units("1000 tonnes") %>%
         add_comments("gcamfaostat Export CSV") %>%
         add_precursors("TM_bilateral_wide",
-                       "xfaostat_L199_GCAMFAOSTAT_CSV")->
+                       "yfaostat_GCAM_GCAMFAOSTAT_CSV")->
         GCAMFAOSTAT_BiTrade
 
       add_to_output_meta(.df = GCAMFAOSTAT_BiTrade, "GCAMFAOSTAT_BiTrade")
@@ -172,7 +166,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
         add_units("1000 tonnes") %>%
         add_comments("gcamfaostat Export CSV") %>%
         add_precursors("Bal_new_all",
-                       "xfaostat_L199_GCAMFAOSTAT_CSV") ->
+                       "yfaostat_GCAM_GCAMFAOSTAT_CSV") ->
         GCAMFAOSTAT_SUA
 
       add_to_output_meta(.df = GCAMFAOSTAT_SUA, "GCAMFAOSTAT_SUA")
@@ -191,7 +185,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
       rm(Bal_new_all)
 
       ## *FBSH and CB ----
-      FBSH_CB_wide %>%
+      FBSH_CBH_wide %>%
         gather_years() %>%
         FAOSTAT_AREA_RM_NONEXIST() %>%
         select(-element_code) %>%
@@ -200,15 +194,15 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
         FBSH_CB
 
       FBSH_CB %>%
-        mutate(unit = "1000 tonnes", value = value / 1000) %>%
+        mutate(unit = "1000 tonnes", value = value) %>%
         filter(year <= min(FAOSTAT_Hist_Year_FBS) - 1)  %>%
         filter(!is.na(year)) %>%
         spread(year, value) %>%
         add_title("GCAMFAOSTAT_FBSH_CB") %>%
         add_units("1000 tonnes") %>%
         add_comments("gcamfaostat Export CSV") %>%
-        add_precursors("FBSH_CB_wide",
-                       "xfaostat_L199_GCAMFAOSTAT_CSV") ->
+        add_precursors("FBSH_CBH_wide",
+                       "yfaostat_GCAM_GCAMFAOSTAT_CSV") ->
         GCAMFAOSTAT_FBSH_CB
 
       add_to_output_meta(.df = GCAMFAOSTAT_FBSH_CB, "GCAMFAOSTAT_FBSH_CB")
@@ -225,7 +219,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
         GZIP = T
       )
 
-      rm(FBSH_CB_wide, FBSH_CB)
+      rm(FBSH_CBH_wide, FBSH_CB)
 
       # Production and Area harvested ----
 
@@ -252,7 +246,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
         add_comments("gcamfaostat Export CSV") %>%
         add_precursors("QCL_CROP_PRIMARY",
                        "QCL_PROD",
-                       "xfaostat_L199_GCAMFAOSTAT_CSV") ->
+                       "yfaostat_GCAM_GCAMFAOSTAT_CSV") ->
         GCAMFAOSTAT_NonFodderProdArea
 
       add_to_output_meta(.df = GCAMFAOSTAT_NonFodderProdArea, "GCAMFAOSTAT_NonFodderProdArea")
@@ -279,7 +273,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
         add_units("1000 tonnes or 1000 ha") %>%
         add_comments("gcamfaostat Export CSV") %>%
         add_precursors("QCL_FODDERCROP",
-                       "xfaostat_L199_GCAMFAOSTAT_CSV") ->
+                       "yfaostat_GCAM_GCAMFAOSTAT_CSV") ->
         GCAMFAOSTAT_FodderProdArea
 
       add_to_output_meta(.df = GCAMFAOSTAT_FodderProdArea, "GCAMFAOSTAT_FodderProdArea")
@@ -297,7 +291,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
 
       rm(QCL_CROP_PRIMARY, QCL_FODDERCROP, QCL_PROD)
 
-      #**AnimalStocks ----
+      ##*AnimalStocks ----
       # Laying is not needed for now; live animal stocks and milk animals are used for water demand calculation in GCAM
       # 1171 "Animals live nes" and 1083 "Pigeons, other birds" are not available
 
@@ -315,7 +309,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
         add_comments("gcamfaostat Export CSV") %>%
         add_precursors("FAO_an_Stocks",
                        "FAO_an_Dairy_Stocks",
-                       "xfaostat_L199_GCAMFAOSTAT_CSV") ->
+                       "yfaostat_GCAM_GCAMFAOSTAT_CSV") ->
         GCAMFAOSTAT_AnimalStock
 
       add_to_output_meta(.df = GCAMFAOSTAT_AnimalStock, "GCAMFAOSTAT_AnimalStock")
@@ -333,7 +327,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
       )
 
       # Producer prices in quantity and value ----
-      # **Producer Price ----
+      ##*Producer Price ----
 
       QCL_PRIMARY_PROD_PV %>%
         filter(year >= MIN_HIST_PP_YEAR) %>%
@@ -342,7 +336,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
         add_units("Quantity in tonne; Value in US$") %>%
         add_comments("gcamfaostat Export CSV") %>%
         add_precursors("QCL_PRIMARY_PROD_PV",
-                       "xfaostat_L199_GCAMFAOSTAT_CSV") ->
+                       "yfaostat_GCAM_GCAMFAOSTAT_CSV") ->
         GCAMFAOSTAT_ProdPrice
 
       add_to_output_meta(.df = GCAMFAOSTAT_ProdPrice, "GCAMFAOSTAT_ProdPrice")
@@ -361,7 +355,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
       rm(QCL_PRIMARY_PROD_PV)
 
 
-      ###** GDP deflators ----
+      ##*GDP deflators ----
 
       FAO_GDP_Deflators <-
         PD %>% FAOSTAT_AREA_RM_NONEXIST(RM_AREA_CODE = NULL) %>%
@@ -370,7 +364,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
         add_units("Unitless") %>%
         add_comments("gcamfaostat Export CSV") %>%
         add_precursors("FAO_GDP_Deflators",
-                       "xfaostat_L199_GCAMFAOSTAT_CSV")
+                       "yfaostat_GCAM_GCAMFAOSTAT_CSV")
 
       add_to_output_meta(.df = FAO_GDP_Deflators, "FAO_GDP_Deflators")
 
@@ -407,7 +401,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
         add_units("calories per g or (fat or protein) percentage") %>%
         add_comments("gcamfaostat Export CSV") %>%
         add_precursors("SUA_food_macronutrient_rate",
-                       "xfaostat_L199_GCAMFAOSTAT_CSV") ->
+                       "yfaostat_GCAM_GCAMFAOSTAT_CSV") ->
         GCAMFAOSTAT_MacroNutrientRate
 
       add_to_output_meta(.df = GCAMFAOSTAT_MacroNutrientRate, "GCAMFAOSTAT_MacroNutrientRate")
@@ -426,7 +420,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
 
       # Forestry data output ----
 
-      #*ForProdTrade ----
+      ##*ForProdTrade ----
       For_Balance %>%
         filter(element != "Demand") %>%
         spread(year, value) %>%
@@ -434,7 +428,7 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
         add_units("m3") %>%
         add_comments("gcamfaostat Export CSV") %>%
         add_precursors("For_Balance",
-                       "xfaostat_L199_GCAMFAOSTAT_CSV") ->
+                       "yfaostat_GCAM_GCAMFAOSTAT_CSV") ->
         GCAMFAOSTAT_ForProdTrade
 
       add_to_output_meta(.df = GCAMFAOSTAT_ForProdTrade, "GCAMFAOSTAT_ForProdTrade")
@@ -450,14 +444,14 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
         out_dir = DIR_OUTPUT_CSV
       )
 
-      #*ForExpPrice ----
+      ##*ForExpPrice ----
       FO_RoundwoodProducts_Export_Q_V %>%
         spread(year, value) %>%
         add_title("GCAMFAOSTAT_ForExpPrice") %>%
         add_units("Export Quantity in m3; Export Value in 1000 US$") %>%
         add_comments("gcamfaostat Export CSV") %>%
         add_precursors("FO_RoundwoodProducts_Export_Q_V",
-                       "xfaostat_L199_GCAMFAOSTAT_CSV") ->
+                       "yfaostat_GCAM_GCAMFAOSTAT_CSV") ->
         GCAMFAOSTAT_ForExpPrice
 
       add_to_output_meta(.df = GCAMFAOSTAT_ForExpPrice, "GCAMFAOSTAT_ForExpPrice")
@@ -476,14 +470,14 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
 
       # Land Cover data output ----
 
-      #*LandCover ----
+      ##*LandCover ----
       RL_LandCover %>%
         spread(year, value) %>%
         add_title("GCAMFAOSTAT_LandCover") %>%
         add_units("1000 Ha") %>%
         add_comments("gcamfaostat Export CSV") %>%
         add_precursors("RL_LandCover",
-                       "xfaostat_L199_GCAMFAOSTAT_CSV") ->
+                       "yfaostat_GCAM_GCAMFAOSTAT_CSV") ->
         GCAMFAOSTAT_LandCover
 
       add_to_output_meta(.df = GCAMFAOSTAT_LandCover, "GCAMFAOSTAT_LandCover")
@@ -502,14 +496,14 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
 
       # Fertilizer data output----
 
-      #* N Fertilizer ----
+      ##* N Fertilizer ----
       RFN_ProdDemand %>%
         spread(year, value) %>%
         add_title("GCAMFAOSTAT_NFertilizer") %>%
         add_units("tonnes N") %>%
         add_comments("gcamfaostat Export CSV") %>%
         add_precursors("RFN_ProdDemand",
-                       "xfaostat_L199_GCAMFAOSTAT_CSV") ->
+                       "yfaostat_GCAM_GCAMFAOSTAT_CSV") ->
         GCAMFAOSTAT_NFertilizer
 
       add_to_output_meta(.df = GCAMFAOSTAT_NFertilizer, "GCAMFAOSTAT_NFertilizer")
@@ -526,30 +520,93 @@ module_xfaostat_L999_CSVExport <- function(command, ...) {
       )
 
 
+      # Macroeconomics output----
+      ## *Capital stock ----
+      CS %>%
+        FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL(SUDAN2012_MERGE = T) %>%
+        spread(year, value) %>%
+        add_title("GCAMFAOSTAT_CapitalStock") %>%
+        add_units("2015 USD") %>%
+        add_comments("gcamfaostat Export CSV") %>%
+        add_precursors("CS",
+                       "yfaostat_GCAM_GCAMFAOSTAT_CSV") ->
+        GCAMFAOSTAT_CapitalStock
+
+      assertthat::assert_that(grepl("2015", unique(GCAMFAOSTAT_CapitalStock$element)), msg = "Check FAO units")
+      add_to_output_meta(.df = GCAMFAOSTAT_CapitalStock, "GCAMFAOSTAT_CapitalStock")
+
       output_csv_data(
-        gcam_dataset = xfaostat_L199_GCAMFAOSTAT_CSV,
+        gcam_dataset = GCAMFAOSTAT_CapitalStock,
+        out_filename = "GCAMFAOSTAT_CapitalStock",
+        col_type_nonyear = "iiciccc",
+        title = "FAO macroeconomic metrics of capital shocks by country_year",
+        unit = "2015 USD",
+        description = "Data is preprocessed and generated by gcamfaostat",
+        code = "CS",
+        out_dir = DIR_OUTPUT_CSV)
+
+
+      ## *GDP ----
+
+      MK %>%
+        FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL(SUDAN2012_MERGE = T) %>%
+        # area_code_Belgium_Luxembourg had been separated in the data for before 2000
+        # so remove na
+        filter(!is.na(year)) %>%
+        spread(year, value) %>%
+        add_title("GCAMFAOSTAT_CapitalStock") %>%
+        add_units("2015 USD or nominal") %>%
+        add_comments("gcamfaostat Export CSV") %>%
+        add_precursors("MK",
+                       "yfaostat_GCAM_GCAMFAOSTAT_CSV") ->
+        GCAMFAOSTAT_GDP
+
+      assertthat::assert_that(grepl("2015", unique(GCAMFAOSTAT_GDP$element)) %>% any(), msg = "Check FAO units")
+      add_to_output_meta(.df = GCAMFAOSTAT_GDP, "GCAMFAOSTAT_GDP")
+
+      output_csv_data(
+        gcam_dataset = GCAMFAOSTAT_GDP,
+        out_filename = "GCAMFAOSTAT_GDP",
+        col_type_nonyear = "iiciccc",
+        title = "FAO real and nominal GDP since 1970",
+        unit = "2015 million USD or nominal million USD",
+        code = "MK",
+        description = "Data is preprocessed and generated by gcamfaostat.",
+        out_dir = DIR_OUTPUT_CSV,
+        GZIP = F)
+
+
+      # GCAMFAOSTAT_metadata ----
+      output_csv_data(
+        gcam_dataset = yfaostat_GCAM_GCAMFAOSTAT_CSV,
         out_filename = "GCAMFAOSTAT_metadata",
         col_type_nonyear = "ciic",
         title = "Information of dataset exported by gcamfaostat",
         unit = "NA",
-        description = "Data is preprocessed and generated by gcamfaostat",
+        description = "Data is preprocessed and generated by gcamfaostat v1.0.1",
         code = "NA",
-        out_dir = DIR_OUTPUT_CSV
-      )
-
+        out_dir = DIR_OUTPUT_CSV)
 
       }
+    else {
 
-    xfaostat_L199_GCAMFAOSTAT_CSV %>%
+        lapply(MODULE_OUTPUTS[MODULE_OUTPUTS %>% names() == "CSV"],
+               function(output){
+                 assign(output, empty_data() %>%
+                          add_title(output) %>%
+                          add_precursors("yfaostat_GCAM_GCAMFAOSTAT_CSV"), envir =  Curr_Envir)
+               })
+        }
+
+    yfaostat_GCAM_GCAMFAOSTAT_CSV %>%
       add_title("Export CSV to DIR_OUTPUT_CSV") %>%
       add_units("NA") %>%
       add_comments("Export CSV") %>%
       add_precursors(MODULE_INPUTS) ->
-      xfaostat_L199_GCAMFAOSTAT_CSV
+      yfaostat_GCAM_GCAMFAOSTAT_CSV
 
 
     return_data(MODULE_OUTPUTS)
-
 
   } else {
     stop("Unknown command")

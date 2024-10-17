@@ -1,0 +1,269 @@
+# File: Mapping_FAO_iso_reg.csv
+# Title: Mapping of FAO countries  ISO codes
+# Units: NA
+# Description: Note that both French Guiana and French Guyana are added for now and  Saint Helena,, Ascension and Tristan da Cunha is added. Area_code should be used later,
+# region_ID is model-specific region mapping. It is set to FAO area_code now. It can be used to remove intraregional trade in compiling the new FBS
+# Last update: 06-15-2024 (XZ)
+# Column types: cici
+# ----------
+FAO_country,area_code,iso,region_ID
+Armenia,1,arm,1
+Afghanistan,2,afg,2
+Albania,3,alb,3
+Algeria,4,dza,4
+American Samoa,5,asm,5
+Andorra,6,and,6
+Angola,7,ago,7
+Antigua and Barbuda,8,atg,8
+Argentina,9,arg,9
+Australia,10,aus,10
+Austria,11,aut,11
+Bahamas,12,bhs,12
+Bahrain,13,bhr,13
+Barbados,14,brb,14
+Belgium-Luxembourg,15,lux,15
+Bangladesh,16,bgd,16
+Bermuda,17,bmu,17
+Bhutan,18,btn,18
+Bolivia (Plurinational State of),19,bol,19
+Botswana,20,bwa,20
+Brazil,21,bra,21
+Aruba,22,abw,22
+Belize,23,blz,23
+Solomon Islands,25,slb,25
+Brunei Darussalam,26,brn,26
+Bulgaria,27,bgr,27
+Myanmar,28,mmr,28
+Burundi,29,bdi,29
+Cameroon,32,cmr,32
+Canada,33,can,33
+Cabo Verde,35,cpv,35
+Cayman Islands,36,cym,36
+Central African Republic,37,caf,37
+Sri Lanka,38,lka,38
+Chad,39,tcd,39
+Chile,40,chl,40
+"China, mainland",41,chn,41
+Christmas Island,42,cxr,42
+Colombia,44,col,44
+Comoros,45,com,45
+Congo,46,cog,46
+Cook Islands,47,cok,47
+Costa Rica,48,cri,48
+Cuba,49,cub,49
+Cyprus,50,cyp,50
+Czechoslovakia,51,cze,51
+Czechoslovakia,51,svk,51
+Azerbaijan,52,aze,52
+Benin,53,ben,53
+Denmark,54,dnk,54
+Dominica,55,dma,55
+Dominican Republic,56,dom,56
+Belarus,57,blr,57
+Ecuador,58,ecu,58
+Egypt,59,egy,59
+El Salvador,60,slv,60
+Equatorial Guinea,61,gnq,61
+Ethiopia PDR,62,eth,62
+Estonia,63,est,63
+Faroe Islands,64,fro,64
+Falkland Islands (Malvinas),65,flk,65
+Fiji,66,fji,66
+Finland,67,fin,67
+France,68,fra,68
+French Guiana,69,guf,69
+French Polynesia,70,pyf,70
+Djibouti,72,dji,72
+Georgia,73,geo,73
+Gabon,74,gab,74
+Gambia,75,gmb,75
+Germany,79,deu,79
+Bosnia and Herzegovina,80,bih,80
+Ghana,81,gha,81
+Gibraltar,82,gib,82
+Kiribati,83,kir,83
+Greece,84,grc,84
+Greenland,85,grl,85
+Grenada,86,grd,86
+Guadeloupe,87,glp,87
+Guam,88,gum,88
+Guatemala,89,gtm,89
+Guinea,90,gin,90
+Guyana,91,guy,91
+Haiti,93,hti,93
+Honduras,95,hnd,95
+"China, Hong Kong SAR",96,hkg,96
+Hungary,97,hun,97
+Croatia,98,hrv,98
+Iceland,99,isl,99
+India,100,ind,100
+Indonesia,101,idn,101
+Iran (Islamic Republic of),102,irn,102
+Iraq,103,irq,103
+Ireland,104,irl,104
+Israel,105,isr,105
+Italy,106,ita,106
+Cote dIvoire,107,civ,107
+Kazakhstan,108,kaz,108
+Jamaica,109,jam,109
+Japan,110,jpn,110
+Jordan,112,jor,112
+Kyrgyzstan,113,kgz,113
+Kenya,114,ken,114
+Cambodia,115,khm,115
+Democratic Peoples Republic of Korea,116,prk,116
+Republic of Korea,117,kor,117
+Kuwait,118,kwt,118
+Latvia,119,lva,119
+Lao Peoples Democratic Republic,120,lao,120
+Lebanon,121,lbn,121
+Lesotho,122,lso,122
+Liberia,123,lbr,123
+Libya,124,lby,124
+Liechtenstein,125,lie,125
+Lithuania,126,ltu,126
+Marshall Islands,127,mhl,127
+"China, Macao SAR",128,mac,128
+Madagascar,129,mdg,129
+Malawi,130,mwi,130
+Malaysia,131,mys,131
+Maldives,132,mdv,132
+Mali,133,mli,133
+Malta,134,mlt,134
+Martinique,135,mtq,135
+Mauritania,136,mrt,136
+Mauritius,137,mus,137
+Mexico,138,mex,138
+Mongolia,141,mng,141
+Montserrat,142,msr,142
+Morocco,143,mar,143
+Mozambique,144,moz,144
+Micronesia (Federated States of),145,fsm,145
+Republic of Moldova,146,mda,146
+Namibia,147,nam,147
+Nauru,148,nru,148
+Nepal,149,npl,149
+Netherlands (Kingdom of the),150,nld,150
+Netherlands Antilles,151,ant,151
+New Caledonia,153,ncl,153
+North Macedonia,154,mkd,154
+Vanuatu,155,vut,155
+New Zealand,156,nzl,156
+Nicaragua,157,nic,157
+Niger,158,ner,158
+Nigeria,159,nga,159
+Niue,160,niu,160
+Norfolk Island,161,nfk,161
+Norway,162,nor,162
+Northern Mariana Islands,163,mnp,163
+Pacific Islands Trust Territory,164,fsm,164
+Pakistan,165,pak,165
+Panama,166,pan,166
+Czechia,167,cze,167
+Papua New Guinea,168,png,168
+Paraguay,169,pry,169
+Peru,170,per,170
+Philippines,171,phl,171
+Poland,173,pol,173
+Portugal,174,prt,174
+Guinea-Bissau,175,gnb,175
+Timor-Leste,176,tls,176
+Puerto Rico,177,pri,177
+Eritrea,178,eri,178
+Qatar,179,qat,179
+Palau,180,plw,180
+Zimbabwe,181,zwe,181
+Reunion,182,reu,182
+Romania,183,rom,183
+Rwanda,184,rwa,184
+Russian Federation,185,rus,185
+Serbia and Montenegro,186,scg,186
+Serbia and Montenegro,186,scg,186
+Serbia and Montenegro,186,scg,186
+"Saint Helena, Ascension and Tristan da Cunha",187,shn,187
+Saint Kitts and Nevis,188,kna,188
+Saint Lucia,189,lca,189
+Saint Pierre and Miquelon,190,spm,190
+Saint Vincent and the Grenadines,191,vct,191
+San Marino,192,smr,192
+Sao Tome and Principe,193,stp,193
+Saudi Arabia,194,sau,194
+Senegal,195,sen,195
+Seychelles,196,syc,196
+Sierra Leone,197,sle,197
+Slovenia,198,svn,198
+Slovakia,199,svk,199
+Singapore,200,sgp,200
+Somalia,201,som,201
+South Africa,202,zaf,202
+Spain,203,esp,203
+Western Sahara,205,esh,205
+Sudan (former),206,sdn,206
+Suriname,207,sur,207
+Tajikistan,208,tjk,208
+Eswatini,209,swz,209
+Sweden,210,swe,210
+Switzerland,211,che,211
+Syrian Arab Republic,212,syr,212
+Turkmenistan,213,tkm,213
+"China, Taiwan Province of",214,twn,214
+United Republic of Tanzania,215,tza,215
+Thailand,216,tha,216
+Togo,217,tgo,217
+Tokelau,218,tkl,218
+Tonga,219,ton,219
+Trinidad and Tobago,220,tto,220
+Oman,221,omn,221
+Tunisia,222,tun,222
+Turkiye,223,tur,223
+Turks and Caicos Islands,224,tca,224
+United Arab Emirates,225,are,225
+Uganda,226,uga,226
+Tuvalu,227,tuv,227
+USSR,228,arm,228
+USSR,228,aze,228
+USSR,228,blr,228
+USSR,228,est,228
+USSR,228,geo,228
+USSR,228,kaz,228
+USSR,228,kgz,228
+USSR,228,ltu,228
+USSR,228,lva,228
+USSR,228,mda,228
+USSR,228,rus,228
+USSR,228,tjk,228
+USSR,228,tkm,228
+USSR,228,ukr,228
+USSR,228,uzb,228
+United Kingdom of Great Britain and Northern Ireland,229,gbr,229
+Ukraine,230,ukr,230
+United States of America,231,usa,231
+Burkina Faso,233,bfa,233
+Uruguay,234,ury,234
+Uzbekistan,235,uzb,235
+Venezuela (Bolivarian Republic of),236,ven,236
+Viet Nam,237,vnm,237
+Ethiopia,238,eth,238
+British Virgin Islands,239,vgb,239
+United States Virgin Islands,240,vir,240
+Wallis and Futuna Islands,243,wlf,243
+Samoa,244,wsm,244
+Yugoslav SFR,248,bih,248
+Yugoslav SFR,248,hrv,248
+Yugoslav SFR,248,mkd,248
+Yugoslav SFR,248,mne,248
+Yugoslav SFR,248,srb,248
+Yugoslav SFR,248,svn,248
+Yemen,249,yem,249
+Democratic Republic of the Congo,250,cod,250
+Zambia,251,zmb,251
+Belgium,255,bel,255
+Luxembourg,256,lux,256
+Channel Islands,259,chi,259
+Isle of Man,264,imn,264
+Mayotte,270,myt,270
+Serbia,272,srb,272
+Montenegro,273,mne,273
+Sudan,276,sdn,276
+South Sudan,277,ssd,277
+Palestine,299,pse,299

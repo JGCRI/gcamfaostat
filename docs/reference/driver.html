@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gcamfaostat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -95,91 +95,55 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">driver</span><span class="op">(</span></span>
-<span>  all_data <span class="op">=</span> <span class="fu"><a href="empty_data.html">empty_data</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  stop_before <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  stop_after <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  return_inputs_of <span class="op">=</span> <span class="va">stop_before</span>,</span>
-<span>  return_outputs_of <span class="op">=</span> <span class="va">stop_after</span>,</span>
-<span>  return_data_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">union</a></span><span class="op">(</span><span class="fu"><a href="inputs_of.html">inputs_of</a></span><span class="op">(</span><span class="va">return_inputs_of</span><span class="op">)</span>, <span class="fu"><a href="outputs_of.html">outputs_of</a></span><span class="op">(</span><span class="va">return_outputs_of</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  return_data_map_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  write_outputs <span class="op">=</span> <span class="op">!</span><span class="va">return_data_map_only</span>,</span>
-<span>  write_xml <span class="op">=</span> <span class="va">write_outputs</span>,</span>
-<span>  outdir <span class="op">=</span> <span class="va">OUTPUTS_DIR</span>,</span>
-<span>  xmldir <span class="op">=</span> <span class="va">XML_DIR</span>,</span>
-<span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  user_modifications <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  xml_suffix <span class="op">=</span> <span class="cn">NULL</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">driver</span><span class="op">(</span>
+  all_data <span class="op">=</span> <span class="fu"><a href="empty_data.html">empty_data</a></span><span class="op">(</span><span class="op">)</span>,
+  stop_before <span class="op">=</span> <span class="cn">NULL</span>,
+  stop_after <span class="op">=</span> <span class="cn">NULL</span>,
+  return_inputs_of <span class="op">=</span> <span class="va">stop_before</span>,
+  return_outputs_of <span class="op">=</span> <span class="va">stop_after</span>,
+  return_data_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">union</a></span><span class="op">(</span><span class="fu"><a href="inputs_of.html">inputs_of</a></span><span class="op">(</span><span class="va">return_inputs_of</span><span class="op">)</span>, <span class="fu"><a href="outputs_of.html">outputs_of</a></span><span class="op">(</span><span class="va">return_outputs_of</span><span class="op">)</span><span class="op">)</span>,
+  return_data_map_only <span class="op">=</span> <span class="cn">FALSE</span>,
+  write_outputs <span class="op">=</span> <span class="cn">FALSE</span>,
+  write_xml <span class="op">=</span> <span class="va">write_outputs</span>,
+  outdir <span class="op">=</span> <span class="va">OUTPUTS_DIR</span>,
+  xmldir <span class="op">=</span> <span class="va">XML_DIR</span>,
+  quiet <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>all_data</dt>
 <dd><p>Data to be pre-loaded into data system</p></dd>
-
-
 <dt>stop_before</dt>
 <dd><p>Stop immediately before this chunk (character)</p></dd>
-
-
 <dt>stop_after</dt>
 <dd><p>Stop immediately after this chunk  (character)</p></dd>
-
-
 <dt>return_inputs_of</dt>
 <dd><p>Return the data objects that are inputs for these chunks (character).
 If <code>stop_before</code> is specified, by default that chunk's inputs are returned</p></dd>
-
-
 <dt>return_outputs_of</dt>
 <dd><p>Return the data objects that are output from these chunks (character)
 If <code>stop_after</code> is specified, by default that chunk's outputs are returned</p></dd>
-
-
 <dt>return_data_names</dt>
 <dd><p>Return these data objects (character). By default this is the union of <code>return_inputs_of</code> and <code>return_outputs_of</code></p></dd>
-
-
 <dt>return_data_map_only</dt>
 <dd><p>Return only the precursor information? (logical) This overrides
 the other <code>return_*</code> parameters above</p></dd>
-
-
 <dt>write_outputs</dt>
 <dd><p>Write all chunk outputs to disk?</p></dd>
-
-
 <dt>write_xml</dt>
 <dd><p>Write XML Batch chunk outputs to disk?</p></dd>
-
-
 <dt>outdir</dt>
 <dd><p>Location to write output data (ignored if <code>write_outputs</code> is <code>FALSE</code>)</p></dd>
-
-
 <dt>xmldir</dt>
 <dd><p>Location to write output XML (ignored if <code>write_outputs</code> is <code>FALSE</code>)</p></dd>
-
-
 <dt>quiet</dt>
 <dd><p>Suppress output?</p></dd>
-
-
-<dt>user_modifications</dt>
-<dd><p>A list of function names which implement a user mod chunk. See vignettes/usermod_vignette.Rmd for more details and examples.</p></dd>
-
-
-<dt>xml_suffix</dt>
-<dd><p>A suffix to be appended at the end of all XML file name if not null.  Such a feature is
-useful when using <code>user_modifications</code> to generate alternative scenarios.</p></dd>
-
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>A list of all built data (or a data map tibble if requested).</p>
+    <p>A list of all built data (or a data map tibble if requested).</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -205,7 +169,7 @@ the relevant wiki page at <a href="https://github.com/bpbond/gcamdata/wiki/Drive
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

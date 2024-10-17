@@ -18,17 +18,20 @@
 module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Prices_E_All_Data_Normalized",
-      FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Deflators_E_All_Data_Normalized",
-      FAOSTAT_FILE = "aglu/FAO/FAOSTAT/Population_E_All_Data_Normalized",
-      FILE = "aglu/FAO/FAOSTAT/Other_supplementary/GDP_deflator_Taiwan",
+    c(FAOSTAT_FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Prices_E_All_Data_Normalized"),
+      FAOSTAT_FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Deflators_E_All_Data_Normalized"),
+      FAOSTAT_FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Population_E_All_Data_Normalized"),
+      FAOSTAT_FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Investment_CapitalStock_E_All_Data_Normalized"),
+      FAOSTAT_FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Macro-Statistics_Key_Indicators_E_All_Data_Normalized"),
+      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Other_supplementary/GDP_deflator_Taiwan"),
       "QCL_area_code_map")
-
 
     MODULE_OUTPUTS <-
     c("PP_wide",          # Producer prices
       "PD",               # GDP deflator
-      "OA")               # Population
+      "OA",               # Population
+      "CS",               # Capital stock
+      "MK")               # Macro-Statistics (GDP)
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -52,6 +55,8 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
       PP_wide <- extract_prebuilt_data("PP_wide")
       PD <- extract_prebuilt_data("PD")
       OA <- extract_prebuilt_data("OA")
+      CS <- extract_prebuilt_data("CS")
+      MK <- extract_prebuilt_data("MK")
 
     } else {
 
@@ -64,9 +69,17 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
 
     # *[PP] Producer price ----
 
-    FAOSTAT_load_raw_data(DATASETCODE = "PP", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT, .Envir = Curr_Envir)
+    FAOSTAT_load_raw_data(DATASETCODE = "PP", .Envir = Curr_Envir)
     # check data
     PP %>% distinct(element, element_code, unit)
+
+    assertthat:: assert_that(
+      PP %>% distinct(element, element_code, unit) %>%
+        filter(element_code == 5539) %>% pull(element) == "Producer Price Index (2014-2016 = 100)",
+      msg = "Price index element changed; please check and update."
+    )
+    PriceIndexYear = 2015
+
 
     PP %>%
       filter(
@@ -95,7 +108,7 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
                  pp_baseindex = `Producer Price Index (2014-2016 = 100)`) %>%
           filter(!is.na(pp_base)) %>%
           group_by(area, area_code, item) %>%
-          filter(year == 2015) %>% within(rm(year)) %>%
+          filter(year == PriceIndexYear) %>% within(rm(year)) %>%
           ungroup(),
         by = c("area_code", "area", "item_code", "item")
       ) %>% mutate(
@@ -125,14 +138,15 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
       add_units("USD/tonne") %>%
       add_comments("Preprocessed FAOSTAT producer prices") %>%
       add_precursors("QCL_area_code_map",
-                     "aglu/FAO/FAOSTAT/Prices_E_All_Data_Normalized") ->
+                     file.path(DIR_RAW_DATA_FAOSTAT, "Prices_E_All_Data_Normalized")) ->
       PP_wide
+
     verify_identical_prebuilt(PP_wide)
 
     # [PD] FAO_GDP_deflators ----
     #**************************************
 
-    FAOSTAT_load_raw_data(DATASETCODE = "PD", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT, .Envir = Curr_Envir)
+    FAOSTAT_load_raw_data(DATASETCODE = "PD", .Envir = Curr_Envir)
     # read in Taiwan values as FAO does not have Taiwan price data
     # GDP_deflator_Taiwan
 
@@ -178,8 +192,8 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
       add_units("Unitless") %>%
       add_comments("Preprocessed FAOSTAT regional gdp deflators") %>%
       add_precursors("QCL_area_code_map",
-                     "aglu/FAO/FAOSTAT/Deflators_E_All_Data_Normalized",
-                     "aglu/FAO/FAOSTAT/Other_supplementary/GDP_deflator_Taiwan") ->
+                     file.path(DIR_RAW_DATA_FAOSTAT, "Deflators_E_All_Data_Normalized"),
+                     file.path(DIR_RAW_DATA_FAOSTAT, "Other_supplementary/GDP_deflator_Taiwan")) ->
       PD
 
     verify_identical_prebuilt(PD)
@@ -187,7 +201,7 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
 
     # *[OA]: Population ----
 
-    FAOSTAT_load_raw_data(DATASETCODE = "OA", DATA_FOLDER = DIR_RAW_DATA_FAOSTAT, .Envir = Curr_Envir)
+    FAOSTAT_load_raw_data(DATASETCODE = "OA", .Envir = Curr_Envir)
 
     OA %>% distinct(element, element_code)
     OA %>% distinct(item, item_code)
@@ -212,10 +226,78 @@ module_xfaostat_L101_RawDataPreProc2_PP_PD_OA <- function(command, ...) {
       add_title("FAO population") %>%
       add_units("tonne") %>%
       add_comments("Preprocessed FAO OA")  %>%
-      add_precursors("aglu/FAO/FAOSTAT/Population_E_All_Data_Normalized") ->
+      add_precursors(file.path(DIR_RAW_DATA_FAOSTAT, "Population_E_All_Data_Normalized")) ->
       OA
 
     verify_identical_prebuilt(OA)
+
+    # *[CS]: Capital stock ----
+    FAOSTAT_load_raw_data(DATASETCODE = "CS", .Envir = Curr_Envir)
+
+    #CS %>% distinct(element, element_code)
+    #CS %>% distinct(item, item_code)
+    # check area mapping
+    # CS %>% filter(area_code < 400) %>%
+    #   distinct(area, area_code) %>% full_join(QCL_area_code_map, by = c("area_code"))
+
+    CS %>% filter(area_code %in% QCL_area_code,
+                  # only keep regions with production
+                  element_code == 6184 # Value US$, 2015 prices
+    )  %>%
+      select(area_code,
+             area,
+             item_code,
+             item,
+             element_code,
+             element,
+             year,
+             value,
+             unit) %>%
+      rm_accent("item", "area") -> CS1
+
+    ### output OA ----
+    CS1 %>%
+      add_title("FAO capiral stock") %>%
+      add_units("2015 USD") %>%
+      add_comments("Preprocessed FAO CS")  %>%
+      add_precursors(file.path(DIR_RAW_DATA_FAOSTAT, "Investment_CapitalStock_E_All_Data_Normalized")) ->
+      CS
+
+    verify_identical_prebuilt(CS)
+
+
+    # *[MK]: macroeconomic stat (GDP) ----
+    FAOSTAT_load_raw_data(DATASETCODE = "MK", .Envir = Curr_Envir)
+
+    #MK %>% distinct(element, element_code)
+    #MK %>% distinct(item, item_code)
+
+    MK %>%
+      filter(
+        area_code < 350, # rm aggregated
+        element_code %in% c(6110, 6184),
+        item_code == 22008)  %>%
+      select(area_code,
+             area,
+             item_code,
+             item,
+             element_code,
+             element,
+             year,
+             value,
+             unit) %>%
+      rm_accent("item", "area") -> MK1
+
+    ### output MK ----
+      MK1 %>%
+      add_title("FAO GDP") %>%
+      add_units("2015 million USD or nominal million USD") %>%
+      add_comments("Preprocessed FAO MK")  %>%
+      add_precursors(file.path(DIR_RAW_DATA_FAOSTAT, "Macro-Statistics_Key_Indicators_E_All_Data_Normalized")) ->
+      MK
+
+    verify_identical_prebuilt(MK)
+
     }
 
     return_data(MODULE_OUTPUTS)

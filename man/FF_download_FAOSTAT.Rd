@@ -6,7 +6,7 @@
 \usage{
 FF_download_FAOSTAT(
   DATASETCODE,
-  DATA_FOLDER = DIR_RAW_DATA_FAOSTAT,
+  DATA_FOLDER = file.path("inst/extdata", DIR_RAW_DATA_FAOSTAT),
   OverWrite = FALSE
 )
 }

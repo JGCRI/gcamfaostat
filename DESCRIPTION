@@ -1,8 +1,8 @@
 Package: gcamfaostat
 Type: Package
 Title: Prepare, process, and synthesize FAOSTAT data for global agroeconomic and multisector dynamic modeling
-Version: 1.0.0
-Date: 2023-05-06
+Version: 1.0.1
+Date: 2024-10-17
 Authors@R: c(person("Xin", "Zhao", email = "xin.zhao@pnnl.gov", role = c("cre", "aut"), comment = c(ORCID = "0000-0002-1801-4393")),
             person("Maksym", "Chepeliev", role = "aut", comment = c(ORCID = "0000-0001-8585-2314")),
             person("Pralit", "Patel", role = "aut", comment = c(ORCID = "0000-0003-3992-1061")),
