@@ -52,6 +52,8 @@ reference:
   - title: gcamfaostat modules
     contents:
       - starts_with("module_xfaostat_")
+      - starts_with("module_yfaostat_")
+      - starts_with("module_yextension_")
   - title: gcamdata AgLU modules
     contents:    
       - starts_with("module_aglu_")
@@ -77,6 +79,7 @@ reference:
       - Moving_average      
       - downscale_FAO_country
       - treemap_wrapper
+      - chord_wrapper
   - title: Prebuilt data
     contents:
       - GCAM_DATA_MAP
