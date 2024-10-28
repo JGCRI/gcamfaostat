@@ -9,7 +9,7 @@ GCAM_land %>%
   gather_years() %>%
   filter(year == 2020, grepl("forest|shrub|grass", LandLeaf)) %>%
   mutate(LandLeaf = gsub("\\(|\\)", "", LandLeaf)) %>%
-  spread(LandLeaf, value) %>%
+  spread(LandLeaf, value, fill = 0) %>%
   transmute(region, year, GCAM_FOR_MGMT = `forest managed`, GCAM_FOR_UnMGMT = `forest unmanaged`,
             GCAM_FOR = GCAM_FOR_MGMT + GCAM_FOR_UnMGMT,  GCAM_shrubs = shrubs, GCAM_grass = grass) %>%
   left_join(
@@ -23,6 +23,7 @@ GCAM_land %>%
 A %>%
   group_by() %>%
   summarize(FAO_FOR = sum(FAO_FOR, na.rm = T),
+            GCAM_shrubs = sum(GCAM_shrubs, na.rm = T),
             GCAM_FOR = sum(GCAM_FOR))
 
 library(ggplot2)
@@ -45,7 +46,23 @@ A %>%
        fill = "Source") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) -> p
 
-ggsave(plot = p,filename =  "ForestAreaCompare.png", width = 11, height = 10)
+ggsave(plot = p,filename =  "data-raw/ForestAreaCompare.png", width = 11, height = 10)
+
+
+A %>%
+  select(region, year, FAO_FOR, GCAM_FOR, GCAM_shrubs) %>%
+  mutate(Diff = GCAM_FOR + GCAM_shrubs - FAO_FOR) %>%
+  #gather(source, value, FAO_FOR, GCAM_FOR) %>%
+  ggplot() +
+  geom_bar(aes(x = reorder(region, Diff), y = FAO_FOR, fill = "FAO"), stat = "identity", color = "black") +
+  geom_point(aes(x = region, y = GCAM_FOR + GCAM_shrubs, fill = "GCAM"), shape = 21, size = 4 ) +
+  theme_bw() +
+  labs(x = "Region", y = "Thous km2",
+       title = "Forest area: GCAM (forest + shrub) vs. FAO", subtitle = "Global: GCAM (4.17 Bha) vs. FAO (4.05 Bha) ",
+       fill = "Source") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) -> p
+
+ggsave(plot = p,filename =  "data-raw/ForestShrubAreaCompare.png", width = 11, height = 10)
 
 
 
