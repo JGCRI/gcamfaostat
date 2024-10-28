@@ -12,14 +12,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="News">
-<meta property="og:description" content="gcamfaostat">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-article">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -33,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gcamfaostat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -42,15 +41,15 @@
 <li>
   <a href="../index.html">
     <span class="fa fa-home"></span>
-     
+
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fas fa-book"></span>
-     
+
     Vignettes
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -71,21 +70,21 @@
 <li>
   <a href="../articles/vignette_visualization.html">
     <span class="fa fa-file-image-o"></span>
-     
+
     Visualization
   </a>
 </li>
 <li>
   <a href="../reference/index.html">
     <span class="fa fa-file-code-o"></span>
-     
+
     Reference
   </a>
 </li>
 <li>
   <a href="../articles/vignette_news.html">
     <span class="fa fa-newspaper-o"></span>
-     
+
     News
   </a>
 </li>
@@ -94,7 +93,7 @@
 <li>
   <a href="https://github.com/jgcri/gcamfaostat/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -105,29 +104,62 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>News</h1>
             
-            <h4 data-toc-skip class="date">2024-05-23</h4>
+            <h4 data-toc-skip class="date">2024-10-28</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_news.Rmd" class="external-link"><code>vignettes/vignette_news.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/main/vignettes/vignette_news.Rmd" class="external-link"><code>vignettes/vignette_news.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_news.Rmd</code></div>
 
     </div>
 
     
     
-<p>2023-2-11</p>
+<div class="section level2">
+<h2 id="updates">2024 updates<a class="anchor" aria-label="anchor" href="#updates"></a>
+</h2>
+<p>2024-10-17 * Merge the BYU and PCE branches into master.</p>
+<div class="section level3">
+<h3 id="structure-change-to-make-the-package-accessible-to-all-modelers-not-just-gcam">Structure change to make the package accessible to all modelers (not
+just GCAM)<a class="anchor" aria-label="anchor" href="#structure-change-to-make-the-package-accessible-to-all-modelers-not-just-gcam"></a>
+</h3>
+<ul>
+<li>GCAM specific chunks are added in <code>DISABLED_MODULES</code> in
+<code>constants.R</code>.<br>
+</li>
+<li>
+<code>write_csv_model</code> is added to
+<code><a href="../reference/driver_drake.html">driver_drake()</a></code>. If <code>write_csv_model = GCAM</code>,
+related CSV will be exported to
+<code>output/gcamfaostat_GCAM</code>.<br>
+</li>
+<li>Prepare for the next release</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="raw-data-archive-2024">
+<strong>Raw data archive 2024</strong><a class="anchor" aria-label="anchor" href="#raw-data-archive-2024"></a>
+</h3>
+<ul>
+<li>Input data updated to include 2022. Both remote archive and prebuilt
+data have been updated.<br>
+</li>
+<li>The source data downloaded from FAOSTAT is archived at a <a href="https://zenodo.org/deposit/13941470" class="external-link">Zenodo repository</a>.</li>
+</ul>
+<p>2024-4-22 # <strong>JOSS Published</strong> * gcamfaostat v1.0.0 *
+doi.org/10.21105/joss.06388</p>
+<p>2024-2-11</p>
 <ul>
 <li>Update trade related figures in <a href="https://jgcri.github.io/gcamfaostat/articles/vignette_use_cases.html#faostat-raw-data-and-processing-output-updates">Cast
 Study</a>
 </li>
 </ul>
-<p>2023-1-28</p>
+<p>2024-1-28</p>
 <ul>
 <li>The first version of gcamfaostat is still being processed/reviewed
 at JOSS</li>
@@ -142,8 +174,10 @@ documentation</li>
 </li>
 <li>Possibly adding IFPRI SPAM data in the processing chain</li>
 </ul>
+</div>
+</div>
 <div class="section level2">
-<h2 id="november-2023-updates">November 2023 updates<a class="anchor" aria-label="anchor" href="#november-2023-updates"></a>
+<h2 id="updates-1">2023 updates<a class="anchor" aria-label="anchor" href="#updates-1"></a>
 </h2>
 </div>
 <div class="section level2">
@@ -191,10 +225,9 @@ ToDo before JOSS submission</p>
 <li>
 <code>gcamfaostat</code> moved to the JGCRI GitHub account</li>
 </ul>
-</div>
-<div class="section level2">
-<h2 id="faostat-commodity-balance-cb-updates">FAOSTAT Commodity Balance (CB) updates<a class="anchor" aria-label="anchor" href="#faostat-commodity-balance-cb-updates"></a>
-</h2>
+<div class="section level3">
+<h3 id="faostat-commodity-balance-cb-updates">FAOSTAT Commodity Balance (CB) updates<a class="anchor" aria-label="anchor" href="#faostat-commodity-balance-cb-updates"></a>
+</h3>
 <p>2023-09-25 * Good news: It seems FAOSTAT just made the updated
 Commodity Balance (CB) dataset available. Previously, it only includes
 data up to 2013, i.e., consistent with FBSH. It is now adding a new
@@ -206,9 +239,9 @@ download seems not enabled yet. + Dataset code will likely change. CB
 seems reserved for the new data and the old one might be CBH. * Stay
 tuned.</p>
 </div>
-<div class="section level2">
-<h2 id="goals-for-the-next-version-include">Goals for the next version include:<a class="anchor" aria-label="anchor" href="#goals-for-the-next-version-include"></a>
-</h2>
+<div class="section level3">
+<h3 id="goals-for-the-next-version-include">Goals for the next version include:<a class="anchor" aria-label="anchor" href="#goals-for-the-next-version-include"></a>
+</h3>
 <p>2023-09-25</p>
 <ul>
 <li>Improve the documentation and the visualization of the
@@ -230,20 +263,19 @@ FAO Food Balance Sheet (FBS).</li>
 with the FBS data compiled using FAOSTAT method (never disclosed).</li>
 </ul>
 </div>
-<div class="section level2">
-<h2 id="raw-data-archive">
-<strong>Raw data archive</strong><a class="anchor" aria-label="anchor" href="#raw-data-archive"></a>
-</h2>
+<div class="section level3">
+<h3 id="raw-data-archive-2023">
+<strong>Raw data archive 2023</strong><a class="anchor" aria-label="anchor" href="#raw-data-archive-2023"></a>
+</h3>
 <p>2023-08-19</p>
 <p>The source data downloaded from FAOSTAT is archived at a <a href="https://zenodo.org/deposit/8260225" class="external-link">Zenodo repository</a>.</p>
+</div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+      </div>
 
 </div>
 
@@ -256,16 +288,16 @@ with the FBS data compiled using FAOSTAT method (never disclosed).</li>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer>
 </div>
 
-  
 
 
-  
+
+
 
   </body>
 </html>
