@@ -252,11 +252,12 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
                extraction_rate = if_else(is.na(extraction_rate) | extraction_rate == 0, extraction_rate_world, extraction_rate),
                # Using minimum extraction rate here as an upper threshold to avoid extremely large scaling later
                extraction_rate = pmax(extraction_rate, minimium_extraction_rate),
+               extraction_rate_trade = sum(Export) / sum(Export / extraction_rate),
+               extraction_rate_trade = if_else(is.na(extraction_rate_trade), extraction_rate, extraction_rate_trade),
                # Set rate to Inf when Processed == 0
                PositiveProd_ZeroProc = Production > 0 & Processed == 0,
-               extraction_rate = if_else(PositiveProd_ZeroProc == TRUE, Inf, extraction_rate),
-               extraction_rate_trade = sum(Export) / sum(Export / extraction_rate),
-               extraction_rate_trade = if_else(is.na(extraction_rate_trade), extraction_rate, extraction_rate_trade)) %>%
+               extraction_rate = if_else(PositiveProd_ZeroProc == TRUE, Inf, extraction_rate)
+               ) %>%
         ungroup() %>%
         group_by(APE_comm, region_ID) %>%
         # Calculate lagged extraction_rate but replace NA with current rate (first period)
@@ -479,17 +480,39 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
 
         .df2 %>%
           complete(region_ID = unique(Area_Region_Map$region_ID), nesting(APE_comm, item_code, nest_level, year), fill=list(value=0)) %>%
-          complete(.df2 %>% distinct(APE_comm, item_code, nest_level), nesting(region_ID, year), fill=list(value=0)) %>%
+          complete(.df2 %>% distinct(APE_comm, item_code, nest_level), nesting(region_ID, year), fill=list(value=0)) ->
+          .df2_1
+
+        .df2_1 %>%
           # Use global value (year is specified now!)
-          # group_by(APE_comm, item_code, year) %>%
-          # mutate(value = sum(value)) %>%
-          # ungroup() %>%
+          group_by(APE_comm, item_code, year) %>%
+          mutate(value = sum(value)) %>%
+          ungroup() %>%
           group_by(APE_comm, region_ID, year) %>%
           mutate(share = value/ sum(value),
                  share = if_else(is.finite(share), share, dplyr::n()/sum(dplyr::n()))) %>%
           ungroup() %>%
           select(-value, source_item_code = item_code) ->
+          source_share_global
+
+        .df2_1 %>%
+          group_by(APE_comm, item_code, year) %>%
+          mutate(value = sum(value)) %>%
+          ungroup() %>%
+          group_by(APE_comm, region_ID, year) %>%
+          mutate(share = value/ sum(value),
+                 share = if_else(is.finite(share), share, dplyr::n()/sum(dplyr::n()))) %>%
+          ungroup() %>%
+          select(-value, source_item_code = item_code) ->
+          source_share_regional
+
+        source_share_regional %>% mutate(bal_source = "bal_domestic_lag") %>%
+          bind_rows(source_share_regional %>% mutate(bal_source = "bal_domestic_current")) %>%
+          bind_rows(source_share_global %>% mutate(bal_source = "bal_import")) ->
           source_share
+
+        # Note that the treatment of this share (when many-to-one processing) could cause negative values in processed use
+        # we will make adjustments right away
 
         ## d. Merge sink SUA into source items SUA  ----
         # Note that with multiple source items, sinks are aggregated into sources based on average processed shares across sources
@@ -498,7 +521,7 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
         # prepare sink item SUAs and map them to source item(s)
         # multiple source items are possible but source item will be shared out
         .df1 %>%
-          left_join(source_share, by=c("APE_comm", "region_ID", "year"), relationship = "many-to-many") %>%
+          left_join(source_share, by = c("bal_source", "region_ID", "year", "APE_comm")) %>%
           filter(!is.na(share)) %>%
           mutate(value = value * share,
                  item_code = source_item_code) %>%
@@ -532,7 +555,8 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
             summarize(value = sum(value), .groups = "drop") %>%
             ungroup() ->
             AGG
-
+          # There could be negative "processed" use due to the above many-to-one processing
+          # but should be small; we will adjust them later since they may aggregate
           DF_ALL %>%
             filter(nest_level != nest_i) %>%
             bind_rows(tibble(nest_level = nest_i, data = list(AGG))) ->
@@ -553,6 +577,10 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
         spread(element, value, fill = 0.0) %>%
         # Do a final balance cleaning
         mutate(`Regional supply` = `Opening stocks` + Production + `Import`,
+               # ignore negative "processed" due to the above many-to-one processing above (should be small)
+               Processed = if_else(Processed < 0, 0, Processed),
+               Food = if_else(Food < 0, 0, Food),
+               `Other uses` = if_else(`Other uses` < 0, 0, `Other uses`),
                `Regional demand` = `Export` + Feed + Food + Loss + Processed + Seed + `Other uses` +`Closing stocks`,
                Residuals = `Regional supply` -  `Regional demand`) %>%
         gather(element, value, -region_ID, -APE_comm, -year) ->
@@ -600,7 +628,58 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
       Proc_primarize() ->
       L107.APE_after2010
 
-    rm(FAO_SUA_Kt_R)
+
+    Check_Balance_SUA <- function(.DF){
+
+      NULL -> element -> GCAM_commodity -> Import -> Export -> Production -> Food ->
+        Feed -> `Other uses` -> `Regional supply` -> `Regional demand` -> bal ->
+        region
+
+      assertthat::assert_that(all(c("element") %in% names(.DF)))
+
+      # 0. Check NA
+      if (.DF %>% filter(is.na(value)) %>% nrow() > 0) {
+        warning("NA values in SUA Balance")
+      }
+
+      # 1. Positive value except stock variation and residues
+      if (isFALSE(.DF %>% filter(!element %in% c("Stock Variation", "Residuals")) %>%
+                  summarise(min = min(value, na.rm = T)) %>% pull(min) >= -0.001)) {
+        warning("Negative values in key elements (not including stock variation and Residuals)")
+      }
+
+      # 2. Trade balance in all year and items
+      if (isFALSE(.DF %>% filter(element %in% c("Import", "Export")) %>%
+                  group_by(year, APE_comm_Agg, element) %>%
+                  summarise(value = sum(value), .groups = "drop") %>%
+                  spread(element, value) %>% filter(abs(Import - Export) > 0.0001) %>% nrow() == 0)) {
+        warning("Gross trade imbalance")
+      }
+
+      # 3. SUA balance check
+      if (isFALSE(.DF %>%
+                  spread(element, value) %>%
+                  mutate(`Regional supply` = Production + `Import` +`Opening stocks`,
+                         `Regional demand` = `Export` + Feed + Food + Loss + Processed + Seed + `Other uses` +`Closing stocks` + Residuals,
+                         bal = abs(`Regional supply` -  `Regional demand`)) %>%
+                  filter(bal > 0.0001) %>% nrow() == 0)) {
+        warning("Regional supply != Regional demand + Residuals")
+      }
+
+      # 4. Balanced in all dimensions but APE_comm_Agg
+
+      assertthat::assert_that(.DF %>% group_by(APE_comm_Agg) %>%
+                                summarize(nyear = length(unique(year)),
+                                          nreg = length(unique(region_ID)),
+                                          nele = length(unique(element)), .groups = "drop"
+                                ) %>%
+                                summarize(count = sum(nyear * nreg *nele)) %>% pull(count) ==
+                                .DF1 %>% nrow())
+
+    }
+
+
+    Check_Balance_SUA(L107.APE_after2010)
 
     ## Done Section2 ----
     #****************************----

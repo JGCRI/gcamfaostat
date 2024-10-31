@@ -444,22 +444,45 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
           filter(element == "Processed", item_code %in% curr_source_items) %>%
           select(-element) ->
           .df2
+
         .df2 %>%
           complete(GCAM_region_ID = GCAM_region_names$GCAM_region_ID, nesting(APE_comm, item_code, nest_level, year), fill=list(value=0)) %>%
-          complete(.df2 %>% distinct(APE_comm, item_code, nest_level), nesting(GCAM_region_ID, year), fill=list(value=0)) %>%
+          complete(.df2 %>% distinct(APE_comm, item_code, nest_level), nesting(GCAM_region_ID, year), fill=list(value=0)) ->
+          .df2_1
+
+        .df2_1 %>%
+          # Use global value (year is specified now!)
+          group_by(APE_comm, item_code, year) %>%
+          mutate(value = sum(value)) %>%
+          ungroup() %>%
           group_by(APE_comm, GCAM_region_ID, year) %>%
           mutate(share = value/ sum(value),
                  share = if_else(is.finite(share), share, dplyr::n()/sum(dplyr::n()))) %>%
           ungroup() %>%
           select(-value, source_item_code = item_code) ->
-          source_share
+          source_share_global
 
+        .df2_1 %>%
+          group_by(APE_comm, item_code, year) %>%
+          mutate(value = sum(value)) %>%
+          ungroup() %>%
+          group_by(APE_comm, GCAM_region_ID, year) %>%
+          mutate(share = value/ sum(value),
+                 share = if_else(is.finite(share), share, dplyr::n()/sum(dplyr::n()))) %>%
+          ungroup() %>%
+          select(-value, source_item_code = item_code) ->
+          source_share_regional
+
+        source_share_regional %>% mutate(bal_source = "bal_domestic_lag") %>%
+          bind_rows(source_share_regional %>% mutate(bal_source = "bal_domestic_current")) %>%
+          bind_rows(source_share_global %>% mutate(bal_source = "bal_import")) ->
+          source_share
 
         ## d. Merge sink SUA into source items SUA  ----
         # Note that with multiple source items, sinks are aggregated into sources based on average processed shares across sources
         # Prepare data to calculate world average source share
         .df1 %>%
-          left_join(source_share, by=c("APE_comm", "GCAM_region_ID", "year")) %>%
+          left_join(source_share, by = c("bal_source", "GCAM_region_ID", "year", "APE_comm"))  %>%
           filter(!is.na(share)) %>%
           mutate(value = value * share,
                  item_code = source_item_code) %>%
@@ -508,6 +531,10 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
         spread(element, value, fill = 0.0) %>%
         # Do a final balance cleaning
         mutate(`Regional supply` = `Opening stocks` + Production + `Import`,
+               # ignore negative "processed" due to the above many-to-one processing above (should be small)
+               Processed = if_else(Processed < 0, 0, Processed),
+               Food = if_else(Food < 0, 0, Food),
+               `Other uses` = if_else(`Other uses` < 0, 0, `Other uses`),
                `Regional demand` = `Export` + Feed + Food + Loss + Processed + Seed + `Other uses` +`Closing stocks`,
                Residuals = `Regional supply` -  `Regional demand`) %>%
         gather(element, value, -GCAM_region_ID, -APE_comm, -year) ->
