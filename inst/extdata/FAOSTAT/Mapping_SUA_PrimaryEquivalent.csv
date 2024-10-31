@@ -20,7 +20,7 @@
 # Last update: 06-09-2024 (XZ)
 # Column types: ccilccncnnl
 # ----------
-GCAM_commodity,APE_comm,nest_level,source_primary,source_item,sink_item,output_specific_extraction_rate,sink_FBS_item,extraction_rate_Q25,extraction_rate_world2019,Q25asMin
+APE_comm_Agg,APE_comm,nest_level,source_primary,source_item,sink_item,output_specific_extraction_rate,sink_FBS_item,extraction_rate_Q25,extraction_rate_world2019,Q25asMin
 Wheat,Wheat,1,TRUE,Wheat,"Food preparations, flour, malt extract",,Wheat and products,0.942971612,0.985277283,FALSE
 Wheat,Wheat,1,TRUE,Wheat,Bulgur,,Wheat and products,0.942971612,0.985277283,FALSE
 Wheat,Wheat,1,TRUE,Wheat,"Cereals, breakfast",,Wheat and products,0.942971612,0.985277283,FALSE

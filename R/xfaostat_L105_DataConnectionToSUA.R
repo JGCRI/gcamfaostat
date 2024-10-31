@@ -19,8 +19,8 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
   MODULE_INPUTS <-
     c(FILE = file.path(DIR_RAW_DATA_FAOSTAT, "FAO_items"),
-      "QCL_PROD",
-      "QCL_AN_LIVEANIMAL_MEATEQ",
+      "L102.QCL_PROD",
+      "L102.QCL_AN_LIVEANIMAL_MEATEQ",
       "TCL_wide",
       "TM_bilateral_wide",
       "FBSH_CBH_wide",
@@ -28,7 +28,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       "SCL_wide")
 
   MODULE_OUTPUTS <-
-    c("Bal_new_all")
+    c("L105.Bal_new_all")
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -39,10 +39,10 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
     SCL_wide <- element_code <- element <- area_code <- item_code <- area <-
       item <- unit <- FBS_wide <- FBSH_CBH_wide <- TCL_wide <- TM_bilateral_wide <-
-      QCL_PROD <- FAO_items <- tier <- QCL <- oil <-
+      L102.QCL_PROD <- FAO_items <- tier <- QCL <- oil <-
       cake <- SCL_item_oil <- SCL_item_cake <- cake_rate <- cake_rate_world <-
       DS_key_coproduct_item <- Production <- Import <- Export <- DS_demand <-
-      DS_production <- CoproductRate <- QCL_AN_LIVEANIMAL_MEATEQ <- `Closing stocks` <-
+      DS_production <- CoproductRate <- L102.QCL_AN_LIVEANIMAL_MEATEQ <- `Closing stocks` <-
       `Opening stocks` <- `Stock Variation` <- NULL
 
     all_data <- list(...)[[1]]
@@ -78,7 +78,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
 
     # Get area code in QCL that is consistent with FBS e.g., after 2010 only
-    QCL_PROD %>% filter(year >= min (FAOSTAT_Hist_Year_FBS)) %>%  distinct(area_code) %>% pull ->
+    L102.QCL_PROD %>% filter(year >= min (FAOSTAT_Hist_Year_FBS)) %>%  distinct(area_code) %>% pull ->
       QCL_area_code_FBS
 
     ## 1.2. Get FAO supply-utilization SCL ready ----
@@ -161,7 +161,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     # Merge Sudan regions to be consistent with data
     # Mainly for storage data concerns
     # And only keep data > min(FAOSTAT_Hist_Year_FBS)
-    for (.DF in c("SCL", "TCL_TM", "TCL_gross", "FBSH_CBH", "FBS", "QCL_PROD")) {
+    for (.DF in c("SCL", "TCL_TM", "TCL_gross", "FBSH_CBH", "FBS", "L102.QCL_PROD")) {
       get(.DF) %>% filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
         # merge Sudan and South Sudan
         FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL(SUDAN2012_MERGE = T) %>%
@@ -169,7 +169,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
 
     # Update area code in QCL
-    QCL_PROD %>% filter(year %in% FAOSTAT_Hist_Year_FBS) %>%  distinct(area_code) %>% pull ->
+    L102.QCL_PROD %>% filter(year %in% FAOSTAT_Hist_Year_FBS) %>%  distinct(area_code) %>% pull ->
       QCL_area_code_FBS
 
     # 2. Create helper functions to simplify join by data set ----
@@ -214,19 +214,19 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
       ## Start SUA_TEMPLATE_LEFT_JOIN ----
 
-      ## a. Join QCL_PROD when .DS == "QCL" ----
+      ## a. Join L102.QCL_PROD when .DS == "QCL" ----
       if (.DS == "QCL") {
 
-        # assert QCL_PROD exist
-        assertthat::assert_that(is.data.frame(QCL_PROD))
+        # assert L102.QCL_PROD exist
+        assertthat::assert_that(is.data.frame(L102.QCL_PROD))
 
         # assert items exist in joined DF
         assertthat::assert_that(.DF %>% distinct(item_code) %>% pull %>%
-                                  setdiff(QCL_PROD %>% distinct(item_code) %>% pull) %>%
+                                  setdiff(L102.QCL_PROD %>% distinct(item_code) %>% pull) %>%
                                   length() == 0 )
         # Join
         .DF %>% left_join(
-          QCL_PROD %>%
+          L102.QCL_PROD %>%
             select(area_code, item_code, element, year, QCL = value),
           by = c("area_code", "item_code", "element", "year")
         ) -> .DF1
@@ -237,7 +237,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       ## b. Join TCL_TM when .DS == "TM" ----
       if (.DS == "TM") {
 
-        # assert QCL_PROD exist
+        # assert L102.QCL_PROD exist
         assertthat::assert_that(is.data.frame(TCL_TM))
 
         if (.DS_TM_Assert_Item == T) {
@@ -259,7 +259,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       ## c. Join TCL_gross when .DS == "TCL_gross" ----
       if (.DS == "TCL_gross") {
 
-        # assert QCL_PROD exist
+        # assert TCL exist
         assertthat::assert_that(is.data.frame(TCL_gross))
 
         if (.DS_TM_Assert_Item == T) {
@@ -280,7 +280,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       ## d. Join SCL when .DS == "SCL" ----
       if (.DS == "SCL") {
 
-        # assert QCL_PROD exist
+        # assert SCL exist
         assertthat::assert_that(is.data.frame(SCL))
 
         # assert items exist in joined DF
@@ -580,7 +580,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
     ### 3.8.1 Process the live animal meat equivalent data APE_live_an_MeatEQ ----
 
-    # read in QCL_AN_LIVEANIMAL_MEATEQ live animal meat equivalent
+    # read in L102.QCL_AN_LIVEANIMAL_MEATEQ live animal meat equivalent
     # Treat live animal as stock and adjust using production or other demand
     # Milk cattle is not included
     # Note that only stock variation is used
@@ -588,7 +588,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     # But accounting delta allows more accurate estimate of feed uses
     # E.g., additional feed demand due to animal expansion
 
-    QCL_AN_LIVEANIMAL_MEATEQ %>%
+    L102.QCL_AN_LIVEANIMAL_MEATEQ %>%
       select(area_code, item_code, year, value) %>%
       #mutate(item = gsub("Meat", "AnMeatEq", item)) %>%
       # convert units back to tonne!!! And adjust item_code
@@ -622,14 +622,14 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       Bal_new_tier8
 
     assert_FBS_balance(.DF = Bal_new_tier8)
-    rm(QCL_AN_LIVEANIMAL_MEATEQ, APE_live_an_MeatEQ)
+    rm(L102.QCL_AN_LIVEANIMAL_MEATEQ, APE_live_an_MeatEQ)
 
 
     # 4. Bind all to get Bal_new_all ----
     #[ToDo loop not working in package]
     # lapply(paste0("Bal_new_tier", 1:9), get) %>% bind_rows() %>%
     #   # Add area_code
-    #   left_join(QCL_PROD %>% distinct(area, area_code), by = "area_code") ->
+    #   left_join(L102.QCL_PROD %>% distinct(area, area_code), by = "area_code") ->
     #   Bal_new_all
 
       Bal_new_tier1 %>%
@@ -641,28 +641,28 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
         bind_rows(Bal_new_tier7) %>%
         bind_rows(Bal_new_tier8) %>%
       # Add area_code
-      left_join(QCL_PROD %>% distinct(area, area_code), by = "area_code")->
-      Bal_new_all
+      left_join(L102.QCL_PROD %>% distinct(area, area_code), by = "area_code")->
+      L105.Bal_new_all
 
-    assert_FBS_balance(.DF = Bal_new_all)
+    assert_FBS_balance(.DF = L105.Bal_new_all)
 
     rm(TCL_gross, TCL_TM, SCL, FBS, FBSH_CBH, FAO_items)
     rm(list = ls(pattern = "Bal_new_tier*"))
 
 
-    Bal_new_all %>%
-      add_title("Bal_new_all") %>%
+    L105.Bal_new_all %>%
+      add_title("L105.Bal_new_all") %>%
       add_units("Ktonne") %>%
       add_comments("Preprocessed FAO SUA 2010 - 2021") %>%
       add_precursors(file.path(DIR_RAW_DATA_FAOSTAT, "FAO_items"),
-                     "QCL_PROD",
-                     "QCL_AN_LIVEANIMAL_MEATEQ",
+                     "L102.QCL_PROD",
+                     "L102.QCL_AN_LIVEANIMAL_MEATEQ",
                      "TCL_wide",
                      "TM_bilateral_wide",
                      "FBSH_CBH_wide",
                      "FBS_wide",
                      "SCL_wide")->
-      Bal_new_all
+      L105.Bal_new_all
 
 
     return_data(MODULE_OUTPUTS)
@@ -690,7 +690,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 #
 #  TCL_TM %>% mutate(item = 1) -> TCL_TM1
 #
-#  FF_join_checkmap(c("SCL", "QCL_PROD", "TCL_TM1", "FBSH_CB"), COL_by = c("item_code"), COL_rename = "item" ) ->
+#  FF_join_checkmap(c("SCL", "L102.QCL_PROD", "TCL_TM1", "FBSH_CB"), COL_by = c("item_code"), COL_rename = "item" ) ->
 #    JoinItemMap
 #
 #

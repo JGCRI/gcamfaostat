@@ -1,13 +1,13 @@
 # Copyright 2019 Battelle Memorial Institute; see the LICENSE file.
 
-#' module_yextension_L100_FoodBalanceSheet
+#' module_xfaostat_L107_FoodBalanceSheet
 #'
-#' Generate supply utilization balance in primary equivalent
+#' Generate FBS supply utilization balance in primary equivalent
 #'
 #' @param command API command to execute
 #' @param ... other optional parameters, depending on command
 #' @return Depends on \code{command}: either a vector of required inputs, a vector of output names, or (if
-#'   \code{command} is "MAKE") all the generated outputs: \code{FAO_Food_Macronutrient_All},
+#'   \code{command} is "MAKE") all the generated outputs: \code{L107.FAO_Food_Macronutrient_All},
 #'   \code{FAO_Food_MacronutrientRate_2010_2019_MaxValue}
 #' @details This chunk aggregates supply utilization accounts into food balance sheet items
 #' @importFrom assertthat assert_that
@@ -16,22 +16,19 @@
 #' @importFrom tibble tibble is_tibble
 #' @importFrom tidyr complete drop_na gather nesting spread replace_na
 #' @author XZ 2024
-module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
+module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c("FBS_wide",
-      "TM_bilateral_wide",
-      "Bal_new_all",
-      "QCL_CROP_PRIMARY",
-      "QCL_PROD",
-      "SUA_food_macronutrient_rate",
+    c("TM_bilateral_wide",
+      "L105.Bal_new_all",
+      "L106.SUA_food_macronutrient_rate",
       FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_SUA_PrimaryEquivalent"),
       FILE = file.path(DIR_RAW_DATA_FAOSTAT, "SUA_item_code_map"),
       FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_FAO_iso_reg") )
 
   MODULE_OUTPUTS <-
-    c("GCAM_APE_after2010",
-      "FAO_Food_Macronutrient_All")
+    c("L107.APE_after2010",
+      "L107.FAO_Food_Macronutrient_All")
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -46,26 +43,6 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
     # Load required inputs ----
 
     get_data_list(all_data, MODULE_INPUTS, strip_attributes = TRUE)
-
-    for (.DF in c("QCL_CROP_PRIMARY", "QCL_PROD")) {
-      get(.DF) %>%
-        # merge Sudan and South Sudan
-        FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL(SUDAN2012_MERGE = T) %>%
-        assign(x = .DF, envir = Curr_Envir)
-    }
-
-    ## *NonFodderProdArea ----
-    QCL_CROP_PRIMARY %>%
-      filter(element == "Area harvested") %>%
-      mutate(item_set = "QCL_COMM_CROP_PRIMARY") %>%
-      bind_rows(QCL_PROD %>%
-                  filter(!is.na(year))) %>%
-      select(-element_code) %>%
-      mutate(value = value / 1000,
-             unit = if_else(unit == "tonnes", "1000 tonnes", "1000 ha")) %>%
-      spread(year, value) ->
-      GCAMFAOSTAT_NonFodderProdArea
-
 
 
     TM_bilateral_wide %>%
@@ -91,36 +68,37 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
       ) %>%
       filter(value != 0.0) %>%
       transmute(area_code, item_code, source_code, year, value) ->
-      GCAMFAOSTAT_BiTrade
+      FAO_BiTrade_Kt
 
-    Bal_new_all %>% filter(value != 0.0) %>%
+    # GCAMFAOSTAT_SUA
+    L105.Bal_new_all %>%
+      filter(value != 0.0) %>%
       transmute(area_code, item_code, element, year, value) ->
-      GCAMFAOSTAT_SUA
+      FAO_SUA_Kt
 
-    SUA_food_macronutrient_rate -> GCAMFAOSTAT_MacroNutrientRate
 
     # Fix Sudan with code 206 and 276 after 2012
-    if (206 %in% GCAMFAOSTAT_MacroNutrientRate$area_code == F) {
-      GCAMFAOSTAT_MacroNutrientRate %>%
+    if (206 %in% L106.SUA_food_macronutrient_rate$area_code == F) {
+      L106.SUA_food_macronutrient_rate %>%
         filter(area_code  == 276) %>% mutate(area_code  = 206) %>%
-        bind_rows(GCAMFAOSTAT_MacroNutrientRate) ->
-        GCAMFAOSTAT_MacroNutrientRate
+        bind_rows(L106.SUA_food_macronutrient_rate) ->
+        L106.SUA_food_macronutrient_rate
     }
 
 
 
 
     # Get Supply-utilization account (SUA) elements and use as factor
-    All_Bal_element <- levels(GCAMFAOSTAT_SUA$element)
+    All_Bal_element <- levels(FAO_SUA_Kt$element)
     All_Bal_element <- factor(All_Bal_element, levels = All_Bal_element)
 
     # Bilateral trade item indicator is added to SUA_item_code_map
-    # filter GCAMFAOSTAT_BiTrade to only include bilateral trade item to be
-    # consistent with GCAMFAOSTAT_SUA
+    # filter FAO_BiTrade_Kt to only include bilateral trade item to be
+    # consistent with FAO_SUA_Kt
     BilaterialTrade_ItemCode <- SUA_item_code_map %>% filter(TM == TRUE) %>% distinct(item_code) %>% pull
-    GCAMFAOSTAT_BiTrade %>%
+    FAO_BiTrade_Kt %>%
       filter(item_code %in% BilaterialTrade_ItemCode) ->
-      GCAMFAOSTAT_BiTrade
+      FAO_BiTrade_Kt
     SUA_item_code_map %>% select(item, item_code) -> SUA_item_code_map
 
     # Section1: [2010-2019] Region aggregation of supply-utilization-accounting data ----
@@ -133,26 +111,28 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
     # trap doors where we need to be extra careful to complete / refill zeros or risk loosing
     # rows of legitimate data.
 
-    # create a complete area / iso / GCAM region mapping
-    GCAMFAOSTAT_NonFodderProdArea %>%
-      distinct(area_code, area) %>%
+    # create a complete area / iso  region mapping
+    FAO_SUA_Kt %>%
+      distinct(area_code) %>%
       left_join_error_no_match(Mapping_FAO_iso_reg %>% distinct(area_code, iso, region_ID), by = c("area_code")) ->
       Area_Region_Map
 
     # 1.1 Regional aggregation for SUA ----
+    # [this section is not doing anything if no regional aggregation is needed]
 
-    # Aggregate SUA to GCAM regions
+    # Aggregate SUA regions if needed
     # Intra regional trade is removed when bilateral trade data is available
 
-    GCAMFAOSTAT_SUA %>%
-      left_join_error_no_match(Area_Region_Map %>% select(area_code, region_ID), by="area_code") %>%
+    FAO_SUA_Kt %>%
+      left_join_error_no_match(
+        Area_Region_Map %>% select(area_code, region_ID), by="area_code") %>%
       group_by(region_ID, item_code, element, year) %>%
       summarize(value = sum(value), .groups = "drop") %>%
       ungroup() ->
       DF_SUA_Agg
 
     # Calculate intra regional trade
-    GCAMFAOSTAT_BiTrade %>%
+    FAO_BiTrade_Kt %>%
       left_join_error_no_match(Area_Region_Map %>% select(area_code, region_ID), by="area_code") %>%
       left_join_error_no_match(Area_Region_Map %>% select(source_code = area_code, source_region_ID = region_ID), by="source_code") %>%
       filter(region_ID == source_region_ID) %>%
@@ -193,18 +173,20 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
       group_by(region_ID, item_code, element, year) %>%
       summarize(value = sum(value), .groups = "drop") %>%
       ungroup() ->
-      FAO_SUA_Kt_2010to2019_R
+      FAO_SUA_Kt_R
 
+    # complete years and fill in zeros
+    FAO_SUA_Kt_R %>%
+      complete(nesting(region_ID, item_code, element), year) %>%
+      replace_na(list(value = 0)) ->
+      FAO_SUA_Kt_R
 
-    Min_SUA_Year <- min(FAO_SUA_Kt_2010to2019_R$year)
-    FAO_SUA_Kt_2010to2019 <- GCAMFAOSTAT_SUA
     ## Clean up
-    rm(GCAMFAOSTAT_SUA)
-    rm(GCAMFAOSTAT_BiTrade)
+    rm(FAO_BiTrade_Kt)
     ## Done Section1 ----
     #****************************----
 
-    # Section2: [2010-2019] Primary equivalent aggregation to GCAM commodities ----
+    # Section2: [2010-2019] Primary equivalent aggregation to PCe commodities ----
 
     Mapping_SUA_PrimaryEquivalent %>%
       left_join_error_no_match(SUA_item_code_map %>% rename(sink_item_code = item_code), by=c("sink_item" = "item")) %>%
@@ -231,6 +213,7 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
     # @return A data frame including regional, traded, and world extraction rates of a processing
 
     Get_GROSS_EXTRACTION_RATE <- function(DF_CURR_NEST, DF_ALL) {
+
       curr_sink_items = unique(DF_CURR_NEST$item_code)
       Mapping_SUA_PrimaryEquivalent_ID %>%
         filter(sink_item_code %in% curr_sink_items) ->
@@ -267,12 +250,13 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
                # Regional extraction rate = prod of an aggregated processed item  / Processed use of an aggregated primary item
                # Use world average to fill in NA or zero
                extraction_rate = if_else(is.na(extraction_rate) | extraction_rate == 0, extraction_rate_world, extraction_rate),
-               # Using minimum extraction rate here
+               # Using minimum extraction rate here as an upper threshold to avoid extremely large scaling later
                extraction_rate = pmax(extraction_rate, minimium_extraction_rate),
+               # Set rate to Inf when Processed == 0
+               PositiveProd_ZeroProc = Production > 0 & Processed == 0,
+               extraction_rate = if_else(PositiveProd_ZeroProc == TRUE, Inf, extraction_rate),
                extraction_rate_trade = sum(Export) / sum(Export / extraction_rate),
-               extraction_rate_trade = if_else(is.na(extraction_rate_trade), extraction_rate, extraction_rate_trade),
-               # both processed and production > 0
-               positive_prod = Production > 0 & Processed > 0) %>%
+               extraction_rate_trade = if_else(is.na(extraction_rate_trade), extraction_rate, extraction_rate_trade)) %>%
         ungroup() %>%
         group_by(APE_comm, region_ID) %>%
         # Calculate lagged extraction_rate but replace NA with current rate (first period)
@@ -426,11 +410,13 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
 
     # Primary equivalent aggregation
     # @param DF_ALL Input supply-utilization accounting data frame with all levels of data nested which need to be primarized
-    # @return A supply-utilization accounting data frame with all levels processed and aggregated to GCAM_commodity
+    # @return A supply-utilization accounting data frame with all levels processed and aggregated to APE_comm_Agg
 
     Proc_primarize <- function(DF_ALL){
+
       MaxNest = max(DF_ALL$nest_level)
       MinNest = 1
+
       for(curr_nest in MaxNest:MinNest) {
         # get the current tier to process
         DF_ALL %>%
@@ -495,9 +481,9 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
           complete(region_ID = unique(Area_Region_Map$region_ID), nesting(APE_comm, item_code, nest_level, year), fill=list(value=0)) %>%
           complete(.df2 %>% distinct(APE_comm, item_code, nest_level), nesting(region_ID, year), fill=list(value=0)) %>%
           # Use global value (year is specified now!)
-          group_by(APE_comm, item_code, year) %>%
-          mutate(value = sum(value)) %>%
-          ungroup() %>%
+          # group_by(APE_comm, item_code, year) %>%
+          # mutate(value = sum(value)) %>%
+          # ungroup() %>%
           group_by(APE_comm, region_ID, year) %>%
           mutate(share = value/ sum(value),
                  share = if_else(is.finite(share), share, dplyr::n()/sum(dplyr::n()))) %>%
@@ -572,28 +558,28 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
         gather(element, value, -region_ID, -APE_comm, -year) ->
         APE_AGG
 
-      # Aggregate by GCAM_commodity
+      # Aggregate by APE_comm_Agg
       # At this point we ditch the ID codes and factors as we return the data and
       # make it available for the rest of the original processing
       APE_AGG %>%
-        left_join_error_no_match(Mapping_SUA_PrimaryEquivalent %>% select(GCAM_commodity, APE_comm) %>% distinct(),
+        left_join_error_no_match(Mapping_SUA_PrimaryEquivalent %>% select(APE_comm_Agg, APE_comm) %>% distinct(),
                                  by = c("APE_comm")) %>%
-        group_by(region_ID, GCAM_commodity, element, year) %>%
+        group_by(region_ID, APE_comm_Agg, element, year) %>%
         summarize(value = sum(value), .groups = "drop") %>%
         ungroup() %>%
         mutate(element = as.character(element)) %>%
-        select(region_ID, year, GCAM_commodity, element, value) ->
-        GCAM_APE_after2010
+        select(region_ID, year, APE_comm_Agg, element, value) ->
+        .df_APE
 
-      return(GCAM_APE_after2010)
+      return(.df_APE)
     }
 
     # 2.2. Execution: process data into APE ----
 
 
-    ## Loop through all GCAM_commodity with available data ----
+    ## Loop through all APE_comm_Agg with available data ----
 
-    FAO_SUA_Kt_2010to2019_R %>%
+    FAO_SUA_Kt_R %>%
       left_join(Mapping_SUA_PrimaryEquivalent_ID %>%
                   select(APE_comm, item_code = sink_item_code, nest_level) %>% distinct(), by = c("item_code")) %>%
       left_join(Mapping_SUA_PrimaryEquivalent_ID %>%
@@ -610,12 +596,11 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
       # although we end up needed to unnest at times as well so ultimately,
       # it likely makes little difference in performance
       tidyr::nest(data = -nest_level) %>%
-      # we are now ready to recursively primarize APE commodities then aggregate
-      # to GCAM commodities
+      # we are now ready to recursively primarize APE commodities then aggregate to APE
       Proc_primarize() ->
-      GCAM_APE_after2010
+      L107.APE_after2010
 
-    rm(FAO_SUA_Kt_2010to2019_R)
+    rm(FAO_SUA_Kt_R)
 
     ## Done Section2 ----
     #****************************----
@@ -632,15 +617,15 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
     # about 486 items (out of 530) used in GCAM
 
     Mapping_SUA_PrimaryEquivalent %>%
-      select(GCAM_commodity, item = source_item) %>%
+      select(APE_comm_Agg, item = source_item) %>%
       bind_rows(Mapping_SUA_PrimaryEquivalent %>%
-                  select(GCAM_commodity, item = sink_item)) %>%
+                  select(APE_comm_Agg, item = sink_item)) %>%
       distinct() %>%
       left_join_error_no_match(SUA_item_code_map, by = "item") ->
-      SUA_Items_GCAM
+      SUA_Items_APE
 
     assertthat::assert_that(
-      SUA_Items_GCAM %>% distinct(item_code) %>% nrow() == SUA_Items_GCAM %>% nrow(),
+      SUA_Items_APE %>% distinct(item_code) %>% nrow() == SUA_Items_APE %>% nrow(),
       msg = "Check duplicates in Mapping_SUA_PrimaryEquivalent SUA items"
     )
 
@@ -648,16 +633,16 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
     # (e.g., wine, infant food, or other nonfood items etc.)
 
     SUA_item_code_map %>%
-      filter(!item_code %in% unique(SUA_Items_GCAM$item_code)) -> SUA_Items_NonGCAM
+      filter(!item_code %in% unique(SUA_Items_APE$item_code)) -> SUA_Items_NEC
 
-    # b. There are 426 FAO food items, all included in FAO_SUA_Kt_2010to2019 (530 items)
+    # b. There are 426 FAO food items, all included in FAO_SUA_Kt_2010to2022 (530 items)
     # SUA_Items_Food includes both GCAM and NonGCAM(NEC)
     SUA_item_code_map %>%
-      filter(item_code %in% unique(GCAMFAOSTAT_MacroNutrientRate$item_code)) %>%
-      left_join(SUA_Items_GCAM %>% select(-item), by = "item_code") %>%
-      # For NA GCAM_commodity: not elsewhere classified (NEC)
+      filter(item_code %in% unique(L106.SUA_food_macronutrient_rate$item_code)) %>%
+      left_join(SUA_Items_APE %>% select(-item), by = "item_code") %>%
+      # For NA APE_comm_Agg: not elsewhere classified (NEC)
       # So we would know % of food calories not included in GCAM commodities
-      mutate(GCAM_commodity = if_else(is.na(GCAM_commodity), "NEC", GCAM_commodity)) ->
+      mutate(APE_comm_Agg = if_else(is.na(APE_comm_Agg), "NEC", APE_comm_Agg)) ->
       SUA_Items_Food
 
 
@@ -666,7 +651,7 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
     ### a. Get world average macronutrient ----
     # For filling in missing values
 
-    GCAMFAOSTAT_MacroNutrientRate %>%
+    L106.SUA_food_macronutrient_rate %>%
       tidyr::gather(macronutrient, macronutrient_value, calperg:proteinperc) %>%
       group_by(item, item_code, macronutrient) %>%
       summarise(macronutrient_value_World = mean(macronutrient_value), .groups = "drop") %>%
@@ -676,7 +661,7 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
 
     ### b. Calculate SUA food Calories consumption by joining macronutrient rates and SUA food ----
 
-    FAO_SUA_Kt_2010to2019 %>%
+    FAO_SUA_Kt %>%
       filter(element == "Food", item_code %in% SUA_Items_Food$item_code) %>%
       # ensure we at least have a complete series across time otherwise it may
       # throw off moving avg calculations
@@ -687,7 +672,7 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
       repeat_add_columns(
         tibble(macronutrient = c("calperg", "fatperc", "proteinperc"))) %>%
       left_join(
-        GCAMFAOSTAT_MacroNutrientRate %>%
+        L106.SUA_food_macronutrient_rate %>%
           select(-item) %>%
           tidyr::gather(macronutrient, macronutrient_value, calperg:proteinperc),
         by = c("area_code", "item_code", "macronutrient")
@@ -709,20 +694,8 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
         macronutrient == "fatperc" ~ "MtFat",
         macronutrient == "proteinperc" ~ "MtProtein" )) %>%
       left_join_error_no_match(Area_Region_Map, by = "area_code") ->
-      FAO_Food_Macronutrient_All
+      L107.FAO_Food_Macronutrient_All
 
-
-    # Compare recompiled FBS with the original FBS ----
-
-    FBS_wide %>% gather_years() %>%
-      filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
-      FAOSTAT_AREA_RM_NONEXIST() -> FBS
-
-    for (.DF in c("FBS")) {
-      get(.DF) %>% filter(year >= min(FAOSTAT_Hist_Year_FBS)) %>%
-        # merge Sudan and South Sudan
-        FAO_AREA_DISAGGREGATE_HIST_DISSOLUTION_ALL(SUDAN2012_MERGE = T) %>%
-        assign(x = .DF, envir = parent.env(environment()))  }
 
     #****************************----
     # Produce outputs ----
@@ -732,28 +705,18 @@ module_yextension_L100_FoodBalanceSheet <- function(command, ...) {
     #   add_title("GCAM_AgLU_SUA_APE_1973_2019") %>%
     #   add_units("kton") %>%
     #   add_comments("Supply utilization balance for GCAM commodities and regions in primary equivalent") %>%
-    #   add_precursors("aglu/AGLU_ctry",
-    #                  "common/iso_GCAM_regID",
-    #                  "aglu/FAO/GCAMFAOSTAT_SUA",
-    #                  "aglu/FAO/GCAMFAOSTAT_BiTrade",
-    #                  "aglu/FAO/Mapping_SUA_PrimaryEquivalent",
-    #                  "aglu/FAO/SUA_item_code_map",
-    #                  "aglu/FAO/GCAMFAOSTAT_NonFodderProdArea") ->
+    #   add_precursors(MODULE_INPUTS) ->
     #   GCAM_AgLU_SUA_APE_1973_2019
 
 
 
     #
-    #     FAO_Food_Macronutrient_All %>%
+    #     L107.FAO_Food_Macronutrient_All %>%
     #       add_title("GCAM_AgLU_SUA_APE_1973_2019") %>%
     #       add_units("MKcal, MtFat, MtProtein") %>%
     #       add_comments("Macronutrient consumption values connected to food consumption in GCAM_AgLU_SUA_APE_1973_2019") %>%
-    #       add_precursors("aglu/AGLU_ctry",
-    #                      "common/iso_GCAM_regID",
-    #                      "aglu/FAO/GCAMFAOSTAT_SUA",
-    #                      "aglu/FAO/GCAMFAOSTAT_MacroNutrientRate",
-    #                      "aglu/FAO/Mapping_SUA_PrimaryEquivalent") ->
-    #       FAO_Food_Macronutrient_All
+    #       add_precursors(MODULE_INPUTS) ->
+    #       L107.FAO_Food_Macronutrient_All
     #
 
     return_data(MODULE_OUTPUTS)

@@ -22,7 +22,7 @@ module_xfaostat_L104_ProductionAreaAddFodder <- function(command, ...) {
       "QCL_area_code_map")
 
   MODULE_OUTPUTS <-
-    c("QCL_FODDERCROP")
+    c("L104.QCL_FODDERCROP")
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -95,17 +95,17 @@ module_xfaostat_L104_ProductionAreaAddFodder <- function(command, ...) {
       # Remove area x year that should no exist
       FAOSTAT_AREA_RM_NONEXIST %>%
       left_join(UnitMap, by = "element") ->
-      QCL_FODDERCROP
+      L104.QCL_FODDERCROP
 
     rm(FAO_fodder_Prod_t_HA_ha_PRODSTAT_2011, UnitMap)
 
-    QCL_FODDERCROP %>%
+    L104.QCL_FODDERCROP %>%
       add_title("Processed fodder crop production and area") %>%
       add_units("tonne and ha") %>%
       add_comments("Data is from old GCAM data v5.4") %>%
       add_precursors(file.path(DIR_RAW_DATA_FAOSTAT, "Other_supplementary/FAO_fodder_Prod_t_HA_ha_PRODSTAT_2011"),
                      "QCL_area_code_map")->
-      QCL_FODDERCROP
+      L104.QCL_FODDERCROP
 
 
     # FAO_ag_items_PRODSTAT is not read in anymore

@@ -1,6 +1,6 @@
 # Copyright 2019 Battelle Memorial Institute; see the LICENSE file.
 
-#' module_yfaostat_SUA_FBS_CSVExport
+#' module_xfaostat_L999_DataExport
 #'
 #' Generate supply utilization balance in primary equivalent
 #'
@@ -15,16 +15,16 @@
 #' @importFrom tibble tibble
 #' @importFrom tidyr complete drop_na gather nesting spread replace_na
 #' @author XZ Sep2024
-module_yfaostat_SUA_FBS_CSVExport <- function(command, ...) {
+module_xfaostat_L999_DataExport <- function(command, ...) {
 
   MODULE_INPUTS <-
     c(FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_SUA_PrimaryEquivalent"),
       FILE = file.path(DIR_RAW_DATA_FAOSTAT, "SUA_item_code_map"),
       FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_FAO_iso_reg"),
-      "GCAM_APE_after2010",
-      "Bal_new_all",
+      "L107.APE_after2010",
+      "L105.Bal_new_all",
       "FBS_wide",
-      "FAO_Food_Macronutrient_All")
+      "L107.FAO_Food_Macronutrient_All")
 
     MODULE_OUTPUTS <-
       c(CSV = "GCAMFAOSTAT_DataArchive_SUA")
@@ -53,12 +53,12 @@ module_yfaostat_SUA_FBS_CSVExport <- function(command, ...) {
       # SUA and FBS ----
       ## *SUA ----
 
-      Bal_new_all %>% filter(value != 0.0) %>%
+      L105.Bal_new_all %>% filter(value != 0.0) %>%
         transmute(area_code, item_code, element, year, value) %>%
         add_title("GCAMFAOSTAT_DataArchive_SUA") %>%
         add_units("1000 tonnes") %>%
         add_comments("gcamfaostat Export CSV") %>%
-        add_precursors("Bal_new_all") ->
+        add_precursors("L105.Bal_new_all") ->
         GCAMFAOSTAT_DataArchive_SUA
 
 
@@ -73,7 +73,7 @@ module_yfaostat_SUA_FBS_CSVExport <- function(command, ...) {
         out_dir = DIR_OUTPUT_CSV,
         GZIP = F)
 
-      rm(Bal_new_all)
+      rm(L105.Bal_new_all)
 
 
       }

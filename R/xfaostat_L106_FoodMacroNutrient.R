@@ -25,7 +25,7 @@ module_xfaostat_L106_FoodMacroNutrient <- function(command, ...) {
       FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_FAO_FBS_SUA"))
 
   MODULE_OUTPUTS <-
-    c("SUA_food_macronutrient_rate")
+    c("L106.SUA_food_macronutrient_rate")
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -235,11 +235,11 @@ module_xfaostat_L106_FoodMacroNutrient <- function(command, ...) {
           left_join(FAO_an_items_cal_SUA %>%
                       select(item_code, calperg = Mcal_t,fatperc = fat_Perc,
                              proteinperc = protein_Perc), by = "item_code" )
-      ) -> SUA_food_macronutrient_rate
+      ) -> L106.SUA_food_macronutrient_rate
 
-    unique(SUA_food_macronutrient_rate$area_code) %>% length()
-    unique(SUA_food_macronutrient_rate$item_code) %>% length()
-    SUA_food_macronutrient_rate %>% distinct(item, item_code) -> SUA_COMM_FOOD_NUTRIENT
+    unique(L106.SUA_food_macronutrient_rate$area_code) %>% length()
+    unique(L106.SUA_food_macronutrient_rate$item_code) %>% length()
+    L106.SUA_food_macronutrient_rate %>% distinct(item, item_code) -> SUA_COMM_FOOD_NUTRIENT
     # 76244 =179 area * (414 items + 12 fish items)
     # remove processing data
 
@@ -252,7 +252,7 @@ module_xfaostat_L106_FoodMacroNutrient <- function(command, ...) {
 
 
 
-    SUA_food_macronutrient_rate %>%
+    L106.SUA_food_macronutrient_rate %>%
       add_title("FAO food calories and macronutrient rate") %>%
       add_units("rates") %>%
       add_comments("Detailed FAO food calories and macrotunitent info for 414 SUA items + 12 fish items") %>%
@@ -261,7 +261,7 @@ module_xfaostat_L106_FoodMacroNutrient <- function(command, ...) {
                      "OA",
                      file.path(DIR_RAW_DATA_FAOSTAT, "FAO_an_items_cal_SUA"),
                      file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_FAO_FBS_SUA")) ->
-      SUA_food_macronutrient_rate
+      L106.SUA_food_macronutrient_rate
 
     # P.S. ----
     # China Wheat, bran for food? Need to fix in SUA later; no changes needed here for this

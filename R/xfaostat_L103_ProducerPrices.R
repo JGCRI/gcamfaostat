@@ -18,11 +18,11 @@
 module_xfaostat_L103_ProducerPrices <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c("QCL_PROD",
+    c("L102.QCL_PROD",
       "PP_wide")
 
   MODULE_OUTPUTS <-
-    c("QCL_PRIMARY_PROD_PV")
+    c("L103.QCL_PRIMARY_PROD_PV")
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -32,7 +32,7 @@ module_xfaostat_L103_ProducerPrices <- function(command, ...) {
 
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
     PP_wide <- element_code <- element <- area_code <- item_code <- area <-
-      item <- unit <- QCL_PROD <- item_set <- GCAM_commodity <- QCL_PRIMARY_item <-
+      item <- unit <- L102.QCL_PROD <- item_set <- GCAM_commodity <- QCL_PRIMARY_item <-
       PP_item <- Production <- Prod_Value <- PP_index <- World_PP_index <-
       PP_Multiplier <- PP_item_world <- NULL
 
@@ -50,15 +50,15 @@ module_xfaostat_L103_ProducerPrices <- function(command, ...) {
 
 
     # Primary crops
-    QCL_PROD %>% filter(item_set == "QCL_COMM_CROP_PRIMARY") %>%
+    L102.QCL_PROD %>% filter(item_set == "QCL_COMM_CROP_PRIMARY") %>%
       distinct(item, item_code) -> QCL_COMM_CROP_PRIMARY
     # Primary animal products, including fat hides etc. 46
-    QCL_PROD %>% filter(grepl("AN_PRIMARY", item_set) ) %>%
+    L102.QCL_PROD %>% filter(grepl("AN_PRIMARY", item_set) ) %>%
       distinct(item, item_code) -> QCL_COMM_AN_PRIMARY
 
     QCL_COMM_CROP_PRIMARY %>%
       bind_rows(QCL_COMM_AN_PRIMARY) %>%
-      left_join(QCL_PROD, by = c("item_code", "item")) ->
+      left_join(L102.QCL_PROD, by = c("item_code", "item")) ->
       QCL_PRIMARY
 
     QCL_PRIMARY %>% distinct(item, element, item_set, unit)
@@ -129,17 +129,17 @@ module_xfaostat_L103_ProducerPrices <- function(command, ...) {
       left_join(UnitMap %>%
                   bind_rows(UnitMap %>% mutate(element = "Prod_Value", unit = "USD")),
                 by = "element") ->
-      QCL_PRIMARY_PROD_PV
+      L103.QCL_PRIMARY_PROD_PV
 
     rm(QV1, QV)
 
-    QCL_PRIMARY_PROD_PV %>%
+    L103.QCL_PRIMARY_PROD_PV %>%
       add_title("FAO crop and livestock production and crop area") %>%
       add_units("USD and tonne") %>%
       add_comments("Detailed FAO QCL data processing. FBS fish data is used") %>%
-      add_precursors("QCL_PROD",
+      add_precursors("L102.QCL_PROD",
                      "PP_wide") ->
-      QCL_PRIMARY_PROD_PV
+      L103.QCL_PRIMARY_PROD_PV
 
     return_data(MODULE_OUTPUTS)
 

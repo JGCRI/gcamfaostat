@@ -23,11 +23,11 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       "FBSH_CBH_wide")
 
   MODULE_OUTPUTS <-
-    c("QCL_PROD",
-      "QCL_AN_LIVEANIMAL",
-      "QCL_AN_PRIMARY_MILK",
-      "QCL_AN_LIVEANIMAL_MEATEQ",
-      "QCL_CROP_PRIMARY")
+    c("L102.QCL_PROD",
+      "L102.QCL_AN_LIVEANIMAL",
+      "L102.QCL_AN_PRIMARY_MILK",
+      "L102.QCL_AN_LIVEANIMAL_MEATEQ",
+      "L102.QCL_CROP_PRIMARY")
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -378,7 +378,7 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
 
 
 
-    # Bind QCL_ALL and save RDS ----
+    # Bind L102.QCL_ALL and save RDS ----
     #*******************************************
 
     QCL_CROP_PRIMARY %>% mutate(item_set = "QCL_COMM_CROP_PRIMARY") %>%
@@ -392,10 +392,10 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       bind_rows(QCL_AN_LIVEANIMAL %>% mutate(item_set = "QCL_COMM_AN_LIVEANIMAL")) %>%
       bind_rows(QCL_AN_LIVEANIMAL_MEATEQ %>% mutate(item_set = "QCL_COMM_AN_LIVEANIMAL_MEATEQ")) %>%
       bind_rows(FBS_FISH %>% mutate(item_set = "FBS_COMM_FISH"))->
-      QCL_ALL
+      L102.QCL_ALL
 
 
-    QCL_ALL %>%
+    L102.QCL_ALL %>%
       filter(item_set %in% c("QCL_COMM_AN_PRIMARY_MEAT1",
                              "QCL_COMM_AN_PRIMARY_MEAT2",
                              "QCL_COMM_AN_PRIMARY_EGG",
@@ -408,60 +408,60 @@ module_xfaostat_L102_ProductionArea <- function(command, ...) {
       add_units("various") %>%
       add_comments("Detailed FAO QCL data processing for live animal and production") %>%
       add_precursors("QCL_wide", "FBS_wide", "FBSH_CBH_wide") ->
-      QCL_AN_LIVEANIMAL
+      L102.QCL_AN_LIVEANIMAL
 
     QCL_AN_PRIMARY_MILK %>%
       add_title("FAO milk animal stock and production") %>%
       add_units("various") %>%
       add_comments("Detailed FAO QCL data processing for dairy animal and production") %>%
-      same_precursors_as(QCL_AN_LIVEANIMAL) ->
-      QCL_AN_PRIMARY_MILK
+      same_precursors_as(L102.QCL_AN_LIVEANIMAL) ->
+      L102.QCL_AN_PRIMARY_MILK
 
     QCL_AN_LIVEANIMAL_MEATEQ %>%
       add_title("FAO live animal stock meat equivalent") %>%
       add_units("various") %>%
       add_comments("Detailed FAO QCL data processing for live animal stock meat equivalent") %>%
-      same_precursors_as(QCL_AN_LIVEANIMAL) ->
-      QCL_AN_LIVEANIMAL_MEATEQ
+      same_precursors_as(L102.QCL_AN_LIVEANIMAL) ->
+      L102.QCL_AN_LIVEANIMAL_MEATEQ
 
     QCL_CROP_PRIMARY %>%
       add_title("FAO primary crop area and production") %>%
       add_units("various") %>%
       add_comments("Detailed FAO QCL data processing for crop area and production") %>%
-      same_precursors_as(QCL_AN_LIVEANIMAL) ->
-      QCL_CROP_PRIMARY
+      same_precursors_as(L102.QCL_AN_LIVEANIMAL) ->
+      L102.QCL_CROP_PRIMARY
 
 
     # Production only
-    QCL_ALL %>% filter(element_code == 5510) ->
-      QCL_PROD
+    L102.QCL_ALL %>% filter(element_code == 5510) ->
+      L102.QCL_PROD
 
-    QCL_PROD %>%
+    L102.QCL_PROD %>%
       add_title("FAO primary production") %>%
       add_units("tonnes") %>%
       add_comments("FAO primary production") %>%
-      same_precursors_as(QCL_AN_LIVEANIMAL) ->
-      QCL_PROD
+      same_precursors_as(L102.QCL_AN_LIVEANIMAL) ->
+      L102.QCL_PROD
 
     # No NA
-    assertthat::assert_that(QCL_ALL %>% filter(is.na(value)) %>% nrow() == 0)
+    assertthat::assert_that(L102.QCL_ALL %>% filter(is.na(value)) %>% nrow() == 0)
 
-    #QCL_ALL %>% FF_check_count_plot -> p; p
+    #L102.QCL_ALL %>% FF_check_count_plot -> p; p
     # ggsave(file.path(DIR_DATAPROC_PLOT, "QCL_ALL.png"),
     #        plot = p + ggtitle("gcamdata-FAOSTAT (QCL & FBS) production data over time"),
     #        dpi = 200, width = 9, height = 5 )
     # rm(p)
 
-    QCL_ALL %>% distinct(year); # 53 years
-    QCL_ALL %>% distinct(element, element_code, unit) # QCL_COMM_AN_LIVEANIMAL_MEATEQ has no element_code
-    QCL_ALL %>% distinct(item)  # 158 primary crop + 45 primary an + 57 others + 17 +12
+    L102.QCL_ALL %>% distinct(year); # 53 years
+    L102.QCL_ALL %>% distinct(element, element_code, unit) # QCL_COMM_AN_LIVEANIMAL_MEATEQ has no element_code
+    L102.QCL_ALL %>% distinct(item)  # 158 primary crop + 45 primary an + 57 others + 17 +12
 
 
-    # QCL_ALL %>%
+    # L102.QCL_ALL %>%
     #   add_title("FAO crop and livestock production and crop area") %>%
     #   add_units("various") %>%
     #   add_comments("Detailed FAO QCL data processing. FBS fish data is used") ->
-    #   QCL_ALL
+    #   L102.QCL_ALL
 
 
     return_data(MODULE_OUTPUTS)
