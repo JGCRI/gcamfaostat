@@ -231,12 +231,13 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
                # Regional extraction rate = prod of an aggregated processed item  / Processed use of an aggregated primary item
                # Use world average to fill in NA or zero
                extraction_rate = if_else(is.na(extraction_rate) | extraction_rate == 0, extraction_rate_world, extraction_rate),
-               # Using minimum extraction rate here
+               # Using minimum extraction rate here as an upper threshold to avoid extremely large scaling later
                extraction_rate = pmax(extraction_rate, minimium_extraction_rate),
+               # Set rate to Inf when Processed == 0
+               PositiveProd_ZeroProc = Production > 0 & Processed == 0,
+               extraction_rate = if_else(PositiveProd_ZeroProc == TRUE, Inf, extraction_rate),
                extraction_rate_trade = sum(Export) / sum(Export / extraction_rate),
-               extraction_rate_trade = if_else(is.na(extraction_rate_trade), extraction_rate, extraction_rate_trade),
-               # both processed and production > 0
-               positive_prod = Production > 0 & Processed > 0) %>%
+               extraction_rate_trade = if_else(is.na(extraction_rate_trade), extraction_rate, extraction_rate_trade)) %>%
         ungroup() %>%
         group_by(APE_comm, GCAM_region_ID) %>%
         # Calculate lagged extraction_rate but replace NA with current rate (first period)
@@ -446,9 +447,6 @@ module_aglu_L100.FAO_SUA_PrimaryEquivalent <- function(command, ...) {
         .df2 %>%
           complete(GCAM_region_ID = GCAM_region_names$GCAM_region_ID, nesting(APE_comm, item_code, nest_level, year), fill=list(value=0)) %>%
           complete(.df2 %>% distinct(APE_comm, item_code, nest_level), nesting(GCAM_region_ID, year), fill=list(value=0)) %>%
-          group_by(APE_comm, item_code) %>%
-          mutate(value = sum(value)) %>%
-          ungroup() %>%
           group_by(APE_comm, GCAM_region_ID, year) %>%
           mutate(share = value/ sum(value),
                  share = if_else(is.finite(share), share, dplyr::n()/sum(dplyr::n()))) %>%
