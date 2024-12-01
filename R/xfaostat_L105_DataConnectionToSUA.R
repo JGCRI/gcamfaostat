@@ -18,7 +18,7 @@
 module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(FILE = file.path(DIR_RAW_DATA_FAOSTAT, "FAO_items"),
+    c(FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_FAO_items"),
       "L102.QCL_PROD",
       "L102.QCL_AN_LIVEANIMAL_MEATEQ",
       "TCL_wide",
@@ -39,7 +39,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     year <- value <- Year <- Value <- FAO_country <- iso <- NULL    # silence package check.
     SCL_wide <- element_code <- element <- area_code <- item_code <- area <-
       item <- unit <- FBS_wide <- FBSH_CBH_wide <- TCL_wide <- TM_bilateral_wide <-
-      L102.QCL_PROD <- FAO_items <- tier <- QCL <- oil <-
+      L102.QCL_PROD <- Mapping_gcamdata_FAO_items <- tier <- QCL <- oil <-
       cake <- SCL_item_oil <- SCL_item_cake <- cake_rate <- cake_rate_world <-
       DS_key_coproduct_item <- Production <- Import <- Export <- DS_demand <-
       DS_production <- CoproductRate <- L102.QCL_AN_LIVEANIMAL_MEATEQ <- `Closing stocks` <-
@@ -384,14 +384,14 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
 
 
-    # 3. Process items in FAO_items to get Balanced SUA data ----
+    # 3. Process items in Mapping_gcamdata_FAO_items to get Balanced SUA data ----
     ## 3.1 Bal_new_tier1 ----
     # Tier1 includes 209 = 210-1 items with best sources e.g. bilateral trade (TM)  prodstat (QCL) and supply-utilization-account (SCL)
     # Note that item 237 Oil soybean was moved from Tier1 to Tier2 to use SCL for production due to Brazil data issue in QCL
     # SCL has balanced data processed by FAO but the quality was poor with low consistency
 
 
-    Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 1) %>% pull(item_code)) %>%
+    Get_SUA_TEMPLATE(.ITEM_CODE = Mapping_gcamdata_FAO_items %>% filter(tier == 1) %>% pull(item_code)) %>%
       SUA_TEMPLATE_LEFT_JOIN("QCL") %>%
       SUA_TEMPLATE_LEFT_JOIN("TM") %>%
       SUA_TEMPLATE_LEFT_JOIN("SCL") %>%
@@ -402,7 +402,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       select(-QCL, -TCL, -SCL) %>%
       # Adjust for balance across all dimensions
       SUA_bal_adjust %>%   # Unit is converted to 1000 tonnes!
-      left_join(FAO_items %>% select(item_code, item), by = "item_code") ->
+      left_join(Mapping_gcamdata_FAO_items %>% select(item_code, item), by = "item_code") ->
       Bal_new_tier1
 
 
@@ -411,7 +411,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     ## 3.2 Bal_new_tier2 ----
     # Tier2 includes 204 items that had no data or low quality data in QCL so used production from SCL
 
-    Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 2) %>% pull(item_code)) %>%
+    Get_SUA_TEMPLATE(.ITEM_CODE = Mapping_gcamdata_FAO_items %>% filter(tier == 2) %>% pull(item_code)) %>%
       SUA_TEMPLATE_LEFT_JOIN("TM") %>%
       SUA_TEMPLATE_LEFT_JOIN("SCL") %>%
       mutate(value = case_when(
@@ -419,7 +419,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
         element %in% SCL_element_new ~ SCL) ) %>%
       select(-TCL, -SCL)  %>%
       SUA_bal_adjust %>%   # Unit is converted to 1000 tonnes!
-      left_join(FAO_items %>% select(item_code, item), by = "item_code") ->
+      left_join(Mapping_gcamdata_FAO_items %>% select(item_code, item), by = "item_code") ->
       Bal_new_tier2
 
     assert_FBS_balance(Bal_new_tier2)
@@ -429,7 +429,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     # Tier3 includes 21 items that had QCL but no bilateral trade data
     # so use gross trade from SCL
 
-    Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 3) %>% pull(item_code)) %>%
+    Get_SUA_TEMPLATE(.ITEM_CODE = Mapping_gcamdata_FAO_items %>% filter(tier == 3) %>% pull(item_code)) %>%
       SUA_TEMPLATE_LEFT_JOIN("SCL")  %>%
       # light cleaning here since more missing data were seen for this group
       # set NA stock variation to zero to avoid fill NA later
@@ -446,7 +446,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       select(-QCL, -SCL) %>%
       GROSS_TRADE_ADJUST(.MIN_TRADE_PROD_RATIO = 0.01) %>%
       SUA_bal_adjust %>%   # Unit is converted to 1000 tonnes!
-      left_join(FAO_items %>% select(item_code, item), by = "item_code") ->
+      left_join(Mapping_gcamdata_FAO_items %>% select(item_code, item), by = "item_code") ->
       Bal_new_tier3
 
     assert_FBS_balance(Bal_new_tier3)
@@ -454,7 +454,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     ## 3.4 Bal_new_tier4 ----
     # Tier4 includes 40 items included in SCL but not in Tier1-3
 
-    Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 4) %>% pull(item_code)) %>%
+    Get_SUA_TEMPLATE(.ITEM_CODE = Mapping_gcamdata_FAO_items %>% filter(tier == 4) %>% pull(item_code)) %>%
       SUA_TEMPLATE_LEFT_JOIN("SCL") %>%
       # light cleaning here since more missing data were seen for this group
       rename(value = SCL)  %>%
@@ -466,7 +466,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       # Gross trade is adjusted since the source was not bilateral trade
       GROSS_TRADE_ADJUST(.MIN_TRADE_PROD_RATIO = 0.01) %>%
       SUA_bal_adjust %>%   # Unit is converted to 1000 tonnes!
-      left_join(FAO_items %>% select(item_code, item), by = "item_code") ->
+      left_join(Mapping_gcamdata_FAO_items %>% select(item_code, item), by = "item_code") ->
       Bal_new_tier4
 
     assert_FBS_balance(.DF = Bal_new_tier4)
@@ -475,7 +475,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     ## 3.5 Bal_new_tier5 ----
     #Tier5 includes 12 fish items from FBS and FBSH. Item code came from FBS as well
 
-    Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 5) %>% pull(item_code)) %>%
+    Get_SUA_TEMPLATE(.ITEM_CODE = Mapping_gcamdata_FAO_items %>% filter(tier == 5) %>% pull(item_code)) %>%
       SUA_TEMPLATE_LEFT_JOIN("FBS") %>%
       mutate(value = if_else(is.na(value) & element == "Stock Variation", 0, value)) %>%
       group_by(area_code, item_code, element) %>%
@@ -485,7 +485,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       replace_na(list(value = 0)) %>%
       GROSS_TRADE_ADJUST(.MIN_TRADE_PROD_RATIO = 0.01) %>%
       SUA_bal_adjust %>%  # Unit is converted to 1000 tonnes!
-      left_join(FAO_items %>% select(item_code, item), by = "item_code") ->
+      left_join(Mapping_gcamdata_FAO_items %>% select(item_code, item), by = "item_code") ->
       Bal_new_tier5
 
     assert_FBS_balance(.DF = Bal_new_tier5)
@@ -496,7 +496,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
     # "Rice, paddy (rice milled equivalent)" removed as not needed and excluded by FAOSTAT in 2023
     # 773 (Flax, processed but not spun) is changed to 771 (Flax, raw or retted)
 
-    Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 6) %>% pull(item_code)) %>%
+    Get_SUA_TEMPLATE(.ITEM_CODE = Mapping_gcamdata_FAO_items %>% filter(tier == 6) %>% pull(item_code)) %>%
       SUA_TEMPLATE_LEFT_JOIN("QCL") %>%
       SUA_TEMPLATE_LEFT_JOIN("TM", .DS_TM_Assert_Item = F) %>%
       SUA_TEMPLATE_LEFT_JOIN("TCL_gross", .DS_TM_Assert_Item = F) %>%
@@ -509,23 +509,23 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       replace_na(list(value = 0)) %>%
       GROSS_TRADE_ADJUST(.MIN_TRADE_PROD_RATIO = 0.01) %>%
       spread(element, value) %>%
-      # Processing to add demand based on DS_demand in FAO_items
+      # Processing to add demand based on DS_demand in Mapping_gcamdata_FAO_items
       # Only an exclusive use is assumed
-      mutate(Processed = if_else(item_code %in% c(FAO_items %>%
+      mutate(Processed = if_else(item_code %in% c(Mapping_gcamdata_FAO_items %>%
                                                    filter(tier == 6, grepl("Processed", DS_demand)) %>%
                                                    pull(item_code) ) & (Production + Import - Export) > 0,
                                 (Production + Import - Export), 0),
-             Food = if_else(item_code %in% c(FAO_items %>%
+             Food = if_else(item_code %in% c(Mapping_gcamdata_FAO_items %>%
                                               filter(tier == 6, grepl("Food", DS_demand)) %>%
                                               pull(item_code) ) & (Production + Import - Export) > 0,
                            (Production + Import - Export), 0),
-             `Other uses` = if_else(item_code %in% c(FAO_items %>%
+             `Other uses` = if_else(item_code %in% c(Mapping_gcamdata_FAO_items %>%
                                                       filter(tier == 6, grepl("Other", DS_demand)) %>%
                                                       pull(item_code) ) & (Production + Import - Export) > 0,
                                    (Production + Import - Export), 0)) %>%
       gather(element, value, -area_code, -item_code, -year) %>%
       SUA_bal_adjust %>%  # Unit is converted to 1000 tonnes!
-      left_join(FAO_items %>% select(item_code, item), by = "item_code") ->
+      left_join(Mapping_gcamdata_FAO_items %>% select(item_code, item), by = "item_code") ->
       Bal_new_tier6
 
     assert_FBS_balance(.DF = Bal_new_tier6)
@@ -543,7 +543,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       filter(element == "Production") %>%
       mutate(value = value * 1000) %>%  # convert units back to tonne!!!
       # Join to keep Tier 8 items
-      right_join(FAO_items %>% filter(tier == 7) %>%
+      right_join(Mapping_gcamdata_FAO_items %>% filter(tier == 7) %>%
                    # Get co-production rate from DS_production which is uniform across regions
                    mutate(CoproductRate = as.numeric(gsub("Coproduction_Rate \\(|)","", DS_production))) %>%
                    select(item_code, item, coproduct_item = DS_key_coproduct_item, coproduct_item_code = DS_key_coproduct_item_code, CoproductRate),
@@ -553,21 +553,21 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
 
     ### 3.7.2 Process to get Bal_new_tier7 ----
-    Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 7) %>% pull(item_code)) %>%
+    Get_SUA_TEMPLATE(.ITEM_CODE = Mapping_gcamdata_FAO_items %>% filter(tier == 7) %>% pull(item_code)) %>%
       SUA_TEMPLATE_LEFT_JOIN("QCL_Coproduct") %>%
       replace_na(list(value = 0)) %>%
       spread(element, value) %>%
-      # Processing to add demand based on DS_demand in FAO_items
+      # Processing to add demand based on DS_demand in Mapping_gcamdata_FAO_items
       # Only an exclusive use is assumed
-      mutate(Feed = if_else(item_code %in% c(FAO_items %>% filter(tier == 7, grepl("Feed", DS_demand)) %>%
+      mutate(Feed = if_else(item_code %in% c(Mapping_gcamdata_FAO_items %>% filter(tier == 7, grepl("Feed", DS_demand)) %>%
                                               pull(item_code) ) & Production > 0,
                            Production, 0),
-             `Other uses` = if_else(item_code %in% c(FAO_items %>% filter(tier == 7, grepl("Other", DS_demand)) %>%
+             `Other uses` = if_else(item_code %in% c(Mapping_gcamdata_FAO_items %>% filter(tier == 7, grepl("Other", DS_demand)) %>%
                                                       pull(item_code) ) & Production > 0,
                                    Production, 0) ) %>%
       gather(element, value, -area_code, -item_code, -year) %>%
       SUA_bal_adjust %>%  # Unit is converted to 1000 tonnes!
-      left_join(FAO_items %>% select(item, item_code), by = "item_code") ->
+      left_join(Mapping_gcamdata_FAO_items %>% select(item, item_code), by = "item_code") ->
       Bal_new_tier7
 
     assert_FBS_balance(.DF = Bal_new_tier7)
@@ -609,7 +609,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       APE_live_an_MeatEQ
 
     ### 3.8.2 Process to get Bal_new_tier9 ----
-    Get_SUA_TEMPLATE(.ITEM_CODE = FAO_items %>% filter(tier == 8) %>% pull(item_code)) %>%
+    Get_SUA_TEMPLATE(.ITEM_CODE = Mapping_gcamdata_FAO_items %>% filter(tier == 8) %>% pull(item_code)) %>%
       SUA_TEMPLATE_LEFT_JOIN("APE_live_an_MeatEQ") %>%
       spread(element, value) %>%
       # only keep net openning stock in the study period
@@ -618,7 +618,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       ungroup() %>%
       gather(element, value, -area_code, -item_code, -year) %>%
       SUA_bal_adjust %>%  # Unit is converted to 1000 tonnes!
-      left_join(FAO_items %>% select(item, item_code), by = "item_code") ->
+      left_join(Mapping_gcamdata_FAO_items %>% select(item, item_code), by = "item_code") ->
       Bal_new_tier8
 
     assert_FBS_balance(.DF = Bal_new_tier8)
@@ -646,7 +646,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 
     assert_FBS_balance(.DF = L105.Bal_new_all)
 
-    rm(TCL_gross, TCL_TM, SCL, FBS, FBSH_CBH, FAO_items)
+    rm(TCL_gross, TCL_TM, SCL, FBS, FBSH_CBH, Mapping_gcamdata_FAO_items)
     rm(list = ls(pattern = "Bal_new_tier*"))
 
 
@@ -654,7 +654,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
       add_title("L105.Bal_new_all") %>%
       add_units("Ktonne") %>%
       add_comments("Preprocessed FAO SUA 2010 - 2021") %>%
-      add_precursors(file.path(DIR_RAW_DATA_FAOSTAT, "FAO_items"),
+      add_precursors(file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_FAO_items"),
                      "L102.QCL_PROD",
                      "L102.QCL_AN_LIVEANIMAL_MEATEQ",
                      "TCL_wide",
@@ -676,7 +676,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 # Update log
 # The old tier 5 was not needed (oil seed cake) as the data is available
 
-# ***Generate/check FAO_items ----
+# ***Generate/check Mapping_gcamdata_FAO_items ----
 
 #  Curr_Envir <- environment()
 #
@@ -737,7 +737,7 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 #    filter(item_code != 30) -> Tier6
 #
 #  Tier6 %>% left_join(
-#    FAO_items %>% filter(tier == 6) %>% select(item_code, DS_trade, DS_production, DS_demand, DS_key_coproduct_item)
+#    Mapping_gcamdata_FAO_items %>% filter(tier == 6) %>% select(item_code, DS_trade, DS_production, DS_demand, DS_key_coproduct_item)
 #  )  %>% replace_na(list(DS_demand = "Other use only")) -> Tier6
 #
 #  Tier6 %>% inner_join(
@@ -750,14 +750,14 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 #    mutate(DS_production = "QCL") -> Tier6
 #
 #
-#  FAO_items %>% filter(tier %in% 8) %>%
+#  Mapping_gcamdata_FAO_items %>% filter(tier %in% 8) %>%
 #    select(item_code, item, DS_trade, DS_production, DS_demand, DS_key_coproduct_item) %>%  mutate(tier = 8) %>%
 #    filter(!grepl("rice|maize|hempseed|linseed|kapok|poppy|safflower", item)) %>%
 #    mutate(coproduct_item_code = c(274, 278, 332, 340))-> Tier7
 #
 # # "Oil of olive residues|Jojoba oil|Cake of cottonseed|Other oil of vegetable origin, crude n.e.c."
 #
-#  FAO_items %>% filter(tier %in% 9) %>%
+#  Mapping_gcamdata_FAO_items %>% filter(tier %in% 9) %>%
 #    select(item_code, item) %>%  mutate(tier = 9) -> Tier8
 #
 #  Tier1 %>% mutate(DS_trade = "TM", DS_production = "QCL", DS_demand = "SCL") %>%
@@ -769,9 +769,9 @@ module_xfaostat_L105_DataConnectionToSUA <- function(command, ...) {
 #    bind_rows(Tier7) %>%
 #    bind_rows(Tier8) -> Tier_All
 #
-#  FAO_items %>% filter(tier %in% 1:9) %>% anti_join(Tier_All, by = c("item_code"))
-#  Tier_All %>% anti_join(FAO_items, by = c("item_code"))
+#  Mapping_gcamdata_FAO_items %>% filter(tier %in% 1:9) %>% anti_join(Tier_All, by = c("item_code"))
+#  Tier_All %>% anti_join(Mapping_gcamdata_FAO_items, by = c("item_code"))
 #
-#  Tier_All -> FAO_items
+#  Tier_All -> Mapping_gcamdata_FAO_items
 #
 

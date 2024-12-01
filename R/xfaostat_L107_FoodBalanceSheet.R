@@ -22,9 +22,9 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
     c("TM_bilateral_wide",
       "L105.Bal_new_all",
       "L106.SUA_food_macronutrient_rate",
-      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_SUA_PrimaryEquivalent"),
-      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "SUA_item_code_map"),
-      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_FAO_iso_reg") )
+      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_SUA_PrimaryEquivalent"),
+      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_SUA_ItemCode"),
+      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_FAO_iso_reg") )
 
   MODULE_OUTPUTS <-
     c("L107.APE_after2010",
@@ -92,14 +92,14 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
     All_Bal_element <- levels(FAO_SUA_Kt$element)
     All_Bal_element <- factor(All_Bal_element, levels = All_Bal_element)
 
-    # Bilateral trade item indicator is added to SUA_item_code_map
+    # Bilateral trade item indicator is added to Mapping_gcamdata_SUA_ItemCode
     # filter FAO_BiTrade_Kt to only include bilateral trade item to be
     # consistent with FAO_SUA_Kt
-    BilaterialTrade_ItemCode <- SUA_item_code_map %>% filter(TM == TRUE) %>% distinct(item_code) %>% pull
+    BilaterialTrade_ItemCode <- Mapping_gcamdata_SUA_ItemCode %>% filter(TM == TRUE) %>% distinct(item_code) %>% pull
     FAO_BiTrade_Kt %>%
       filter(item_code %in% BilaterialTrade_ItemCode) ->
       FAO_BiTrade_Kt
-    SUA_item_code_map %>% select(item, item_code) -> SUA_item_code_map
+    Mapping_gcamdata_SUA_ItemCode %>% select(item, item_code) -> Mapping_gcamdata_SUA_ItemCode
 
     # Section1: [2010-2019] Region aggregation of supply-utilization-accounting data ----
 
@@ -114,7 +114,7 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
     # create a complete area / iso  region mapping
     FAO_SUA_Kt %>%
       distinct(area_code) %>%
-      left_join_error_no_match(Mapping_FAO_iso_reg %>% distinct(area_code, iso, region_ID), by = c("area_code")) ->
+      left_join_error_no_match(Mapping_gcamdata_FAO_iso_reg %>% distinct(area_code, iso, region_ID), by = c("area_code")) ->
       Area_Region_Map
 
     # 1.1 Regional aggregation for SUA ----
@@ -188,15 +188,15 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
 
     # Section2: [2010-2019] Primary equivalent aggregation to PCe commodities ----
 
-    Mapping_SUA_PrimaryEquivalent %>%
-      left_join_error_no_match(SUA_item_code_map %>% rename(sink_item_code = item_code), by=c("sink_item" = "item")) %>%
-      left_join_error_no_match(SUA_item_code_map %>% rename(source_item_code = item_code), by=c("source_item" = "item")) %>%
+    Mapping_gcamdata_SUA_PrimaryEquivalent %>%
+      left_join_error_no_match(Mapping_gcamdata_SUA_ItemCode %>% rename(sink_item_code = item_code), by=c("sink_item" = "item")) %>%
+      left_join_error_no_match(Mapping_gcamdata_SUA_ItemCode %>% rename(source_item_code = item_code), by=c("source_item" = "item")) %>%
       mutate(APE_comm = as.factor(APE_comm)) ->
-      Mapping_SUA_PrimaryEquivalent_ID
+      Mapping_gcamdata_SUA_PrimaryEquivalent_ID
 
-    #Mapping_SUA_PrimaryEquivalent_ID[Mapping_SUA_PrimaryEquivalent_ID$sink_item_code == 235, "source_primary"] = FALSE
+    #Mapping_gcamdata_SUA_PrimaryEquivalent_ID[Mapping_gcamdata_SUA_PrimaryEquivalent_ID$sink_item_code == 235, "source_primary"] = FALSE
 
-    Mapping_SUA_PrimaryEquivalent_ID %>%
+    Mapping_gcamdata_SUA_PrimaryEquivalent_ID %>%
       select(item_code = sink_item_code, output_specific_extraction_rate) %>%
       filter(!is.na(output_specific_extraction_rate)) ->
       OUTPUT_SPECIFIC_EXTRACTION_RATE
@@ -215,11 +215,11 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
     Get_GROSS_EXTRACTION_RATE <- function(DF_CURR_NEST, DF_ALL) {
 
       curr_sink_items = unique(DF_CURR_NEST$item_code)
-      Mapping_SUA_PrimaryEquivalent_ID %>%
+      Mapping_gcamdata_SUA_PrimaryEquivalent_ID %>%
         filter(sink_item_code %in% curr_sink_items) ->
         Curr_Sink_Mapping
       curr_source_items = unique(Curr_Sink_Mapping$source_item_code)
-      Mapping_SUA_PrimaryEquivalent_ID %>%
+      Mapping_gcamdata_SUA_PrimaryEquivalent_ID %>%
         filter(source_item_code %in% curr_source_items) ->
         Curr_Source_Mapping
       Curr_Source_Mapping %>%
@@ -428,12 +428,12 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
 
         # Sink items or processed items in the processing
         curr_sink_items = unique(DF_CURR_NEST$item_code)
-        Mapping_SUA_PrimaryEquivalent_ID %>%
+        Mapping_gcamdata_SUA_PrimaryEquivalent_ID %>%
           filter(sink_item_code %in% curr_sink_items) ->
           Curr_Sink_Mapping
         # Source items or primary items in the processing
         curr_source_items = unique(Curr_Sink_Mapping$source_item_code)
-        Mapping_SUA_PrimaryEquivalent_ID %>%
+        Mapping_gcamdata_SUA_PrimaryEquivalent_ID %>%
           filter(source_item_code %in% curr_source_items) ->
           Curr_Source_Mapping
 
@@ -590,7 +590,7 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
       # At this point we ditch the ID codes and factors as we return the data and
       # make it available for the rest of the original processing
       APE_AGG %>%
-        left_join_error_no_match(Mapping_SUA_PrimaryEquivalent %>% select(APE_comm_Agg, APE_comm) %>% distinct(),
+        left_join_error_no_match(Mapping_gcamdata_SUA_PrimaryEquivalent %>% select(APE_comm_Agg, APE_comm) %>% distinct(),
                                  by = c("APE_comm")) %>%
         group_by(region_ID, APE_comm_Agg, element, year) %>%
         summarize(value = sum(value), .groups = "drop") %>%
@@ -608,9 +608,9 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
     ## Loop through all APE_comm_Agg with available data ----
 
     FAO_SUA_Kt_R %>%
-      left_join(Mapping_SUA_PrimaryEquivalent_ID %>%
+      left_join(Mapping_gcamdata_SUA_PrimaryEquivalent_ID %>%
                   select(APE_comm, item_code = sink_item_code, nest_level) %>% distinct(), by = c("item_code")) %>%
-      left_join(Mapping_SUA_PrimaryEquivalent_ID %>%
+      left_join(Mapping_gcamdata_SUA_PrimaryEquivalent_ID %>%
                   select(APE_comm_source = APE_comm, item_code = source_item_code) %>% distinct(), by=c("item_code")) %>%
       # find SUA items which are truly not mapped to anything and filter them out
       mutate(APE_comm = if_else(is.na(APE_comm), APE_comm_source, APE_comm)) %>%
@@ -674,7 +674,7 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
                                           nele = length(unique(element)), .groups = "drop"
                                 ) %>%
                                 summarize(count = sum(nyear * nreg *nele)) %>% pull(count) ==
-                                .DF1 %>% nrow())
+                                .DF %>% nrow())
 
     }
 
@@ -695,28 +695,28 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
     # a. Get all GCAM SUA items from the mapping by binding both source and sink items
     # about 486 items (out of 530) used in GCAM
 
-    Mapping_SUA_PrimaryEquivalent %>%
+    Mapping_gcamdata_SUA_PrimaryEquivalent %>%
       select(APE_comm_Agg, item = source_item) %>%
-      bind_rows(Mapping_SUA_PrimaryEquivalent %>%
+      bind_rows(Mapping_gcamdata_SUA_PrimaryEquivalent %>%
                   select(APE_comm_Agg, item = sink_item)) %>%
       distinct() %>%
-      left_join_error_no_match(SUA_item_code_map, by = "item") ->
+      left_join_error_no_match(Mapping_gcamdata_SUA_ItemCode, by = "item") ->
       SUA_Items_APE
 
     assertthat::assert_that(
       SUA_Items_APE %>% distinct(item_code) %>% nrow() == SUA_Items_APE %>% nrow(),
-      msg = "Check duplicates in Mapping_SUA_PrimaryEquivalent SUA items"
+      msg = "Check duplicates in Mapping_gcamdata_SUA_PrimaryEquivalent SUA items"
     )
 
     # highly processed products or other products are not included in GCAM
     # (e.g., wine, infant food, or other nonfood items etc.)
 
-    SUA_item_code_map %>%
+    Mapping_gcamdata_SUA_ItemCode %>%
       filter(!item_code %in% unique(SUA_Items_APE$item_code)) -> SUA_Items_NEC
 
     # b. There are 426 FAO food items, all included in FAO_SUA_Kt_2010to2022 (530 items)
     # SUA_Items_Food includes both GCAM and NonGCAM(NEC)
-    SUA_item_code_map %>%
+    Mapping_gcamdata_SUA_ItemCode %>%
       filter(item_code %in% unique(L106.SUA_food_macronutrient_rate$item_code)) %>%
       left_join(SUA_Items_APE %>% select(-item), by = "item_code") %>%
       # For NA APE_comm_Agg: not elsewhere classified (NEC)

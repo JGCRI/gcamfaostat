@@ -18,9 +18,9 @@
 module_xfaostat_L999_DataExport <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c(FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_SUA_PrimaryEquivalent"),
-      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "SUA_item_code_map"),
-      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_FAO_iso_reg"),
+    c(FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_SUA_PrimaryEquivalent"),
+      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_SUA_ItemCode"),
+      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_FAO_iso_reg"),
       "L107.APE_after2010",
       "L105.Bal_new_all",
       "FBS_wide",
