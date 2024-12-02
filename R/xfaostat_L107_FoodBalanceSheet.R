@@ -19,16 +19,16 @@
 module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
 
   MODULE_INPUTS <-
-    c("TM_bilateral_wide",
-      "L105.Bal_new_all",
-      "L106.SUA_food_macronutrient_rate",
-      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_SUA_PrimaryEquivalent"),
+    c(FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_SUA_PrimaryEquivalent"),
       FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_SUA_ItemCode"),
-      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_FAO_iso_reg") )
+      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_FAO_iso_reg"),
+      "TM_bilateral_wide",
+      "L105.Bal_new_all",
+      "L106.SUA_food_macronutrient_rate")
 
   MODULE_OUTPUTS <-
-    c("L107.APE_after2010",
-      "L107.FAO_Food_Macronutrient_All")
+    c("L107.Traceable_FBS_PCe_2010Plus",
+      "L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus")
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -626,7 +626,7 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
       tidyr::nest(data = -nest_level) %>%
       # we are now ready to recursively primarize APE commodities then aggregate to APE
       Proc_primarize() ->
-      L107.APE_after2010
+      L107.Traceable_FBS_PCe_2010Plus
 
 
     Check_Balance_SUA <- function(.DF){
@@ -679,7 +679,7 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
     }
 
 
-    Check_Balance_SUA(L107.APE_after2010)
+    Check_Balance_SUA(L107.Traceable_FBS_PCe_2010Plus)
 
     ## Done Section2 ----
     #****************************----
@@ -693,7 +693,7 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
     # All food item with available macronutrient info from FAOSTAT are included
 
     # a. Get all GCAM SUA items from the mapping by binding both source and sink items
-    # about 486 items (out of 530) used in GCAM
+    # 533 items
 
     Mapping_gcamdata_SUA_PrimaryEquivalent %>%
       select(APE_comm_Agg, item = source_item) %>%
@@ -703,24 +703,23 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
       left_join_error_no_match(Mapping_gcamdata_SUA_ItemCode, by = "item") ->
       SUA_Items_APE
 
+    # food is uniquely mapped from SUA to APE_Comm
     assertthat::assert_that(
       SUA_Items_APE %>% distinct(item_code) %>% nrow() == SUA_Items_APE %>% nrow(),
       msg = "Check duplicates in Mapping_gcamdata_SUA_PrimaryEquivalent SUA items"
     )
 
-    # highly processed products or other products are not included in GCAM
-    # (e.g., wine, infant food, or other nonfood items etc.)
-
+    # check: there are two items with empty accounts
     Mapping_gcamdata_SUA_ItemCode %>%
       filter(!item_code %in% unique(SUA_Items_APE$item_code)) -> SUA_Items_NEC
 
-    # b. There are 426 FAO food items, all included in FAO_SUA_Kt_2010to2022 (530 items)
-    # SUA_Items_Food includes both GCAM and NonGCAM(NEC)
+    # b. There are 432 FAO food items, all included in FAO_SUA_Kt_2010to2022 (535 items)
     Mapping_gcamdata_SUA_ItemCode %>%
       filter(item_code %in% unique(L106.SUA_food_macronutrient_rate$item_code)) %>%
-      left_join(SUA_Items_APE %>% select(-item), by = "item_code") %>%
+      left_join_error_no_match(SUA_Items_APE %>% select(-item), by = "item_code") %>%
       # For NA APE_comm_Agg: not elsewhere classified (NEC)
       # So we would know % of food calories not included in GCAM commodities
+      # we later updated mapping to account for NEC there already; no No NA here
       mutate(APE_comm_Agg = if_else(is.na(APE_comm_Agg), "NEC", APE_comm_Agg)) ->
       SUA_Items_Food
 
@@ -740,6 +739,7 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
 
     ### b. Calculate SUA food Calories consumption by joining macronutrient rates and SUA food ----
 
+    # Get data ready first
     FAO_SUA_Kt %>%
       filter(element == "Food", item_code %in% SUA_Items_Food$item_code) %>%
       # ensure we at least have a complete series across time otherwise it may
@@ -760,46 +760,54 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
                                by = c("item_code", "macronutrient")) %>%
       mutate(macronutrient_value = if_else(is.na(macronutrient_value),
                                            macronutrient_value_World,
-                                           macronutrient_value),
-             # calculate total Cal, protein and fat in food
-             # value was in 1000 ton or 10^ 9 g
-             value = macronutrient_value * Food_Kt,
+                                           macronutrient_value) ) %>%
+    # computation
+      # calculate total Cal, protein and fat in food
+      # value was in 1000 ton or 10^ 9 g
+      mutate(value = macronutrient_value * Food_Kt,
              value = if_else(macronutrient %in% c("fatperc", "proteinperc"),
                              value / 100 /1000, value)) %>% # unit from perc to Mt
       select(-macronutrient_value, -macronutrient_value_World, -Food_Kt) %>%
       # rename element with units
-      mutate(macronutrient = case_when(
-        macronutrient == "calperg" ~ "MKcal",
-        macronutrient == "fatperc" ~ "MtFat",
-        macronutrient == "proteinperc" ~ "MtProtein" )) %>%
-      left_join_error_no_match(Area_Region_Map, by = "area_code") ->
-      L107.FAO_Food_Macronutrient_All
+      mutate(
+        element = case_when(
+          macronutrient == "calperg" ~ "Dietary energy",
+          macronutrient == "fatperc" ~ "Fat",
+          macronutrient == "proteinperc" ~ "Protein" ),
+        unit = case_when(
+          macronutrient == "calperg" ~ "Mkcal",
+          macronutrient == "fatperc" ~ "Mt",
+          macronutrient == "proteinperc" ~ "Mt" )) %>%
+      select(-macronutrient)->
+      L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus
 
 
     #****************************----
     # Produce outputs ----
-    #*******************************
 
-    # GCAM_AgLU_SUA_APE_1973_2019 %>%
-    #   add_title("GCAM_AgLU_SUA_APE_1973_2019") %>%
-    #   add_units("kton") %>%
-    #   add_comments("Supply utilization balance for GCAM commodities and regions in primary equivalent") %>%
-    #   add_precursors(MODULE_INPUTS) ->
-    #   GCAM_AgLU_SUA_APE_1973_2019
+    L107.Traceable_FBS_PCe_2010Plus %>%
+      add_title("L107.Traceable_FBS_PCe_2010Plus") %>%
+      add_units("kton") %>%
+      add_comments("Updated FBS: Supply utilization balance in primary equivalent, FAO countries, APE commoditeis, for 2010 +") %>%
+      add_precursors("TM_bilateral_wide",
+                     "L105.Bal_new_all",
+                     file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_SUA_PrimaryEquivalent"),
+                     file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_SUA_ItemCode"),
+                     file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_FAO_iso_reg")) ->
+      L107.Traceable_FBS_PCe_2010Plus
 
+    L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus %>%
+      add_title("L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus") %>%
+      add_units("MKcal, MtFat, MtProtein") %>%
+      add_comments("Dietary energy and macronutrients for food supply in PCe, FAO countries, APE commoditeis, for 2010 +") %>%
+      add_precursors("L106.SUA_food_macronutrient_rate",
+                     FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_SUA_PrimaryEquivalent"),
+                     FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_SUA_ItemCode"),
+                     file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_FAO_iso_reg")) ->
+      L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus
 
-
-    #
-    #     L107.FAO_Food_Macronutrient_All %>%
-    #       add_title("GCAM_AgLU_SUA_APE_1973_2019") %>%
-    #       add_units("MKcal, MtFat, MtProtein") %>%
-    #       add_comments("Macronutrient consumption values connected to food consumption in GCAM_AgLU_SUA_APE_1973_2019") %>%
-    #       add_precursors(MODULE_INPUTS) ->
-    #       L107.FAO_Food_Macronutrient_All
-    #
 
     return_data(MODULE_OUTPUTS)
-
 
   } else {
     stop("Unknown command")

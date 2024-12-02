@@ -419,6 +419,9 @@ driver_drake <- function(
     # assign output path (csv_dir) to DIR_OUTPUT_CSV in the package environment
     assign(x = "DIR_OUTPUT_CSV", value = csv_dir, envir = rlang::pkg_env("gcamfaostat"))
     dir.create(DIR_OUTPUT_CSV, showWarnings = FALSE, recursive = TRUE)
+
+    # clean data export chunk so that the data will be always exported
+    drake::clean("module_yfaostat_Traceable_FBS_DataExport")
   }
 
   # We merely suggest drake as we can still run the data system via driver
