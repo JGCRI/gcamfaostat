@@ -686,9 +686,9 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
 
 
 
-    #Section6 Connect food items and macronutrient rates ----
+    #Section3 Connect food items and macronutrient rates ----
 
-    # 6.1 Separate FAO food items into GCAM food items and NEC for macronutrient ----
+    # 3.1 Separate FAO food items into GCAM food items and NEC for macronutrient ----
     # GCAM included most of the food items
     # All food item with available macronutrient info from FAOSTAT are included
 
@@ -724,7 +724,7 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
       SUA_Items_Food
 
 
-    # 6.2 Get macronutrient values ----
+    # 3.2 Get macronutrient values ----
 
     ### a. Get world average macronutrient ----
     # For filling in missing values
@@ -781,7 +781,38 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
       select(-macronutrient)->
       L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus
 
+    # Potential discrepancy in food calorie and macronutrient aggregation (due to data quality)
+    # when the processing use of primary is zero while there is indeed secondary output and food consumption
+    # food in secondary products won't be converted to primary due to zero extraction rates.
+    # fortunately, there are only a few cases in small areas/sectors.
+    # One example is "Other citrus and products" in PCe in "bra"
 
+    L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus %>%
+      group_by(area_code, year, APE_comm_Agg, element) %>%
+      summarize(value = sum(value), .groups = "drop") %>%
+      # anti join ones with positive food mass in PCe
+      anti_join(
+        L107.Traceable_FBS_PCe_2010Plus %>%
+          filter(element == "Food", value >0) %>%
+          spread(element, value) %>% rename(area_code = region_ID),
+        by = c("area_code", "year", "APE_comm_Agg")
+      ) %>%
+      # check remaining positive
+      filter(value > 0) %>%
+      distinct(area_code, year, APE_comm_Agg) %>%
+      mutate(ZeroFood = 0) ->
+      FBS_FOOD_SCALER
+
+    # After checks above, there were 30 obs; we change the calorie and macronutrient to zero in FBS
+    L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus %>%
+      left_join(FBS_FOOD_SCALER,
+                by = c("area_code", "year", "APE_comm_Agg")) %>%
+      mutate(value = if_else(is.na(ZeroFood), value, value *0)) %>%
+      select(-ZeroFood) ->
+      L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus
+
+
+    ## Done Section3 ----
     #****************************----
     # Produce outputs ----
 

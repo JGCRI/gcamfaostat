@@ -84,6 +84,7 @@ chord_wrapper <- function(.DF,
 #' @param .FigTitleSize Size of title font
 #' @param .LastLabelCol Color of the last label
 #' @param .SaveScaler A scaler controling the size (dpi = 300)
+#' @param .SVG logical if true export SVG otherwise export PNG
 #' @importFrom grDevices dev.off png
 #' @description
 #' See https://cran.r-project.org/web/packages/treemap/index.html for the details of the treemap function
@@ -99,18 +100,29 @@ treemap_wrapper <- function(.DF,
                             .LastLabelCol = "orange",
                             .SaveDir = "../man/figures",
                             .SaveName,
-                            .SaveScaler = 1){
+                            .SaveScaler = 1,
+                            .SVG = F,
+                            .SVG_w = 6,
+                            .SVG_h = 8){
 
   assertthat::assert_that(is.data.frame(.DF))
   assertthat::assert_that(is.character(.SaveName))
-  assertthat::assert_that(is.character(.FigTitle))
+  #assertthat::assert_that(is.character(.FigTitle))
   assertthat::assert_that(.Depth%%1==0)
   assertthat::assert_that(is.numeric(.SaveScaler))
+  assertthat::assert_that(is.logical(.SVG))
 
 
   # treemap save to a path
-  png(filename= file.path(.SaveDir, paste0(.SaveName,".png")), res = 300,
-      width= 2500 * .SaveScaler, height= 1800 * .SaveScaler )
+
+  if (.SVG == TRUE) {
+    svg(filename= file.path(.SaveDir, paste0(.SaveName,".svg")), width = .SVG_w, height = .SVG_h) }
+  else{
+    png(filename= file.path(.SaveDir, paste0(.SaveName,".png")), res = 300,
+        width= 2500 * .SaveScaler, height= 1800 * .SaveScaler )
+  }
+
+
   # treemap
   treemap(.DF,
           index= names(.DF)[1:.Depth],
