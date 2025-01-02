@@ -452,6 +452,8 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
 
         ## b. For the sink items of the tier, separate balance into domestic and imported ----
         # Note that the method here relies on Get_GROSS_EXTRACTION_RATE and Get_ARMINGTON_BALANCE
+        # Aggregate sink_items are aggregated into "sink_item"
+        # And production & processed are adjusted for primary aggregation
         DF_CURR_NEST %>%
           # adding bal_source including bal_import and bal_domestic
           # map/allocate import to consumption
@@ -468,9 +470,9 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
           select(-extraction_rate) ->
           .df1
 
-        ## c. Aggregate sink_items are aggregated into "sink_item" ----
-        # And production & processed are adjusted for primary aggregation
-        # Bind source items as well
+        ## c. Calculate source item shares ----
+        # in case that there are multiple source items, we need to do vertical aggregation carefully to avoid double accounting
+        # here we calculate the source shared by their processed uses
         DF_ALL %>%
           filter(nest_level <= curr_nest) %>%
           tidyr::unnest(c("data")) %>%
@@ -576,8 +578,25 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
         ungroup() %>%
         spread(element, value, fill = 0.0) %>%
         # Do a final balance cleaning
+        # starting with stocks; the adj here is generaly very small
+        group_by(region_ID, APE_comm) %>% dplyr::arrange(-year) %>%
+        mutate(`Stock Variation` = `Closing stocks` - `Opening stocks`,
+               cum_StockVariation = cumsum(`Stock Variation`) - first(`Stock Variation`),
+               `Opening stocks1` = first(`Opening stocks`) - cum_StockVariation) %>%
+        select(-cum_StockVariation, -`Opening stocks`) %>%
+        rename(`Opening stocks` = `Opening stocks1`) %>%
+        mutate(`Closing stocks` = `Opening stocks` + `Stock Variation`) %>%
+        mutate(Stockshifter = if_else(`Closing stocks` < 0, abs(`Closing stocks`), 0)) %>%
+        mutate(Stockshifter = if_else(`Opening stocks` < 0 & `Opening stocks` < `Closing stocks`,
+                                      abs(`Opening stocks`), Stockshifter)) %>%
+        mutate(Stockshifter = max(Stockshifter),
+               `Opening stocks` = `Opening stocks` + Stockshifter,
+               `Closing stocks` = `Opening stocks` + `Stock Variation`) %>%
+        select(-Stockshifter) %>%
+        ungroup() %>%
+        # recalculate residuals
         mutate(`Regional supply` = `Opening stocks` + Production + `Import`,
-               # ignore negative "processed" due to the above many-to-one processing above (should be small)
+               # ignore negative "processed" due to the above many-to-one processing above (mostly small)
                Processed = if_else(Processed < 0, 0, Processed),
                Food = if_else(Food < 0, 0, Food),
                `Other uses` = if_else(`Other uses` < 0, 0, `Other uses`),
