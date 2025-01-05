@@ -35,6 +35,7 @@ IEA_EnergyBalances_2019.csv.gz
 # FAOSTATA raw zip
 inst/extdata/FAOSTAT/*.zip
 inst/extdata/FAOSTAT_Archive*/*
+inst/extdata/FishSTAT/*.zip
 
 # Model-specific gcamfaostat output files
 gcamfaostat*/

@@ -1,0 +1,59 @@
+# File: Mapping_commodity_ISSCAAP.csv
+# Title: Item mapping for fish species between ISSCAAP and aggregated groups
+# Units: NA
+# Description:  The mapping is available in FISHSTATJ but in a PDF. ISSCAAP_group is used for FAOSTAT FBS. ISSCAAP_star was included in the PDF and starred items were not included in certain aggregations.
+# Data source: FAO FISHSTAT
+# Date of CSV last update: 2025-01-04
+# Column types: clicc
+# ----------
+ISSCAAP_group,ISSCAAP_star,ISSCAAP_code,ISSCAAP,Yearbook_Group_En
+Freshwater fishes,F,11,"Carps, barbels and other cyprinids","Fish, crustaceans and molluscs, etc."
+Freshwater fishes,F,12,Tilapias and other cichlids,"Fish, crustaceans and molluscs, etc."
+Freshwater fishes,F,13,Miscellaneous freshwater fishes,"Fish, crustaceans and molluscs, etc."
+Freshwater fishes,F,21,"Sturgeons, paddlefishes","Fish, crustaceans and molluscs, etc."
+Freshwater fishes,F,22,River eels,"Fish, crustaceans and molluscs, etc."
+Freshwater fishes,F,23,"Salmons, trouts, smelts","Fish, crustaceans and molluscs, etc."
+Freshwater fishes,F,24,Shads,"Fish, crustaceans and molluscs, etc."
+Diadromous fishes,F,25,Miscellaneous diadromous fishes,"Fish, crustaceans and molluscs, etc."
+Diadromous fishes,F,31,"Flounders, halibuts, soles","Fish, crustaceans and molluscs, etc."
+Marine fishes,F,32,"Cods, hakes, haddocks","Fish, crustaceans and molluscs, etc."
+Marine fishes,F,33,Miscellaneous coastal fishes,"Fish, crustaceans and molluscs, etc."
+Marine fishes,F,34,Miscellaneous demersal fishes,"Fish, crustaceans and molluscs, etc."
+Marine fishes,F,35,"Herrings, sardines, anchovies","Fish, crustaceans and molluscs, etc."
+Marine fishes,F,36,"Tunas, bonitos, billfishes","Fish, crustaceans and molluscs, etc."
+Marine fishes,F,37,Miscellaneous pelagic fishes,"Fish, crustaceans and molluscs, etc."
+Marine fishes,F,38,"Sharks, rays, chimaeras","Fish, crustaceans and molluscs, etc."
+Marine fishes,F,39,Marine fishes not identified,"Fish, crustaceans and molluscs, etc."
+Crustaceans,F,41,Freshwater crustaceans,"Fish, crustaceans and molluscs, etc."
+Crustaceans,F,42,"Crabs, sea-spiders","Fish, crustaceans and molluscs, etc."
+Crustaceans,F,43,"Lobsters, spiny-rock lobsters","Fish, crustaceans and molluscs, etc."
+Crustaceans,F,44,"King crabs, squat-lobsters","Fish, crustaceans and molluscs, etc."
+Crustaceans,F,45,"Shrimps, prawns","Fish, crustaceans and molluscs, etc."
+Crustaceans,F,46,"Krill, planktonic crustaceans","Fish, crustaceans and molluscs, etc."
+Crustaceans,F,47,Miscellaneous marine crustaceans,"Fish, crustaceans and molluscs, etc."
+Molluscs,F,51,Freshwater molluscs,"Fish, crustaceans and molluscs, etc."
+Molluscs,F,52,"Abalones, winkles, conchs","Fish, crustaceans and molluscs, etc."
+Molluscs,F,53,Oysters,"Fish, crustaceans and molluscs, etc."
+Molluscs,F,54,Mussels,"Fish, crustaceans and molluscs, etc."
+Molluscs,F,55,"Scallops, pectens","Fish, crustaceans and molluscs, etc."
+Molluscs,F,56,"Clams, cockles, arkshells","Fish, crustaceans and molluscs, etc."
+Molluscs,F,57,"Squids, cuttlefishes, octopuses","Fish, crustaceans and molluscs, etc."
+Molluscs,F,58,Miscellaneous marine molluscs,"Fish, crustaceans and molluscs, etc."
+"Whales, seals and other aquatic mammals",T,61,"Blue-whales, fin-whales",Other aq. animals & products
+"Whales, seals and other aquatic mammals",T,62,"Sperm-whales, pilot-whales",Other aq. animals & products
+"Whales, seals and other aquatic mammals",T,63,"Eared seals, hair seals, walruses",Other aq. animals & products
+"Whales, seals and other aquatic mammals",T,64,Miscellaneous aquatic mammals,Other aq. animals & products
+Miscellaneous aquatic animals,F,71,Frogs and other amphibians,"Fish, crustaceans and molluscs, etc."
+Miscellaneous aquatic animals,F,72,Turtles,"Fish, crustaceans and molluscs, etc."
+Miscellaneous aquatic animals,T,73,Crocodiles and alligators,Other aq. animals & products
+Miscellaneous aquatic animals,F,74,Sea-squirts and other tunicates,"Fish, crustaceans and molluscs, etc."
+Miscellaneous aquatic animals,F,75,Horseshoe crabs and other arachnoids,"Fish, crustaceans and molluscs, etc."
+Miscellaneous aquatic animals,F,76,Sea-urchins and other echinoderms,"Fish, crustaceans and molluscs, etc."
+Miscellaneous aquatic animals,F,77,Miscellaneous aquatic invertebrates,"Fish, crustaceans and molluscs, etc."
+Miscellaneous aquatic animal products,T,81,"Pearls, mother-of-pearl, shells",Other aq. animals & products
+Miscellaneous aquatic animal products,T,82,Corals,Other aq. animals & products
+Miscellaneous aquatic animal products,T,83,Sponges,Other aq. animals & products
+Aquatic plants,T,91,Brown seaweeds,Aquatic plants
+Aquatic plants,T,92,Red seaweeds,Aquatic plants
+Aquatic plants,T,93,Green seaweeds,Aquatic plants
+Aquatic plants,T,94,Miscellaneous aquatic plants,Aquatic plants
