@@ -7,8 +7,8 @@
 #' @param command API command to execute
 #' @param ... other optional parameters, depending on command
 #' @return Depends on \code{command}: either a vector of required inputs, a vector of output names, or (if
-#'   \code{command} is "MAKE") all the generated outputs: \code{L107.FAO_Food_Macronutrient_All},
-#'   \code{FAO_Food_MacronutrientRate_2010_2019_MaxValue}
+#'   \code{command} is "MAKE") all the generated outputs: \code{L107.Traceable_FBS_PCe_2010Plus},
+#'   \code{L107.Traceable_FBS_PCe_Gross_Extraction_Rates_2010Plus},  \code{L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus}
 #' @details This chunk aggregates supply utilization accounts into food balance sheet items
 #' @importFrom assertthat assert_that
 #' @importFrom dplyr summarize bind_rows filter if_else inner_join left_join mutate rename select n group_by_at
@@ -28,6 +28,7 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
 
   MODULE_OUTPUTS <-
     c("L107.Traceable_FBS_PCe_2010Plus",
+      "L107.Traceable_FBS_PCe_Gross_Extraction_Rates_2010Plus",
       "L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus")
 
   if(command == driver.DECLARE_INPUTS) {
@@ -642,10 +643,36 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
       # we will literally nest by nest level to avoid constant subseting
       # although we end up needed to unnest at times as well so ultimately,
       # it likely makes little difference in performance
-      tidyr::nest(data = -nest_level) %>%
+      tidyr::nest(data = -nest_level) ->
+      FAO_SUA_Kt_R_nested
+
       # we are now ready to recursively primarize APE commodities then aggregate to APE
+    FAO_SUA_Kt_R_nested %>%
       Proc_primarize() ->
       L107.Traceable_FBS_PCe_2010Plus
+
+
+    # also keep gross extraction rates
+    # here is a simplified func of Proc_primarize but only binding
+    # extraction rates across nests
+    lapply(max(FAO_SUA_Kt_R_nested$nest_level):1,
+           function(.curr_nest){
+
+      FAO_SUA_Kt_R_nested %>%
+        filter(nest_level == .curr_nest) %>%
+        pull(data) %>%
+        first() ->
+        DF_CURR_NEST
+
+      Mapping_gcamdata_SUA_PrimaryEquivalent_ID %>%
+        distinct(APE_comm, nest_level, source_item, sink_item) %>%
+        inner_join(
+          Get_GROSS_EXTRACTION_RATE(DF_CURR_NEST, FAO_SUA_Kt_R_nested) %>%
+            mutate(nest_level = .curr_nest) %>%
+            spread(bal_source, extraction_rate) , by = c("APE_comm", "nest_level") )
+
+    }) %>% bind_rows() ->
+      L107.Traceable_FBS_PCe_Gross_Extraction_Rates_2010Plus
 
 
     Check_Balance_SUA <- function(.DF){
@@ -856,6 +883,13 @@ module_xfaostat_L107_FoodBalanceSheet <- function(command, ...) {
                      file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_FAO_iso_reg")) ->
       L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus
 
+
+    L107.Traceable_FBS_PCe_Gross_Extraction_Rates_2010Plus %>%
+      add_title("L107.Traceable_FBS_PCe_Gross_Extraction_Rates_2010Plus") %>%
+      add_units("NA") %>%
+      add_comments("Extraction rates by source and sink items and nest level, FAO countries, APE commoditeis, for 2010 +") %>%
+      same_precursors_as(L107.Traceable_FBS_PCe_2010Plus) ->
+      L107.Traceable_FBS_PCe_Gross_Extraction_Rates_2010Plus
 
     return_data(MODULE_OUTPUTS)
 

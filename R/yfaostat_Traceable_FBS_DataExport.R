@@ -23,7 +23,8 @@ module_yfaostat_Traceable_FBS_DataExport <- function(command, ...) {
       FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_FAO_iso_reg"),
       "L105.Bal_new_all",
       "L107.Traceable_FBS_PCe_2010Plus",
-      "L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus")
+      "L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus",
+      "L107.Traceable_FBS_PCe_Gross_Extraction_Rates_2010Plus")
 
     MODULE_OUTPUTS <-
       c(CSV = "Metadata_GCAMFAOSTAT_Traceable_FBS",
@@ -31,7 +32,8 @@ module_yfaostat_Traceable_FBS_DataExport <- function(command, ...) {
         CSV = "SUA_2010_2022",
         CSV = "SUA_Food_Calorie_Macronutrient_2010_2022",
         CSV = "Traceable_FBS_PCe_2010_2022",
-        CSV = "Traceable_FBS_Food_Calorie_Macronutrient_2010_2022")
+        CSV = "Traceable_FBS_Food_Calorie_Macronutrient_2010_2022",
+        CSV = "Traceable_FBS_Extraction_Rate_2010_2022")
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -111,7 +113,7 @@ module_yfaostat_Traceable_FBS_DataExport <- function(command, ...) {
 
       output_csv_data(
         gcam_dataset = Nested_Mapping_SUA_To_Traceable_FBS,
-        out_filename = "Nested_Mapping_SUA_To_Traceable_FBS",
+        out_filename = "Nested_Mapping_SUA_To_Traceable_FBS" %>% paste0("_", Sys.Date()),
         col_type_nonyear = "ccicici",
         title = "Mapping of SUA items to aggregated primary commodity equivalent products by level of nestings",
         unit = "NA",
@@ -148,7 +150,7 @@ module_yfaostat_Traceable_FBS_DataExport <- function(command, ...) {
 
       output_csv_data(
         gcam_dataset = SUA_2010_2022,
-        out_filename = "SUA_2010_2022",
+        out_filename = "SUA_2010_2022" %>% paste0("_", Sys.Date()),
         col_type_nonyear = "ccifc",
         title = "Supply utilization accounts for all FAO items in 2010 - 2022",
         unit = "1000 tonnes",
@@ -177,7 +179,7 @@ module_yfaostat_Traceable_FBS_DataExport <- function(command, ...) {
 
       output_csv_data(
         gcam_dataset = SUA_Food_Calorie_Macronutrient_2010_2022,
-        out_filename = "SUA_Food_Calorie_Macronutrient_2010_2022",
+        out_filename = "SUA_Food_Calorie_Macronutrient_2010_2022" %>% paste0("_", Sys.Date()),
         col_type_nonyear = "ccicc",
         title = "SUA: food energy and macronutrient in 2010 - 2022",
         unit = "Mt or Mkcal",
@@ -206,7 +208,7 @@ module_yfaostat_Traceable_FBS_DataExport <- function(command, ...) {
 
       output_csv_data(
         gcam_dataset = Traceable_FBS_PCe_2010_2022,
-        out_filename = "Traceable_FBS_PCe_2010_2022",
+        out_filename = "Traceable_FBS_PCe_2010_2022" %>% paste0("_", Sys.Date()),
         col_type_nonyear = "cccc",
         title = "Traceable FBS: supply utilization accounts in primary equivalent for APE items in 2010 - 2022",
         unit = "1000 tonnes",
@@ -235,7 +237,7 @@ module_yfaostat_Traceable_FBS_DataExport <- function(command, ...) {
 
       output_csv_data(
         gcam_dataset = Traceable_FBS_Food_Calorie_Macronutrient_2010_2022,
-        out_filename = "Traceable_FBS_Food_Calorie_Macronutrient_2010_2022",
+        out_filename = "Traceable_FBS_Food_Calorie_Macronutrient_2010_2022" %>% paste0("_", Sys.Date()),
         col_type_nonyear = "cccc",
         title = "Traceable FBS: food energy and macronutrient in 2010 - 2022",
         unit = "Mt or Mkcal",
@@ -246,6 +248,71 @@ module_yfaostat_Traceable_FBS_DataExport <- function(command, ...) {
 
       add_to_output_meta(.df = Traceable_FBS_Food_Calorie_Macronutrient_2010_2022,
                          "Traceable_FBS_Food_Calorie_Macronutrient_2010_2022")
+
+
+
+
+
+     # * Traceable_FBS_Extraction_Rate_2010_2022 ----
+      # generate a base mapping to join table
+      # there is some info from the mapping to be used to update the rates
+      # E.g., output specific
+
+      Mapping_gcamdata_SUA_PrimaryEquivalent %>%
+        distinct(APE_comm_Agg, APE_comm, nest_level, source_item,
+                 sink_item, sink_item, source_item,
+                 output_specific_extraction_rate,
+                 min_extraction_rate = extraction_rate_Q25, Q25asMin ) %>%
+        filter(nest_level >= 1) %>%
+        mutate(min_extraction_rate = if_else(Q25asMin == F, 0, min_extraction_rate)) ->
+        Extraction_Rate_Mapping
+
+      Extraction_Rate_Mapping %>%
+        replace_na(list(output_specific_extraction_rate = 1)) %>%
+        full_join(L107.Traceable_FBS_PCe_Gross_Extraction_Rates_2010Plus,
+                  by = c("APE_comm", "nest_level", "source_item", "sink_item")) %>%
+        left_join_error_no_match(
+          Mapping_gcamdata_FAO_iso_reg %>% select(region_ID, iso), by = "region_ID") %>%
+        transmute(aggregated_PCe_item = APE_comm_Agg, PCe_item = APE_comm, iso,  year,
+                  nest_level, source_item, sink_item,
+                  output_specific_extraction_rate,
+                  ER_imported = bal_import,
+                  ER_domestic = bal_domestic_current,
+                  ER_lagged =  bal_domestic_lag )  %>%
+        gather(ER, value, ER_imported, ER_domestic, ER_lagged) %>%
+        # incorporate output_specific_extraction_rate into ER
+        mutate(value = value * output_specific_extraction_rate) %>%
+        select(-output_specific_extraction_rate) %>%
+        rename(source_item0 = source_item, sink_item0 = sink_item) %>%
+        left_join_error_no_match(
+          Mapping_gcamdata_SUA_ItemCode %>%
+            distinct(source_item0 = item,  source_item_code = item_code, source_item = item_new_2024), by = "source_item0") %>%
+        left_join_error_no_match(
+          Mapping_gcamdata_SUA_ItemCode %>%
+            distinct(sink_item0 = item,  sink_item_code = item_code, sink_item = item_new_2024), by = "sink_item0") %>%
+        transmute(aggregated_PCe_item, PCe_item, iso,  year,
+                  nest_level, source_item, sink_item, extraction_point = ER, value) %>%
+        filter(is.finite(value)) %>%
+        add_title("Traceable_FBS_Extraction_Rate_2010_2022") %>%
+        add_units("none") %>%
+        add_comments("gcamfaostat Export CSV") %>%
+        add_precursors(file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_SUA_PrimaryEquivalent")) %>%
+        spread(year, value)->
+        Traceable_FBS_Extraction_Rate_2010_2022
+
+      output_csv_data(
+        gcam_dataset = Traceable_FBS_Extraction_Rate_2010_2022,
+        out_filename = "Traceable_FBS_Extraction_Rate_2010_2022" %>% paste0("_", Sys.Date()),
+        col_type_nonyear = "cciiccc",
+        title = "Extraction rates used for compiling the traceable FBS dataset",
+        unit = "NA",
+        code = "NA",
+        description = "Data is compiled and generated by gcamfaostat.",
+        out_dir = DIR_OUTPUT_CSV,
+        GZIP = F)
+
+      add_to_output_meta(.df = Traceable_FBS_Extraction_Rate_2010_2022 %>% rename(item = sink_item),
+                         "Traceable_FBS_Extraction_Rate_2010_2022")
 
 
       # Metadata ----
