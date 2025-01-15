@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">gcamfaostat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -193,7 +193,9 @@
 </h4>
 <ul>
 <li><code><a href="reference/driver_drake.html">driver_drake()</a></code></li>
-<li>if <code>write_csv_model = GCAM</code> in the function, related CSV will be exported to <code>output/gcamfaostat_GCAM</code>
+<li>if <code>driver_drake(write_csv_model = GCAM)</code>, related CSV for GCAM will be exported to <code>output/gcamfaostat_GCAM</code>
+</li>
+<li>if <code>driver_drake(write_csv_model = "Traceable_FBS")</code>, related CSV for generating traceable FBS (T-FBS) will be exported to <code>output/gcamfaostat_Traceable_FBS</code>
 </li>
 <li>Users can add and design data flows for other models.</li>
 </ul>
@@ -297,10 +299,6 @@
 <li>Xin Zhao <br><small class="roles"> Maintainer, author </small> <a href="https://orcid.org/0000-0002-1801-4393" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Maksym Chepeliev <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-8585-2314" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Pralit Patel <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-3992-1061" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Marshall Wise <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-2718-0051" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Kate Calvin <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-2191-4189" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Kanishka Narayan <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-8483-6216" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Chris Vernon <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-3406-6214" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
@@ -320,7 +318,7 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kate Calvin, Kanishka Narayan, Chris Vernon.</p>
+<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel.</p>
 </div>
 
 <div class="pkgdown">
