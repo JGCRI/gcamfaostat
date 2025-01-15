@@ -13,8 +13,8 @@ module_xfaostat_L107_FoodBalanceSheet(command, ...)
 }
 \value{
 Depends on \code{command}: either a vector of required inputs, a vector of output names, or (if
-  \code{command} is "MAKE") all the generated outputs: \code{L107.FAO_Food_Macronutrient_All},
-  \code{FAO_Food_MacronutrientRate_2010_2019_MaxValue}
+  \code{command} is "MAKE") all the generated outputs: \code{L107.Traceable_FBS_PCe_2010Plus},
+  \code{L107.Traceable_FBS_PCe_Gross_Extraction_Rates_2010Plus},  \code{L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus}
 }
 \description{
 Generate FBS supply utilization balance in primary equivalent

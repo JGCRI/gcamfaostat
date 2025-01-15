@@ -79,8 +79,8 @@ As gcamfaostat is built upon the foundation of `gcamdata` and leverages the powe
 library(gcamfaostat)
 # package data, GCAM_DATA_MAP, will be loaded
 
-# Get information for an intermediate data frame QCL_CROP_PRIMARY
-info("QCL_CROP_PRIMARY")
+# Get information for an intermediate data frame L102.QCL_CROP_PRIMARY
+info("L102.QCL_CROP_PRIMARY")
 
 # Trace all downstream data flows for SCL_wide
 dstrace("SCL_wide", direction = "downstream", recurse = T) 
@@ -103,11 +103,11 @@ load_from_cache("aglu/FAO/FAO_items") %>% first() -> FAO_items
 head(FAO_items)
 
 # Define a list of input data
-MODULE_INPUTS <- c("Bal_new_all")
+MODULE_INPUTS <- c("L105.Bal_new_all")
 # Load a list of MODULE_INPUTS from cache and assign to their name
 get_data_list(all_data = load_from_cache(MODULE_INPUTS), data_list = MODULE_INPUTS)
 # Print
-head(Bal_new_all)
+head(L105.Bal_new_all)
 ```
 
 

@@ -286,6 +286,9 @@
     <loc>https://jgcri.github.io/gcamfaostat/reference/module_xfaostat_L106_FoodMacroNutrient.html</loc>
   </url>
   <url>
+    <loc>https://jgcri.github.io/gcamfaostat/reference/module_xfaostat_L107_FoodBalanceSheet.html</loc>
+  </url>
+  <url>
     <loc>https://jgcri.github.io/gcamfaostat/reference/module_xfaostat_L199_CSVExportAgSUA.html</loc>
   </url>
   <url>
@@ -304,7 +307,13 @@
     <loc>https://jgcri.github.io/gcamfaostat/reference/module_yfaostat_GCAM_CSVExport.html</loc>
   </url>
   <url>
+    <loc>https://jgcri.github.io/gcamfaostat/reference/module_yfaostat_GCAM_DataExport.html</loc>
+  </url>
+  <url>
     <loc>https://jgcri.github.io/gcamfaostat/reference/module_yfaostat_SUA_FBS_CSVExport.html</loc>
+  </url>
+  <url>
+    <loc>https://jgcri.github.io/gcamfaostat/reference/module_yfaostat_Traceable_FBS_DataExport.html</loc>
   </url>
   <url>
     <loc>https://jgcri.github.io/gcamfaostat/reference/Moving_average.html</loc>
