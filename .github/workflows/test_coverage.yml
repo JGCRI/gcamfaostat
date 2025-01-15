@@ -12,7 +12,6 @@ jobs:
       matrix:
         r-version: ['4.1.0']
 
-    
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       GITHUB_PAT: ${{ secrets.GH_PAT}}
@@ -54,4 +53,4 @@ jobs:
       - name: Test coverage
         run: |
           Rscript -e "remotes::install_cran('covr')"
-          Rscript -e "covr::codecov(token = Sys.getenv('CODECOV_TOKEN'))"
+          Rscript -e "covr::codecov(token = Sys.getenv('CODECOV_TOKEN'))" || { echo 'Test coverage step failed'; exit 1; }
