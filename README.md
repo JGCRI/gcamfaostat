@@ -59,7 +59,8 @@ The package is documented in the [online manual](https://jgcri.github.io/gcamfao
 
 #### 4. Run the driver
 * `driver_drake()` 
-* if `write_csv_model = GCAM` in the function, related CSV will be exported to `output/gcamfaostat_GCAM`
+* if `driver_drake(write_csv_model = GCAM)`, related CSV for GCAM will be exported to `output/gcamfaostat_GCAM`
+* if `driver_drake(write_csv_model = "Traceable_FBS")`, related CSV for generating traceable FBS (T-FBS) will be exported to `output/gcamfaostat_Traceable_FBS`
 * Users can add and design data flows for other models.
 
 #### 5. Use data and package functions

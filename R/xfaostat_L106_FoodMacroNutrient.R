@@ -21,11 +21,11 @@ module_xfaostat_L106_FoodMacroNutrient <- function(command, ...) {
     c("SCL_wide",
       "FBS_wide",
       "OA",
-      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "FAO_an_items_cal_SUA"),
-      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_FAO_FBS_SUA"))
+      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_FAO_AnCalorie"),
+      FILE = file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_FAO_FBS_SUA"))
 
   MODULE_OUTPUTS <-
-    c("SUA_food_macronutrient_rate")
+    c("L106.SUA_food_macronutrient_rate")
 
   if(command == driver.DECLARE_INPUTS) {
     return(MODULE_INPUTS)
@@ -38,8 +38,8 @@ module_xfaostat_L106_FoodMacroNutrient <- function(command, ...) {
       `Proteins/Year` <- `Fats/Year` <- calperg <- proteinperc <- fatperc <-
       value_world <- value_reg <- Diff <- p_Diff <- quantile <- `Food supply quantity (kg/capita/yr)` <-
       `Protein supply quantity (g/capita/day)` <- `Fat supply quantity (g/capita/day)` <-
-      FAO_an_items_cal_SUA <- Mcal_t <- fat_Perc  <- protein_Perc <- FAO_FBS_code <-
-      SCL_item_code <- CPC_code <- Mapping_FAO_FBS_SUA <- unit <- element <-
+      Mapping_gcamdata_FAO_AnCalorie <- Mcal_t <- fat_Perc  <- protein_Perc <- FAO_FBS_code <-
+      SCL_item_code <- CPC_code <- Mapping_gcamdata_FAO_FBS_SUA <- unit <- element <-
       area_code <- item_code <- element_code <- OA <- FBS_wide <- SCL_wide <-
       `Food supply (kcal/capita/day)` <- NULL
 
@@ -125,7 +125,7 @@ module_xfaostat_L106_FoodMacroNutrient <- function(command, ...) {
     #*******************************************
 
     SCL %>% filter(element_code %in% c(261, 271, 281, 5141)) %>% #All 3 cal protein fats and food in ton
-      right_join(Mapping_FAO_FBS_SUA %>%
+      right_join(Mapping_gcamdata_FAO_FBS_SUA %>%
                    filter(!is.na(CPC_code)) %>%
                    select(item_code = SCL_item_code, FAO_FBS_code, FBS_label),
                  by = "item_code") %>%
@@ -197,7 +197,7 @@ module_xfaostat_L106_FoodMacroNutrient <- function(command, ...) {
     #*******************************************
 
     # Adding the 12 fish item from FBS
-    Mapping_FAO_FBS_SUA %>% filter(is.na(CPC_code)) %>%
+    Mapping_gcamdata_FAO_FBS_SUA %>% filter(is.na(CPC_code)) %>%
       select(item = FBS_label, item_code = FAO_FBS_code) -> Fish_item
 
     FBS %>% right_join(Fish_item, by = c("item_code", "item")) -> FBS_fish
@@ -232,36 +232,36 @@ module_xfaostat_L106_FoodMacroNutrient <- function(command, ...) {
       bind_rows(
         SUA_food_macronutrient_rate_nofish %>% distinct(area_code) %>%
           full_join(Fish_item,  by = character()) %>%
-          left_join(FAO_an_items_cal_SUA %>%
+          left_join(Mapping_gcamdata_FAO_AnCalorie %>%
                       select(item_code, calperg = Mcal_t,fatperc = fat_Perc,
                              proteinperc = protein_Perc), by = "item_code" )
-      ) -> SUA_food_macronutrient_rate
+      ) -> L106.SUA_food_macronutrient_rate
 
-    unique(SUA_food_macronutrient_rate$area_code) %>% length()
-    unique(SUA_food_macronutrient_rate$item_code) %>% length()
-    SUA_food_macronutrient_rate %>% distinct(item, item_code) -> SUA_COMM_FOOD_NUTRIENT
+    unique(L106.SUA_food_macronutrient_rate$area_code) %>% length()
+    unique(L106.SUA_food_macronutrient_rate$item_code) %>% length()
+    L106.SUA_food_macronutrient_rate %>% distinct(item, item_code) -> SUA_COMM_FOOD_NUTRIENT
     # 76244 =179 area * (414 items + 12 fish items)
     # remove processing data
 
     rm(SUA_food_macronutrient, SUA_food_yearmean,
        SUA_food_yearmean_fill, SUA_food_yearareamean,
-       OA, POP, SCL, FBS, Mapping_FAO_FBS_SUA,
-       SUA_food_macronutrient_rate_nofish, FAO_an_items_cal_SUA)
+       OA, POP, SCL, FBS, Mapping_gcamdata_FAO_FBS_SUA,
+       SUA_food_macronutrient_rate_nofish, Mapping_gcamdata_FAO_AnCalorie)
     rm(Fish_item)
     rm(checkarea, checkitem, checkelement)
 
 
 
-    SUA_food_macronutrient_rate %>%
+    L106.SUA_food_macronutrient_rate %>%
       add_title("FAO food calories and macronutrient rate") %>%
       add_units("rates") %>%
       add_comments("Detailed FAO food calories and macrotunitent info for 414 SUA items + 12 fish items") %>%
       add_precursors("SCL_wide",
                      "FBS_wide",
                      "OA",
-                     file.path(DIR_RAW_DATA_FAOSTAT, "FAO_an_items_cal_SUA"),
-                     file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_FAO_FBS_SUA")) ->
-      SUA_food_macronutrient_rate
+                     file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_FAO_AnCalorie"),
+                     file.path(DIR_RAW_DATA_FAOSTAT, "Mapping_gcamdata_FAO_FBS_SUA")) ->
+      L106.SUA_food_macronutrient_rate
 
     # P.S. ----
     # China Wheat, bran for food? Need to fix in SUA later; no changes needed here for this

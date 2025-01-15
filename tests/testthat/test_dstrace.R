@@ -82,11 +82,11 @@ test_that("info works", {
   expect_error(info(1))
   expect_error(info("1", gcam_data_map = 1))
   expect_error(info("1", previous_tracelist = 1))
-  expect_error(info("Bal_new_all", upstream = 1))
-  expect_error(info("Bal_new_all", downstream = 1))
+  expect_error(info("L105.Bal_new_all", upstream = 1))
+  expect_error(info("L105.Bal_new_all", downstream = 1))
 
   # opens help page
-  expect_type(info("Bal_new_all"), "list")
+  expect_type(info("L105.Bal_new_all"), "list")
 
   # Most of this functionality is tested through the dstrace tests above
 })

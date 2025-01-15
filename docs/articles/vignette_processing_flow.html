@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gcamfaostat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -112,7 +112,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>gcamfaostat data processing</h1>
             
-            <h4 data-toc-skip class="date">2024-10-28</h4>
+            <h4 data-toc-skip class="date">2025-01-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jgcri/gcamfaostat/blob/HEAD/vignettes/vignette_processing_flow.Rmd" class="external-link"><code>vignettes/vignette_processing_flow.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_processing_flow.Rmd</code></div>
@@ -240,9 +240,9 @@ can be used to assign each object in the list to a data frame.</li>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jgcri.github.io/gcamfaostat">gcamfaostat</a></span><span class="op">)</span>
 <span class="co"># package data, GCAM_DATA_MAP, will be loaded</span>
 
-<span class="co"># Get information for an intermediate data frame QCL_CROP_PRIMARY</span>
-<span class="fu"><a href="../reference/info.html">info</a></span><span class="op">(</span><span class="st">"QCL_CROP_PRIMARY"</span><span class="op">)</span>
-<span class="co">#&gt; QCL_CROP_PRIMARY - produced by module_xfaostat_L102_ProductionArea </span>
+<span class="co"># Get information for an intermediate data frame L102.QCL_CROP_PRIMARY</span>
+<span class="fu"><a href="../reference/info.html">info</a></span><span class="op">(</span><span class="st">"L102.QCL_CROP_PRIMARY"</span><span class="op">)</span>
+<span class="co">#&gt; L102.QCL_CROP_PRIMARY - produced by module_xfaostat_L102_ProductionArea </span>
 <span class="co">#&gt;  FAO primary crop area and production (various)</span>
 <span class="co">#&gt;  Detailed FAO QCL data processing for crop area and production</span>
 <span class="co">#&gt;  Dependent: yfaostat_GCAM_GCAMFAOSTAT_CSV</span>
@@ -254,33 +254,70 @@ can be used to assign each object in the list to a data frame.</li>
 <span class="fu"><a href="../reference/dstrace.html">dstrace</a></span><span class="op">(</span><span class="st">"SCL_wide"</span>, direction <span class="op">=</span> <span class="st">"downstream"</span>, recurse <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> 
 <span class="co">#&gt; 1 - SCL_wide - produced by module_xfaostat_L101_RawDataPreProc3_SCL_FBS </span>
 <span class="co">#&gt;  FAO supply utilization account dataset, 2010+, wide (tonne)</span>
-<span class="co">#&gt;  Preprocessed FAOSTAT SCL</span>
-<span class="co">#&gt;  Dependent: Bal_new_all (#2 below)</span>
-<span class="co">#&gt;  Dependent: SUA_food_macronutrient_rate (#3 below)</span>
-<span class="co">#&gt; 2 - Bal_new_all - produced by module_xfaostat_L105_DataConnectionToSUA </span>
-<span class="co">#&gt;  Bal_new_all (Ktonne)</span>
+<span class="co">#&gt;  Preprocessed FAOSTAT SCL; ** PRE-BUILT **</span>
+<span class="co">#&gt;  Dependent: L105.Bal_new_all (#2 below)</span>
+<span class="co">#&gt;  Dependent: L106.SUA_food_macronutrient_rate (#3 below)</span>
+<span class="co">#&gt; 2 - L105.Bal_new_all - produced by module_xfaostat_L105_DataConnectionToSUA </span>
+<span class="co">#&gt;  L105.Bal_new_all (Ktonne)</span>
 <span class="co">#&gt;  Preprocessed FAO SUA 2010 - 2021</span>
 <span class="co">#&gt;  Dependent: yfaostat_GCAM_GCAMFAOSTAT_CSV (#4 below)</span>
-<span class="co">#&gt; 4 - yfaostat_GCAM_GCAMFAOSTAT_CSV - produced by module_yfaostat_GCAM_CSVExport </span>
+<span class="co">#&gt;  Dependent: L107.Traceable_FBS_PCe_2010Plus (#5 below)</span>
+<span class="co">#&gt;  Dependent: Metadata_GCAMFAOSTAT_Traceable_FBS (#6 below)</span>
+<span class="co">#&gt;  Dependent: SUA_2010_2022 (#7 below)</span>
+<span class="co">#&gt; 4 - yfaostat_GCAM_GCAMFAOSTAT_CSV - produced by module_yfaostat_GCAM_DataExport </span>
 <span class="co">#&gt;  Export CSV to DIR_OUTPUT_CSV (NA)</span>
 <span class="co">#&gt;  Export CSV</span>
 <span class="co">#&gt;  No dependents</span>
-<span class="co">#&gt; 3 - SUA_food_macronutrient_rate - produced by module_xfaostat_L106_FoodMacroNutrient </span>
+<span class="co">#&gt; 5 - L107.Traceable_FBS_PCe_2010Plus - produced by module_xfaostat_L107_FoodBalanceSheet </span>
+<span class="co">#&gt;  L107.Traceable_FBS_PCe_2010Plus (kton)</span>
+<span class="co">#&gt;  Updated FBS: Supply utilization balance in primary equivalent, FAO</span>
+<span class="co">#&gt;  countries, APE commoditeis, for 2010 +</span>
+<span class="co">#&gt;  Dependent: Metadata_GCAMFAOSTAT_Traceable_FBS (#6 above)</span>
+<span class="co">#&gt;  Dependent: Traceable_FBS_PCe_2010_2022 (#8 below)</span>
+<span class="co">#&gt; 8 - Traceable_FBS_PCe_2010_2022 - produced by module_yfaostat_Traceable_FBS_DataExport </span>
+<span class="co">#&gt;  Traceable_FBS_PCe_2010_2022 (1000 tonnes)</span>
+<span class="co">#&gt;  gcamfaostat Export CSV</span>
+<span class="co">#&gt;  No dependents</span>
+<span class="co">#&gt; 6 - Metadata_GCAMFAOSTAT_Traceable_FBS - produced by module_yfaostat_Traceable_FBS_DataExport </span>
+<span class="co">#&gt;  Export CSV to DIR_OUTPUT_CSV (NA)</span>
+<span class="co">#&gt;  Export CSV</span>
+<span class="co">#&gt;  No dependents</span>
+<span class="co">#&gt; 7 - SUA_2010_2022 - produced by module_yfaostat_Traceable_FBS_DataExport </span>
+<span class="co">#&gt;  SUA_2010_2022 (1000 tonnes)</span>
+<span class="co">#&gt;  gcamfaostat Export CSV</span>
+<span class="co">#&gt;  No dependents</span>
+<span class="co">#&gt; 3 - L106.SUA_food_macronutrient_rate - produced by module_xfaostat_L106_FoodMacroNutrient </span>
 <span class="co">#&gt;  FAO food calories and macronutrient rate (rates)</span>
 <span class="co">#&gt;  Detailed FAO food calories and macrotunitent info for 414 SUA items +</span>
 <span class="co">#&gt;  12 fish items</span>
 <span class="co">#&gt;  Dependent: yfaostat_GCAM_GCAMFAOSTAT_CSV (#4 above)</span>
+<span class="co">#&gt;  Dependent: L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus (#9 below)</span>
+<span class="co">#&gt; 9 - L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus - produced by module_xfaostat_L107_FoodBalanceSheet </span>
+<span class="co">#&gt;  L107.Traceable_FBS_Food_Calorie_Macronutrient_2010Plus (MKcal, MtFat, MtProtein)</span>
+<span class="co">#&gt;  Dietary energy and macronutrients for food supply in PCe, FAO</span>
+<span class="co">#&gt;  countries, APE commoditeis, for 2010 +</span>
+<span class="co">#&gt;  Dependent: Metadata_GCAMFAOSTAT_Traceable_FBS (#6 above)</span>
+<span class="co">#&gt;  Dependent: SUA_Food_Calorie_Macronutrient_2010_2022 (#10 below)</span>
+<span class="co">#&gt;  Dependent: Traceable_FBS_Food_Calorie_Macronutrient_2010_2022 (#11 below)</span>
+<span class="co">#&gt; 10 - SUA_Food_Calorie_Macronutrient_2010_2022 - produced by module_yfaostat_Traceable_FBS_DataExport </span>
+<span class="co">#&gt;  SUA_Food_Calorie_Macronutrient_2010_2022 (Mt or Mkcal)</span>
+<span class="co">#&gt;  gcamfaostat Export CSV</span>
+<span class="co">#&gt;  No dependents</span>
+<span class="co">#&gt; 11 - Traceable_FBS_Food_Calorie_Macronutrient_2010_2022 - produced by module_yfaostat_Traceable_FBS_DataExport </span>
+<span class="co">#&gt;  Traceable_FBS_Food_Calorie_Macronutrient_2010_2022 (Mt or Mkcal)</span>
+<span class="co">#&gt;  gcamfaostat Export CSV</span>
+<span class="co">#&gt;  No dependents</span>
 
 <span class="co"># Get input of a module</span>
 <span class="fu"><a href="../reference/inputs_of.html">inputs_of</a></span><span class="op">(</span><span class="st">"module_xfaostat_L105_DataConnectionToSUA"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "FAOSTAT/FAO_items"        "QCL_PROD"                </span>
-<span class="co">#&gt; [3] "QCL_AN_LIVEANIMAL_MEATEQ" "TCL_wide"                </span>
-<span class="co">#&gt; [5] "TM_bilateral_wide"        "FBSH_CBH_wide"           </span>
-<span class="co">#&gt; [7] "FBS_wide"                 "SCL_wide"</span>
+<span class="co">#&gt; [1] "FAOSTAT/Mapping_gcamdata_FAO_items" "L102.QCL_PROD"                     </span>
+<span class="co">#&gt; [3] "L102.QCL_AN_LIVEANIMAL_MEATEQ"      "TCL_wide"                          </span>
+<span class="co">#&gt; [5] "TM_bilateral_wide"                  "FBSH_CBH_wide"                     </span>
+<span class="co">#&gt; [7] "FBS_wide"                           "SCL_wide"</span>
 
 <span class="co"># Get output of a module</span>
 <span class="fu"><a href="../reference/outputs_of.html">outputs_of</a></span><span class="op">(</span><span class="st">"module_xfaostat_L106_FoodMacroNutrient"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "SUA_food_macronutrient_rate"</span></code></pre></div>
+<span class="co">#&gt; [1] "L106.SUA_food_macronutrient_rate"</span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Not evaluated for convenience </span>
 <span class="co"># Load gcamfaostat</span>
@@ -292,11 +329,11 @@ can be used to assign each object in the list to a data frame.</li>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">FAO_items</span><span class="op">)</span>
 
 <span class="co"># Define a list of input data</span>
-<span class="va">MODULE_INPUTS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Bal_new_all"</span><span class="op">)</span>
+<span class="va">MODULE_INPUTS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"L105.Bal_new_all"</span><span class="op">)</span>
 <span class="co"># Load a list of MODULE_INPUTS from cache and assign to their name</span>
 <span class="fu"><a href="../reference/get_data_list.html">get_data_list</a></span><span class="op">(</span>all_data <span class="op">=</span> <span class="fu"><a href="../reference/load_from_cache.html">load_from_cache</a></span><span class="op">(</span><span class="va">MODULE_INPUTS</span><span class="op">)</span>, data_list <span class="op">=</span> <span class="va">MODULE_INPUTS</span><span class="op">)</span>
 <span class="co"># Print</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">Bal_new_all</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">L105.Bal_new_all</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 <div class="section level2 unnumbered">
@@ -325,7 +362,7 @@ Computing.”</span> <em>Journal of Open Source Software</em> 3 (21): 550.
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel, Marshall Wise, Kate Calvin, Kanishka Narayan, Chris Vernon.</p>
+<p>Developed by Xin Zhao, Maksym Chepeliev, Pralit Patel.</p>
 </div>
 
 <div class="pkgdown">

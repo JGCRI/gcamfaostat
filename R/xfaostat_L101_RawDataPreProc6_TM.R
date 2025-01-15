@@ -129,6 +129,15 @@ module_xfaostat_L101_RawDataPreProc6_TM <- function(command, ...) {
 
     }
 
+    # 12/20/2024 fix Raw cane or beet sugar (centrifugal only); item code 162 issue
+    # in  iso == "moz"  area code = 144 in 2016
+    # the export value was way too large and likely a unit mistake
+    # we scale it done by 1000 when the export value > 10^6
+
+    TM_bilateral_wide %>%
+      mutate(`2016` = if_else(item_code == 162 & source_code == 144 & `2016` > 10^6, `2016`/1000, `2016` )) ->
+      TM_bilateral_wide
+
 
     return_data(MODULE_OUTPUTS)
 

@@ -1,4 +1,4 @@
-# File: SUA_item_code_map.csv
+# File: Mapping_gcamdata_SUA_ItemCode.csv
 # Title: Mapping of SUA items to their item_code
 # Units: NA
 # Description: Ideally we just use SUA (supply utilization accounts) item names directly.  However, given the volume of data

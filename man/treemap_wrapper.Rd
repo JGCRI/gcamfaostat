@@ -13,7 +13,10 @@ treemap_wrapper(
   .LastLabelCol = "orange",
   .SaveDir = "../man/figures",
   .SaveName,
-  .SaveScaler = 1
+  .SaveScaler = 1,
+  .SVG = F,
+  .SVG_w = 6,
+  .SVG_h = 8
 )
 }
 \arguments{
@@ -34,6 +37,8 @@ treemap_wrapper(
 \item{.SaveName}{Name of the saved png file in .SaveDir}
 
 \item{.SaveScaler}{A scaler controling the size (dpi = 300)}
+
+\item{.SVG}{logical if true export SVG otherwise export PNG}
 }
 \value{
 A saved plot in .SaveDir

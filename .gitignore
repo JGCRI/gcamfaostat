@@ -48,5 +48,6 @@ inst/extdata/GCAM/aglu/FAO/GCAMFAOSTAT*
 # Developer
 paper
 developertemp
+data-raw/SciData/*
 
 #docs
